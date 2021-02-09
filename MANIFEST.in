@@ -1,0 +1,16 @@
+recursive-include rompy *.html
+recursive-include rompy *.csv
+recursive-include rompy *.npy
+recursive-include rompy *.yml
+recursive-include rompy *.yaml
+recursive-include rompy *.zip
+recursive-include rompy *.png
+recursive-include docs/source *
+include docs/Makefile docs/make.bat
+
+recursive-include templates *
+
+include versioneer.py
+include rompy/_version.py
+include requirements.txt
+include LICENSE

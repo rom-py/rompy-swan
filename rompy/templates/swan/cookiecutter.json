@@ -1,0 +1,24 @@
+{
+    "run_id":"run_0001",
+    "compute_start":"20200221.040000",
+    "compute_interval":"0.25 HR",
+    "compute_stop":"20200224.040000",
+    "out_start":"20200221.040000",
+    "out_intvl":"1.0 HR",
+    "output_locs": {
+        "coords":[["115.61","-32.618"],["115.686067","-32.532381"]]
+    },
+    "cgrid": "REG 115.68 -32.76 77 0.39 0.15 389 149",
+    "cgrid_read": "",
+    "wind_grid":"REG 115.3 -32.8 0.0 2 3 0.3515625 0.234375  NONSTATION 20200221.040000  10800.0 S",
+    "wind_read":"SERIES 'extracted.wind' 1 FORMAT '(3F8.1)'",
+    "bottom_grid":"REG 115.68 -32.76 77 390 150 0.001 0.001 EXC -99.0",
+    "bottom_file":"bathy.bot",
+    "friction":"MAD",
+    "friction_coeff":"0.1",
+    "spectra_file":"boundary.spec",
+    "_generated_at":"",
+    "_generated_on":"",
+    "_generated_by":"",
+    "_template":""
+}
