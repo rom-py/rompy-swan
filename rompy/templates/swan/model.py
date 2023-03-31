@@ -2,13 +2,25 @@ from __future__ import annotations
 
 from typing import List
 
-from pydantic import BaseModel, PrivateAttr
+from pydantic import BaseModel, PrivateAttr, validator
 
 from rompy.templates.base.model import Template as BaseTemplate
 
 
 class OutputLocs(BaseModel):
     coords: List[List[str]] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
+
+    @validator("coords")
+    def validate_coords(cls, v):
+        for coord in v:
+            if len(coord) != 2:
+                raise ValueError("coords must be a list of lists of length 2")
+            for lon, lat in coord:
+                if not (-90 <= float(lat) <= 90):
+                    raise ValueError("latitude must be between -90 and 90")
+                if not (-180 <= float(lon) <= 180):
+                    raise ValueError("longitude must be between -180 and 180")
+        return v
 
 
 class Template(BaseTemplate):
@@ -24,3 +36,24 @@ class Template(BaseTemplate):
     friction: str = "MAD"
     friction_coeff: str = "0.1"
     spectra_file: str = "boundary.spec"
+
+    @validator("out_start", "out_intvl", pre=True)
+    def validate_out_start_intvl(cls, v):
+        return cls.validate_compute_start_stop(v)
+
+    @validator("friction")
+    def validate_friction(cls, v):
+        if v not in ["MAD", "MANN", "FRICTION"]:
+            raise ValueError(
+                "friction must be one of MAD, MANN, FRICTION"
+            )  # TODO Raf to add actual friction options
+        return v
+
+    @validator("friction_coeff")
+    def validate_friction_coeff(cls, v):
+        # TODO Raf to add sensible friction coeff range
+        if float(v) > 1:
+            raise ValueError("friction_coeff must be less than 1")
+        if float(v) < 0:
+            raise ValueError("friction_coeff must be greater than 0")
+        return v
