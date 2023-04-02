@@ -5,22 +5,11 @@ from typing import List
 from pydantic import BaseModel, PrivateAttr, validator
 
 from rompy.templates.base.model import Template as BaseTemplate
+from rompy.types import Coordinate
 
 
 class OutputLocs(BaseModel):
-    coords: List[List[str]] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
-
-    @validator("coords")
-    def validate_coords(cls, v):
-        for coord in v:
-            if len(coord) != 2:
-                raise ValueError("coords must be a list of lists of length 2")
-            for lon, lat in coord:
-                if not (-90 <= float(lat) <= 90):
-                    raise ValueError("latitude must be between -90 and 90")
-                if not (-180 <= float(lon) <= 180):
-                    raise ValueError("longitude must be between -180 and 180")
-        return v
+    coords: List[Coordinate] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
 
 
 class Template(BaseTemplate):
