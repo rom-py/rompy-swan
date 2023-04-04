@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel, PrivateAttr, validator
@@ -13,7 +14,7 @@ class OutputLocs(BaseModel):
 
 
 class Template(BaseTemplate):
-    out_start: str = "20200221.040000"
+    out_start: datetime = datetime(2020, 2, 21, 4)
     out_intvl: str = "1.0 HR"
     output_locs: OutputLocs = OutputLocs()
     cgrid: str = "REG 115.68 -32.76 77 0.39 0.15 389 149"
