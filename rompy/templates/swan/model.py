@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import os
 from datetime import datetime
 from typing import List
 
 from pydantic import BaseModel, PrivateAttr, validator
 
+from rompy import TEMPLATES_DIR
 from rompy.templates.base.model import Template as BaseTemplate
 from rompy.types import Coordinate
 
@@ -14,6 +16,7 @@ class OutputLocs(BaseModel):
 
 
 class Template(BaseTemplate):
+    template: str = os.path.join(TEMPLATES_DIR, "swan")
     out_start: datetime = datetime(2020, 2, 21, 4)
     out_intvl: str = "1.0 HR"
     output_locs: OutputLocs = OutputLocs()
