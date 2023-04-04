@@ -30,12 +30,12 @@ NUM ACCUR 0.02 0.02 0.02 95 NONSTAT 20
 BOUND NEST '{{cookiecutter.spectra_file}}' CLOSED
 
 OUTPUT OPTIONS BLOCK 8
-BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 DEPTH UBOT HSIGN HSWELL DIR TPS TM01 WIND OUT {{cookiecutter.out_start}} {{cookiecutter.out_intvl}}
+BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 DEPTH UBOT HSIGN HSWELL DIR TPS TM01 WIND OUT {{cookiecutter.out_start.strftime(cookiecutter._datefmt)}} {{cookiecutter.out_intvl}}
 
 POINTs 'pts' FILE 'out.loc'
-SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {{cookiecutter.out_start}} {{cookiecutter.out_intvl}}
-TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {{cookiecutter.out_start}} {{cookiecutter.out_intvl}}
+SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {{cookiecutter.out_start.strftime(cookiecutter._datefmt)}} {{cookiecutter.out_intvl}}
+TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {{cookiecutter.out_start.strftime(cookiecutter._datefmt)}} {{cookiecutter.out_intvl}}
 
-COMPUTE NONST {{cookiecutter.compute_start}} {{cookiecutter.compute_interval}} {{cookiecutter.compute_stop}}
+COMPUTE NONST {{cookiecutter.compute_start.strftime(cookiecutter._datefmt)}} {{cookiecutter.compute_interval}} {{cookiecutter.compute_stop.strftime(cookiecutter._datefmt)}}
 
 STOP
