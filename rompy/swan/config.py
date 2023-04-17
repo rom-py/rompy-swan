@@ -60,7 +60,9 @@ class SwanConfig(BaseConfig):
     """
 
     template: str = os.path.join(TEMPLATES_DIR, "swan")
-    grid: SwanGrid = SwanGrid(x0=115.68, y0=-32.76, dx=0.001, dy=0.001, nx=389, ny=149)
+    grid: SwanGrid = SwanGrid(
+        x0=115.68, y0=-32.76, dx=0.001, dy=0.001, nx=390, ny=150, rot=77
+    )
     out_start: datetime | None = None
     out_intvl: str = "1.0 HR"
     output_locs: OutputLocs = OutputLocs()

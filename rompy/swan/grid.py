@@ -286,3 +286,6 @@ class SwanGrid(RegularGrid):
 
         ds_boundary = xr.concat(specPoints, dim="site")
         return ds_boundary
+
+    def __repr__(self):
+        return f"SwanGrid: {self.gridtype}, {self.nx}x{self.ny}"
