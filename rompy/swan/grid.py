@@ -1,8 +1,10 @@
-from rompy.core.grid import RegularGrid
 from typing import Optional
-from pydantic import validator, root_validator
+
 import numpy as np
-from datetime import datetime
+from pydantic import root_validator, validator
+
+from rompy.core.grid import RegularGrid
+
 
 class SwanGrid(RegularGrid):
     gridtype: Optional[str] = "REG"
@@ -55,7 +57,6 @@ class SwanGrid(RegularGrid):
             _x, _y = self._gen_curv_cgrid()
         self.x = _x
         self.y = _y
-
 
     def _gen_curv_cgrid(self):
         """loads a SWAN curvilinear grid and returns cgrid lat/lons and

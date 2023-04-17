@@ -3,7 +3,7 @@ import logging
 import numpy as np
 import xarray as xr
 
-from rompy.core import BaseGrid, BaseModel
+from rompy.core import BaseModel
 
 from .config import SwanConfig
 
