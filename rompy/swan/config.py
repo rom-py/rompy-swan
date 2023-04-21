@@ -1,10 +1,11 @@
 import os
+import platform
 from datetime import datetime
 
 from pydantic import validator
 
 from rompy import TEMPLATES_DIR
-from rompy.core import BaseConfig, Coordinate, RompyBaseModel
+from rompy.core import BaseConfig, Coordinate, DateTimeRange, RompyBaseModel
 
 from .grid import SwanGrid
 
@@ -108,3 +109,79 @@ class SwanConfig(BaseConfig):
             fmt += " EXC {exc:f}"
         grid_params = reverse_format(fmt, grid_spec)
         return SwanGrid(**grid_params)
+
+    def generate(self, time: DateTimeRange) -> str:
+        """Generate SWAN input file
+
+        Parameters
+        ----------
+        run_dir : str
+            Path to run directory
+        """
+        self._generated_at = str(datetime.utcnow())
+        self._generated_by = os.environ.get("USER")
+        self._generated_on = platform.node()
+
+        if not self.out_start:
+            self.out_start = time.start_date
+        if not self.out_intvl:
+            self.out_intvl = (
+                "1.0 HR"  # Hardcoded for now, need to get from time object too
+            )
+        frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
+
+        output = ""
+        output += f"$\n"
+        output += f"$ SWAN - Simple example template used by rompy\n"
+        output += f"$ Template: \n"
+        output += f"$ Generated: {self._generated_at} on {self._generated_on} by {self._generated_by}\n"
+        output += f"$ projection: wgs84\n"
+        output += f"$\n"
+        output += "\n"
+        output += f"MODE NONSTATIONARY TWODIMENSIONAL\n"
+        output += f"COORDINATES SPHERICAL\n"
+        output += f"SET NAUTICAL\n"
+        output += "\n"
+        output += f"CGRID {self.cgrid} CIRCLE 36 0.0464 1. 31\n"
+        output += f"{self.cgrid_read}\n"
+        output += "\n"
+        output += f"INPGRID BOTTOM {self.bottom_grid}\n"
+        output += f"READINP BOTTOM 1 '{self.bottom_file}' 3 0 FREE\n"
+        output += "\n"
+        output += f"INPGRID WIND {self.wind_grid}\n"
+        output += f"READINP WIND {self.wind_read}\n"
+        output += "\n"
+        output += f"GEN3 WESTH 0.000075 0.00175\n"
+        output += f"BREAKING\n"
+        output += f"FRICTION {self.friction} {self.friction_coeff}\n"
+        output += "\n"
+        output += f"TRIADS\n"
+        output += "\n"
+        output += f"PROP BSBT\n"
+        output += f"NUM ACCUR 0.02 0.02 0.02 95 NONSTAT 20\n"
+        output += "\n"
+        output += f"BOUND NEST '{self.spectra_file}' CLOSED\n"
+        output += "\n"
+        output += f"OUTPUT OPTIONS BLOCK 8\n"
+        output += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 DEPTH UBOT HSIGN HSWELL DIR TPS TM01 WIND OUT {self.out_start.strftime(self._datefmt)} {self.out_intvl}\n"
+        output += "\n"
+        output += f"POINTs 'pts' FILE 'out.loc'\n"
+        output += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.out_start.strftime(self._datefmt)} {self.out_intvl}\n"
+        output += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.out_start.strftime(self._datefmt)} {self.out_intvl}\n"
+        output += "\n"
+        output += f"COMPUTE NONST {time.start_date.strftime(self._datefmt)} {frequency} {time.end_date.strftime(self._datefmt)}\n"
+        output += "\n"
+        output += f"STOP\n"
+        return output
+
+    def write(self, run_dir, time: DateTimeRange) -> None:
+        """Write SWAN input file
+
+        Parameters
+        ----------
+        run_dir : str
+            Path to run directory
+        """
+        os.makedirs(run_dir, exist_ok=True)
+        with open(os.path.join(run_dir, "INPUT"), "w") as f:
+            f.write(self.generate(time=time))
