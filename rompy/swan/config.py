@@ -1,3 +1,4 @@
+import logging
 import os
 import platform
 from datetime import datetime
@@ -5,9 +6,13 @@ from datetime import datetime
 from pydantic import validator
 
 from rompy import TEMPLATES_DIR
-from rompy.core import BaseConfig, Coordinate, DateTimeRange, RompyBaseModel
+from rompy.core import (BaseConfig, Coordinate, DataBlob, RompyBaseModel,
+                        TimeRange)
 
+from .data import SwanDataGrid
 from .grid import SwanGrid
+
+logger = logging.getLogger(__name__)
 
 
 class OutputLocs(RompyBaseModel):
@@ -26,6 +31,16 @@ class OutputLocs(RompyBaseModel):
         for coord in self.coords:
             ret += f"  {coord[0]} {coord[1]}\n"
         return ret
+
+
+class ForcingData(RompyBaseModel):
+    wind: SwanDataGrid | None = None
+    current: SwanDataGrid | None = None
+    boundary: SwanDataGrid | None = None
+
+
+class FileInputs(RompyBaseModel):
+    bathymetry: DataBlob | None = None
 
 
 class SwanConfig(BaseConfig):
@@ -60,10 +75,9 @@ class SwanConfig(BaseConfig):
     cgrid: SwanGrid = SwanGrid(
         x0=115.68, y0=-32.76, dx=0.001, dy=0.001, nx=390, ny=150, rot=77
     )
-    out_start: datetime | None = None
-    out_intvl: str = "1.0 HR"
+    out_period: TimeRange | None = None
+    forcing: ForcingData = ForcingData()
     output_locs: OutputLocs = OutputLocs()
-    #    wind_source: SwanDataGrid = SwanDataGrid()
     wind_grid: str = "REG 115.3 -32.8 0.0 2 3 0.3515625 0.234375  NONSTATION 20200221.040000  10800.0 S"
     wind_read: str = "SERIES 'extracted.wind' 1 FORMAT '(3F8.1)'"
     bottom_grid: str = "REG 115.68 -32.76 77 390 150 0.001 0.001 EXC -99.0"
@@ -72,10 +86,6 @@ class SwanConfig(BaseConfig):
     friction_coeff: str = "0.1"
     spectra_file: str = "boundary.spec"
     # subnests: list[SwanConfig] = []
-
-    @validator("out_start", "out_intvl", pre=True)
-    def validate_out_start_intvl(cls, v):
-        return cls.validate_compute_start_stop(v)
 
     @validator("friction")
     def validate_friction(cls, v):
@@ -116,12 +126,9 @@ class SwanConfig(BaseConfig):
         self._generated_by = os.environ.get("USER")
         self._generated_on = platform.node()
 
-        if not self.out_start:
-            self.out_start = runtime.compute_start
-        if not self.out_intvl:
-            self.out_intvl = (
-                "1.0 HR"  # Hardcoded for now, need to get from time object too
-            )
+        if not self.out_period:
+            self.out_period = runtime.period
+        out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too
         frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
         output = ""
         output += f"$\n"
@@ -141,8 +148,12 @@ class SwanConfig(BaseConfig):
         output += f"INPGRID BOTTOM {self.bottom_grid}\n"
         output += f"READINP BOTTOM 1 '{self.bottom_file}' 3 0 FREE\n"
         output += "\n"
-        output += f"INPGRID WIND {self.wind_grid}\n"
-        output += f"READINP WIND {self.wind_read}\n"
+        # Raf - this is where the wind input is in defined in the example, is this where current should go too?
+        for forcing in self.forcing:
+            if forcing[1]:
+                forcing._filter_grid(self.cgrid)
+                forcing._filter_time(runtime)
+                output += forcing.get(self.cgrid)
         output += "\n"
         output += f"GEN3 WESTH 0.000075 0.00175\n"
         output += f"BREAKING\n"
@@ -156,13 +167,13 @@ class SwanConfig(BaseConfig):
         output += f"BOUND NEST '{self.spectra_file}' CLOSED\n"
         output += "\n"
         output += f"OUTPUT OPTIONS BLOCK 8\n"
-        output += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 DEPTH UBOT HSIGN HSWELL DIR TPS TM01 WIND OUT {self.out_start.strftime(self._datefmt)} {self.out_intvl}\n"
+        output += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 DEPTH UBOT HSIGN HSWELL DIR TPS TM01 WIND OUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
         output += "\n"
         output += f"POINTs 'pts' FILE 'out.loc'\n"
-        output += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.out_start.strftime(self._datefmt)} {self.out_intvl}\n"
-        output += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.out_start.strftime(self._datefmt)} {self.out_intvl}\n"
+        output += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
+        output += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
         output += "\n"
-        output += f"COMPUTE NONST {runtime.compute_start.strftime(self._datefmt)} {frequency} {runtime.compute_stop.strftime(self._datefmt)}\n"
+        output += f"COMPUTE NONST {runtime.period.start.strftime(self._datefmt)} {frequency} {runtime.period.end.strftime(self._datefmt)}\n"
         output += "\n"
         output += f"STOP\n"
         return output
