@@ -181,6 +181,13 @@ class SwanGrid(RegularGrid):
             raise NotImplementedError("Curvilinear grids not supported yet")
             # return (f'CURVilinear {self.nx-1:0.0f} {self.ny-1:0.0f}',f'READGRID COOR 1 \'{os.path.basename(self.gridpath)}\' 1 0 1 FREE')
 
+    @property
+    def cgrid_read(self):
+        if self.gridtype == "REG":
+            return ""
+        elif self.gridtype == "CURV":
+            raise NotImplementedError("Curvilinear grids not supported yet")
+
     def nearby_spectra(self, ds_spec, dist_thres=0.05, plot=True):
         """Find points nearby and project to the boundary
 
