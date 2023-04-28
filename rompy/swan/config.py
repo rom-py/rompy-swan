@@ -40,10 +40,6 @@ class SwanConfig(BaseConfig):
         Output interval. Must be in the format "1.0 HR" or "1.0 DY"
     output_locs : OutputLocs
         List of coordinates to output spectra
-    cgrid : str
-        Grid definition for curvilinear grid
-    cgrid_read : str
-        Grid definition for curvilinear grid input
     wind_grid : str TODO clean up these definitions
         Grid definition for wind output
     wind_read : str
@@ -61,14 +57,12 @@ class SwanConfig(BaseConfig):
     """
 
     template: str = os.path.join(TEMPLATES_DIR, "swan")
-    grid: SwanGrid = SwanGrid(
+    cgrid: SwanGrid = SwanGrid(
         x0=115.68, y0=-32.76, dx=0.001, dy=0.001, nx=390, ny=150, rot=77
     )
     out_start: datetime | None = None
     out_intvl: str = "1.0 HR"
     output_locs: OutputLocs = OutputLocs()
-    cgrid: str = "REG 115.68 -32.76 77 0.39 0.15 389 149"
-    cgrid_read: str = ""
     #    wind_source: SwanDataGrid = SwanDataGrid()
     wind_grid: str = "REG 115.3 -32.8 0.0 2 3 0.3515625 0.234375  NONSTATION 20200221.040000  10800.0 S"
     wind_read: str = "SERIES 'extracted.wind' 1 FORMAT '(3F8.1)'"
@@ -110,7 +104,7 @@ class SwanConfig(BaseConfig):
         grid_params = reverse_format(fmt, grid_spec)
         return SwanGrid(**grid_params)
 
-    def generate(self, time: DateTimeRange) -> str:
+    def generate(self, runtime) -> str:
         """Generate SWAN input file
 
         Parameters
@@ -123,13 +117,12 @@ class SwanConfig(BaseConfig):
         self._generated_on = platform.node()
 
         if not self.out_start:
-            self.out_start = time.start_date
+            self.out_start = runtime.compute_start
         if not self.out_intvl:
             self.out_intvl = (
                 "1.0 HR"  # Hardcoded for now, need to get from time object too
             )
         frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
-
         output = ""
         output += f"$\n"
         output += f"$ SWAN - Simple example template used by rompy\n"
@@ -142,8 +135,8 @@ class SwanConfig(BaseConfig):
         output += f"COORDINATES SPHERICAL\n"
         output += f"SET NAUTICAL\n"
         output += "\n"
-        output += f"CGRID {self.cgrid} CIRCLE 36 0.0464 1. 31\n"
-        output += f"{self.cgrid_read}\n"
+        output += f"CGRID {self.cgrid.cgrid} CIRCLE 36 0.0464 1. 31\n"
+        output += f"{self.cgrid.cgrid_read}\n"
         output += "\n"
         output += f"INPGRID BOTTOM {self.bottom_grid}\n"
         output += f"READINP BOTTOM 1 '{self.bottom_file}' 3 0 FREE\n"
@@ -169,12 +162,12 @@ class SwanConfig(BaseConfig):
         output += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.out_start.strftime(self._datefmt)} {self.out_intvl}\n"
         output += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.out_start.strftime(self._datefmt)} {self.out_intvl}\n"
         output += "\n"
-        output += f"COMPUTE NONST {time.start_date.strftime(self._datefmt)} {frequency} {time.end_date.strftime(self._datefmt)}\n"
+        output += f"COMPUTE NONST {runtime.compute_start.strftime(self._datefmt)} {frequency} {runtime.compute_stop.strftime(self._datefmt)}\n"
         output += "\n"
         output += f"STOP\n"
         return output
 
-    def write(self, run_dir, time: DateTimeRange) -> None:
+    def write(self, runtime) -> None:
         """Write SWAN input file
 
         Parameters
@@ -182,6 +175,7 @@ class SwanConfig(BaseConfig):
         run_dir : str
             Path to run directory
         """
-        os.makedirs(run_dir, exist_ok=True)
-        with open(os.path.join(run_dir, "INPUT"), "w") as f:
-            f.write(self.generate(time=time))
+        outdir = os.path.join(runtime.output_dir, runtime.run_id)
+        os.makedirs(outdir, exist_ok=True)
+        with open(os.path.join(outdir, "INPUT"), "w") as f:
+            f.write(self.generate(runtime=runtime))
