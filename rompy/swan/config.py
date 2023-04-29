@@ -7,7 +7,7 @@ from pydantic import validator
 
 from rompy import TEMPLATES_DIR
 from rompy.core import BaseConfig, Coordinate, DateTimeRange, RompyBaseModel
-from rompy.swan.components import cgrid
+from rompy.swan.components import cgrid, inpgrid
 
 from .grid import SwanGrid
 
@@ -15,7 +15,8 @@ from .grid import SwanGrid
 logger = logging.getLogger(__name__)
 
 
-COMPONENTS = ["cgrid"]
+# All base component modules must be specified here to be supported
+COMPONENTS = ["cgrid", "inpgrid"]
 
 
 class SwanConfigPydantic(RompyBaseModel):
@@ -25,9 +26,12 @@ class SwanConfigPydantic(RompyBaseModel):
     ----------
     cgrid : CGrid
         The computational grid SWAN component.
+    inpgrid: InpGrid
+        The input grid SWAN component.
 
     """
     cgrid: cgrid.CGrid
+    inpgrid: inpgrid.InpGrid
 
     def __repr__(self):
         s = ""

@@ -17,11 +17,11 @@ class BaseComponent(RompyBaseModel):
 
     @property
     def header(self):
-        return f"\n!{self.name.center(79, '-')}\n"
+        return f"\n!{self.name.center(131, '-')}\n"
 
     def render(self):
         """Render the component to a string."""
-        return f"{self.header}{self.__repr__()}"
+        return f"{self.header}{self.__repr__()}\n"
 
 
 class FormatEnum(str, Enum):
