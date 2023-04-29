@@ -1,4 +1,5 @@
 import os
+import logging
 import platform
 from datetime import datetime
 
@@ -6,8 +7,51 @@ from pydantic import validator
 
 from rompy import TEMPLATES_DIR
 from rompy.core import BaseConfig, Coordinate, DateTimeRange, RompyBaseModel
+from rompy.swan.components import cgrid
 
 from .grid import SwanGrid
+
+
+logger = logging.getLogger(__name__)
+
+
+COMPONENTS = ["cgrid"]
+
+
+class SwanConfigPydantic(RompyBaseModel):
+    """SWAN config class.
+
+    Parameters
+    ----------
+    cgrid : CGrid
+        The computational grid SWAN component.
+
+    """
+    cgrid: cgrid.CGrid
+
+    def __repr__(self):
+        s = ""
+        for component in COMPONENTS:
+            obj = getattr(self, component)
+            if obj is not None:
+                s += obj.render()
+        return s
+
+    def __str__(self):
+        return self.__repr__()
+
+    def _write_cmd(self):
+        """Write command file."""
+        repr = ""
+        for component in COMPONENTS:
+            obj = getattr(self, component)
+            if obj is not None:
+                repr += obj.render()
+        logger.info(f"Writing cmd file:\n{repr.strip()}")
+        # with open(self.cmdfile, "w") as stream:
+        #     logger.info(f"Writing cmd file:\n{repr.strip()}")
+        #     stream.write(repr.strip())
+        return repr
 
 
 class OutputLocs(RompyBaseModel):
