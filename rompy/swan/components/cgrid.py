@@ -1,8 +1,13 @@
 """Computational grid for SWAN."""
-from pydantic import validator, root_validator, conint
+from enum import IntEnum
+import logging
+from pydantic import validator, root_validator, conint, confloat, constr
 
 from rompy.core import RompyBaseModel
-from rompy.swan.components.base import BaseComponent
+from rompy.swan.components.base import BaseComponent, FormatEnum
+
+
+logger = logging.getLogger(__name__)
 
 
 class CGrid(BaseComponent):
@@ -43,7 +48,7 @@ class CGrid(BaseComponent):
     mdc: int
     flow: float | None = None
     fhigh: float | None = None
-    msc: conint(gt=2) | None = None
+    msc: conint(ge=3) | None = None
     dir1: float | None = None
     dir2: float | None = None
 
@@ -79,14 +84,14 @@ class CGrid(BaseComponent):
             return f"SECTOR {self.dir1} {self.dir2}"
 
     def __repr__(self):
-        str = f"{self.dir_sector} mdc={self.mdc}"
+        repr = f"{self.dir_sector} mdc={self.mdc}"
         if self.flow is not None:
-            str += f" flow={self.flow}"
+            repr += f" flow={self.flow}"
         if self.fhigh is not None:
-            str += f" fhigh={self.fhigh}"
+            repr += f" fhigh={self.fhigh}"
         if self.msc is not None:
-            str += f" msc={self.msc}"
-        return str
+            repr += f" msc={self.msc}"
+        return repr
 
 
 class CGridRegular(CGrid):
@@ -128,12 +133,12 @@ class CGridRegular(CGrid):
     myc: int
 
     def __repr__(self):
-        str = (
+        repr = (
             f"CGRID REGULAR xpc={self.xpc} ypc={self.ypc} alpc={self.alpc} "
             f"xlenc={self.xlenc} ylenc={self.ylenc} mxc={self.mxc} myc={self.myc} "
             f"{super().__repr__()}"
         )
-        return str
+        return repr
 
 
 class CGridCurvilinear(CGrid):
@@ -182,11 +187,11 @@ class CGridCurvilinear(CGrid):
             return ""
 
     def __repr__(self):
-        str = f"CGRID CURVILINEAR mxc={self.mxc} myc={self.myc}"
+        repr = f"CGRID CURVILINEAR mxc={self.mxc} myc={self.myc}"
         if self.exception:
-            str += f" {self.exception}"
-        str += f" {super().__repr__()}"
-        return str
+            repr += f" {self.exception}"
+        repr += f" {super().__repr__()}"
+        return repr
 
 
 class CGridUnstructured(CGrid):
@@ -194,6 +199,109 @@ class CGridUnstructured(CGrid):
 
     def __repr__(self):
         return f"CGRID UNSTRUCTURED {super().__repr__()}"
+
+
+class IDFMEnum(IntEnum):
+    one = 1
+    five = 5
+    six = 6
+    eight = 8
+
+
+class ReadGridCoord(BaseComponent):
+    """Read grid coordinates from file.
+
+    Parameters
+    ----------
+    fname: str
+        Name of the file containing the x-coordinates of the grid points.
+    fac: float
+        SWAN multiplies all values that are read from file by `fac`. For instance if
+        the values are given in unit decimeter, one should make `fac=0.1` to obtain
+        values in m. To change sign use a negative `fac`.
+    idla: int
+        prescribes the order in which the values of bottom levels and other fields
+        should be given in the file:
+        - 1: SWAN reads the map from left to right starting in the upper-left-hand
+          corner of the map (it is assumed that the x-axis of the grid is pointing
+          to the right and the y-axis upwards). A new line in the map should start on
+          a new line in the file.
+        - 2: As `1` but a new line in the map need not start on a new line in the file.
+        - 3: SWAN reads the map from left to right starting in the lower-left-hand corner
+          of the map. A new line in the map should start on a new line in the file.
+        - 4: As `3` but a new line in the map need not start on a new line in the file.
+        - 5: SWAN reads the map from top to bottom starting in the lower-left-hand corner
+          of the map. A new column in the map should start on a new line in the file.
+        - 6: As `5` but a new column in the map need not start on a new line in the file.
+    nhedf: int
+        The number of header lines at the start of the file. The text in the header
+        lines is reproduced in the print file created by SWAN. The file may start with
+        more header lines than `nhedf` because the start of the file is often also the
+        start of a time step and possibly also of a vector variable (each having header
+        lines, see below, `nhedvec`).
+    nhedvec: int
+        For each vector variable: number of header lines in the file at the start of
+        each component (e.g., x- or y-component).
+    format: str
+        File format, one of `"free"`, `"fixed"` or `"unformatted"`. If `"free"`, the
+        file is assumed to use the FREE FORTRAN format. If `"fixed"`, the file is
+        assumed to use a fixed format that must be specified by (only) one of `form` or
+        `idfm` arguments. Use `"unformatted"` to read unformatted (binary) files
+        (not recommended for ordinary use).
+    form: str
+        A user-specified format string in Fortran convention, e.g. '(10X,12F5.0)'.
+    idfm: int
+        File format identifier interpreted as follows:
+        - 1: Format according to BODKAR convention (a standard of the Ministry of
+          Transport and Public Works in the Netherlands). Format string: (10X,12F5.0).
+        - 5: Format (16F5.0), an input line consists of 16 fields of 5 places each.
+        - 6: Format (12F6.0), an input line consists of 12 fields of 6 places each.
+        - 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
+
+    """
+    fname: constr(max_length=80)
+    fac: confloat(gt=0.0) = 1.0
+    idla: conint(ge=1, le=6) = 1
+    nhedf: int = 0
+    nhedvec: int = 0
+    format: FormatEnum = "free"
+    form: str | None = None
+    idfm: IDFMEnum | None = None
+ 
+    @root_validator
+    def check_format_definition(cls, values: dict) -> dict:
+        """Check that dir1 and dir2 are specified together."""
+        format = values.get("format")
+        form = values.get("form")
+        idfm = values.get("idfm")
+        if format == "free" and any([form, idfm]):
+            logger.warn(f"FREE format specified, ignoring form={form} idfm={idfm}")
+        elif format == "unformatted" and any([form, idfm]):
+            logger.warn(f"UNFORMATTED format specified, ignoring form={form} idfm={idfm}")
+        elif format == "fixed" and not any([form, idfm]):
+            raise ValueError("FIXED format requires one of form or idfm to be specified")
+        elif format == "fixed" and all([form, idfm]):
+            raise ValueError("FIXED format accepts only one of form or idfm")
+        return values
+
+    @property
+    def format_repr(self):
+        if self.format == "free":
+            repr = "FREE"
+        elif self.format == "fixed" and self.form:
+            repr = f"FORMAT form='{self.form}'"
+        elif self.format == "fixed" and self.idfm:
+            repr = f"FORMAT idfm={self.idfm}"
+        elif self.format == "unformatted":
+            repr = "UNFORMATTED"
+        return repr
+
+    def __repr__(self):
+        repr = (
+            f"READGRID COORDINATES fac={self.fac} fname='{self.fname}' idla={self.idla} "
+            f"nhedf={self.nhedf} nhedvec={self.nhedvec} {self.format_repr}"
+        )
+        return repr
 
 
 if __name__ == "__main__":
@@ -208,3 +316,6 @@ if __name__ == "__main__":
 
     cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
     print(cgrid.render())
+
+    rgc = rgc = ReadGridCoord(fname="grid_coord.txt", format="free")
+    print(rgc.render())
