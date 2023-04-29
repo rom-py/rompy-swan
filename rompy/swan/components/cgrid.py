@@ -1,5 +1,5 @@
 """Computational grid for SWAN."""
-from enum import IntEnum
+from enum import Enum, IntEnum
 import logging
 from pydantic import validator, root_validator, conint, confloat, constr
 
@@ -15,6 +15,13 @@ class IDFMEnum(IntEnum):
     five = 5
     six = 6
     eight = 8
+
+
+class UnstructuredEnum(str, Enum):
+    """Enum for SWAN unstructured grid kinds."""
+    adcirc = "adcirc"
+    triangle = "triangle"
+    easymesh = "easymesh"
 
 
 class CGrid(BaseComponent):
@@ -289,25 +296,39 @@ class CGridCurvilinear(CGrid):
 
 class CGridUnstructured(CGrid):
     """SWAN unstructured computational grid."""
+    kind: UnstructuredEnum = "adcirc"
+    fname: constr(max_length=80) | None = None
+
+    @root_validator
+    def check_fname_required(cls, values: dict) -> dict:
+        """Check that fname needs to be provided."""
+        kind = values.get("kind")
+        fname = values.get("fname")
+        if kind == "adcirc" and fname is not None:
+            raise ValueError("fname must not be specified for ADCIRC grid")
+        elif kind != "adcirc" and fname is None:
+            raise ValueError(f"fname must be specified for {kind} grid")
+        return values
 
     def __repr__(self):
-        return f"CGRID UNSTRUCTURED {super().__repr__()}"
+        repr = f"CGRID UNSTRUCTURED {super().__repr__()}"
+        repr += f"\nREADGRID UNSTRUCTURED {self.kind.upper()}"
+        if self.kind in ["triangle", "easymesh"]:
+            repr += f" fname='{self.fname}'"
+        return repr
 
 
 if __name__ == "__main__":
 
-    # rgc = rgc = ReadGridCoord(fname="grid_coord.txt", format="free")
-    # print(rgc.render())
-
-    # cgrid = CGridRegular(
-    #     mdc=36, flow=0.04, fhigh=0.4, xlenc=100.0, ylenc=100.0, mxc=10, myc=10
-    # )
-    # print(cgrid.render())
+    cgrid = CGridRegular(
+        mdc=36, flow=0.04, fhigh=0.4, xlenc=100.0, ylenc=100.0, mxc=10, myc=10
+    )
+    print(cgrid.render())
 
     cgrid = CGridCurvilinear(
         mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, fname="grid_coord.txt"
     )
     print(cgrid.render())
 
-    # cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
-    # print(cgrid.render())
+    cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
+    print(cgrid.render())

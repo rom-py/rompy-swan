@@ -102,5 +102,15 @@ def test_fixed_format_arguments(curvilinear_kwargs):
         CGridCurvilinear(format="fixed", **curvilinear_kwargs)
 
 
-def test_unstructured_grid():
-    cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
+def test_unstructured_grid_adcirc():
+    CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
+
+
+def test_unstructured_grid_triangle_easymesh():
+    CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, kind="triangle", fname="mesh.txt")
+    CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, kind="easymesh", fname="mesh.txt")
+
+
+def test_unstructured_grid_kinds():
+    with pytest.raises(ValueError):
+        CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, kind="something_else")
