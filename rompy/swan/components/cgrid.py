@@ -10,6 +10,13 @@ from rompy.swan.components.base import BaseComponent, FormatEnum
 logger = logging.getLogger(__name__)
 
 
+class IDFMEnum(IntEnum):
+    one = 1
+    five = 5
+    six = 6
+    eight = 8
+
+
 class CGrid(BaseComponent):
     """SWAN computational grid.
 
@@ -162,59 +169,9 @@ class CGridCurvilinear(CGrid):
         in the computations (this value is provided by the user at the location of the
         y-coordinate considered in the file of the y-coordinates, see command
         READGRID COOR).
-
-    """
-
-    mxc: int
-    myc: int
-    xexc: float | None = None
-    yexc: float | None = None
-
-    @root_validator
-    def check_exception_definition(cls, values: dict) -> dict:
-        """Check exception values are prescribed correctly."""
-        xexc = values.get("xexc")
-        yexc = values.get("yexc")
-        if (xexc is None and yexc is not None) or (yexc is None and xexc is not None):
-            raise ValueError("xexc and yexc must be specified together")
-        return values
-
-    @property
-    def exception(self):
-        if self.xexc is not None:
-            return f"EXCEPTION xexc={self.xexc} xexc={self.yexc}"
-        else:
-            return ""
-
-    def __repr__(self):
-        repr = f"CGRID CURVILINEAR mxc={self.mxc} myc={self.myc}"
-        if self.exception:
-            repr += f" {self.exception}"
-        repr += f" {super().__repr__()}"
-        return repr
-
-
-class CGridUnstructured(CGrid):
-    """SWAN unstructured computational grid."""
-
-    def __repr__(self):
-        return f"CGRID UNSTRUCTURED {super().__repr__()}"
-
-
-class IDFMEnum(IntEnum):
-    one = 1
-    five = 5
-    six = 6
-    eight = 8
-
-
-class ReadGridCoord(BaseComponent):
-    """Read grid coordinates from file.
-
-    Parameters
-    ----------
     fname: str
-        Name of the file containing the x-coordinates of the grid points.
+        Name of the coordinates file to read. These coordinates must be read from a
+        file as a vector (x-coordinate, y-coordinate of each single grid point).
     fac: float
         SWAN multiplies all values that are read from file by `fac`. For instance if
         the values are given in unit decimeter, one should make `fac=0.1` to obtain
@@ -249,7 +206,8 @@ class ReadGridCoord(BaseComponent):
         `idfm` arguments. Use `"unformatted"` to read unformatted (binary) files
         (not recommended for ordinary use).
     form: str
-        A user-specified format string in Fortran convention, e.g. '(10X,12F5.0)'.
+        A user-specified format string in Fortran convention, e.g., '(10X,12F5.0)'.
+        Only used if `format="fixed"`, do not use it if `idfm` is specified.
     idfm: int
         File format identifier interpreted as follows:
         - 1: Format according to BODKAR convention (a standard of the Ministry of
@@ -257,8 +215,13 @@ class ReadGridCoord(BaseComponent):
         - 5: Format (16F5.0), an input line consists of 16 fields of 5 places each.
         - 6: Format (12F6.0), an input line consists of 12 fields of 6 places each.
         - 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
+        Only used if `format="fixed"`, do not use it if `form` is specified.
 
     """
+    mxc: int
+    myc: int
+    xexc: float | None = None
+    yexc: float | None = None
     fname: constr(max_length=80)
     fac: confloat(gt=0.0) = 1.0
     idla: conint(ge=1, le=6) = 1
@@ -267,10 +230,19 @@ class ReadGridCoord(BaseComponent):
     format: FormatEnum = "free"
     form: str | None = None
     idfm: IDFMEnum | None = None
- 
+
+    @root_validator
+    def check_exception_definition(cls, values: dict) -> dict:
+        """Check exception values are prescribed correctly."""
+        xexc = values.get("xexc")
+        yexc = values.get("yexc")
+        if (xexc is None and yexc is not None) or (yexc is None and xexc is not None):
+            raise ValueError("xexc and yexc must be specified together")
+        return values
+
     @root_validator
     def check_format_definition(cls, values: dict) -> dict:
-        """Check that dir1 and dir2 are specified together."""
+        """Check the arguments specifying the file format are specified correctly."""
         format = values.get("format")
         form = values.get("form")
         idfm = values.get("idfm")
@@ -285,6 +257,13 @@ class ReadGridCoord(BaseComponent):
         return values
 
     @property
+    def exception(self):
+        if self.xexc is not None:
+            return f"EXCEPTION xexc={self.xexc} xexc={self.yexc}"
+        else:
+            return ""
+
+    @property
     def format_repr(self):
         if self.format == "free":
             repr = "FREE"
@@ -297,25 +276,38 @@ class ReadGridCoord(BaseComponent):
         return repr
 
     def __repr__(self):
-        repr = (
-            f"READGRID COORDINATES fac={self.fac} fname='{self.fname}' idla={self.idla} "
+        repr = f"CGRID CURVILINEAR mxc={self.mxc} myc={self.myc}"
+        if self.exception:
+            repr += f" {self.exception}"
+        repr += f" {super().__repr__()}"
+        repr += (
+            f"\nREADGRID COORDINATES fac={self.fac} fname='{self.fname}' idla={self.idla} "
             f"nhedf={self.nhedf} nhedvec={self.nhedvec} {self.format_repr}"
         )
         return repr
 
 
+class CGridUnstructured(CGrid):
+    """SWAN unstructured computational grid."""
+
+    def __repr__(self):
+        return f"CGRID UNSTRUCTURED {super().__repr__()}"
+
+
 if __name__ == "__main__":
 
-    cgrid = CGridRegular(
-        mdc=36, flow=0.04, fhigh=0.4, xlenc=100.0, ylenc=100.0, mxc=10, myc=10
+    # rgc = rgc = ReadGridCoord(fname="grid_coord.txt", format="free")
+    # print(rgc.render())
+
+    # cgrid = CGridRegular(
+    #     mdc=36, flow=0.04, fhigh=0.4, xlenc=100.0, ylenc=100.0, mxc=10, myc=10
+    # )
+    # print(cgrid.render())
+
+    cgrid = CGridCurvilinear(
+        mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, fname="grid_coord.txt"
     )
     print(cgrid.render())
 
-    cgrid = CGridCurvilinear(mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10)
-    print(cgrid.render())
-
-    cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
-    print(cgrid.render())
-
-    rgc = rgc = ReadGridCoord(fname="grid_coord.txt", format="free")
-    print(rgc.render())
+    # cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
+    # print(cgrid.render())
