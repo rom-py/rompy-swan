@@ -6,6 +6,7 @@ from rompy.swan.components.cgrid import (
     CGridRegular,
     CGridCurvilinear,
     CGridUnstructured,
+    ReadGridCoord,
 )
 
 
@@ -29,7 +30,7 @@ def test_dir1_and_dir2():
         cgrid = CGrid(mdc=36, flow=0.04, fhigh=0.4, dir1=45.0)
 
 
-def test_at_least_two():
+def test_freq_args_at_least_two():
     with pytest.raises(ValueError):
         cgrid = CGrid(mdc=36, flow=0.04)
 
@@ -78,3 +79,29 @@ def test_curvilinear_grid_exception():
 
 def test_unstructured_grid():
     cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
+
+
+def test_read_grid_coord_free_or_fixed_or_unformatted_only():
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", form="(10X,12F5.0)")
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="free")
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="unformatted")
+    with pytest.raises(ValueError):
+        rgc = ReadGridCoord(fname="grid_coord.txt", format="something_else")
+
+
+def test_read_grid_coord_idfm_options():
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=1)
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=5)
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=6)
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=8)
+    with pytest.raises(ValueError):
+        rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=9)
+
+
+def test_fixed_format_arguments():
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", form="(10X,12F5.0)")
+    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=1)
+    with pytest.raises(ValueError):
+        rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=5, form="(10X,12F5.0)")
+    with pytest.raises(ValueError):
+        rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed")
