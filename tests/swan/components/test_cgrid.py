@@ -6,8 +6,13 @@ from rompy.swan.components.cgrid import (
     CGridRegular,
     CGridCurvilinear,
     CGridUnstructured,
-    ReadGridCoord,
 )
+
+
+
+@pytest.fixture(scope="module")
+def curvilinear_kwargs():
+    yield dict(mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, fname="grid_coord.txt")
 
 
 def test_msc_gt_3():
@@ -59,49 +64,43 @@ def test_regular_grid():
     )
 
 
-def test_curvilinear_grid():
-    cgrid = CGridCurvilinear(mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10)
+def test_curvilinear_grid(curvilinear_kwargs):
+    CGridCurvilinear(**curvilinear_kwargs)
 
 
-def test_curvilinear_grid_exception():
-    cgrid = CGridCurvilinear(
-        mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, xexc=-999.0, yexc=-999.0
-    )
+def test_curvilinear_grid_exception(curvilinear_kwargs):
+    CGridCurvilinear(xexc=-999.0, yexc=-999.0, **curvilinear_kwargs)
     with pytest.raises(ValueError):
-        cgrid = CGridCurvilinear(
-            mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, xexc=-999.0
-        )
+        CGridCurvilinear(xexc=-999.0, **curvilinear_kwargs)
     with pytest.raises(ValueError):
-        cgrid = CGridCurvilinear(
-            mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, yexc=-999.0
-        )
+        CGridCurvilinear(yexc=-999.0, **curvilinear_kwargs)
+
+
+def test_read_grid_coord_free_or_fixed_or_unformatted_only(curvilinear_kwargs):
+    CGridCurvilinear(format="fixed", form="(10X,12F5.0)", **curvilinear_kwargs)
+    CGridCurvilinear(format="free", **curvilinear_kwargs)
+    CGridCurvilinear(format="unformatted", **curvilinear_kwargs)
+    with pytest.raises(ValueError):
+        CGridCurvilinear(format="something_else", **curvilinear_kwargs)
+
+
+def test_read_grid_coord_idfm_options(curvilinear_kwargs):
+    CGridCurvilinear(format="fixed", idfm=1, **curvilinear_kwargs)
+    CGridCurvilinear(format="fixed", idfm=5, **curvilinear_kwargs)
+    CGridCurvilinear(format="fixed", idfm=6, **curvilinear_kwargs)
+    CGridCurvilinear(format="fixed", idfm=8, **curvilinear_kwargs)
+    with pytest.raises(ValueError):
+        CGridCurvilinear(format="fixed", idfm=9, **curvilinear_kwargs)
+
+
+def test_fixed_format_arguments(curvilinear_kwargs):
+    CGridCurvilinear(format="fixed", form="(10X,12F5.0)", **curvilinear_kwargs)
+    CGridCurvilinear(format="fixed", idfm=1, **curvilinear_kwargs)
+    with pytest.raises(ValueError):
+        CGridCurvilinear(format="fixed", idfm=5, form="(10X,12F5.0)", **curvilinear_kwargs)
+    with pytest.raises(ValueError):
+        CGridCurvilinear(format="fixed", **curvilinear_kwargs)
 
 
 def test_unstructured_grid():
     cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
-
-
-def test_read_grid_coord_free_or_fixed_or_unformatted_only():
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", form="(10X,12F5.0)")
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="free")
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="unformatted")
-    with pytest.raises(ValueError):
-        rgc = ReadGridCoord(fname="grid_coord.txt", format="something_else")
-
-
-def test_read_grid_coord_idfm_options():
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=1)
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=5)
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=6)
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=8)
-    with pytest.raises(ValueError):
-        rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=9)
-
-
-def test_fixed_format_arguments():
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", form="(10X,12F5.0)")
-    rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=1)
-    with pytest.raises(ValueError):
-        rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed", idfm=5, form="(10X,12F5.0)")
-    with pytest.raises(ValueError):
-        rgc = ReadGridCoord(fname="grid_coord.txt", format="fixed")
