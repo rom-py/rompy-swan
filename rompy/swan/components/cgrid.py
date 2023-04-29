@@ -58,7 +58,7 @@ class CGrid(BaseComponent):
     CIRCLE, neither `dir1` nor `dir2` should be specified.
 
     """
-
+    name: str = "Computational grid"
     mdc: int
     flow: float | None = None
     fhigh: float | None = None
