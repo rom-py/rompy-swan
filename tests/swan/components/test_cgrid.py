@@ -15,41 +15,41 @@ def curvilinear_kwargs():
     yield dict(mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, fname="grid_coord.txt")
 
 
-def test_msc_gt_3():
+def test_cgrid():
+    CGrid(mdc=36, flow=0.04, fhigh=0.4, msc=28, dir1=None, dir2=None)
+
+
+def test_cgrid_msc_gt_3():
     with pytest.raises(ValueError):
-        cgrid = CGrid(mdc=36, msc=2)
+        CGrid(mdc=36, msc=2)
 
 
-def test_circle():
+def test_cgrid_circle():
     cgrid = CGrid(mdc=36, flow=0.04, fhigh=0.4)
     assert cgrid.dir_sector == "CIRCLE"
 
 
-def test_sector():
+def test_cgrid_sector():
     cgrid = CGrid(mdc=36, flow=0.04, fhigh=0.4, dir1=0.0, dir2=180.0)
     assert cgrid.dir_sector == "SECTOR 0.0 180.0"
 
 
-def test_dir1_and_dir2():
+def test_cgrid_dir1_and_dir2():
     with pytest.raises(ValueError):
-        cgrid = CGrid(mdc=36, flow=0.04, fhigh=0.4, dir1=45.0)
+        CGrid(mdc=36, flow=0.04, fhigh=0.4, dir1=45.0)
 
 
-def test_freq_args_at_least_two():
+def test_cgrid_freq_args_at_least_two():
     with pytest.raises(ValueError):
-        cgrid = CGrid(mdc=36, flow=0.04)
+        CGrid(mdc=36, flow=0.04)
 
 
-def test_flow_less_than_fhigh():
+def test_cgrid_flow_less_than_fhigh():
     with pytest.raises(ValueError):
-        cgrid = CGrid(mdc=36, flow=0.4, fhigh=0.04)
+        CGrid(mdc=36, flow=0.4, fhigh=0.04)
 
 
-def test_cgrid():
-    cgrid = CGrid(mdc=36, flow=0.04, fhigh=0.4, msc=28, dir1=None, dir2=None)
-
-
-def test_regular_grid():
+def test_regular_cgrid():
     cgrid = CGridRegular(
         mdc=36,
         flow=0.04,
@@ -64,11 +64,11 @@ def test_regular_grid():
     )
 
 
-def test_curvilinear_grid(curvilinear_kwargs):
+def test_curvilinear_cgrid(curvilinear_kwargs):
     CGridCurvilinear(**curvilinear_kwargs)
 
 
-def test_curvilinear_grid_exception(curvilinear_kwargs):
+def test_curvilinear_cgrid_exception(curvilinear_kwargs):
     CGridCurvilinear(xexc=-999.0, yexc=-999.0, **curvilinear_kwargs)
     with pytest.raises(ValueError):
         CGridCurvilinear(xexc=-999.0, **curvilinear_kwargs)
@@ -93,7 +93,7 @@ def test_read_grid_coord_idfm_options(curvilinear_kwargs):
         CGridCurvilinear(format="fixed", idfm=9, **curvilinear_kwargs)
 
 
-def test_fixed_format_arguments(curvilinear_kwargs):
+def test_read_grid_fixed_format_arguments(curvilinear_kwargs):
     CGridCurvilinear(format="fixed", form="(10X,12F5.0)", **curvilinear_kwargs)
     CGridCurvilinear(format="fixed", idfm=1, **curvilinear_kwargs)
     with pytest.raises(ValueError):
@@ -102,15 +102,15 @@ def test_fixed_format_arguments(curvilinear_kwargs):
         CGridCurvilinear(format="fixed", **curvilinear_kwargs)
 
 
-def test_unstructured_grid_adcirc():
+def test_unstructured_cgrid_adcirc():
     CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
 
 
-def test_unstructured_grid_triangle_easymesh():
-    CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, kind="triangle", fname="mesh.txt")
-    CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, kind="easymesh", fname="mesh.txt")
+def test_unstructured_cgrid_triangle_easymesh():
+    CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, grid_type="triangle", fname="mesh.txt")
+    CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, grid_type="easymesh", fname="mesh.txt")
 
 
-def test_unstructured_grid_kinds():
+def test_unstructured_cgrid_grid_types():
     with pytest.raises(ValueError):
-        CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, kind="something_else")
+        CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4, grid_type="something_else")

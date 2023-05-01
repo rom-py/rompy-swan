@@ -36,9 +36,19 @@ def inpgrid_instance():
     yield inst
 
 
-def test_swan_config(cgrid_instance, inpgrid_instance):
+def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
     sc = SwanConfig(
         cgrid=cgrid_instance,
         inpgrid=inpgrid_instance,
+    )
+    sc._write_cmd()
+
+
+def test_swan_config_from_dict(cgrid_instance, inpgrid_instance):
+    cg = {k: v for k, v in cgrid_instance.dict().items() if k is not None}
+    ig = {k: v for k, v in inpgrid_instance.dict().items() if k is not None}
+    sc = SwanConfig(
+        cgrid=cg,
+        inpgrid=ig,
     )
     sc._write_cmd()

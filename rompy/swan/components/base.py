@@ -1,23 +1,34 @@
-"""Base class for SWAN components."""
+"""Base class for SWAN components.
+
+How to subclass
+---------------
+
+- Define a new `kind` Literal type for the subclass
+- Overwrite the __repr__ method to return the SWAN input file string
+
+"""
 from enum import Enum
+from typing_extensions import Literal
+from pydantic import BaseModel
+
 from rompy.core import RompyBaseModel
 
-
-class BaseComponent(RompyBaseModel):
+# class BaseComponent(RompyBaseModel):
+class BaseComponent(BaseModel):
     """Base class for SWAN components.
 
     Parameters
     ----------
-    name : str
-        Name of the component which is render as a comment in the cmd file.
+    kind : Literal["base"]
+        Name of the component to help parsing and render as a comment in the cmd file.
 
     """
 
-    name: str
+    kind: Literal["base"]
 
     @property
     def header(self):
-        return f"\n!{self.name.center(131, '-')}\n"
+        return f"\n!{self.kind.center(131, '-')}\n"
 
     def render(self):
         """Render the component to a string."""
