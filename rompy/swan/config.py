@@ -15,8 +15,11 @@ from .grid import SwanGrid
 logger = logging.getLogger(__name__)
 
 
-# All base component modules must be specified here to be supported
-COMPONENTS = ["cgrid", "inpgrid"]
+# All supported swan components must be specified here
+COMPONENTS = {
+    "cgrid": cgrid.CGridRegular | cgrid.CGridCurvilinear | cgrid.CGridUnstructured,
+    "inpgrid": inpgrid.InpGrid,
+}
 
 
 class SwanConfigPydantic(RompyBaseModel):
@@ -30,8 +33,8 @@ class SwanConfigPydantic(RompyBaseModel):
         The input grid SWAN component.
 
     """
-    cgrid: cgrid.CGrid
-    inpgrid: inpgrid.InpGrid
+    cgrid: COMPONENTS.get("cgrid")
+    inpgrid: COMPONENTS.get("inpgrid")
 
     def __repr__(self):
         s = ""

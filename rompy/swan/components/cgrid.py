@@ -2,8 +2,8 @@
 from enum import Enum, IntEnum
 import logging
 from pydantic import validator, root_validator, conint, confloat, constr
+from typing_extensions import Literal
 
-from rompy.core import RompyBaseModel
 from rompy.swan.components.base import BaseComponent, FormatEnum
 
 
@@ -29,6 +29,8 @@ class CGrid(BaseComponent):
 
     Parameters
     ----------
+    kind : Literal["CGrid"]
+        Name of the component to help parsing and render as a comment in the cmd file.
     mdc: int
         Number of meshes in θ-space. In the case of CIRCLE, this is the number of
         subdivisions of the 360 degrees of a circle so ∆θ = [360]/[mdc] is the spectral
@@ -58,7 +60,7 @@ class CGrid(BaseComponent):
     CIRCLE, neither `dir1` nor `dir2` should be specified.
 
     """
-    name: str = "Computational grid"
+    kind: Literal["CGrid"] = "CGrid"
     mdc: int
     flow: float | None = None
     fhigh: float | None = None
@@ -113,6 +115,8 @@ class CGridRegular(CGrid):
 
     Parameters
     ----------
+    kind : Literal["CGridRegular"]
+        Name of the component to help parsing and render as a comment in the cmd file.
     xpc: float
         Geographic location of the origin of the computational grid in the problem
         coordinate system (x-coordinate, in m).
@@ -137,7 +141,7 @@ class CGridRegular(CGrid):
         than the number of grid points in this domain).  In 1D-mode, `myc` should be 0.
 
     """
-
+    kind: Literal["CGridRegular"] = "CGridRegular"
     xpc: float = 0.0
     ypc: float = 0.0
     alpc: float = 0.0
@@ -160,6 +164,8 @@ class CGridCurvilinear(CGrid):
 
     Parameters
     ----------
+    kind : Literal["CGridCurvilinear"]
+        Name of the component to help parsing and render as a comment in the cmd file.
     mxc: int
         Number of meshes in computational grid in ξ-direction (this number
         is one less than the number of grid points in this domain).
@@ -225,6 +231,7 @@ class CGridCurvilinear(CGrid):
         Only used if `format="fixed"`, do not use it if `form` is specified.
 
     """
+    kind: Literal["CGridCurvilinear"] = "CGridCurvilinear"
     mxc: int
     myc: int
     xexc: float | None = None
@@ -295,25 +302,33 @@ class CGridCurvilinear(CGrid):
 
 
 class CGridUnstructured(CGrid):
-    """SWAN unstructured computational grid."""
-    kind: UnstructuredEnum = "adcirc"
+    """SWAN unstructured computational grid.
+
+    Parameters
+    ----------
+    kind : Literal["CGridUnstructured"]
+        Name of the component to help parsing and render as a comment in the cmd file.
+
+    """
+    kind: Literal["CGridUnstructured"] = "CGridUnstructured"
+    grid_type: UnstructuredEnum = "adcirc"
     fname: constr(max_length=80) | None = None
 
     @root_validator
     def check_fname_required(cls, values: dict) -> dict:
         """Check that fname needs to be provided."""
-        kind = values.get("kind")
+        grid_type = values.get("grid_type")
         fname = values.get("fname")
-        if kind == "adcirc" and fname is not None:
+        if grid_type == "adcirc" and fname is not None:
             raise ValueError("fname must not be specified for ADCIRC grid")
-        elif kind != "adcirc" and fname is None:
-            raise ValueError(f"fname must be specified for {kind} grid")
+        elif grid_type != "adcirc" and fname is None:
+            raise ValueError(f"fname must be specified for {grid_type} grid")
         return values
 
     def __repr__(self):
         repr = f"CGRID UNSTRUCTURED {super().__repr__()}"
-        repr += f"\nREADGRID UNSTRUCTURED {self.kind.upper()}"
-        if self.kind in ["triangle", "easymesh"]:
+        repr += f"\nREADGRID UNSTRUCTURED {self.grid_type.upper()}"
+        if self.grid_type in ["triangle", "easymesh"]:
             repr += f" fname='{self.fname}'"
         return repr
 
