@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 # All supported swan components must be specified here
 COMPONENTS = {
     "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED,
-    "inpgrid": inpgrid.InpGrid,
+    "inpgrid": inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED,
 }
 
 
@@ -27,9 +27,9 @@ class SwanConfigPydantic(RompyBaseModel):
 
     Parameters
     ----------
-    cgrid : CGrid
+    cgrid : CGRID
         The computational grid SWAN component.
-    inpgrid: InpGrid
+    inpgrid: INPGRID
         The input grid SWAN component.
 
     """
@@ -63,7 +63,7 @@ class SwanConfigPydantic(RompyBaseModel):
 
 class OutputLocs(RompyBaseModel):
     """Output locations for SWAN
-
+q
     Parameters
     ----------
     coords : list[Coordinate]
