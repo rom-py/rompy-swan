@@ -24,7 +24,7 @@ def cgrid_instance():
 
 @pytest.fixture(scope="module")
 def inpgrid_instance():
-    inst = inpgrid.InpGrid(
+    inst = inpgrid.INPGRID(
         mdc=36,
         flow=0.04,
         fhigh=0.4,
