@@ -24,12 +24,12 @@ class UnstructuredEnum(str, Enum):
     easymesh = "easymesh"
 
 
-class CGrid(BaseComponent):
+class CGRID(BaseComponent):
     """SWAN computational grid.
 
     Parameters
     ----------
-    kind : Literal["CGrid"]
+    kind : Literal["CGRID"]
         Name of the component to help parsing and render as a comment in the cmd file.
     mdc: int
         Number of meshes in θ-space. In the case of CIRCLE, this is the number of
@@ -60,7 +60,7 @@ class CGrid(BaseComponent):
     CIRCLE, neither `dir1` nor `dir2` should be specified.
 
     """
-    kind: Literal["CGrid"] = "CGrid"
+    kind: Literal["CGRID"] = "CGRID"
     mdc: int
     flow: float | None = None
     fhigh: float | None = None
@@ -110,12 +110,12 @@ class CGrid(BaseComponent):
         return repr
 
 
-class CGridRegular(CGrid):
+class REGULAR(CGRID):
     """SWAN regular computational grid.
 
     Parameters
     ----------
-    kind : Literal["CGridRegular"]
+    kind : Literal["REGULAR"]
         Name of the component to help parsing and render as a comment in the cmd file.
     xpc: float
         Geographic location of the origin of the computational grid in the problem
@@ -141,7 +141,7 @@ class CGridRegular(CGrid):
         than the number of grid points in this domain).  In 1D-mode, `myc` should be 0.
 
     """
-    kind: Literal["CGridRegular"] = "CGridRegular"
+    kind: Literal["REGULAR"] | Literal["REG"] | Literal["regular"] = "REGULAR"
     xpc: float = 0.0
     ypc: float = 0.0
     alpc: float = 0.0
@@ -159,12 +159,12 @@ class CGridRegular(CGrid):
         return repr
 
 
-class CGridCurvilinear(CGrid):
+class CURVILINEAR(CGRID):
     """SWAN curvilinear computational grid.
 
     Parameters
     ----------
-    kind : Literal["CGridCurvilinear"]
+    kind : Literal["CURVILINEAR"]
         Name of the component to help parsing and render as a comment in the cmd file.
     mxc: int
         Number of meshes in computational grid in ξ-direction (this number
@@ -231,7 +231,7 @@ class CGridCurvilinear(CGrid):
         Only used if `format="fixed"`, do not use it if `form` is specified.
 
     """
-    kind: Literal["CGridCurvilinear"] = "CGridCurvilinear"
+    kind: Literal["CURVILINEAR"] | Literal["CURV"] | Literal["curvilinear"] = "CURVILINEAR"
     mxc: int
     myc: int
     xexc: float | None = None
@@ -301,16 +301,16 @@ class CGridCurvilinear(CGrid):
         return repr
 
 
-class CGridUnstructured(CGrid):
+class UNSTRUCTURED(CGRID):
     """SWAN unstructured computational grid.
 
     Parameters
     ----------
-    kind : Literal["CGridUnstructured"]
+    kind : Literal["UNSTRUCTURED"]
         Name of the component to help parsing and render as a comment in the cmd file.
 
     """
-    kind: Literal["CGridUnstructured"] = "CGridUnstructured"
+    kind: Literal["UNSTRUCTURED"] | Literal["UNSTRUC"] | Literal["unstructured"] = "UNSTRUCTURED"
     grid_type: UnstructuredEnum = "adcirc"
     fname: constr(max_length=80) | None = None
 
@@ -335,15 +335,15 @@ class CGridUnstructured(CGrid):
 
 if __name__ == "__main__":
 
-    cgrid = CGridRegular(
+    cgrid = REGULAR(
         mdc=36, flow=0.04, fhigh=0.4, xlenc=100.0, ylenc=100.0, mxc=10, myc=10
     )
     print(cgrid.render())
 
-    cgrid = CGridCurvilinear(
+    cgrid = CURVILINEAR(
         mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, fname="grid_coord.txt"
     )
     print(cgrid.render())
 
-    cgrid = CGridUnstructured(mdc=36, flow=0.04, fhigh=0.4)
+    cgrid = UNSTRUCTURED(mdc=36, flow=0.04, fhigh=0.4)
     print(cgrid.render())
