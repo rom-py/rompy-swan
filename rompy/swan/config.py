@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 # All supported swan components must be specified here
 COMPONENTS = {
-    "cgrid": cgrid.CGridRegular | cgrid.CGridCurvilinear | cgrid.CGridUnstructured,
+    "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED,
     "inpgrid": inpgrid.InpGrid,
 }
 

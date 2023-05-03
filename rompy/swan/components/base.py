@@ -28,7 +28,8 @@ class BaseComponent(BaseModel):
 
     @property
     def header(self):
-        return f"\n!{self.kind.center(131, '-')}\n"
+        s = " ".join([c.__name__ for c in self.__class__.__bases__] + [self.kind])
+        return f"\n!{s.center(131, '-')}\n"
 
     def render(self):
         """Render the component to a string."""

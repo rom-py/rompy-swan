@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 @pytest.fixture(scope="module")
 def cgrid_instance():
-    inst = cgrid.CGridRegular(
+    inst = cgrid.REGULAR(
         mdc=36,
         flow=0.04,
         fhigh=0.4,
