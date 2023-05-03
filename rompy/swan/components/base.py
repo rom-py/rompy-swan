@@ -34,10 +34,3 @@ class BaseComponent(BaseModel):
     def render(self):
         """Render the component to a string."""
         return f"{self.header}{self.__repr__()}\n"
-
-
-class FormatEnum(str, Enum):
-    """Enum for SWAN format types."""
-    free = "free"
-    fixed = "fixed"
-    unformatted = "unformatted"

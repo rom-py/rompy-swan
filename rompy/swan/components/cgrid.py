@@ -1,27 +1,12 @@
 """Computational grid for SWAN."""
-from enum import Enum, IntEnum
 import logging
 from pydantic import validator, root_validator, conint, confloat, constr
 from typing_extensions import Literal
 
-from rompy.swan.components.base import BaseComponent, FormatEnum
+from rompy.swan.components.base import BaseComponent
 
 
 logger = logging.getLogger(__name__)
-
-
-class IDFMEnum(IntEnum):
-    one = 1
-    five = 5
-    six = 6
-    eight = 8
-
-
-class UnstructuredEnum(str, Enum):
-    """Enum for SWAN unstructured grid kinds."""
-    adcirc = "adcirc"
-    triangle = "triangle"
-    easymesh = "easymesh"
 
 
 class CGRID(BaseComponent):
@@ -241,9 +226,9 @@ class CURVILINEAR(CGRID):
     idla: conint(ge=1, le=6) = 1
     nhedf: int = 0
     nhedvec: int = 0
-    format: FormatEnum = "free"
+    format: Literal["free", "fixed", "unformatted"] = "free"
     form: str | None = None
-    idfm: IDFMEnum | None = None
+    idfm: Literal[1, 5, 6, 8] | None = None
 
     @root_validator
     def check_exception_definition(cls, values: dict) -> dict:
@@ -311,7 +296,7 @@ class UNSTRUCTURED(CGRID):
 
     """
     kind: Literal["UNSTRUCTURED"] | Literal["UNSTRUC"] | Literal["unstructured"] = "UNSTRUCTURED"
-    grid_type: UnstructuredEnum = "adcirc"
+    grid_type: Literal["adcirc", "triangle", "easymesh"] = "adcirc"
     fname: constr(max_length=80) | None = None
 
     @root_validator
