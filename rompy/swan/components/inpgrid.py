@@ -169,4 +169,20 @@ class CURVILINEAR(INPGRID):
 
 
 class UNSTRUCTURED(INPGRID):
-    pass
+    """SWAN unstructured input grid.
+
+    Parameters
+    ----------
+    kind : Literal["unstructured"]
+        Name of the component to help parsing and render as a comment in the cmd file.
+
+    """
+    kind: Literal["unstructured"] = "unstructured"
+
+    def __repr__(self):
+        repr = f"{super().__repr__()} UNSTRUCTURED"
+        if self.excval is not None:
+            repr += f" EXCEPTION excval={self.excval}"
+        if self.nonstationary is not None:
+            repr += f" {self.nonstationary.render()}"
+        return repr

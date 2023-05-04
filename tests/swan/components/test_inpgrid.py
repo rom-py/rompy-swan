@@ -89,3 +89,12 @@ def test_inpgrid_curvilinear(nonstat):
     )
     logger.info(inpgrid.render())
 
+
+def test_inpgrid_curvilinear(nonstat):
+    inpgrid = UNSTRUCTURED(
+        inpgrid=InpgridOptions.bottom,
+        excval=-999.0,
+        nonstationary=nonstat,
+    )
+    logger.info(inpgrid.render())
+
