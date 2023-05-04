@@ -102,9 +102,10 @@ class REGULAR(INPGRID):
         repr = (
             f"{super().__repr__()} REGULAR xpinp={self.xpinp} ypinp={self.ypinp} "
             f"alpinp={self.alpinp} mxinp={self.mxinp} myinp={self.myinp} "
-            f"dxinp={self.dxinp} dyinp={self.dyinp} "
-            f""
+            f"dxinp={self.dxinp} dyinp={self.dyinp}"
         )
+        if self.excval is not None:
+            repr += f" EXCEPTION excval={self.excval}"
         return repr
 
 
