@@ -88,7 +88,7 @@ class REGULAR(INPGRID):
         convention).
     mxinp: int
         Number of meshes in x-direction of the input grid (this number is one less than
-        than the number of grid points in this direction).
+        the number of grid points in this direction).
     myinp: int
         Number of meshes in y-direction of the input grid (this number is one less than
         the number of grid points in this direction). In 1D-mode, `myinp` should be 0.
@@ -124,63 +124,49 @@ class REGULAR(INPGRID):
 
 
 class CURVILINEAR(INPGRID):
-    pass
+    """SWAN curvilinear input grid.
+
+    Parameters
+    ----------
+    kind : Literal["curvilinear"]
+        Name of the component to help parsing and render as a comment in the cmd file.
+    stagrx: float
+        Staggered x'-direction with respect to computational grid, e.g., `stagrx=0.5`
+        means that the input grid points are shifted a half step in x'-direction; in
+        many flow models x-velocities are defined in points shifted a half step in
+        x'-direction.
+    stagry: float
+        Staggered y'-direction with respect to computational grid, e.g., `stagry=0.5`
+        means that the input grid points are shifted a half step in y'-direction; in
+        many flow models y-velocities are defined in points shifted a half step in
+        y'-direction.
+    mxinp: int
+        Number of meshes in ξ-direction of the input grid (this number is one less than
+        the number of grid points in this direction). Default: `mxinp` = `mxc`.
+    myinp: int
+        Number of meshes in η-direction of the input grid (this number is one less than
+        the number of grid points in this direction). Default: `myinp` = `myc`.
+
+    TODO: Handle (or not) setting default values for mxinp and myinp from cgrid component in swan.
+
+    """
+    kind: Literal["curvilinear"] = "curvilinear"
+    stagrx: float = 0.0
+    stagry: float = 0.0
+    mxinp: int
+    myinp: int
+
+    def __repr__(self):
+        repr = (
+            f"{super().__repr__()} CURVILINEAR stagrx={self.stagrx} "
+            f"stagry={self.stagry} mxinp={self.mxinp} myinp={self.myinp} "
+        )
+        if self.excval is not None:
+            repr += f" EXCEPTION excval={self.excval}"
+        if self.nonstationary is not None:
+            repr += f" {self.nonstationary.render()}"
+        return repr
 
 
 class UNSTRUCTURED(INPGRID):
     pass
-
-
-from typing import List
-
-
-class Regular(BaseComponent):
-    xpinp: float
-    ypinp: float
-    alpinp: float
-    mxinp: float
-    myinp: float
-    dxinp: float
-    dyinp: float
-
-
-class Curvilinear(BaseComponent):
-    stagrx: List[float]
-    stagry: List[float]
-    mxinp: float
-    myinp: float
-
-
-class Exception(BaseComponent):
-    excval: float
-
-
-class NonStationary(BaseComponent):
-    tbeginp: float
-    deltinp: float
-    min: float
-    tendinp: float
-
-
-class INPGrid(BaseComponent):
-    bottom: str
-    wlevel: str
-    current: str
-    vx: str
-    vy: str
-    friction: str
-    wind: str
-    wx: str
-    wy: str
-    nplants: str
-    turbvisc: str
-    mudlayer: str
-    aice: str
-    hice: str
-    hss: str
-    tss: str
-    regular: Regular = None
-    curvilinear: Curvilinear = None
-    unstructured: str = None
-    exception: Exception = None
-    nonstationary: NonStationary = None
