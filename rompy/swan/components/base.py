@@ -9,7 +9,7 @@ How to subclass
 """
 from enum import Enum
 from typing_extensions import Literal
-from pydantic import BaseModel
+from pydantic import BaseModel, root_validator
 
 from rompy.core import RompyBaseModel
 
@@ -22,13 +22,26 @@ class BaseComponent(BaseModel):
     kind : Literal["base"]
         Name of the component to help parsing and render as a comment in the cmd file.
 
+    Behaviour
+    ---------
+    - Make all string input case-insensitive.
+    - Define a header from parent classes names and the component kind.
+    - Define a render method to render the component to a cmd string.
+
     """
 
     kind: Literal["base"]
 
+    @root_validator(pre=True)
+    def to_lowercase(cls, values):
+        """Make all string input case-insensitive."""
+        values = {k: v.lower() if isinstance(v, str) else v for k, v in values.items()}
+        return values
+
     @property
     def header(self):
-        s = " ".join([c.__name__ for c in self.__class__.__bases__] + [self.kind])
+        """Define a header from parent classes names and the component kind."""
+        s = " ".join([c.__name__ for c in self.__class__.__bases__] + [self.kind.upper()])
         return f"\n!{s.center(131, '-')}\n"
 
     def render(self):

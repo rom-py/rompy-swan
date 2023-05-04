@@ -24,14 +24,15 @@ def cgrid_instance():
 
 @pytest.fixture(scope="module")
 def inpgrid_instance():
-    inst = inpgrid.INPGRID(
-        mdc=36,
-        flow=0.04,
-        fhigh=0.4,
-        xlenc=100.0,
-        ylenc=100.0,
-        mxc=10,
-        myc=10,
+    inst = inpgrid.REGULAR(
+        inpgrid="BOTTOM",
+        xpinp=0.0,
+        ypinp=0.0,
+        alpinp=0.0,
+        mxinp=10,
+        myinp=10,
+        dxinp=0.1,
+        dyinp=0.1,
     )
     yield inst
 
