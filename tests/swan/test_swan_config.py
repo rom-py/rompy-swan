@@ -24,8 +24,8 @@ def cgrid_instance():
 
 @pytest.fixture(scope="module")
 def inpgrid_instance():
-    inst = inpgrid.REGULAR(
-        inpgrid="BOTTOM",
+    inst_wind = inpgrid.REGULAR(
+        inpgrid="WIND",
         xpinp=0.0,
         ypinp=0.0,
         alpinp=0.0,
@@ -34,10 +34,17 @@ def inpgrid_instance():
         dxinp=0.1,
         dyinp=0.1,
         excval=-999.0,
+        nonstationary=inpgrid.NONSTATIONARY(
+            tbeg="2023-01-01T00:00:00",
+            delt="PT30M",
+            tend="2023-02-01T00:00:00",
+            deltfmt="hr",
+        )
     )
-    inst2 = inst.copy()
-    inst2.inpgrid = "WIND"
-    yield [inst, inst2]
+    inst_bottom = inst_wind.copy()
+    inst_bottom.inpgrid = "BOTTOM"
+    inst_bottom.nonstationary = None
+    yield [inst_bottom, inst_wind]
 
 
 def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
@@ -49,10 +56,36 @@ def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
 
 
 def test_swan_config_from_dict(cgrid_instance, inpgrid_instance):
-    cg = {k: v for k, v in cgrid_instance.dict().items() if k is not None}
-    ig = [{k: v for k, v in inst.dict().items() if k is not None} for inst in inpgrid_instance]
+    cgrid_dict = {
+        "kind": "regular",
+        "mdc": 36,
+        "flow": 0.04,
+        "fhigh": 0.4,
+        "xlenc": 100.0,
+        "ylenc": 100.0,
+        "mxc": 10,
+        "myc": 10,
+    }
+    inpgrid_wind_dict = {
+        "kind": "regular",
+        "inpgrid": "wind",
+        "xpinp": 0.0,
+        "ypinp": 0.0,
+        "alpinp": 0.0,
+        "mxinp": 10,
+        "myinp": 10,
+        "dxinp": 0.1,
+        "dyinp": 0.1,
+        "excval": -999.0,
+        "nonstationary": {
+            "tbeg": "2023-01-01T00:00:00",
+            "delt": "PT30M",
+            "tend": "2023-02-01T00:00:00",
+            "deltfmt": "hr",
+        },
+    }
     sc = SwanConfig(
-        cgrid=cg,
-        inpgrid=ig,
+        cgrid=cgrid_dict,
+        inpgrid=[inpgrid_wind_dict],
     )
     sc._write_cmd()

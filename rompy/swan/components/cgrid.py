@@ -12,6 +12,8 @@ logger = logging.getLogger(__name__)
 class CGRID(BaseComponent):
     """SWAN computational grid.
 
+    This is the base class for all comput grids. It is not meant to be used directly.
+
     Parameters
     ----------
     kind : Literal["cgrid"]
