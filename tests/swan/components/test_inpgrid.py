@@ -31,6 +31,17 @@ def inpgrid_instance():
     )
 
 
+@pytest.fixture(scope="module")
+def nonstat():
+    inst = NONSTATIONARY(
+        tbeg="2023-01-01T00:00:00",
+        delt="PT30M",
+        tend="2023-02-01T00:00:00",
+        deltfmt="hr",
+    )
+    yield inst
+
+
 def test_valid_inpgrid_options():
     for inpgrid in InpgridOptions:
         INPGRID(inpgrid=inpgrid.value)
@@ -46,21 +57,13 @@ def test_excval():
     assert isinstance(inpgrid.excval, float)
 
 
-def test_nonstationary():
-    inpgrid = INPGRID(
-        inpgrid="BOTTOM",
-        nonstationary=NONSTATIONARY(
-            tbeg="2023-01-01T00:00:00",
-            delt="PT30M",
-            tend="2023-02-01T00:00:00",
-            deltfmt="hr",
-        )
-    )
+def test_inpgrid_nonstationary(nonstat):
+    inpgrid = INPGRID(inpgrid="BOTTOM", nonstationary=nonstat)
     assert isinstance(inpgrid.nonstationary, NONSTATIONARY)
     assert inpgrid.nonstationary.suffix == "inp"
 
 
-def test_inpgrid_regular():
+def test_inpgrid_regular(nonstat):
     inpgrid = REGULAR(
         inpgrid=InpgridOptions.bottom,
         xpinp=0.0,
@@ -71,5 +74,18 @@ def test_inpgrid_regular():
         dxinp=0.1,
         dyinp=0.1,
         excval=-999.0,
+        nonstationary=nonstat,
     )
     logger.info(inpgrid.render())
+
+
+def test_inpgrid_curvilinear(nonstat):
+    inpgrid = CURVILINEAR(
+        inpgrid=InpgridOptions.bottom,
+        mxinp=10,
+        myinp=10,
+        excval=-999.0,
+        nonstationary=nonstat,
+    )
+    logger.info(inpgrid.render())
+
