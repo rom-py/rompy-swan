@@ -33,8 +33,11 @@ def inpgrid_instance():
         myinp=10,
         dxinp=0.1,
         dyinp=0.1,
+        excval=-999.0,
     )
-    yield inst
+    inst2 = inst.copy()
+    inst2.inpgrid = "WIND"
+    yield [inst, inst2]
 
 
 def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
@@ -47,7 +50,7 @@ def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
 
 def test_swan_config_from_dict(cgrid_instance, inpgrid_instance):
     cg = {k: v for k, v in cgrid_instance.dict().items() if k is not None}
-    ig = {k: v for k, v in inpgrid_instance.dict().items() if k is not None}
+    ig = [{k: v for k, v in inst.dict().items() if k is not None} for inst in inpgrid_instance]
     sc = SwanConfig(
         cgrid=cg,
         inpgrid=ig,

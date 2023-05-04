@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 # All supported swan components must be specified here
 COMPONENTS = {
     "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED,
-    "inpgrid": inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED,
+    "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED],
 }
 
 
@@ -53,7 +53,12 @@ class SwanConfigPydantic(RompyBaseModel):
         for component in COMPONENTS:
             obj = getattr(self, component)
             if obj is not None:
-                repr += obj.render()
+                # This works but is ugly
+                if isinstance(obj, list):
+                    for o in obj:
+                        repr += o.render()
+                else:
+                    repr += obj.render()
         logger.info(f"Writing cmd file:\n{repr.strip()}")
         # with open(self.cmdfile, "w") as stream:
         #     logger.info(f"Writing cmd file:\n{repr.strip()}")
