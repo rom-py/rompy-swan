@@ -14,7 +14,7 @@ class CGRID(BaseComponent):
 
     Parameters
     ----------
-    kind : Literal["CGRID"]
+    kind : Literal["cgrid"]
         Name of the component to help parsing and render as a comment in the cmd file.
     mdc: int
         Number of meshes in θ-space. In the case of CIRCLE, this is the number of
@@ -45,7 +45,7 @@ class CGRID(BaseComponent):
     CIRCLE, neither `dir1` nor `dir2` should be specified.
 
     """
-    kind: Literal["CGRID"] = "CGRID"
+    kind: Literal["cgrid"] = "cgrid"
     mdc: int
     flow: float | None = None
     fhigh: float | None = None
@@ -100,7 +100,7 @@ class REGULAR(CGRID):
 
     Parameters
     ----------
-    kind : Literal["REGULAR"]
+    kind : Literal["regular"]
         Name of the component to help parsing and render as a comment in the cmd file.
     xpc: float
         Geographic location of the origin of the computational grid in the problem
@@ -126,7 +126,7 @@ class REGULAR(CGRID):
         than the number of grid points in this domain).  In 1D-mode, `myc` should be 0.
 
     """
-    kind: Literal["REGULAR"] | Literal["REG"] | Literal["regular"] = "REGULAR"
+    kind: Literal["regular"] = "regular"
     xpc: float = 0.0
     ypc: float = 0.0
     alpc: float = 0.0
@@ -149,7 +149,7 @@ class CURVILINEAR(CGRID):
 
     Parameters
     ----------
-    kind : Literal["CURVILINEAR"]
+    kind : Literal["curvilinear"]
         Name of the component to help parsing and render as a comment in the cmd file.
     mxc: int
         Number of meshes in computational grid in ξ-direction (this number
@@ -216,7 +216,7 @@ class CURVILINEAR(CGRID):
         Only used if `format="fixed"`, do not use it if `form` is specified.
 
     """
-    kind: Literal["CURVILINEAR"] | Literal["CURV"] | Literal["curvilinear"] = "CURVILINEAR"
+    kind: Literal["curvilinear"] = "curvilinear"
     mxc: int
     myc: int
     xexc: float | None = None
@@ -291,11 +291,11 @@ class UNSTRUCTURED(CGRID):
 
     Parameters
     ----------
-    kind : Literal["UNSTRUCTURED"]
+    kind : Literal["unstructured"]
         Name of the component to help parsing and render as a comment in the cmd file.
 
     """
-    kind: Literal["UNSTRUCTURED"] | Literal["UNSTRUC"] | Literal["unstructured"] = "UNSTRUCTURED"
+    kind: Literal["unstructured"] = "unstructured"
     grid_type: Literal["adcirc", "triangle", "easymesh"] = "adcirc"
     fname: constr(max_length=80) | None = None
 
