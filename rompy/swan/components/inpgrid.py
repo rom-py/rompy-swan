@@ -7,7 +7,7 @@ from pathlib import Path
 from typing_extensions import Literal
 from pydantic import root_validator
 
-from rompy.swan.components.base import BaseComponent
+from rompy.swan.components.base import BaseComponent, NONSTATIONARY
 
 
 HERE = Path(__file__).parent
@@ -36,6 +36,8 @@ class InpgridOptions(str, Enum):
 class INPGRID(BaseComponent):
     """SWAN input grid.
 
+    This is the base class for all input grids. It is not meant to be used directly.
+
     Parameters
     ----------
     kind : Literal["inpgrid"]
@@ -45,12 +47,22 @@ class INPGRID(BaseComponent):
         Exception value to allow identifying and ignoring certain point inside the
         given grid during the computation. If `fac` != 1, `excval` must be given as
         `fac` times the exception value.
+    nonstationary: NONSTATIONARY | None = None
+        Nonstationary time specification.
 
     """
 
     kind: Literal["inpgrid"] = "inpgrid"
     inpgrid: InpgridOptions
     excval: float | None = None
+    nonstationary: NONSTATIONARY | None = None
+
+    @root_validator
+    def set_nonstat_suffix(cls, values):
+        """Set the nonstationary suffix."""
+        if values.get("nonstationary") is not None:
+            values["nonstationary"].suffix = "inp"
+        return values
 
     def __repr__(self):
         return f"INPGRID {self.inpgrid.upper()}"
@@ -106,6 +118,8 @@ class REGULAR(INPGRID):
         )
         if self.excval is not None:
             repr += f" EXCEPTION excval={self.excval}"
+        if self.nonstationary is not None:
+            repr += f" {self.nonstationary.render()}"
         return repr
 
 
