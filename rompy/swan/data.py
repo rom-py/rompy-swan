@@ -72,6 +72,61 @@ class SwanDataGrid(DataGrid):
         return output
 
 
+def dset_to_swan(
+    dset: xr.Dataset,
+    output_file: str,
+    variables: list,
+    fmt: str = "%4.2f",
+    fill_value: float = FILL_VALUE,
+    time_dim="time",
+):
+    """Convert netcdf into SWAN ASCII file.
+
+    Parameters
+    ----------
+    dset: xr.Dataset
+        Dataset to write in SWAN ASCII format.
+    output_file: str
+        Local file name for the ascii output file.
+    variables: list
+        Variables to write to ascii.
+    fmt: str
+        String float formatter.
+    fill_value: float
+        Fill value.
+    time_dim: str
+        Name of the time dimension if available in the dataset.
+
+    """
+    # Input checking
+    for data_var in variables:
+        if data_var not in dset.data_vars:
+            raise ValueError(f"Variable {data_var} not in {dset}")
+        if dset[data_var].ndim not in (2, 3):
+            raise NotImplementedError(
+                "Only 2D and 3D datasets are supported but "
+                f"dset.{data_var} has {dset[data_var].ndim} dims"
+            )
+
+    # Ensure time is a dimension so iteration will work
+    if time_dim not in dset.dims:
+        dset = dset.expand_dims(time_dim, 0)
+
+    # Write to ascii
+    logger.info(f"Writing SWAN ASCII file: {output_file}")
+    with open(output_file, "w") as stream:
+        for time in dset[time_dim]:
+            logger.debug(
+                f"Appending Time {pd.to_datetime(time.values)} to {output_file}"
+            )
+            for data_var in variables:
+                logger.debug(f"Appending Variable {data_var} to {output_file}")
+                data = dset[data_var].sel(time=time).fillna(fill_value).values
+                np.savetxt(fname=stream, X=data, fmt=fmt, delimiter="\t")
+
+    return output_file
+
+
 @xr.register_dataset_accessor("swan")
 class Swan_accessor(object):
     def __init__(self, xarray_obj):
