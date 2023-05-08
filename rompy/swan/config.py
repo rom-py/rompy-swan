@@ -151,9 +151,12 @@ class SwanConfig(BaseConfig):
         # Raf - this is where the wind input is in defined in the example, is this where current should go too?
         for forcing in self.forcing:
             if forcing[1]:
-                forcing._filter_grid(self.cgrid)
-                forcing._filter_time(runtime)
-                output += forcing.get(self.cgrid)
+                logger.info(f"\t processing {forcing[0]} forcing")
+                forcing[1]._filter_grid(self.cgrid)
+                forcing[1]._filter_time(runtime.period)
+                output += forcing[1].get(
+                    os.path.join(runtime.output_dir, runtime.run_id), self.cgrid
+                )
         output += "\n"
         output += f"GEN3 WESTH 0.000075 0.00175\n"
         output += f"BREAKING\n"
