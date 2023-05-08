@@ -1,6 +1,7 @@
 import logging
 import os
 
+import numpy as np
 import xarray as xr
 from pydantic import root_validator
 
@@ -9,6 +10,8 @@ from rompy.core import DataGrid
 from .grid import SwanGrid
 
 logger = logging.getLogger(__name__)
+
+FILL_VALUE = -99.0
 
 
 class SwanDataGrid(DataGrid):
@@ -73,6 +76,79 @@ class SwanDataGrid(DataGrid):
 class Swan_accessor(object):
     def __init__(self, xarray_obj):
         self._obj = xarray_obj
+
+    def grid(self, x="lon", y="lat", exc=FILL_VALUE):
+        """SWAN Grid object for this dataset.
+
+        TODO: Perhaps we could assume y, x are the last 2 axes.
+
+        """
+        return SwanGrid(
+            gridtype="REG",
+            x0=float(self._obj[x].min()),
+            y0=float(self._obj[y].min()),
+            dx=float(np.diff(self._obj[x]).mean()),
+            dy=float(np.diff(self._obj[y]).mean()),
+            nx=len(self._obj[x]),
+            ny=len(self._obj[y]),
+            rot=0,
+            exc=exc,
+        )
+
+    def to_bottom_grid(
+        self,
+        output_file,
+        fmt="%4.2f",
+        x="lon",
+        y="lat",
+        z="depth",
+        vmin=0.0,
+        fill_value=FILL_VALUE,
+        fac=1.0,
+    ):
+        """Write SWAN inpgrid BOTTOM file.
+
+        Parameters
+        ----------
+        output_file: str
+            Local file name for the ascii output file.
+        fmt: str
+            String float formatter.
+        x: str
+            Name of the x-axis in the dataset.
+        y: str
+            Name of the y-axis in the dataset.
+        z: str
+            Name of the bottom variable in the dataset.
+        vmin: float
+            Minimum value below which depths are masked.
+        fill_value: float
+            Fill value.
+        fac: float
+            Multiplying factor, only necessary when the data are not in meters.
+
+        Returns
+        -------
+        inpgrid: str
+            SWAN INPgrid command instruction.
+        readinp: str
+            SWAN READinp command instruction.
+
+        TODO: Merge this method with `to_inpgrid`.
+        TODO: Change cookiecutter so readinp is used.
+
+        """
+        dset_to_swan(
+            dset=self._obj.where(self._obj > vmin).transpose(..., y, x),
+            output_file=output_file,
+            fmt=fmt,
+            variables=[z],
+            fill_value=fill_value,
+        )
+        grid = self.grid(x=x, y=y)
+        inpgrid = f"{grid.inpgrid}"
+        readinp = f"{fac} '{Path(output_file).name}' 3 FREE"
+        return inpgrid, readinp
 
     def to_inpgrid(
         self,
