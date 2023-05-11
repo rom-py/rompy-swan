@@ -144,7 +144,6 @@ class SwanConfig(BaseConfig):
         for forcing in self.forcing:
             if forcing[1]:
                 logger.info(f"\t processing {forcing[0]} forcing")
-                __import__("ipdb").set_trace()
                 forcing[1]._filter_grid(self.cgrid)
                 forcing[1]._filter_time(runtime.period)
                 output += forcing[1].get(
