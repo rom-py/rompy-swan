@@ -1,9 +1,11 @@
 import logging
 import os
+from pathlib import Path
 
 import numpy as np
+import pandas as pd
 import xarray as xr
-from pydantic import root_validator
+from pydantic import root_validator, validator
 
 from rompy.core import DataGrid
 
@@ -57,19 +59,33 @@ class SwanDataGrid(DataGrid):
         values["params"]["data_vars"] = data_vars
         return values
 
+    @validator("var")
+    def var_must_be_one_of_wind_bathy_current(cls, v):
+        if v not in ["WIND", "BOTTOM", "CURRENT"]:  # Raf to add any others here
+            raise ValueError(f"var must be one of WIND, BOTTOM, CURRENT")
+        return v
+
     def get(self, staging_dir: str, grid: SwanGrid = None):
         output_file = os.path.join(staging_dir, f"{self.id}.grd")
         logger.info(f"\tWriting {self.id} to {output_file}")
-        inpwind, readwind = self.ds.swan.to_inpgrid(
-            output_file=output_file,
-            z1=self.z1,
-            z2=self.z2,
-            grid=grid,
-            var=self.var,
-        )
-        output = f"INPGRID {self.var} {inpwind}\n"
-        output += f"READINP {self.var} {readwind}\n"
-        return output
+        if self.var == "BOTTOM":
+            inpgrid, readgrid = self.ds.swan.to_bottom_grid(
+                output_file,
+                fmt="%4.2f",
+                x=self.lonname,
+                y=self.latname,
+                z=self.z1,
+                vmin=0.0,
+            )
+        else:
+            inpgrid, readgrid = self.ds.swan.to_inpgrid(
+                output_file=output_file,
+                z1=self.z1,
+                z2=self.z2,
+                grid=grid,
+                var=self.var,
+            )
+        return f"{inpgrid}\n{readgrid}\n"
 
 
 def dset_to_swan(
@@ -80,7 +96,7 @@ def dset_to_swan(
     fill_value: float = FILL_VALUE,
     time_dim="time",
 ):
-    """Convert netcdf into SWAN ASCII file.
+    """Convert xarray Dataset into SWAN ASCII file.
 
     Parameters
     ----------
@@ -146,7 +162,7 @@ class Swan_accessor(object):
             dy=float(np.diff(self._obj[y]).mean()),
             nx=len(self._obj[x]),
             ny=len(self._obj[y]),
-            rot=0,
+            rot=0,  # TODO Raf Why is this zero?
             exc=exc,
         )
 
@@ -201,8 +217,8 @@ class Swan_accessor(object):
             fill_value=fill_value,
         )
         grid = self.grid(x=x, y=y)
-        inpgrid = f"{grid.inpgrid}"
-        readinp = f"{fac} '{Path(output_file).name}' 3 FREE"
+        inpgrid = f"INPGRID BOTTOM {grid.inpgrid}"
+        readinp = f"READINP BOTTOM {fac} '{Path(output_file).name}' 3 FREE"
         return inpgrid, readinp
 
     def to_inpgrid(
@@ -281,8 +297,8 @@ class Swan_accessor(object):
             )
 
         input_strings = (
-            f"{grid.inpgrid} NONSTATION {inptimes[0]} {dt} HR",
-            f"1 '{os.path.basename(output_file)}' 3 0 1 0 FREE",
+            f"INPGRID {var} {grid.inpgrid} NONSTATION {inptimes[0]} {dt} HR",
+            f"READINP {var} 1 '{os.path.basename(output_file)}' 3 0 1 0 FREE",
         )
 
         return input_strings

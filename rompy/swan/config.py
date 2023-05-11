@@ -6,8 +6,7 @@ from datetime import datetime
 from pydantic import validator
 
 from rompy import TEMPLATES_DIR
-from rompy.core import (BaseConfig, Coordinate, DataBlob, RompyBaseModel,
-                        TimeRange)
+from rompy.core import BaseConfig, Coordinate, DataBlob, RompyBaseModel, TimeRange
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -34,13 +33,10 @@ class OutputLocs(RompyBaseModel):
 
 
 class ForcingData(RompyBaseModel):
+    bottom: SwanDataGrid | None = None  # TODO Raf should probably be required?
     wind: SwanDataGrid | None = None
     current: SwanDataGrid | None = None
     boundary: SwanDataGrid | None = None
-
-
-class FileInputs(RompyBaseModel):
-    bathymetry: DataBlob | None = None
 
 
 class SwanConfig(BaseConfig):
@@ -145,19 +141,16 @@ class SwanConfig(BaseConfig):
         output += f"CGRID {self.cgrid.cgrid} CIRCLE 36 0.0464 1. 31\n"
         output += f"{self.cgrid.cgrid_read}\n"
         output += "\n"
-        output += f"INPGRID BOTTOM {self.bottom_grid}\n"
-        output += f"READINP BOTTOM 1 '{self.bottom_file}' 3 0 FREE\n"
-        output += "\n"
-        # Raf - this is where the wind input is in defined in the example, is this where current should go too?
         for forcing in self.forcing:
             if forcing[1]:
                 logger.info(f"\t processing {forcing[0]} forcing")
+                __import__("ipdb").set_trace()
                 forcing[1]._filter_grid(self.cgrid)
                 forcing[1]._filter_time(runtime.period)
                 output += forcing[1].get(
                     os.path.join(runtime.output_dir, runtime.run_id), self.cgrid
                 )
-        output += "\n"
+                output += "\n"
         output += f"GEN3 WESTH 0.000075 0.00175\n"
         output += f"BREAKING\n"
         output += f"FRICTION {self.friction} {self.friction_coeff}\n"
