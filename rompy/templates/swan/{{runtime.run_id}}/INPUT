@@ -10,4 +10,10 @@ COORDINATES SPHERICAL
 SET NAUTICAL
 
 {{config.grid}}
+{{config.forcing}}
+{{config.physics}}
+{{config.remaining}}
+{{config.outputs}}
+COMPUTE NONST {{runtime.period.start.strftime(runtime._datefmt)}} {{runtime.frequency}} {{runtime.period.end.strftime(runtime._datefmt)}}
 
+STOP
