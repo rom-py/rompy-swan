@@ -1,13 +1,17 @@
 import logging
 import os
-import platform
-from datetime import datetime
 
 from pydantic import validator
 
 from rompy import TEMPLATES_DIR
-from rompy.core import (BaseConfig, Coordinate, DataBlob, RompyBaseModel,
-                        TimeRange)
+from rompy.core import (
+    BaseConfig,
+    Coordinate,
+    DataBlob,
+    RompyBaseModel,
+    Spectrum,
+    TimeRange,
+)
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -40,6 +44,12 @@ class ForcingData(RompyBaseModel):
     boundary: SwanDataGrid | None = None
 
 
+class SwanSpectrum(Spectrum):
+    @property
+    def cmd(self):
+        return f"CIRCLE {self.ndirs} {self.fmin} {self.fmax} {self.nfreqs}"
+
+
 class SwanConfig(BaseConfig):
     """SWAN configuration
 
@@ -68,10 +78,10 @@ class SwanConfig(BaseConfig):
         Path to input boundary spectra file
     """
 
-    template: str = os.path.join(TEMPLATES_DIR, "swan")
-    cgrid: SwanGrid = SwanGrid(
+    grid: SwanGrid = SwanGrid(
         x0=115.68, y0=-32.76, dx=0.001, dy=0.001, nx=390, ny=150, rot=77
     )
+    spectral_resolution: SwanSpectrum = SwanSpectrum()
     out_period: TimeRange | None = None
     forcing: ForcingData = ForcingData()
     output_locs: OutputLocs = OutputLocs()
@@ -98,6 +108,12 @@ class SwanConfig(BaseConfig):
             raise ValueError("friction_coeff must be greater than 0")
         return v
 
+    @property
+    def domain(self):
+        output = f"CGRID {self.grid.cgrid} {self.spectral_resolution.cmd}\n"
+        output += f"{self.grid.cgrid_read}\n"
+        return output
+
     def _get_grid(self, key=None):
         from intake.source.utils import reverse_format
 
@@ -108,32 +124,20 @@ class SwanConfig(BaseConfig):
         grid_params = reverse_format(fmt, grid_spec)
         return SwanGrid(**grid_params)
 
-    def generate(self, runtime) -> str:
-        """Generate SWAN input file
-
-        Parameters
-        ----------
-        run_dir : str
-            Path to run directory
-        """
-
-        return output
-
     def __call__(self, runtime) -> str:
         ret = {}
         if not self.out_period:
             self.out_period = runtime.period
         out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too
         frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
-        ret["grid"] = f"CGRID {self.cgrid.cgrid} CIRCLE 36 0.0464 1. 31\n"
-        ret["grid"] += f"{self.cgrid.cgrid_read}\n"
+        ret["grid"] = f"{self.domain}"
         ret["grid"] += "\n"
         for forcing in self.forcing:
             if forcing[1]:
                 logger.info(f"\t processing {forcing[0]} forcing")
-                forcing[1]._filter_grid(self.cgrid)
+                forcing[1]._filter_grid(self.grid)
                 forcing[1]._filter_time(runtime.period)
-                ret["grid"] += forcing[1].get(runtime.staging_dir, self.cgrid)
+                ret["grid"] += forcing[1].get(runtime.staging_dir, self.grid)
                 ret["grid"] += "\n"
         ret["grid"] += f"GEN3 WESTH 0.000075 0.00175\n"
         ret["grid"] += f"BREAKING\n"
