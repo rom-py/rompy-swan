@@ -1,11 +1,9 @@
 import logging
-import os
 
 from pydantic import validator
 
-from rompy import TEMPLATES_DIR
-from rompy.core import (BaseConfig, Coordinate, DataBlob, RompyBaseModel,
-                        Spectrum, TimeRange)
+from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
+                        TimeRange)
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -121,8 +119,7 @@ class Outputs(RompyBaseModel):
 
     @property
     def cmd(self):
-        out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too
-        frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
+        out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too TODO
         ret = "OUTPUT OPTIONS BLOCK 8\n"
         ret += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 {' '.join(self.grid.variables)} OUT {self.grid.period.start.strftime(self._datefmt)} {out_intvl}\n"
         ret += "\n"
@@ -137,27 +134,16 @@ class SwanConfig(BaseConfig):
 
     Parameters
     ----------
-    template : str
-        Path to template file. If this is a git repository, the template will be cloned by cookiecutter.
-    out_start : datetime. If not provided, will be set to compute_start
-    out_intvl : str
-        Output interval. Must be in the format "1.0 HR" or "1.0 DY"
-    output_locs : OutputLocs
-        List of coordinates to output spectra
-    wind_grid : str TODO clean up these definitions
-        Grid definition for wind output
-    wind_read : str
-        Grid definition for wind input
-    bottom_grid : str
-        Grid definition for bathymetry output
-    bottom_file : str
-        Path to bathymetry file
-    friction : str
-        Friction type. Must be one of MAD, OTHER or ANDANOTHER
-    friction_coeff : str
-        Friction coefficient. Must be between 0 and 1
-    spectra_file : str
-        Path to input boundary spectra file
+    grid : SwanGrid
+        Grid for SWAN
+    spectral_resolution : SwanSpectrum
+        Spectral resolution for SWAN
+    forcing : ForcingData
+        Forcing data for SWAN
+    physics : SwanPhysics
+        Physics options for SWAN
+    outputs : Outputs
+        Outputs for SWAN
     """
 
     grid: SwanGrid = SwanGrid(
@@ -166,7 +152,6 @@ class SwanConfig(BaseConfig):
     spectral_resolution: SwanSpectrum = SwanSpectrum()
     forcing: ForcingData = ForcingData()
     physics: SwanPhysics = SwanPhysics()
-    output_locs: OutputLocs = OutputLocs()
     outputs: Outputs = Outputs()
     spectra_file: str = "boundary.spec"
     _datefmt: str = "%Y%m%d.%H%M%S"
