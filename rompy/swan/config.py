@@ -78,6 +78,7 @@ class SwanConfig(BaseConfig):
     friction: str = "MAD"
     friction_coeff: str = "0.1"
     spectra_file: str = "boundary.spec"
+    _datefmt: str = "%Y%m%d.%H%M%S"
     # subnests: list[SwanConfig] = []
 
     @validator("friction")
@@ -115,70 +116,53 @@ class SwanConfig(BaseConfig):
         run_dir : str
             Path to run directory
         """
-        self._generated_at = str(datetime.utcnow())
-        self._generated_by = os.environ.get("USER")
-        self._generated_on = platform.node()
 
+        return output
+
+    def __call__(self, runtime) -> str:
+        ret = {}
         if not self.out_period:
             self.out_period = runtime.period
         out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too
         frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
-        output = ""
-        output += f"$\n"
-        output += f"$ SWAN - Simple example template used by rompy\n"
-        output += f"$ Template: \n"
-        output += f"$ Generated: {self._generated_at} on {self._generated_on} by {self._generated_by}\n"
-        output += f"$ projection: wgs84\n"
-        output += f"$\n"
-        output += "\n"
-        output += f"MODE NONSTATIONARY TWODIMENSIONAL\n"
-        output += f"COORDINATES SPHERICAL\n"
-        output += f"SET NAUTICAL\n"
-        output += "\n"
-        output += f"CGRID {self.cgrid.cgrid} CIRCLE 36 0.0464 1. 31\n"
-        output += f"{self.cgrid.cgrid_read}\n"
-        output += "\n"
+        ret["grid"] = f"CGRID {self.cgrid.cgrid} CIRCLE 36 0.0464 1. 31\n"
+        ret["grid"] += f"{self.cgrid.cgrid_read}\n"
+        ret["grid"] += "\n"
         for forcing in self.forcing:
             if forcing[1]:
                 logger.info(f"\t processing {forcing[0]} forcing")
                 forcing[1]._filter_grid(self.cgrid)
                 forcing[1]._filter_time(runtime.period)
-                output += forcing[1].get(
-                    os.path.join(runtime.output_dir, runtime.run_id), self.cgrid
-                )
-                output += "\n"
-        output += f"GEN3 WESTH 0.000075 0.00175\n"
-        output += f"BREAKING\n"
-        output += f"FRICTION {self.friction} {self.friction_coeff}\n"
-        output += "\n"
-        output += f"TRIADS\n"
-        output += "\n"
-        output += f"PROP BSBT\n"
-        output += f"NUM ACCUR 0.02 0.02 0.02 95 NONSTAT 20\n"
-        output += "\n"
-        output += f"BOUND NEST '{self.spectra_file}' CLOSED\n"
-        output += "\n"
-        output += f"OUTPUT OPTIONS BLOCK 8\n"
-        output += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 DEPTH UBOT HSIGN HSWELL DIR TPS TM01 WIND OUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
-        output += "\n"
-        output += f"POINTs 'pts' FILE 'out.loc'\n"
-        output += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
-        output += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
-        output += "\n"
-        output += f"COMPUTE NONST {runtime.period.start.strftime(self._datefmt)} {frequency} {runtime.period.end.strftime(self._datefmt)}\n"
-        output += "\n"
-        output += f"STOP\n"
-        return output
-
-    def write(self, runtime) -> None:
-        """Write SWAN input file
-
-        Parameters
-        ----------
-        run_dir : str
-            Path to run directory
-        """
-        outdir = os.path.join(runtime.output_dir, runtime.run_id)
-        os.makedirs(outdir, exist_ok=True)
-        with open(os.path.join(outdir, "INPUT"), "w") as f:
-            f.write(self.generate(runtime=runtime))
+                ret["grid"] += forcing[1].get(runtime.staging_dir, self.cgrid)
+                ret["grid"] += "\n"
+        ret["grid"] += f"GEN3 WESTH 0.000075 0.00175\n"
+        ret["grid"] += f"BREAKING\n"
+        ret["grid"] += f"FRICTION {self.friction} {self.friction_coeff}\n"
+        ret["grid"] += "\n"
+        ret["grid"] += f"TRIADS\n"
+        ret["grid"] += "\n"
+        ret["grid"] += f"PROP BSBT\n"
+        ret["grid"] += f"NUM ACCUR 0.02 0.02 0.02 95 NONSTAT 20\n"
+        ret["grid"] += "\n"
+        ret["grid"] += f"BOUND NEST '{self.spectra_file}' CLOSED\n"
+        ret["grid"] += "\n"
+        ret["grid"] += f"OUTPUT OPTIONS BLOCK 8\n"
+        ret[
+            "grid"
+        ] += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 DEPTH UBOT HSIGN HSWELL DIR TPS TM01 WIND OUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
+        ret["grid"] += "\n"
+        ret["grid"] += f"POINTs 'pts' FILE 'out.loc'\n"
+        ret[
+            "grid"
+        ] += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
+        ret[
+            "grid"
+        ] += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
+        ret["grid"] += "\n"
+        ret[
+            "grid"
+        ] += f"COMPUTE NONST {runtime.period.start.strftime(self._datefmt)} {frequency} {runtime.period.end.strftime(self._datefmt)}\n"
+        ret["grid"] += "\n"
+        ret["grid"] += f"STOP\n"
+        ret["output_locs"] = self.output_locs
+        return ret
