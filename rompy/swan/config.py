@@ -43,11 +43,99 @@ class ForcingData(RompyBaseModel):
     current: SwanDataGrid | None = None
     boundary: SwanDataGrid | None = None
 
+    def get(self, grid, runtime):
+        ret = []
+        for forcing in self:
+            if forcing[1]:
+                logger.info(f"\t processing {forcing[0]} forcing")
+                forcing[1]._filter_grid(grid)
+                forcing[1]._filter_time(runtime.period)
+                ret.append(forcing[1].get(runtime.staging_dir, grid))
+        return "\n".join(ret)
+
 
 class SwanSpectrum(Spectrum):
     @property
     def cmd(self):
         return f"CIRCLE {self.ndirs} {self.fmin} {self.fmax} {self.nfreqs}"
+
+
+class SwanPhysics(RompyBaseModel):
+    friction: str = "MAD"
+    friction_coeff: float = 0.1
+
+    @validator("friction")
+    def validate_friction(cls, v):
+        if v not in ["MAD", "OTHER", "ANDANOTHER"]:
+            raise ValueError(
+                "friction must be one of MAD, OTHER or ANDANOTHER"
+            )  # TODO Raf to add actual friction options
+        return v
+
+    @validator("friction_coeff")
+    def validate_friction_coeff(cls, v):
+        # TODO Raf to add sensible friction coeff range
+        if float(v) > 1:
+            raise ValueError("friction_coeff must be less than 1")
+        if float(v) < 0:
+            raise ValueError("friction_coeff must be greater than 0")
+        return v
+
+    @property
+    def cmd(self):
+        ret = ""
+        ret += f"GEN3 WESTH 0.000075 0.00175\n"
+        ret += f"BREAKING\n"
+        ret += f"FRICTION {self.friction} {self.friction_coeff}\n"
+        ret += "\n"
+        ret += f"TRIADS\n"
+        ret += "\n"
+        ret += f"PROP BSBT\n"
+        ret += f"NUM ACCUR 0.02 0.02 0.02 95 NONSTAT 20\n"
+        return ret
+
+
+class GridOutput(RompyBaseModel):
+    """Gridded outputs for SWAN"""
+
+    period: TimeRange | None = None
+    variables: list[str] = [
+        "DEPTH",
+        "UBOT",
+        "HSIGN",
+        "HSWELL",
+        "DIR",
+        "TPS",
+        "TM01",
+        "WIND",
+    ]
+
+
+class SpecOutput(RompyBaseModel):
+    """Spectral outputs for SWAN"""
+
+    period: TimeRange | None = None
+    locations: OutputLocs | None = None
+
+
+class Outputs(RompyBaseModel):
+    """Outputs for SWAN"""
+
+    grid: GridOutput = GridOutput()
+    spec: SpecOutput = SpecOutput()
+    _datefmt: str = "%Y%m%d.%H%M%S"
+
+    @property
+    def cmd(self):
+        out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too
+        frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
+        ret = "OUTPUT OPTIONS BLOCK 8\n"
+        ret += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 {' '.join(self.grid.variables)} OUT {self.grid.period.start.strftime(self._datefmt)} {out_intvl}\n"
+        ret += "\n"
+        ret += f"POINTs 'pts' FILE 'out.loc'\n"
+        ret += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.spec.period.start.strftime(self._datefmt)} {out_intvl}\n"
+        ret += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.grid.period.start.strftime(self._datefmt)} {out_intvl}\n"
+        return ret
 
 
 class SwanConfig(BaseConfig):
@@ -84,29 +172,14 @@ class SwanConfig(BaseConfig):
     spectral_resolution: SwanSpectrum = SwanSpectrum()
     out_period: TimeRange | None = None
     forcing: ForcingData = ForcingData()
+    physics: SwanPhysics = SwanPhysics()
     output_locs: OutputLocs = OutputLocs()
     friction: str = "MAD"
     friction_coeff: str = "0.1"
     spectra_file: str = "boundary.spec"
+    outputs: Outputs = Outputs()
     _datefmt: str = "%Y%m%d.%H%M%S"
     # subnests: list[SwanConfig] = []
-
-    @validator("friction")
-    def validate_friction(cls, v):
-        if v not in ["MAD", "OTHER", "ANDANOTHER"]:
-            raise ValueError(
-                "friction must be one of MAD, OTHER or ANDANOTHER"
-            )  # TODO Raf to add actual friction options
-        return v
-
-    @validator("friction_coeff")
-    def validate_friction_coeff(cls, v):
-        # TODO Raf to add sensible friction coeff range
-        if float(v) > 1:
-            raise ValueError("friction_coeff must be less than 1")
-        if float(v) < 0:
-            raise ValueError("friction_coeff must be greater than 0")
-        return v
 
     @property
     def domain(self):
@@ -126,47 +199,18 @@ class SwanConfig(BaseConfig):
 
     def __call__(self, runtime) -> str:
         ret = {}
+        if not self.outputs.grid.period:
+            self.outputs.grid.period = runtime.period
+        if not self.outputs.spec.period:
+            self.outputs.spec.period = runtime.period
         if not self.out_period:
             self.out_period = runtime.period
         out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too
         frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
         ret["grid"] = f"{self.domain}"
-        ret["grid"] += "\n"
-        for forcing in self.forcing:
-            if forcing[1]:
-                logger.info(f"\t processing {forcing[0]} forcing")
-                forcing[1]._filter_grid(self.grid)
-                forcing[1]._filter_time(runtime.period)
-                ret["grid"] += forcing[1].get(runtime.staging_dir, self.grid)
-                ret["grid"] += "\n"
-        ret["grid"] += f"GEN3 WESTH 0.000075 0.00175\n"
-        ret["grid"] += f"BREAKING\n"
-        ret["grid"] += f"FRICTION {self.friction} {self.friction_coeff}\n"
-        ret["grid"] += "\n"
-        ret["grid"] += f"TRIADS\n"
-        ret["grid"] += "\n"
-        ret["grid"] += f"PROP BSBT\n"
-        ret["grid"] += f"NUM ACCUR 0.02 0.02 0.02 95 NONSTAT 20\n"
-        ret["grid"] += "\n"
-        ret["grid"] += f"BOUND NEST '{self.spectra_file}' CLOSED\n"
-        ret["grid"] += "\n"
-        ret["grid"] += f"OUTPUT OPTIONS BLOCK 8\n"
-        ret[
-            "grid"
-        ] += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 DEPTH UBOT HSIGN HSWELL DIR TPS TM01 WIND OUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
-        ret["grid"] += "\n"
-        ret["grid"] += f"POINTs 'pts' FILE 'out.loc'\n"
-        ret[
-            "grid"
-        ] += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
-        ret[
-            "grid"
-        ] += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.out_period.start.strftime(self._datefmt)} {out_intvl}\n"
-        ret["grid"] += "\n"
-        ret[
-            "grid"
-        ] += f"COMPUTE NONST {runtime.period.start.strftime(self._datefmt)} {frequency} {runtime.period.end.strftime(self._datefmt)}\n"
-        ret["grid"] += "\n"
-        ret["grid"] += f"STOP\n"
+        ret["forcing"] = self.forcing.get(self.grid, runtime)
+        ret["physics"] = f"{self.physics.cmd}"
+        ret["remaining"] = f"BOUND NEST '{self.spectra_file}' CLOSED\n"
+        ret["outputs"] = self.outputs.cmd
         ret["output_locs"] = self.output_locs
         return ret
