@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 class SwanModel(BaseModel):
     model: str = "SWAN"
     config: SwanConfig = SwanConfig()
+    template: str = "/source/rompy/rompy/templates/swan"
 
     # @property
     # def subnests(self):

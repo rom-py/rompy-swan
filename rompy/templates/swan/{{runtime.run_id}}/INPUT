@@ -1,0 +1,13 @@
+$
+$ SWAN - Simple example template used by rompy
+$ Template: {{runtime._template}}
+$ Generated: {{runtime._generated_at}} on {{runtime._generated_on}} by {{runtime._generated_by}}
+$ projection: wgs84
+$
+
+MODE NONSTATIONARY TWODIMENSIONAL
+COORDINATES SPHERICAL
+SET NAUTICAL
+
+{{config.grid}}
+
