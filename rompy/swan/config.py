@@ -4,14 +4,8 @@ import os
 from pydantic import validator
 
 from rompy import TEMPLATES_DIR
-from rompy.core import (
-    BaseConfig,
-    Coordinate,
-    DataBlob,
-    RompyBaseModel,
-    Spectrum,
-    TimeRange,
-)
+from rompy.core import (BaseConfig, Coordinate, DataBlob, RompyBaseModel,
+                        Spectrum, TimeRange)
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -170,14 +164,11 @@ class SwanConfig(BaseConfig):
         x0=115.68, y0=-32.76, dx=0.001, dy=0.001, nx=390, ny=150, rot=77
     )
     spectral_resolution: SwanSpectrum = SwanSpectrum()
-    out_period: TimeRange | None = None
     forcing: ForcingData = ForcingData()
     physics: SwanPhysics = SwanPhysics()
     output_locs: OutputLocs = OutputLocs()
-    friction: str = "MAD"
-    friction_coeff: str = "0.1"
-    spectra_file: str = "boundary.spec"
     outputs: Outputs = Outputs()
+    spectra_file: str = "boundary.spec"
     _datefmt: str = "%Y%m%d.%H%M%S"
     # subnests: list[SwanConfig] = []
 
@@ -203,8 +194,6 @@ class SwanConfig(BaseConfig):
             self.outputs.grid.period = runtime.period
         if not self.outputs.spec.period:
             self.outputs.spec.period = runtime.period
-        if not self.out_period:
-            self.out_period = runtime.period
         out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too
         frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
         ret["grid"] = f"{self.domain}"
