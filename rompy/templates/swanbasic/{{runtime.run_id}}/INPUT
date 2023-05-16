@@ -20,7 +20,7 @@ READINP WIND 1 'wind.grd' 3 0 1 0 FREE
 
 GEN3 WESTH 0.000075 0.00175
 BREAKING
-FRICTION MAD 0.1
+FRICTION MAD {{config.friction_coefficient}} 
 
 TRIADS
 
