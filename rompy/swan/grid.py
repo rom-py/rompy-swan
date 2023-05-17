@@ -302,3 +302,6 @@ class SwanGrid(RegularGrid):
 
     def __repr__(self):
         return f"SwanGrid: {self.gridtype}, {self.nx}x{self.ny}"
+
+    def __str__(self):
+        return f"SwanGrid: {self.gridtype}, {self.nx}x{self.ny}"
