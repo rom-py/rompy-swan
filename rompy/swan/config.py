@@ -2,8 +2,7 @@ import logging
 
 from pydantic import validator
 
-from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
-                        TimeRange)
+from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -107,7 +106,7 @@ class SpecOutput(RompyBaseModel):
     """Spectral outputs for SWAN"""
 
     period: TimeRange | None = None
-    locations: OutputLocs | None = None
+    locations: OutputLocs | None = OutputLocs()  # TODO change to None
 
 
 class Outputs(RompyBaseModel):
@@ -146,9 +145,7 @@ class SwanConfig(BaseConfig):
         Outputs for SWAN
     """
 
-    grid: SwanGrid = SwanGrid(
-        x0=115.68, y0=-32.76, dx=0.001, dy=0.001, nx=390, ny=150, rot=77
-    )
+    grid: SwanGrid
     spectral_resolution: SwanSpectrum = SwanSpectrum()
     forcing: ForcingData = ForcingData()
     physics: SwanPhysics = SwanPhysics()
@@ -164,6 +161,7 @@ class SwanConfig(BaseConfig):
         return output
 
     def _get_grid(self, key=None):
+        # TODO - Is this functionality needed?
         from intake.source.utils import reverse_format
 
         grid_spec = self.bottom_grid
@@ -179,12 +177,10 @@ class SwanConfig(BaseConfig):
             self.outputs.grid.period = runtime.period
         if not self.outputs.spec.period:
             self.outputs.spec.period = runtime.period
-        out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too
-        frequency = "0.25 HR"  # Hardcoded for now, need to get from time object too
         ret["grid"] = f"{self.domain}"
         ret["forcing"] = self.forcing.get(self.grid, runtime)
         ret["physics"] = f"{self.physics.cmd}"
         ret["remaining"] = f"BOUND NEST '{self.spectra_file}' CLOSED\n"
         ret["outputs"] = self.outputs.cmd
-        ret["output_locs"] = self.output_locs
+        ret["output_locs"] = self.outputs.spec.locations
         return ret

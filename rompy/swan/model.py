@@ -8,8 +8,8 @@ logger = logging.getLogger(__name__)
 
 
 class SwanModel(BaseModel):
+    config: SwanConfig | dict = {}
     model: str = "SWAN"
-    config: SwanConfig = SwanConfig()
     template: str = "/source/rompy/rompy/templates/swan"
 
     # @property
