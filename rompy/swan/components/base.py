@@ -50,7 +50,7 @@ class BaseComponent(RompyBaseModel):
 
     Parameters
     ----------
-    type : Literal["base"]
+    model_type : Literal["base"]
         Name of the component to help parsing and render as a header in the cmd file.
 
     Behaviour
@@ -61,7 +61,13 @@ class BaseComponent(RompyBaseModel):
 
     """
 
-    type: Literal["base"]
+    model_type: Literal["base"]
+
+    class Config:
+        """Configure the model."""
+
+        # validate_assignment = True
+        extra = "forbid"
 
     @root_validator(pre=True)
     def to_lowercase(cls, values):
@@ -72,7 +78,7 @@ class BaseComponent(RompyBaseModel):
     @property
     def header(self):
         """Define a header from parent classes names and the component type."""
-        s = " ".join([c.__name__ for c in self.__class__.__bases__] + [self.type.upper()])
+        s = " ".join([c.__name__ for c in self.__class__.__bases__] + [self.model_type.upper()])
         return f"\n!{s.center(131, '-')}\n"
 
     def render(self):
@@ -85,7 +91,7 @@ class READGRID(BaseModel):
 
     Parameters:
     -----------
-    type : Literal["readgrid"]
+    model_type : Literal["readgrid"]
         Name of the component to help parsing and render as a comment in the cmd file.
     gridtype: GridOptions
         Type of the SWAN grid file.
@@ -134,7 +140,7 @@ class READGRID(BaseModel):
         - 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
 
     """
-    type: Literal["readgrid"] = "readgrid"
+    model_type: Literal["readgrid"] = "readgrid"
     gridtype: str
     fac: confloat(gt=0.0) = 1.0
     idla: conint(ge=1, le=6) = 1
@@ -181,15 +187,15 @@ class READCOORD(READGRID):
 
     parameters
     ----------
-    type : Literal["readcoord"]
+    model_type : Literal["readcoord"]
         Name of the component to help parsing and render as a comment in the cmd file.
     gridtype: Literal["coordinates"]
-        Grid type.
+        Type of the SWAN grid file.
     fname: str
         Name of the SWAN coordinates file.
 
     """
-    type: Literal["readcoord"] = "readcoord"
+    model_type: Literal["readcoord"] = "readcoord"
     gridtype: Literal["coordinates"] = "coordinates"
     fname: str
 
@@ -214,10 +220,10 @@ class READINP(READGRID):
 
     parameters
     ----------
-    type : Literal["readcoord"]
+    model_type : Literal["readcoord"]
         Name of the component to help parsing and render as a comment in the cmd file.
     gridtype: GridOptions | None
-        Name of the component to help parsing and render as a comment in the cmd file.
+        Type of the SWAN grid file.
     fname1: str
         Name of the file with the values of the variable.
     fname2: str | None
@@ -234,7 +240,7 @@ class READINP(READGRID):
         lines (see `nhedvec`).
 
     """
-    type: Literal["readcoord"] = "readcoord"
+    model_type: Literal["readcoord"] = "readcoord"
     gridtype: GridOptions | None = None
     fname1: str
     fname2: str | None = None
@@ -263,7 +269,7 @@ class NONSTATIONARY(BaseModel):
 
     Parameters
     ----------
-    type : Literal["nonstationary"]
+    model_type : Literal["nonstationary"]
         Name of the component to help parsing and render as a comment in the cmd file.
     tbeg: datetime
         Begin time of the first field of the variable.
@@ -301,7 +307,7 @@ class NONSTATIONARY(BaseModel):
 
     """
 
-    type: Literal["nonstationary"] = "nonstationary"
+    model_type: Literal["nonstationary"] = "nonstationary"
     tbeg: datetime
     delt: timedelta
     tend: datetime

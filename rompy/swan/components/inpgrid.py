@@ -40,7 +40,7 @@ class INPGRID(BaseComponent):
 
     Parameters
     ----------
-    type : Literal["inpgrid"]
+    model_type : Literal["inpgrid"]
         Name of the component to help parsing and render as a header in the cmd file.
     inpgrid: InpgridOptions
     excval: float | None = None
@@ -52,7 +52,7 @@ class INPGRID(BaseComponent):
 
     """
 
-    type: Literal["inpgrid"] = "inpgrid"
+    model_type: Literal["inpgrid"] = "inpgrid"
     inpgrid: InpgridOptions
     excval: float | None = None
     nonstationary: NONSTATIONARY | None = None
@@ -73,7 +73,7 @@ class REGULAR(INPGRID):
 
     Parameters
     ----------
-    type : Literal["regular"]
+    model_type : Literal["regular"]
         Name of the component to help parsing and render as a header in the cmd file.
     xpinp: float
         Geographic location (x-coordinate) of the origin of the input grid in problem
@@ -101,7 +101,7 @@ class REGULAR(INPGRID):
         `dyinp` may have any value.
 
     """
-    type: Literal["regular"] = "regular"
+    model_type: Literal["regular"] = "regular"
     xpinp: float
     ypinp: float
     alpinp: float = 0.0
@@ -128,7 +128,7 @@ class CURVILINEAR(INPGRID):
 
     Parameters
     ----------
-    type : Literal["curvilinear"]
+    model_type : Literal["curvilinear"]
         Name of the component to help parsing and render as a header in the cmd file.
     stagrx: float
         Staggered x'-direction with respect to computational grid, e.g., `stagrx=0.5`
@@ -150,7 +150,7 @@ class CURVILINEAR(INPGRID):
     TODO: Handle (or not) setting default values for mxinp and myinp from cgrid component in swan.
 
     """
-    type: Literal["curvilinear"] = "curvilinear"
+    model_type: Literal["curvilinear"] = "curvilinear"
     stagrx: float = 0.0
     stagry: float = 0.0
     mxinp: int
@@ -173,11 +173,11 @@ class UNSTRUCTURED(INPGRID):
 
     Parameters
     ----------
-    type : Literal["unstructured"]
+    model_type : Literal["unstructured"]
         Name of the component to help parsing and render as a header in the cmd file.
 
     """
-    type: Literal["unstructured"] = "unstructured"
+    model_type: Literal["unstructured"] = "unstructured"
 
     def __repr__(self):
         repr = f"{super().__repr__()} UNSTRUCTURED"
