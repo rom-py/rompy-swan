@@ -27,17 +27,17 @@ def test_nonstationary():
 
 
 def test_readgrid_fac():
-    READGRID(gridtype="coordinates", fname="grid_coords.txt", fac=1.0)
+    READGRID(grid_type="coordinates", fname="grid_coords.txt", fac=1.0)
     with pytest.raises(ValidationError):
-        READGRID(gridtype="coordinates", fname="grid_coords.txt", fac=0.0)
+        READGRID(grid_type="coordinates", fname="grid_coords.txt", fac=0.0)
     with pytest.raises(ValidationError):
-        READGRID(gridtype="coordinates", fname="grid_coords.txt", fac=-1.0)
+        READGRID(grid_type="coordinates", fname="grid_coords.txt", fac=-1.0)
 
 
 def test_readgrid_wrong_format():
     with pytest.raises(ValidationError):
         READGRID(
-            gridtype="coordinates",
+            grid_type="coordinates",
             fname="grid_coords.txt",
             format="invalid",
         )
@@ -45,7 +45,7 @@ def test_readgrid_wrong_format():
 
 def test_readgrid_free():
     readgrid = READGRID(
-        gridtype="coordinates",
+        grid_type="coordinates",
         fname="grid_coords.txt",
         format="free",
     )
@@ -54,7 +54,7 @@ def test_readgrid_free():
 
 def test_readgrid_unformatted():
     readgrid = READGRID(
-        gridtype="coordinates",
+        grid_type="coordinates",
         fname="grid_coords.txt",
         format="unformatted",
     )
@@ -63,7 +63,7 @@ def test_readgrid_unformatted():
 
 def test_readgrid_fixed_form():
     readgrid = READGRID(
-        gridtype="coordinates",
+        grid_type="coordinates",
         fname="grid_coords.txt",
         format="fixed",
         form="(10X,12F5.0)",
@@ -74,13 +74,13 @@ def test_readgrid_fixed_form():
 def test_readgrid_fixed_idfm():
     with pytest.raises(ValidationError):
         READGRID(
-            gridtype="coordinates",
+            grid_type="coordinates",
             fname="grid_coords.txt",
             format="fixed",
             idfm=2,
         )
     readgrid = READGRID(
-        gridtype="coordinates",
+        grid_type="coordinates",
         fname="grid_coords.txt",
         format="fixed",
         idfm=1,
