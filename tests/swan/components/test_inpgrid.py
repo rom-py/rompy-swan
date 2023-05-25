@@ -98,3 +98,5 @@ def test_inpgrid_curvilinear(nonstat):
     )
     logger.info(inpgrid.render())
 
+
+# def test_inpgrid_case():

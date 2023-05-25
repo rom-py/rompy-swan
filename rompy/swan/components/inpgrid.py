@@ -40,8 +40,8 @@ class INPGRID(BaseComponent):
 
     Parameters
     ----------
-    kind : Literal["inpgrid"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+    type : Literal["inpgrid"]
+        Name of the component to help parsing and render as a header in the cmd file.
     inpgrid: InpgridOptions
     excval: float | None = None
         Exception value to allow identifying and ignoring certain point inside the
@@ -52,7 +52,7 @@ class INPGRID(BaseComponent):
 
     """
 
-    kind: Literal["inpgrid"] = "inpgrid"
+    type: Literal["inpgrid"] = "inpgrid"
     inpgrid: InpgridOptions
     excval: float | None = None
     nonstationary: NONSTATIONARY | None = None
@@ -73,8 +73,8 @@ class REGULAR(INPGRID):
 
     Parameters
     ----------
-    kind : Literal["regular"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+    type : Literal["regular"]
+        Name of the component to help parsing and render as a header in the cmd file.
     xpinp: float
         Geographic location (x-coordinate) of the origin of the input grid in problem
         coordinates (in m) if Cartesian coordinates are used or in degrees if spherical
@@ -101,7 +101,7 @@ class REGULAR(INPGRID):
         `dyinp` may have any value.
 
     """
-    kind: Literal["regular"] = "regular"
+    type: Literal["regular"] = "regular"
     xpinp: float
     ypinp: float
     alpinp: float = 0.0
@@ -128,8 +128,8 @@ class CURVILINEAR(INPGRID):
 
     Parameters
     ----------
-    kind : Literal["curvilinear"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+    type : Literal["curvilinear"]
+        Name of the component to help parsing and render as a header in the cmd file.
     stagrx: float
         Staggered x'-direction with respect to computational grid, e.g., `stagrx=0.5`
         means that the input grid points are shifted a half step in x'-direction; in
@@ -150,7 +150,7 @@ class CURVILINEAR(INPGRID):
     TODO: Handle (or not) setting default values for mxinp and myinp from cgrid component in swan.
 
     """
-    kind: Literal["curvilinear"] = "curvilinear"
+    type: Literal["curvilinear"] = "curvilinear"
     stagrx: float = 0.0
     stagry: float = 0.0
     mxinp: int
@@ -173,11 +173,11 @@ class UNSTRUCTURED(INPGRID):
 
     Parameters
     ----------
-    kind : Literal["unstructured"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+    type : Literal["unstructured"]
+        Name of the component to help parsing and render as a header in the cmd file.
 
     """
-    kind: Literal["unstructured"] = "unstructured"
+    type: Literal["unstructured"] = "unstructured"
 
     def __repr__(self):
         repr = f"{super().__repr__()} UNSTRUCTURED"
