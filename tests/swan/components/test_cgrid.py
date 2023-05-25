@@ -11,7 +11,8 @@ from rompy.swan.components.cgrid import (
 
 @pytest.fixture(scope="module")
 def curvilinear_kwargs():
-    yield dict(mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, fname="grid_coord.txt")
+    readcoord = {"fname": "grid_coord.txt"}
+    yield dict(mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, readcoord=readcoord)
 
 
 def test_cgrid():
@@ -76,29 +77,46 @@ def test_curvilinear_cgrid_exception(curvilinear_kwargs):
 
 
 def test_read_grid_coord_free_or_fixed_or_unformatted_only(curvilinear_kwargs):
-    CURVILINEAR(format="fixed", form="(10X,12F5.0)", **curvilinear_kwargs)
-    CURVILINEAR(format="free", **curvilinear_kwargs)
-    CURVILINEAR(format="unformatted", **curvilinear_kwargs)
+    kwargs = curvilinear_kwargs.copy()
+    kwargs["readcoord"] = {
+        "fname": "coords.txt", "format": "fixed", "form": "(10X,12F5.0)"
+    }
+    CURVILINEAR(**kwargs)
+    kwargs["readcoord"] = {"fname": "coords.txt", "format": "free"}
+    CURVILINEAR(**kwargs)
+    kwargs["readcoord"] = {"fname": "coords.txt", "format": "unformatted"}
+    CURVILINEAR(**kwargs)
     with pytest.raises(ValueError):
-        CURVILINEAR(format="something_else", **curvilinear_kwargs)
+        kwargs["readcoord"] = {"fname": "coords.txt", "format": "something_else"}
+        CURVILINEAR(**kwargs)
 
 
 def test_read_grid_coord_idfm_options(curvilinear_kwargs):
-    CURVILINEAR(format="fixed", idfm=1, **curvilinear_kwargs)
-    CURVILINEAR(format="fixed", idfm=5, **curvilinear_kwargs)
-    CURVILINEAR(format="fixed", idfm=6, **curvilinear_kwargs)
-    CURVILINEAR(format="fixed", idfm=8, **curvilinear_kwargs)
+    kwargs = curvilinear_kwargs.copy()
+    for idfm in [1, 5, 6, 8]:
+        kwargs["readcoord"] = {"fname": "coords.txt", "format": "fixed", "idfm": idfm}
+        CURVILINEAR(**kwargs)
     with pytest.raises(ValueError):
-        CURVILINEAR(format="fixed", idfm=9, **curvilinear_kwargs)
+        kwargs["readcoord"] = {"fname": "coords.txt", "format": "fixed", "idfm": 2}
+        CURVILINEAR(**kwargs)
 
 
 def test_read_grid_fixed_format_arguments(curvilinear_kwargs):
-    CURVILINEAR(format="fixed", form="(10X,12F5.0)", **curvilinear_kwargs)
-    CURVILINEAR(format="fixed", idfm=1, **curvilinear_kwargs)
+    kwargs = curvilinear_kwargs.copy()
+    kwargs["readcoord"] = {
+        "fname": "coords.txt", "format": "fixed", "form": "(10X,12F5.0)"
+    }
+    CURVILINEAR(**kwargs)
+    kwargs["readcoord"] = {"fname": "coords.txt", "format": "fixed", "idfm": 1}
+    CURVILINEAR(**kwargs)
     with pytest.raises(ValueError):
-        CURVILINEAR(format="fixed", idfm=5, form="(10X,12F5.0)", **curvilinear_kwargs)
+        kwargs["readcoord"] = {
+            "fname": "coords.txt", "format": "fixed", "form": "(10X,12F5.0)", "idfm": 1
+        }
+        CURVILINEAR(**kwargs)
     with pytest.raises(ValueError):
-        CURVILINEAR(format="fixed", **curvilinear_kwargs)
+        kwargs["readcoord"] = {"fname": "coords.txt", "format": "fixed"}
+        CURVILINEAR(**kwargs)
 
 
 def test_unstructured_cgrid_adcirc():
