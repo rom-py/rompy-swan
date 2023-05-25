@@ -7,30 +7,10 @@ from pathlib import Path
 from typing_extensions import Literal
 from pydantic import root_validator
 
-from rompy.swan.components.base import BaseComponent, NONSTATIONARY
+from rompy.swan.components.base import BaseComponent, NONSTATIONARY, GridOptions
 
 
 HERE = Path(__file__).parent
-
-
-class InpgridOptions(str, Enum):
-    """Valid options for the input grid type."""
-    bottom = "bottom"
-    wlevel = "wlevel"
-    current = "current"
-    vx = "vx"
-    vy = "vy"
-    friction = "friction"
-    wind = "wind"
-    wx = "wx"
-    wy = "wy"
-    nplants = "nplants"
-    turbvisc = "turbvisc"
-    mudlayer = "mudlayer"
-    aice = "aice"
-    hice = "hice"
-    hss = "hss"
-    tss = "tss"
 
 
 class INPGRID(BaseComponent):
@@ -42,7 +22,7 @@ class INPGRID(BaseComponent):
     ----------
     model_type : Literal["inpgrid"]
         Name of the component to help parsing and render as a header in the cmd file.
-    inpgrid: InpgridOptions
+    inpgrid: GridOptions
     excval: float | None = None
         Exception value to allow identifying and ignoring certain point inside the
         given grid during the computation. If `fac` != 1, `excval` must be given as
@@ -53,7 +33,7 @@ class INPGRID(BaseComponent):
     """
 
     model_type: Literal["inpgrid"] = "inpgrid"
-    inpgrid: InpgridOptions
+    inpgrid: GridOptions
     excval: float | None = None
     nonstationary: NONSTATIONARY | None = None
 

@@ -65,8 +65,6 @@ class BaseComponent(RompyBaseModel):
 
     class Config:
         """Configure the model."""
-
-        # validate_assignment = True
         extra = "forbid"
 
     @root_validator(pre=True)
