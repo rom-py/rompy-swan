@@ -17,7 +17,7 @@ class CGRID(BaseComponent):
     Parameters
     ----------
     model_type : Literal["cgrid"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
     mdc: int
         Number of meshes in θ-space. In the case of CIRCLE, this is the number of
         subdivisions of the 360 degrees of a circle so ∆θ = [360]/[mdc] is the spectral
@@ -103,7 +103,7 @@ class REGULAR(CGRID):
     Parameters
     ----------
     model_type : Literal["regular"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
     xpc: float
         Geographic location of the origin of the computational grid in the problem
         coordinate system (x-coordinate, in m).
@@ -152,7 +152,7 @@ class CURVILINEAR(CGRID):
     Parameters
     ----------
     model_type : Literal["curvilinear"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
     mxc: int
         Number of meshes in computational grid in ξ-direction (this number
         is one less than the number of grid points in this domain).
@@ -242,7 +242,11 @@ class UNSTRUCTURED(CGRID):
     Parameters
     ----------
     model_type : Literal["unstructured"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
+    grid_type : Literal["adcirc", "triangle", "easymesh"]
+        Unstructured grid type.
+    fname: str
+        Name of the file containing the unstructured grid.
 
     """
     model_type: Literal["unstructured"] = "unstructured"
