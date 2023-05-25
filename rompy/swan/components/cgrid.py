@@ -3,7 +3,7 @@ import logging
 from pydantic import validator, root_validator, conint, confloat, constr
 from typing_extensions import Literal
 
-from rompy.swan.components.base import BaseComponent
+from rompy.swan.components.base import BaseComponent, READGRID
 
 
 logger = logging.getLogger(__name__)
@@ -16,8 +16,8 @@ class CGRID(BaseComponent):
 
     Parameters
     ----------
-    kind : Literal["cgrid"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+    type : Literal["cgrid"]
+        Name of the component to help parsing and render as a header in the cmd file.
     mdc: int
         Number of meshes in θ-space. In the case of CIRCLE, this is the number of
         subdivisions of the 360 degrees of a circle so ∆θ = [360]/[mdc] is the spectral
@@ -47,7 +47,7 @@ class CGRID(BaseComponent):
     CIRCLE, neither `dir1` nor `dir2` should be specified.
 
     """
-    kind: Literal["cgrid"] = "cgrid"
+    type: Literal["cgrid"] = "cgrid"
     mdc: int
     flow: float | None = None
     fhigh: float | None = None
@@ -102,8 +102,8 @@ class REGULAR(CGRID):
 
     Parameters
     ----------
-    kind : Literal["regular"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+    type : Literal["regular"]
+        Name of the component to help parsing and render as a header in the cmd file.
     xpc: float
         Geographic location of the origin of the computational grid in the problem
         coordinate system (x-coordinate, in m).
@@ -128,7 +128,7 @@ class REGULAR(CGRID):
         than the number of grid points in this domain).  In 1D-mode, `myc` should be 0.
 
     """
-    kind: Literal["regular"] = "regular"
+    type: Literal["regular"] = "regular"
     xpc: float = 0.0
     ypc: float = 0.0
     alpc: float = 0.0
@@ -151,8 +151,8 @@ class CURVILINEAR(CGRID):
 
     Parameters
     ----------
-    kind : Literal["curvilinear"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+    type : Literal["curvilinear"]
+        Name of the component to help parsing and render as a header in the cmd file.
     mxc: int
         Number of meshes in computational grid in ξ-direction (this number
         is one less than the number of grid points in this domain).
@@ -218,7 +218,7 @@ class CURVILINEAR(CGRID):
         Only used if `format="fixed"`, do not use it if `form` is specified.
 
     """
-    kind: Literal["curvilinear"] = "curvilinear"
+    type: Literal["curvilinear"] = "curvilinear"
     mxc: int
     myc: int
     xexc: float | None = None
@@ -293,11 +293,11 @@ class UNSTRUCTURED(CGRID):
 
     Parameters
     ----------
-    kind : Literal["unstructured"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+    type : Literal["unstructured"]
+        Name of the component to help parsing and render as a header in the cmd file.
 
     """
-    kind: Literal["unstructured"] = "unstructured"
+    type: Literal["unstructured"] = "unstructured"
     grid_type: Literal["adcirc", "triangle", "easymesh"] = "adcirc"
     fname: constr(max_length=80) | None = None
 

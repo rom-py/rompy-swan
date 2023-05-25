@@ -55,7 +55,7 @@ def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
     sc._write_cmd()
 
 
-def test_swan_config_from_dict(cgrid_instance, inpgrid_instance):
+def test_swan_config_from_dict():
     cgrid_dict = {
         "kind": "regular",
         "mdc": 36,
