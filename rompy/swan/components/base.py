@@ -95,7 +95,7 @@ class READGRID(BaseModel):
     -----------
     model_type : Literal["readgrid"]
         Model type discriminator.
-    gridtype: GridOptions
+    grid_type: GridOptions
         Type of the SWAN grid file.
     fac: float
         SWAN multiplies all values that are read from file by `fac`. For instance if
@@ -143,7 +143,7 @@ class READGRID(BaseModel):
 
     """
     model_type: Literal["readgrid"] = "readgrid"
-    gridtype: str
+    grid_type: str
     fac: confloat(gt=0.0) = 1.0
     idla: conint(ge=1, le=6) = 1
     nhedf: conint(ge=0) = 0
@@ -191,14 +191,14 @@ class READCOORD(READGRID):
     ----------
     model_type : Literal["readcoord"]
         Model type discriminator.
-    gridtype: Literal["coordinates"]
+    grid_type: Literal["coordinates"]
         Type of the SWAN grid file.
     fname: str
         Name of the SWAN coordinates file.
 
     """
     model_type: Literal["readcoord"] = "readcoord"
-    gridtype: Literal["coordinates"] = "coordinates"
+    grid_type: Literal["coordinates"] = "coordinates"
     fname: str
 
     @root_validator
@@ -224,7 +224,7 @@ class READINP(READGRID):
     ----------
     model_type : Literal["readcoord"]
         Model type discriminator.
-    gridtype: GridOptions | None
+    grid_type: GridOptions | None
         Type of the SWAN grid file.
     fname1: str
         Name of the file with the values of the variable.
@@ -243,7 +243,7 @@ class READINP(READGRID):
 
     """
     model_type: Literal["readcoord"] = "readcoord"
-    gridtype: GridOptions | None = None
+    grid_type: GridOptions | None = None
     fname1: str
     fname2: str | None = None
     nhedt: conint(ge=0) = 0
@@ -254,7 +254,7 @@ class READINP(READGRID):
 
     def render(self):
         repr = (
-            f"READINP {self.gridtype.upper()} fac={self.fac} fname1='{self.fname1}'"
+            f"READINP {self.grid_type.upper()} fac={self.fac} fname1='{self.fname1}'"
         )
         if self.fname2:
             repr += f" SERIES fname2='{self.fname2}'"
