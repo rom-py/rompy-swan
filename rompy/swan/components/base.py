@@ -85,7 +85,6 @@ class READGRID(BaseModel):
 
     Parameters:
     -----------
-
     type : Literal["readgrid"]
         Name of the component to help parsing and render as a comment in the cmd file.
     gridtype: GridOptions
@@ -94,8 +93,6 @@ class READGRID(BaseModel):
         SWAN multiplies all values that are read from file by `fac`. For instance if
         the values are given in unit decimeter, one should make `fac=0.1` to obtain
         values in m. To change sign use a negative `fac`.
-    fname: str
-        Name of the SWAN grid file.
     idla: int
         prescribes the order in which the values of bottom levels and other fields
         should be given in the file:
@@ -115,12 +112,7 @@ class READGRID(BaseModel):
         lines is reproduced in the print file created by SWAN . The file may start with
         more header lines than `nhedf` because the start of the file is often also the
         start of a time step and possibly also of a vector variable (each having header
-        lines, see below, `nhedt` and `nhedvec`).
-    nhedt: int
-        Only if variable is time dependent: number of header lines in the file at the
-        start of each time level. A time step may start with more header lines than
-        `nhedt` because the variable may be a vector variable which has its own header
-        lines (see below `nhedvec`).
+        lines, see `nhedt` and `nhedvec`).
     nhedvec: int
         For each vector variable: number of header lines in the file at the start of
         each component (e.g., x- or y-component).
@@ -145,13 +137,9 @@ class READGRID(BaseModel):
     type: Literal["readgrid"] = "readgrid"
     gridtype: str
     fac: confloat(gt=0.0) = 1.0
-    fname: str
-    fname1: str | None = None
-    fname2: str | None = None
     idla: conint(ge=1, le=6) = 1
     nhedf: conint(ge=0) = 0
-    nhedt: conint(ge=0) | None = None
-    nhedvec: conint(ge=0) | None = None
+    nhedvec: conint(ge=0) = 0
     format: Literal["free", "fixed", "unformatted"] = "free"
     form: str | None = None
     idfm: Literal[1, 5, 6, 8] | None = None
@@ -193,26 +181,76 @@ class READCOORD(READGRID):
 
     parameters
     ----------
-    gridtype: Literal["coordinates"] = "coordinates
+    type : Literal["readcoord"]
         Name of the component to help parsing and render as a comment in the cmd file.
+    gridtype: Literal["coordinates"]
+        Grid type.
+    fname: str
+        Name of the SWAN coordinates file.
 
     """
     type: Literal["readcoord"] = "readcoord"
     gridtype: Literal["coordinates"] = "coordinates"
+    fname: str
 
     @root_validator
     def check_arguments(cls, values: dict) -> dict:
         """A few checks to restrict input types from parent class."""
-        for key in ["fname1", "fname2", "nhedt"]:
+        for key in ["nhedt"]:
             if values.get(key):
                 raise ValueError(f"{key} is not allowed for READCOORD")
         return values
 
     def render(self):
         repr = (
-            f"\nREADGRID COORDINATES fac={self.fac} fname='{self.fname}' "
+            f"READGRID COORDINATES fac={self.fac} fname='{self.fname}' "
             f"idla={self.idla} nhedf={self.nhedf} nhedvec={self.nhedvec} {self.format_repr}"
         )
+        return repr
+
+
+class READINP(READGRID):
+    """SWAN READ INP.
+
+    parameters
+    ----------
+    type : Literal["readcoord"]
+        Name of the component to help parsing and render as a comment in the cmd file.
+    gridtype: GridOptions | None
+        Name of the component to help parsing and render as a comment in the cmd file.
+    fname1: str
+        Name of the file with the values of the variable.
+    fname2: str | None
+        Name of file that contains the names of the files where the variables are
+        given when the SERIES option is used. These names are to be given in proper
+        time sequence. SWAN reads the next file when the previous file end has been
+        encountered. In these files the input should be given in the same format as in
+        the above file 'fname1' (that implies that a file should start with the start
+        of an input time step).
+    nhedt: int
+        Only if variable is time dependent: number of header lines in the file at the
+        start of each time level. A time step may start with more header lines than
+        `nhedt` because the variable may be a vector variable which has its own header
+        lines (see `nhedvec`).
+
+    """
+    type: Literal["readcoord"] = "readcoord"
+    gridtype: GridOptions | None = None
+    fname1: str
+    fname2: str | None = None
+    nhedt: conint(ge=0) = 0
+
+    @root_validator
+    def check_arguments(cls, values: dict) -> dict:
+        return values
+
+    def render(self):
+        repr = (
+            f"READINP {self.gridtype.upper()} fac={self.fac} fname1='{self.fname1}'"
+        )
+        if self.fname2:
+            repr += f" SERIES fname2='{self.fname2}'"
+        repr += f" idla={self.idla} nhedf={self.nhedf} nhedt={self.nhedt} nhedvec={self.nhedvec} {self.format_repr}"
         return repr
 
 
