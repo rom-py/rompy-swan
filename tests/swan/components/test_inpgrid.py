@@ -8,7 +8,7 @@ from rompy.swan.components.inpgrid import (
     REGULAR,
     CURVILINEAR,
     UNSTRUCTURED,
-    InpgridOptions,
+    GridOptions,
     NONSTATIONARY,
 )
 
@@ -43,7 +43,7 @@ def nonstat():
 
 
 def test_valid_inpgrid_options():
-    for inpgrid in InpgridOptions:
+    for inpgrid in GridOptions:
         INPGRID(inpgrid=inpgrid.value)
         INPGRID(inpgrid=inpgrid.value.lower())
         INPGRID(inpgrid=inpgrid.value.upper())
@@ -65,7 +65,7 @@ def test_inpgrid_nonstationary(nonstat):
 
 def test_inpgrid_regular(nonstat):
     inpgrid = REGULAR(
-        inpgrid=InpgridOptions.bottom,
+        inpgrid=GridOptions.bottom,
         xpinp=0.0,
         ypinp=0.0,
         alpinp=0.0,
@@ -81,7 +81,7 @@ def test_inpgrid_regular(nonstat):
 
 def test_inpgrid_curvilinear(nonstat):
     inpgrid = CURVILINEAR(
-        inpgrid=InpgridOptions.bottom,
+        inpgrid=GridOptions.bottom,
         mxinp=10,
         myinp=10,
         excval=-999.0,
@@ -92,7 +92,7 @@ def test_inpgrid_curvilinear(nonstat):
 
 def test_inpgrid_curvilinear(nonstat):
     inpgrid = UNSTRUCTURED(
-        inpgrid=InpgridOptions.bottom,
+        inpgrid=GridOptions.bottom,
         excval=-999.0,
         nonstationary=nonstat,
     )
