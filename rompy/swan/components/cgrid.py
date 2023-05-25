@@ -228,11 +228,7 @@ class CURVILINEAR(CGRID):
         repr = f"CGRID CURVILINEAR mxc={self.mxc} myc={self.myc}"
         if self.exception:
             repr += f" {self.exception}"
-        repr += f" {super().__repr__()}"
-        repr += (
-            f"\nREADGRID COORDINATES fac={self.fac} fname='{self.fname}' idla={self.idla} "
-            f"nhedf={self.nhedf} nhedvec={self.nhedvec} {self.format_repr}"
-        )
+        repr += f" {super().__repr__()}\n{self.readcoord.render()}"
         return repr
 
 
@@ -280,7 +276,7 @@ if __name__ == "__main__":
     print(cgrid.render())
 
     cgrid = CURVILINEAR(
-        mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, fname="grid_coord.txt"
+        mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, readcoord=dict(fname="grid_coord.txt")
     )
     print(cgrid.render())
 
