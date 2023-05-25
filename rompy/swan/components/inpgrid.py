@@ -21,7 +21,7 @@ class INPGRID(BaseComponent):
     Parameters
     ----------
     model_type : Literal["inpgrid"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
     inpgrid: GridOptions
     excval: float | None = None
         Exception value to allow identifying and ignoring certain point inside the
@@ -54,7 +54,7 @@ class REGULAR(INPGRID):
     Parameters
     ----------
     model_type : Literal["regular"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
     xpinp: float
         Geographic location (x-coordinate) of the origin of the input grid in problem
         coordinates (in m) if Cartesian coordinates are used or in degrees if spherical
@@ -109,7 +109,7 @@ class CURVILINEAR(INPGRID):
     Parameters
     ----------
     model_type : Literal["curvilinear"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
     stagrx: float
         Staggered x'-direction with respect to computational grid, e.g., `stagrx=0.5`
         means that the input grid points are shifted a half step in x'-direction; in
@@ -154,7 +154,7 @@ class UNSTRUCTURED(INPGRID):
     Parameters
     ----------
     model_type : Literal["unstructured"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
 
     """
     model_type: Literal["unstructured"] = "unstructured"

@@ -55,7 +55,7 @@ class BaseComponent(RompyBaseModel):
     Parameters
     ----------
     model_type : Literal["base"]
-        Name of the component to help parsing and render as a header in the cmd file.
+        Model type discriminator.
 
     Behaviour
     ---------
@@ -94,7 +94,7 @@ class READGRID(BaseModel):
     Parameters:
     -----------
     model_type : Literal["readgrid"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+        Model type discriminator.
     gridtype: GridOptions
         Type of the SWAN grid file.
     fac: float
@@ -190,7 +190,7 @@ class READCOORD(READGRID):
     parameters
     ----------
     model_type : Literal["readcoord"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+        Model type discriminator.
     gridtype: Literal["coordinates"]
         Type of the SWAN grid file.
     fname: str
@@ -223,7 +223,7 @@ class READINP(READGRID):
     parameters
     ----------
     model_type : Literal["readcoord"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+        Model type discriminator.
     gridtype: GridOptions | None
         Type of the SWAN grid file.
     fname1: str
@@ -272,7 +272,7 @@ class NONSTATIONARY(BaseModel):
     Parameters
     ----------
     model_type : Literal["nonstationary"]
-        Name of the component to help parsing and render as a comment in the cmd file.
+        Model type discriminator.
     tbeg: datetime
         Begin time of the first field of the variable.
     delt:
