@@ -16,7 +16,7 @@ class CGRID(BaseComponent):
 
     Parameters
     ----------
-    type : Literal["cgrid"]
+    model_type : Literal["cgrid"]
         Name of the component to help parsing and render as a header in the cmd file.
     mdc: int
         Number of meshes in θ-space. In the case of CIRCLE, this is the number of
@@ -47,7 +47,7 @@ class CGRID(BaseComponent):
     CIRCLE, neither `dir1` nor `dir2` should be specified.
 
     """
-    type: Literal["cgrid"] = "cgrid"
+    model_type: Literal["cgrid"] = "cgrid"
     mdc: int
     flow: float | None = None
     fhigh: float | None = None
@@ -102,7 +102,7 @@ class REGULAR(CGRID):
 
     Parameters
     ----------
-    type : Literal["regular"]
+    model_type : Literal["regular"]
         Name of the component to help parsing and render as a header in the cmd file.
     xpc: float
         Geographic location of the origin of the computational grid in the problem
@@ -128,7 +128,7 @@ class REGULAR(CGRID):
         than the number of grid points in this domain).  In 1D-mode, `myc` should be 0.
 
     """
-    type: Literal["regular"] = "regular"
+    model_type: Literal["regular"] = "regular"
     xpc: float = 0.0
     ypc: float = 0.0
     alpc: float = 0.0
@@ -151,7 +151,7 @@ class CURVILINEAR(CGRID):
 
     Parameters
     ----------
-    type : Literal["curvilinear"]
+    model_type : Literal["curvilinear"]
         Name of the component to help parsing and render as a header in the cmd file.
     mxc: int
         Number of meshes in computational grid in ξ-direction (this number
@@ -173,7 +173,7 @@ class CURVILINEAR(CGRID):
         Grid coordinates reader.
 
     """
-    type: Literal["curvilinear"] = "curvilinear"
+    model_type: Literal["curvilinear"] = "curvilinear"
     mxc: int
     myc: int
     xexc: float | None = None
@@ -241,11 +241,11 @@ class UNSTRUCTURED(CGRID):
 
     Parameters
     ----------
-    type : Literal["unstructured"]
+    model_type : Literal["unstructured"]
         Name of the component to help parsing and render as a header in the cmd file.
 
     """
-    type: Literal["unstructured"] = "unstructured"
+    model_type: Literal["unstructured"] = "unstructured"
     grid_type: Literal["adcirc", "triangle", "easymesh"] = "adcirc"
     fname: constr(max_length=80) | None = None
 

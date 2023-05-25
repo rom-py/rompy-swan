@@ -57,7 +57,7 @@ def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
 
 def test_swan_config_from_dict():
     cgrid_dict = {
-        "kind": "regular",
+        "model_type": "regular",
         "mdc": 36,
         "flow": 0.04,
         "fhigh": 0.4,
@@ -67,7 +67,7 @@ def test_swan_config_from_dict():
         "myc": 10,
     }
     inpgrid_wind_dict = {
-        "kind": "regular",
+        "model_type": "regular",
         "inpgrid": "wind",
         "xpinp": 0.0,
         "ypinp": 0.0,
