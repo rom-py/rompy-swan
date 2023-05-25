@@ -3,7 +3,7 @@
 How to subclass
 ---------------
 
-- Define a new `kind` Literal type for the subclass
+- Define a new `type` Literal type for the subclass
 - Overwrite the __repr__ method to return the SWAN input file string
 
 """
@@ -11,12 +11,13 @@ import logging
 from enum import Enum
 from datetime import datetime, timedelta
 from typing_extensions import Literal
-from pydantic import BaseModel, root_validator, conint
+from pydantic import BaseModel, root_validator, conint, confloat
 
 from rompy.core import RompyBaseModel
 
 
 logger = logging.getLogger(__name__)
+
 
 TIME_FORMATS = {
     1: "%Y%m%d.%H%M%S",
@@ -26,6 +27,7 @@ TIME_FORMATS = {
     5: "%y/%m/%d %H:%M:%S'",
     6: "%y%m%d%H%M",
 }
+
 
 class GridOptions(str, Enum):
     """Valid options for the input grid type."""
@@ -84,15 +86,17 @@ class READGRID(BaseModel):
     Parameters:
     -----------
 
-    kind : Literal["readgrid"]
+    type : Literal["readgrid"]
         Name of the component to help parsing and render as a comment in the cmd file.
     gridtype: GridOptions
         Type of the SWAN grid file.
-    fac:
+    fac: float
+        SWAN multiplies all values that are read from file by `fac`. For instance if
+        the values are given in unit decimeter, one should make `fac=0.1` to obtain
+        values in m. To change sign use a negative `fac`.
     fname: str
         Name of the SWAN grid file.
-    idla:
-        idla: int
+    idla: int
         prescribes the order in which the values of bottom levels and other fields
         should be given in the file:
         - 1: SWAN reads the map from left to right starting in the upper-left-hand
@@ -138,8 +142,9 @@ class READGRID(BaseModel):
         - 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
 
     """
-    kind: Literal["readgrid"]
+    type: Literal["readgrid"] = "readgrid"
     gridtype: str
+    fac: confloat(gt=0.0) = 1.0
     fname: str
     fname1: str | None = None
     fname2: str | None = None
@@ -179,9 +184,36 @@ class READGRID(BaseModel):
             repr = "UNFORMATTED"
         return repr
 
+    def render(self):
+        return ""
+
 
 class READCOORD(READGRID):
-    pass
+    """SWAN READ COORD.
+
+    parameters
+    ----------
+    gridtype: Literal["coordinates"] = "coordinates
+        Name of the component to help parsing and render as a comment in the cmd file.
+
+    """
+    type: Literal["readcoord"] = "readcoord"
+    gridtype: Literal["coordinates"] = "coordinates"
+
+    @root_validator
+    def check_arguments(cls, values: dict) -> dict:
+        """A few checks to restrict input types from parent class."""
+        for key in ["fname1", "fname2", "nhedt"]:
+            if values.get(key):
+                raise ValueError(f"{key} is not allowed for READCOORD")
+        return values
+
+    def render(self):
+        repr = (
+            f"\nREADGRID COORDINATES fac={self.fac} fname='{self.fname}' "
+            f"idla={self.idla} nhedf={self.nhedf} nhedvec={self.nhedvec} {self.format_repr}"
+        )
+        return repr
 
 
 class READINP(READGRID):
@@ -193,7 +225,7 @@ class NONSTATIONARY(BaseModel):
 
     Parameters
     ----------
-    kind : Literal["nonstationary"]
+    type : Literal["nonstationary"]
         Name of the component to help parsing and render as a comment in the cmd file.
     tbeg: datetime
         Begin time of the first field of the variable.
@@ -231,7 +263,7 @@ class NONSTATIONARY(BaseModel):
 
     """
 
-    kind: Literal["nonstationary"] = "nonstationary"
+    type: Literal["nonstationary"] = "nonstationary"
     tbeg: datetime
     delt: timedelta
     tend: datetime

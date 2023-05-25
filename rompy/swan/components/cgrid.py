@@ -3,7 +3,7 @@ import logging
 from pydantic import validator, root_validator, conint, confloat, constr
 from typing_extensions import Literal
 
-from rompy.swan.components.base import BaseComponent, READGRID
+from rompy.swan.components.base import BaseComponent, READCOORD
 
 
 logger = logging.getLogger(__name__)
@@ -169,53 +169,8 @@ class CURVILINEAR(CGRID):
         in the computations (this value is provided by the user at the location of the
         y-coordinate considered in the file of the y-coordinates, see command
         READGRID COOR).
-    fname: str
-        Name of the coordinates file to read. These coordinates must be read from a
-        file as a vector (x-coordinate, y-coordinate of each single grid point).
-    fac: float
-        SWAN multiplies all values that are read from file by `fac`. For instance if
-        the values are given in unit decimeter, one should make `fac=0.1` to obtain
-        values in m. To change sign use a negative `fac`.
-    idla: int
-        prescribes the order in which the values of bottom levels and other fields
-        should be given in the file:
-        - 1: SWAN reads the map from left to right starting in the upper-left-hand
-          corner of the map (it is assumed that the x-axis of the grid is pointing
-          to the right and the y-axis upwards). A new line in the map should start on
-          a new line in the file.
-        - 2: As `1` but a new line in the map need not start on a new line in the file.
-        - 3: SWAN reads the map from left to right starting in the lower-left-hand corner
-          of the map. A new line in the map should start on a new line in the file.
-        - 4: As `3` but a new line in the map need not start on a new line in the file.
-        - 5: SWAN reads the map from top to bottom starting in the lower-left-hand corner
-          of the map. A new column in the map should start on a new line in the file.
-        - 6: As `5` but a new column in the map need not start on a new line in the file.
-    nhedf: int
-        The number of header lines at the start of the file. The text in the header
-        lines is reproduced in the print file created by SWAN. The file may start with
-        more header lines than `nhedf` because the start of the file is often also the
-        start of a time step and possibly also of a vector variable (each having header
-        lines, see below, `nhedvec`).
-    nhedvec: int
-        For each vector variable: number of header lines in the file at the start of
-        each component (e.g., x- or y-component).
-    format: str
-        File format, one of `"free"`, `"fixed"` or `"unformatted"`. If `"free"`, the
-        file is assumed to use the FREE FORTRAN format. If `"fixed"`, the file is
-        assumed to use a fixed format that must be specified by (only) one of `form` or
-        `idfm` arguments. Use `"unformatted"` to read unformatted (binary) files
-        (not recommended for ordinary use).
-    form: str
-        A user-specified format string in Fortran convention, e.g., '(10X,12F5.0)'.
-        Only used if `format="fixed"`, do not use it if `idfm` is specified.
-    idfm: int
-        File format identifier interpreted as follows:
-        - 1: Format according to BODKAR convention (a standard of the Ministry of
-          Transport and Public Works in the Netherlands). Format string: (10X,12F5.0).
-        - 5: Format (16F5.0), an input line consists of 16 fields of 5 places each.
-        - 6: Format (12F6.0), an input line consists of 12 fields of 6 places each.
-        - 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
-        Only used if `format="fixed"`, do not use it if `form` is specified.
+    readcoord: READCOORD
+        Grid coordinates reader.
 
     """
     type: Literal["curvilinear"] = "curvilinear"
@@ -223,14 +178,7 @@ class CURVILINEAR(CGRID):
     myc: int
     xexc: float | None = None
     yexc: float | None = None
-    fname: constr(max_length=80)
-    fac: confloat(gt=0.0) = 1.0
-    idla: conint(ge=1, le=6) = 1
-    nhedf: int = 0
-    nhedvec: int = 0
-    format: Literal["free", "fixed", "unformatted"] = "free"
-    form: str | None = None
-    idfm: Literal[1, 5, 6, 8] | None = None
+    readcoord: READCOORD
 
     @root_validator
     def check_exception_definition(cls, values: dict) -> dict:
