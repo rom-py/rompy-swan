@@ -39,11 +39,15 @@ def inpgrid_instance():
             delt="PT30M",
             tend="2023-02-01T00:00:00",
             deltfmt="hr",
+        ),
+        readinp=inpgrid.READINP(
+            fname1="wind.txt",
         )
     )
     inst_bottom = inst_wind.copy()
     inst_bottom.inpgrid = "BOTTOM"
     inst_bottom.nonstationary = None
+    inst_bottom.readinp.fname1 = "bottom.txt"
     yield [inst_bottom, inst_wind]
 
 
@@ -83,6 +87,7 @@ def test_swan_config_from_dict():
             "tend": "2023-02-01T00:00:00",
             "deltfmt": "hr",
         },
+        "readinp": {"fname1": "wind.txt"},
     }
     sc = SwanConfig(
         cgrid=cgrid_dict,

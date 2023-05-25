@@ -63,6 +63,7 @@ class BaseComponent(RompyBaseModel):
     - Define a header from parent classes names and the component type.
     - Define a render method to render the component to a cmd string.
 
+    TODO: Replace to_lowercase validator by Config.case_sensitive = False
     """
 
     model_type: Literal["base"]
@@ -143,7 +144,7 @@ class READGRID(BaseModel):
 
     """
     model_type: Literal["readgrid"] = "readgrid"
-    grid_type: str
+    grid_type: GridOptions | Literal["coordinates"]
     fac: confloat(gt=0.0) = 1.0
     idla: conint(ge=1, le=6) = 1
     nhedf: conint(ge=0) = 0
@@ -250,6 +251,8 @@ class READINP(READGRID):
 
     @root_validator
     def check_arguments(cls, values: dict) -> dict:
+        if values.get("grid_type") is None:
+            values["grid_type"] = "undefined"
         return values
 
     def render(self):
@@ -260,10 +263,6 @@ class READINP(READGRID):
             repr += f" SERIES fname2='{self.fname2}'"
         repr += f" idla={self.idla} nhedf={self.nhedf} nhedt={self.nhedt} nhedvec={self.nhedvec} {self.format_repr}"
         return repr
-
-
-class READINP(READGRID):
-    pass
 
 
 class NONSTATIONARY(BaseModel):

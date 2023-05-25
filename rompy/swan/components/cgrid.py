@@ -228,7 +228,8 @@ class CURVILINEAR(CGRID):
         repr = f"CGRID CURVILINEAR mxc={self.mxc} myc={self.myc}"
         if self.exception:
             repr += f" {self.exception}"
-        repr += f" {super().__repr__()}\n{self.readcoord.render()}"
+        repr += f" {super().__repr__()}"
+        repr += f"\n{self.readcoord.render()}"
         return repr
 
 
