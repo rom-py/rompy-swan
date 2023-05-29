@@ -1,14 +1,22 @@
 import logging
+from pathlib import Path
 
 from pydantic import validator
 
 from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
+from rompy.core.render import render
 from rompy.swan.components import cgrid, inpgrid
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
 
 logger = logging.getLogger(__name__)
+
+HERE = Path(__file__).parent
+COMPONENTS = {
+    "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED,
+    "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED],
+}
 
 
 class OutputLocs(RompyBaseModel):
@@ -187,13 +195,7 @@ class SwanConfig(BaseConfig):
         return ret
 
 
-COMPONENTS = {
-    "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED,
-    "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED],
-}
-
-
-class SwanConfigPydantic(RompyBaseModel):
+class SwanConfigPydantic(BaseConfig):
     """SWAN config class.
 
     Parameters
@@ -207,13 +209,13 @@ class SwanConfigPydantic(RompyBaseModel):
     cgrid: COMPONENTS.get("cgrid")
     inpgrid: COMPONENTS.get("inpgrid")
 
-    def __repr__(self):
-        s = ""
-        for component in COMPONENTS:
-            obj = getattr(self, component)
-            if obj is not None:
-                s += obj.render()
-        return s
+    # def __repr__(self):
+    #     s = ""
+    #     for component in COMPONENTS:
+    #         obj = getattr(self, component)
+    #         if obj is not None:
+    #             s += obj.render()
+    #     return s
 
     def __str__(self):
         return self.__repr__()
