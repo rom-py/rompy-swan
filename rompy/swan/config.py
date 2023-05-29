@@ -2,13 +2,16 @@ import logging
 from pathlib import Path
 
 from pydantic import validator
+from typing_extensions import Literal
 
-from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
-from rompy.core.render import render
+from rompy.core import (
+    BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
+)
 from rompy.swan.components import cgrid, inpgrid
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
+
 
 logger = logging.getLogger(__name__)
 
@@ -28,10 +31,17 @@ class OutputLocs(RompyBaseModel):
         list of coordinates to output spectra
     """
 
-    coords: list[Coordinate] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
+    coords: list[Coordinate] = [
+        ["115.61", "-32.618"], ["115.686067", "-32.532381"]]
 
     def __repr__(self):
         ret = __class__.__name__ + "\n"
+        for coord in self.coords:
+            ret += f"  {coord[0]} {coord[1]}\n"
+        return ret
+
+    def __str__(self):
+        ret = ""
         for coord in self.coords:
             ret += f"  {coord[0]} {coord[1]}\n"
         return ret
@@ -52,6 +62,20 @@ class ForcingData(RompyBaseModel):
                 forcing[1]._filter_time(runtime.period)
                 ret.append(forcing[1].get(runtime.staging_dir, grid))
         return "\n".join(ret)
+
+    def __str__(self):
+        ret = ""
+        for forcing in self:
+            if forcing[1]:
+                ret += f"{forcing[0]}:"
+                if forcing[1].url:
+                    ret += f" {forcing[1].url}\n"
+                if forcing[1].path:
+                    ret += f" {forcing[1].path}\n"
+                if forcing[1].catalog:
+                    ret += f" {forcing[1].catalog}"
+                    ret += f" {forcing[1].dataset}\n"
+        return ret
 
 
 class SwanSpectrum(Spectrum):
@@ -110,12 +134,26 @@ class GridOutput(RompyBaseModel):
         "WIND",
     ]
 
+    def __str__(self):
+        ret = "\tGrid:\n"
+        if self.period:
+            ret += f"\t\tperiod: {self.period}\n"
+        ret += f"\t\tvariables: {' '.join(self.variables)}\n"
+        return ret
+
 
 class SpecOutput(RompyBaseModel):
     """Spectral outputs for SWAN"""
 
     period: TimeRange | None = None
     locations: OutputLocs | None = OutputLocs()  # TODO change to None
+
+    def __str__(self):
+        ret = "\tSpec\n"
+        if self.period:
+            ret += f"\t\tperiod: {self.period}\n"
+        ret += f"\t\tlocations: {self.locations}\n"
+        return ret
 
 
 class Outputs(RompyBaseModel):
@@ -134,6 +172,12 @@ class Outputs(RompyBaseModel):
         ret += f"POINTs 'pts' FILE 'out.loc'\n"
         ret += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.spec.period.start.strftime(self._datefmt)} {out_intvl}\n"
         ret += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.grid.period.start.strftime(self._datefmt)} {out_intvl}\n"
+        return ret
+
+    def __str__(self):
+        ret = "Outputs:\n"
+        ret += f"{self.grid}"
+        ret += f"{self.spec}"
         return ret
 
 
@@ -155,6 +199,7 @@ class SwanConfig(BaseConfig):
     """
 
     grid: SwanGrid
+    model_type: Literal["swan"] = "swan"
     spectral_resolution: SwanSpectrum = SwanSpectrum()
     forcing: ForcingData = ForcingData()
     physics: SwanPhysics = SwanPhysics()
@@ -192,6 +237,14 @@ class SwanConfig(BaseConfig):
         ret["remaining"] = f"BOUND NEST '{self.spectra_file}' CLOSED\n"
         ret["outputs"] = self.outputs.cmd
         ret["output_locs"] = self.outputs.spec.locations
+        return ret
+
+    def __str__(self):
+        ret = f"grid: {self.grid}\n"
+        ret += f"spectral_resolution: {self.spectral_resolution}\n"
+        ret += f"forcing: {self.forcing}\n"
+        ret += f"physics: {self.physics}\n"
+        ret += f"outputs: {self.outputs}\n"
         return ret
 
 

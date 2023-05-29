@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import xarray as xr
-from pydantic import root_validator, validator
+from pydantic import Field, root_validator, validator
 
 from rompy.core import DataGrid
 
@@ -17,35 +17,17 @@ FILL_VALUE = -99.0
 
 
 class SwanDataGrid(DataGrid):
-    """This class is used to write SWAN data from a dataset.
+    """This class is used to write SWAN data from a dataset."""
 
-    Parameters
-    ----------
-    path: str
-            Optional local file path
-    url: str
-            Optional remote file url
-    catalog: str
-            Optional intake catalog
-    dataset: str
-            Optional intake dataset id
-    params: dict
-            Optional parameters to pass to the intake catalog
-    filter: Filter
-            Optional filter specification to apply to the dataset
-    xarray_kwargs: dict
-            Optional keyword arguments to pass to xarray.open_dataset
-    netcdf_kwargs: dict
-            Optional keyword arguments to pass to xarray.Dataset.to_netcdf
-    var: str
-            Variable name to write
-
-
-    """
-
-    z1: str
-    z2: str = None
-    var: str = "WIND"
+    z1: str = Field(
+        description="Scaler paramater u componet of vecotr field",
+        default=None,
+    )
+    z2: str = Field(description="v componet of vecotr field", type=str, default=None)
+    var: str = Field(
+        description="SWAN variable name (WIND, BOTTOM, CURRENT)",
+        default="WIND",
+    )
 
     # root validator
     @root_validator
@@ -86,6 +68,18 @@ class SwanDataGrid(DataGrid):
                 var=self.var,
             )
         return f"{inpgrid}\n{readgrid}\n"
+
+    def __str__(self):
+        ret = f"{self.id}\n"
+        if self.url:
+            ret += f"\turl: {self.url}\n"
+        if self.path:
+            ret += f"\tpath: {self.path}\n"
+        if self.catalog:
+            ret += f"\tcatalog: {self.catalog}\n"
+            ret += f"\tdataset: {self.dataset}\n"
+            ret += f"\tparams: {self.params}\n"
+        return ret
 
 
 def dset_to_swan(

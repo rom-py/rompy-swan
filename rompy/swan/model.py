@@ -1,6 +1,6 @@
 import logging
 
-from rompy.core import BaseModel
+from rompy.core import BaseConfig, BaseModel
 
 from .config import SwanConfig
 
@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class SwanModel(BaseModel):
-    config: SwanConfig | dict = {}
+    config: SwanConfig | BaseConfig = {}
     model: str = "SWAN"
     template: str = "/source/rompy/rompy/templates/swan"
 
