@@ -3,8 +3,7 @@ import logging
 from pydantic import validator
 from typing_extensions import Literal
 
-from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
-                        TimeRange)
+from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
