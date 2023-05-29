@@ -259,34 +259,6 @@ class SwanConfigPydantic(BaseConfig):
         The input grid SWAN component.
 
     """
+    model_type: Literal["swan"] = "swan"
     cgrid: COMPONENTS.get("cgrid")
     inpgrid: COMPONENTS.get("inpgrid")
-
-    # def __repr__(self):
-    #     s = ""
-    #     for component in COMPONENTS:
-    #         obj = getattr(self, component)
-    #         if obj is not None:
-    #             s += obj.render()
-    #     return s
-
-    def __str__(self):
-        return self.__repr__()
-
-    def _write_cmd(self):
-        """Write command file."""
-        repr = ""
-        for component in COMPONENTS:
-            obj = getattr(self, component)
-            if obj is not None:
-                # This works but is ugly
-                if isinstance(obj, list):
-                    for o in obj:
-                        repr += o.render()
-                else:
-                    repr += obj.render()
-        logger.info(f"Writing cmd file:\n{repr.strip()}")
-        # with open(self.cmdfile, "w") as stream:
-        #     logger.info(f"Writing cmd file:\n{repr.strip()}")
-        #     stream.write(repr.strip())
-        return repr
