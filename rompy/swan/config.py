@@ -21,8 +21,7 @@ class OutputLocs(RompyBaseModel):
         list of coordinates to output spectra
     """
 
-    coords: list[Coordinate] = [
-        ["115.61", "-32.618"], ["115.686067", "-32.532381"]]
+    coords: list[Coordinate] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
 
     def __repr__(self):
         ret = __class__.__name__ + "\n"
@@ -195,6 +194,7 @@ class SwanConfig(BaseConfig):
     physics: SwanPhysics = SwanPhysics()
     outputs: Outputs = Outputs()
     spectra_file: str = "boundary.spec"
+    template: str = "/source/rompy/rompy/templates/swan"
     _datefmt: str = "%Y%m%d.%H%M%S"
     # subnests: list[SwanConfig] = []
 
