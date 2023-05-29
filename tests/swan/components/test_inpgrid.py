@@ -35,28 +35,28 @@ def nonstat():
 
 def test_valid_inpgrid_options(readinp):
     for inpgrid in GridOptions:
-        INPGRID(inpgrid=inpgrid.value, readinp=readinp)
-        INPGRID(inpgrid=inpgrid.value.lower(), readinp=readinp)
-        INPGRID(inpgrid=inpgrid.value.upper(), readinp=readinp)
+        INPGRID(grid_type=inpgrid.value, readinp=readinp)
+        INPGRID(grid_type=inpgrid.value.lower(), readinp=readinp)
+        INPGRID(grid_type=inpgrid.value.upper(), readinp=readinp)
     with pytest.raises(ValidationError):
-        INPGRID(inpgrid="invalid", readinp=readinp)
+        INPGRID(grid_type="invalid", readinp=readinp)
 
 
 def test_excval(readinp):
-    inpgrid = INPGRID(inpgrid="BOTTOM", excval=-999, readinp=readinp)
+    inpgrid = INPGRID(grid_type="BOTTOM", excval=-999, readinp=readinp)
     assert inpgrid.excval == -999.0
     assert isinstance(inpgrid.excval, float)
 
 
 def test_inpgrid_nonstationary(nonstat, readinp):
-    inpgrid = INPGRID(inpgrid="BOTTOM", nonstationary=nonstat, readinp=readinp)
+    inpgrid = INPGRID(grid_type="BOTTOM", nonstationary=nonstat, readinp=readinp)
     assert isinstance(inpgrid.nonstationary, NONSTATIONARY)
     assert inpgrid.nonstationary.suffix == "inp"
 
 
 def test_inpgrid_regular(nonstat, readinp):
     inpgrid = REGULAR(
-        inpgrid=GridOptions.bottom,
+        grid_type=GridOptions.bottom,
         xpinp=0.0,
         ypinp=0.0,
         alpinp=0.0,
@@ -73,7 +73,7 @@ def test_inpgrid_regular(nonstat, readinp):
 
 def test_inpgrid_curvilinear(nonstat, readinp):
     inpgrid = CURVILINEAR(
-        inpgrid=GridOptions.bottom,
+        grid_type=GridOptions.bottom,
         mxinp=10,
         myinp=10,
         excval=-999.0,
@@ -85,7 +85,7 @@ def test_inpgrid_curvilinear(nonstat, readinp):
 
 def test_inpgrid_curvilinear_render(nonstat, readinp):
     inpgrid = UNSTRUCTURED(
-        inpgrid=GridOptions.bottom,
+        grid_type=GridOptions.bottom,
         excval=-999.0,
         nonstationary=nonstat,
         readinp=readinp,
