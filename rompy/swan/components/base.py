@@ -63,7 +63,6 @@ class BaseComponent(RompyBaseModel):
     - Define a header from parent classes names and the component type.
     - Define a render method to render the component to a cmd string.
 
-    TODO: Replace to_lowercase validator by Config.case_sensitive = False
     """
 
     model_type: Literal["base"]
