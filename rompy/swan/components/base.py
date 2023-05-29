@@ -222,7 +222,7 @@ class READINP(READGRID):
 
     parameters
     ----------
-    model_type : Literal["readcoord"]
+    model_type : Literal["readinp"]
         Model type discriminator.
     grid_type: GridOptions | None
         Type of the SWAN grid file.
@@ -242,7 +242,7 @@ class READINP(READGRID):
         lines (see `nhedvec`).
 
     """
-    model_type: Literal["readcoord"] = "readcoord"
+    model_type: Literal["readinp"] = "readinp"
     grid_type: GridOptions | None = None
     fname1: str
     fname2: str | None = None
