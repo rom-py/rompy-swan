@@ -1,6 +1,6 @@
 $
 $ SWAN - Simple example template used by rompy
-$ Template: {{runtime._template}}
+$ Template: {{_template}}
 $ Generated: {{runtime._generated_at}} on {{runtime._generated_on}} by {{runtime._generated_by}}
 $ projection: wgs84
 $
