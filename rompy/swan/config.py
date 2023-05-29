@@ -1,6 +1,7 @@
 import logging
 
 from pydantic import validator
+from typing_extensions import Literal
 
 from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
                         TimeRange)
@@ -20,7 +21,8 @@ class OutputLocs(RompyBaseModel):
         list of coordinates to output spectra
     """
 
-    coords: list[Coordinate] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
+    coords: list[Coordinate] = [
+        ["115.61", "-32.618"], ["115.686067", "-32.532381"]]
 
     def __repr__(self):
         ret = __class__.__name__ + "\n"
@@ -187,6 +189,7 @@ class SwanConfig(BaseConfig):
     """
 
     grid: SwanGrid
+    model_type: Literal["swan"] = "swan"
     spectral_resolution: SwanSpectrum = SwanSpectrum()
     forcing: ForcingData = ForcingData()
     physics: SwanPhysics = SwanPhysics()
