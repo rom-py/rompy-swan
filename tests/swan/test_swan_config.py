@@ -25,7 +25,7 @@ def cgrid_instance():
 @pytest.fixture(scope="module")
 def inpgrid_instance():
     inst_wind = inpgrid.REGULAR(
-        inpgrid="WIND",
+        grid_type="WIND",
         xpinp=0.0,
         ypinp=0.0,
         alpinp=0.0,
@@ -45,7 +45,7 @@ def inpgrid_instance():
         )
     )
     inst_bottom = inst_wind.copy()
-    inst_bottom.inpgrid = "BOTTOM"
+    inst_bottom.grid_type = "BOTTOM"
     inst_bottom.nonstationary = None
     inst_bottom.readinp.fname1 = "bottom.txt"
     yield [inst_bottom, inst_wind]
@@ -72,7 +72,7 @@ def test_swan_config_from_dict():
     }
     inpgrid_wind_dict = {
         "model_type": "regular",
-        "inpgrid": "wind",
+        "grid_type": "wind",
         "xpinp": 0.0,
         "ypinp": 0.0,
         "alpinp": 0.0,

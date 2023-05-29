@@ -74,7 +74,7 @@ class BaseComponent(RompyBaseModel):
 
     @root_validator(pre=True)
     def to_lowercase(cls, values):
-        """Make all string input case-insensitive."""
+        """Coerce to lower case before validation to allow defining as upper-case."""
         values = {k: v.lower() if isinstance(v, str) else v for k, v in values.items()}
         return values
 

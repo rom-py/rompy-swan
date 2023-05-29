@@ -22,7 +22,8 @@ class INPGRID(BaseComponent):
     ----------
     model_type : Literal["inpgrid"]
         Model type discriminator.
-    inpgrid: GridOptions
+    grid_type: GridOptions
+        Type of the swan input grid.
     excval: float | None = None
         Exception value to allow identifying and ignoring certain point inside the
         given grid during the computation. If `fac` != 1, `excval` must be given as
@@ -35,7 +36,7 @@ class INPGRID(BaseComponent):
     """
 
     model_type: Literal["inpgrid"] = "inpgrid"
-    inpgrid: GridOptions
+    grid_type: GridOptions
     excval: float | None = None
     nonstationary: NONSTATIONARY | None = None
     readinp: READINP
@@ -45,12 +46,12 @@ class INPGRID(BaseComponent):
         """Set the nonstationary suffix."""
         if values.get("nonstationary") is not None:
             values["nonstationary"].suffix = "inp"
-        if values.get("readinp") is not None and "inpgrid" in values:
-            values["readinp"].grid_type = values["inpgrid"]
+        if values.get("grid_type") is not None and "grid_type" in values:
+            values["readinp"].grid_type = values["grid_type"]
         return values
 
     def __repr__(self):
-        return f"INPGRID {self.inpgrid.upper()}"
+        return f"INPGRID {self.grid_type.upper()}"
 
 
 class REGULAR(INPGRID):
