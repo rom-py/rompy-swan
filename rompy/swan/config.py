@@ -253,6 +253,8 @@ class SwanConfigPydantic(BaseConfig):
 
     Parameters
     ----------
+    model_type: Literal["swan"]
+        Model type discriminator.
     cgrid : CGRID
         The computational grid SWAN component.
     inpgrid: INPGRID
