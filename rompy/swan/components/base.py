@@ -60,7 +60,6 @@ class BaseComponent(RompyBaseModel):
     Behaviour
     ---------
     - Make all string input case-insensitive.
-    - Define a header from parent classes names and the component type.
     - Define a render method to render the component to a cmd string.
 
     """
@@ -77,15 +76,9 @@ class BaseComponent(RompyBaseModel):
         values = {k: v.lower() if isinstance(v, str) else v for k, v in values.items()}
         return values
 
-    @property
-    def header(self):
-        """Define a header from parent classes names and the component type."""
-        s = " ".join([c.__name__ for c in self.__class__.__bases__] + [self.model_type.upper()])
-        return f"\n!{s.center(131, '-')}\n"
-
     def render(self):
         """Render the component to a string."""
-        return f"{self.header}{self.__repr__()}\n"
+        return f"{self.__repr__()}\n"
 
 
 class READGRID(BaseModel):
