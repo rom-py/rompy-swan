@@ -14,6 +14,7 @@ from typing_extensions import Literal
 from pydantic import BaseModel, root_validator, conint, confloat
 
 from rompy.core import RompyBaseModel
+from rompy.swan.types import GridOptions
 
 
 logger = logging.getLogger(__name__)
@@ -27,26 +28,6 @@ TIME_FORMATS = {
     5: "%y/%m/%d %H:%M:%S'",
     6: "%y%m%d%H%M",
 }
-
-
-class GridOptions(str, Enum):
-    """Valid options for the input grid type."""
-    bottom = "bottom"
-    wlevel = "wlevel"
-    current = "current"
-    vx = "vx"
-    vy = "vy"
-    wind = "wind"
-    wx = "wx"
-    wy = "wy"
-    friction = "friction"
-    nplants = "nplants"
-    turbvisc = "turbvisc"
-    mudlayer = "mudlayer"
-    aice = "aice"
-    hice = "hice"
-    hss = "hss"
-    tss = "tss"
 
 
 class BaseComponent(RompyBaseModel):
