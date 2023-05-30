@@ -1,6 +1,6 @@
 """Computational grid for SWAN."""
 import logging
-from pydantic import validator, root_validator, conint, confloat, constr
+from pydantic import root_validator, conint, constr
 from typing_extensions import Literal
 
 from rompy.swan.components.base import BaseComponent, READCOORD
@@ -267,19 +267,3 @@ class UNSTRUCTURED(CGRID):
         if self.grid_type in ["triangle", "easymesh"]:
             repr += f" fname='{self.fname}'"
         return repr
-
-
-if __name__ == "__main__":
-
-    cgrid = REGULAR(
-        mdc=36, flow=0.04, fhigh=0.4, xlenc=100.0, ylenc=100.0, mxc=10, myc=10
-    )
-    print(cgrid.render())
-
-    cgrid = CURVILINEAR(
-        mdc=36, flow=0.04, fhigh=0.4, mxc=10, myc=10, readcoord=dict(fname="grid_coord.txt")
-    )
-    print(cgrid.render())
-
-    cgrid = UNSTRUCTURED(mdc=36, flow=0.04, fhigh=0.4)
-    print(cgrid.render())
