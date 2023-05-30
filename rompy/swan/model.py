@@ -11,7 +11,6 @@ class SwanModel(ModelRun):
     # Note this is class is redundant and will be removed
     config: SwanConfig | BaseConfig = {}
     model: str = "SWAN"
-    template: str = "/source/rompy/rompy/templates/swan"
 
     # @property
     # def subnests(self):
