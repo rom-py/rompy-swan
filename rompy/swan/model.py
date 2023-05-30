@@ -1,14 +1,13 @@
 import logging
 
-from rompy.core import BaseConfig, ModelRun
+from rompy.core import BaseConfig, BaseModel
 
 from .config import SwanConfig
 
 logger = logging.getLogger(__name__)
 
 
-class SwanModel(ModelRun):
-    # Note this class is now redundant - it will be removed in a future release
+class SwanModel(BaseModel):
     config: SwanConfig | BaseConfig = {}
     model: str = "SWAN"
     template: str = "/source/rompy/rompy/templates/swan"
