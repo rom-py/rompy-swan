@@ -4,7 +4,8 @@ from pathlib import Path
 from typing_extensions import Literal
 from pydantic import root_validator
 
-from rompy.swan.components.base import BaseComponent, NONSTATIONARY, READINP, GridOptions
+from rompy.swan.components.base import BaseComponent, NONSTATIONARY, READINP
+from rompy.swan.types import GridOptions
 
 
 HERE = Path(__file__).parent
