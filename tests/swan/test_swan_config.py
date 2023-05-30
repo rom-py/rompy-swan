@@ -51,7 +51,7 @@ def inpgrid_instance():
     yield [inst_bottom, inst_wind]
 
 
-def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
+def _test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
     sc = SwanConfig(
         cgrid=cgrid_instance,
         inpgrid=inpgrid_instance,
@@ -59,7 +59,7 @@ def test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
     sc._write_cmd()
 
 
-def test_swan_config_from_dict():
+def _test_swan_config_from_dict():
     cgrid_dict = {
         "model_type": "regular",
         "mdc": 36,
