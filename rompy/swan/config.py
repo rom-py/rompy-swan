@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-from pydantic import validator
+from pydantic import validator, Field
 from typing_extensions import Literal
 
 from rompy.core import (
