@@ -1,8 +1,5 @@
 """Input grid for SWAN."""
-import yaml
-from enum import Enum
 from typing import Literal
-from enum import Enum
 from pathlib import Path
 from typing_extensions import Literal
 from pydantic import root_validator
