@@ -4,7 +4,6 @@ import logging
 
 from rompy.core.model import BaseModel
 from rompy.swan.config import SwanConfigPydantic as SwanConfig
-from rompy.swan.config import cgrid, inpgrid
 
 
 logger = logging.getLogger(__name__)
@@ -58,10 +57,23 @@ def inpgrid_dict():
     yield [inst_bottom, inst_wind]
 
 
-def test_swan_model(tmpdir, cgrid_dict, inpgrid_dict):
+@pytest.fixture(scope="module")
+def boundary_dict():
+    inst = dict(
+        model_type="boundspec",
+        location=dict(
+            model_type="segmentxy",
+            points=[(0, 0), (1, 1), (2, 2)],
+        ),
+    )
+    yield inst
+
+
+def test_swan_model(tmpdir, cgrid_dict, inpgrid_dict, boundary_dict):
     config = SwanConfig(
         cgrid=cgrid_dict,
         inpgrid=inpgrid_dict,
+        boundary=boundary_dict,
     )
     model = BaseModel(
         run_id="test",
@@ -69,6 +81,6 @@ def test_swan_model(tmpdir, cgrid_dict, inpgrid_dict):
         config=config,
         template="/source/csiro/rompy/rompy/templates/swan2",
     )
-    model.generate()
     # import ipdb; ipdb.set_trace()
+    model.generate()
     # sc.render_cmd()
