@@ -16,7 +16,7 @@ class CGRID(BaseComponent):
 
     Parameters
     ----------
-    model_type : Literal["cgrid"]
+    model_type: Literal["cgrid"]
         Model type discriminator.
     mdc: int
         Number of meshes in θ-space. In the case of CIRCLE, this is the number of
@@ -102,7 +102,7 @@ class REGULAR(CGRID):
 
     Parameters
     ----------
-    model_type : Literal["regular"]
+    model_type: Literal["regular"]
         Model type discriminator.
     xpc: float
         Geographic location of the origin of the computational grid in the problem
@@ -151,7 +151,7 @@ class CURVILINEAR(CGRID):
 
     Parameters
     ----------
-    model_type : Literal["curvilinear"]
+    model_type: Literal["curvilinear"]
         Model type discriminator.
     mxc: int
         Number of meshes in computational grid in ξ-direction (this number
@@ -238,7 +238,7 @@ class UNSTRUCTURED(CGRID):
 
     Parameters
     ----------
-    model_type : Literal["unstructured"]
+    model_type: Literal["unstructured"]
         Model type discriminator.
     grid_type : Literal["adcirc", "triangle", "easymesh"]
         Unstructured grid type.
