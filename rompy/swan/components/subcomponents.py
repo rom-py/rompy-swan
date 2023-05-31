@@ -126,7 +126,7 @@ class PAR(BaseComponent):
     dd: float
     len: Optional[confloat(ge=0)]
 
-    def render(self):
+    def __repr__(self):
         """Render subcomponent cmd."""
         repr = "PAR"
         if self.len is not None:

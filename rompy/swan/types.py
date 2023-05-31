@@ -20,3 +20,25 @@ class GridOptions(str, Enum):
     hice = "hice"
     hss = "hss"
     tss = "tss"
+
+
+class BoundShapeOptions(str, Enum):
+    """Valid options for the boundary shape type."""
+    jonswap = "jonswap"
+    pm = "pm"
+    gauss = "gauss"
+    bin = "bin"
+    tma = "tma"
+
+
+class SideOptions(str, Enum):
+    """Valid options for the boundary shape type."""
+    north = "north"
+    nw = "nw"
+    west = "west"
+    sw = "sw"
+    south = "south"
+    se = "se"
+    east = "east"
+    ne = "ne"
+    k = "k"

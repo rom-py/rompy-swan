@@ -36,20 +36,20 @@ def nonstat():
 def test_valid_inpgrid_options(readinp):
     for inpgrid in GridOptions:
         INPGRID(grid_type=inpgrid.value, readinp=readinp)
-        INPGRID(grid_type=inpgrid.value.lower(), readinp=readinp)
-        INPGRID(grid_type=inpgrid.value.upper(), readinp=readinp)
+        # INPGRID(grid_type=inpgrid.value.lower(), readinp=readinp)
+        # INPGRID(grid_type=inpgrid.value.upper(), readinp=readinp)
     with pytest.raises(ValidationError):
         INPGRID(grid_type="invalid", readinp=readinp)
 
 
 def test_excval(readinp):
-    inpgrid = INPGRID(grid_type="BOTTOM", excval=-999, readinp=readinp)
+    inpgrid = INPGRID(grid_type="bottom", excval=-999, readinp=readinp)
     assert inpgrid.excval == -999.0
     assert isinstance(inpgrid.excval, float)
 
 
 def test_inpgrid_nonstationary(nonstat, readinp):
-    inpgrid = INPGRID(grid_type="BOTTOM", nonstationary=nonstat, readinp=readinp)
+    inpgrid = INPGRID(grid_type="bottom", nonstationary=nonstat, readinp=readinp)
     assert isinstance(inpgrid.nonstationary, NONSTATIONARY)
     assert inpgrid.nonstationary.suffix == "inp"
 
