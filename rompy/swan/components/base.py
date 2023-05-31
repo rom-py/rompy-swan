@@ -35,7 +35,7 @@ class BaseComponent(RompyBaseModel):
 
     Parameters
     ----------
-    model_type : Literal["base"]
+    model_type: Literal["base"]
         Model type discriminator.
 
     Behaviour
@@ -59,7 +59,7 @@ class BaseComponent(RompyBaseModel):
 
     def render(self):
         """Render the component to a string."""
-        return f"{self.__repr__()}\n"
+        return f"{self.__repr__()}"
 
 
 class READGRID(BaseModel):
@@ -67,7 +67,7 @@ class READGRID(BaseModel):
 
     Parameters:
     -----------
-    model_type : Literal["readgrid"]
+    model_type: Literal["readgrid"]
         Model type discriminator.
     grid_type: GridOptions
         Type of the SWAN grid file.
@@ -163,7 +163,7 @@ class READCOORD(READGRID):
 
     parameters
     ----------
-    model_type : Literal["readcoord"]
+    model_type: Literal["readcoord"]
         Model type discriminator.
     grid_type: Literal["coordinates"]
         Type of the SWAN grid file.
@@ -196,7 +196,7 @@ class READINP(READGRID):
 
     parameters
     ----------
-    model_type : Literal["readinp"]
+    model_type: Literal["readinp"]
         Model type discriminator.
     grid_type: GridOptions | None
         Type of the SWAN grid file.
@@ -243,7 +243,7 @@ class NONSTATIONARY(BaseModel):
 
     Parameters
     ----------
-    model_type : Literal["nonstationary"]
+    model_type: Literal["nonstationary"]
         Model type discriminator.
     tbeg: datetime
         Begin time of the first field of the variable.
