@@ -65,6 +65,21 @@ def boundary_dict():
             model_type="segmentxy",
             points=[(0, 0), (1, 1), (2, 2)],
         ),
+        data=dict(
+            model_type="constantpar",
+            hs=1.0,
+            per=10.0,
+            dir=0.0,
+            dd=10.0,
+        ),
+        # data=dict(
+        #     model_type="variablepar",
+        #     hs=[1.0, 2.0],
+        #     per=[10.0, 11.0],
+        #     dir=[0.0, 5.0],
+        #     dd=[10.0, 9.0],
+        #     dist=[0.0, 1.0],
+        # ),
     )
     yield inst
 
