@@ -7,7 +7,7 @@ from typing_extensions import Literal
 from rompy.core import (
     BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 )
-from rompy.swan.components import cgrid, inpgrid
+from rompy.swan.components import cgrid, inpgrid, boundary
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -19,6 +19,7 @@ HERE = Path(__file__).parent
 COMPONENTS = {
     "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED,
     "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED],
+    "boundary": boundary.BOUNDSPEC,
 }
 
 
@@ -264,3 +265,4 @@ class SwanConfigPydantic(BaseConfig):
     model_type: Literal["swan"] = "swan"
     cgrid: COMPONENTS.get("cgrid")
     inpgrid: COMPONENTS.get("inpgrid")
+    boundary: COMPONENTS.get("boundary")
