@@ -18,7 +18,7 @@ class INPGRID(BaseComponent):
 
     Parameters
     ----------
-    model_type : Literal["inpgrid"]
+    model_type: Literal["inpgrid"]
         Model type discriminator.
     grid_type: GridOptions
         Type of the swan input grid.
@@ -57,7 +57,7 @@ class REGULAR(INPGRID):
 
     Parameters
     ----------
-    model_type : Literal["regular"]
+    model_type: Literal["regular"]
         Model type discriminator.
     xpinp: float
         Geographic location (x-coordinate) of the origin of the input grid in problem
@@ -113,7 +113,7 @@ class CURVILINEAR(INPGRID):
 
     Parameters
     ----------
-    model_type : Literal["curvilinear"]
+    model_type: Literal["curvilinear"]
         Model type discriminator.
     stagrx: float
         Staggered x'-direction with respect to computational grid, e.g., `stagrx=0.5`
@@ -158,7 +158,7 @@ class UNSTRUCTURED(INPGRID):
 
     Parameters
     ----------
-    model_type : Literal["unstructured"]
+    model_type: Literal["unstructured"]
         Model type discriminator.
 
     """
