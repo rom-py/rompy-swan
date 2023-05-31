@@ -9,7 +9,7 @@ from pydantic import root_validator, confloat
 
 from rompy.swan.components.base import BaseComponent#, NONSTATIONARY, READINP, GridOptions
 from rompy.swan.types import BoundShapeOptions, SideOptions
-from rompy.swan.components.subcomponents import PAR, SIDE, SEGMENTXY, SEGMENTIJ
+from rompy.swan.components.subcomponents import SIDE, SEGMENTXY, SEGMENTIJ, CONSTANTPAR, VARIABLEPAR, CONSTANTFILE
 
 
 HERE = Path(__file__).parent
@@ -83,7 +83,9 @@ class JONSWAP(SHAPESPEC):
 
 
 class BOUNDSPEC(BOUNDARY):
-    """SWAN BOUNDSPEC base class.
+    """SWAN BOUNDSPEC boundary component.
+
+    `BOUNDSPEC`
 
     This command BOUNDSPEC defines parametric spectra at the boundary. It consists of
     two parts, the first part defines the boundary side or segment where the spectra
@@ -105,20 +107,15 @@ class BOUNDSPEC(BOUNDARY):
         Easymesh, respectively). The order must be counterclockwise!
         ONLY MEANT FOR UNSTRUCTURED MESHES.
 
+    TODO: Add BOUnd SHAPespec
+
     """
     model_type: Literal["boundspec"] = "boundspec"
     location: SIDE | SEGMENTXY | SEGMENTIJ
-    k: Optional[int]
-
-    # @root_validator
-    # def set_nonstat_suffix(cls, values):
-    #     """Set the nonstationary suffix."""
-    #     if values.get("nonstationary") is not None:
-    #         values["nonstationary"].suffix = "bnd"
-    #     return values
+    data: CONSTANTPAR | CONSTANTFILE | VARIABLEPAR
 
     def __repr__(self):
-        repr = f"BOUNDSPEC {self.location.render()}"
+        repr = f"BOUNDSPEC {self.location.render()}{self.data.render()}"
         return repr
 
 
