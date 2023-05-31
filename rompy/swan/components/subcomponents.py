@@ -16,18 +16,16 @@ class SIDE(BaseComponent):
     ----------
     model_type: Literal["side"]
         Model type discriminator.
-    side: SideOptions
+    side: Literal["north", "nw", "west", "sw", "south", "se", "east", "ne"]
         The side of the grid to apply the boundary to.
 
     """
     model_type: Literal["side"] = "side"
-    side: SideOptions
+    side: Literal["north", "nw", "west", "sw", "south", "se", "east", "ne"]
     direction: Literal["ccw", "clockwise"] = "ccw"
 
     def __repr__(self):
         repr = f"BOUNDSPEC SIDE {self.side.upper()}"
-        # if self.k is not None:
-        #     repr += f" k={self.k}"
         repr += f" {self.direction.upper()}"
         return repr
 
