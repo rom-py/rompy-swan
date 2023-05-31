@@ -28,7 +28,7 @@ def cgrid_dict():
 def inpgrid_dict():
     inst_bottom = dict(
         model_type="regular",
-        grid_type="BOTTOM",
+        grid_type="bottom",
         xpinp=0.0,
         ypinp=0.0,
         alpinp=0.0,
@@ -43,7 +43,7 @@ def inpgrid_dict():
         ),
     )
     inst_wind = inst_bottom.copy()
-    inst_wind["grid_type"] = "WIND"
+    inst_wind["grid_type"] = "wind"
     inst_wind["nonstationary"] = dict(
         tbeg="2023-01-01T00:00:00",
         delt="PT30M",

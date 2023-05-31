@@ -51,18 +51,18 @@ class BaseComponent(RompyBaseModel):
         """Configure the model."""
         extra = "forbid"
 
-    @root_validator(pre=True)
-    def to_lowercase(cls, values):
-        """Coerce to lower case before validation to allow defining as upper-case."""
-        values = {k: v.lower() if isinstance(v, str) else v for k, v in values.items()}
-        return values
+    # @root_validator(pre=True)
+    # def to_lowercase(cls, values):
+    #     """Coerce to lower case before validation to allow defining as upper-case."""
+    #     values = {k: v.lower() if isinstance(v, str) else v for k, v in values.items()}
+    #     return values
 
     def render(self):
         """Render the component to a string."""
         return f"{self.__repr__()}"
 
 
-class READGRID(BaseModel):
+class READGRID(BaseComponent):
     """SWAN grid file.
 
     Parameters:
@@ -154,7 +154,7 @@ class READGRID(BaseModel):
             repr = "UNFORMATTED"
         return repr
 
-    def render(self):
+    def __repr__(self):
         return ""
 
 
@@ -183,7 +183,7 @@ class READCOORD(READGRID):
                 raise ValueError(f"{key} is not allowed for READCOORD")
         return values
 
-    def render(self):
+    def __repr__(self):
         repr = (
             f"READGRID COORDINATES fac={self.fac} fname='{self.fname}' "
             f"idla={self.idla} nhedf={self.nhedf} nhedvec={self.nhedvec} {self.format_repr}"
@@ -228,7 +228,7 @@ class READINP(READGRID):
             values["grid_type"] = "undefined"
         return values
 
-    def render(self):
+    def __repr__(self):
         repr = (
             f"READINP {self.grid_type.upper()} fac={self.fac} fname1='{self.fname1}'"
         )
@@ -238,7 +238,7 @@ class READINP(READGRID):
         return repr
 
 
-class NONSTATIONARY(BaseModel):
+class NONSTATIONARY(BaseComponent):
     """SWAN input grid.
 
     Parameters
@@ -319,6 +319,3 @@ class NONSTATIONARY(BaseModel):
             repr += f" {self.delt_string}"
             repr += f" {self.tend.strftime(self.tfmt)}"
         return repr
-
-    def render(self):
-        return self.__repr__()
