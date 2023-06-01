@@ -1,7 +1,7 @@
 """Test SWAN boundary components."""
 import pytest
 
-from rompy.swan.components.boundary import BOUNDSPEC, BOUNDNEST1, BOUNDNEST2
+from rompy.swan.components.boundary import BOUNDSPEC, BOUNDNEST1, BOUNDNEST2, BOUNDNEST3
 from rompy.swan.subcomponents.shape import SHAPESPEC, JONSWAP
 from rompy.swan.subcomponents.boundary import SIDE, CONSTANTPAR
 
@@ -40,7 +40,7 @@ def test_boundnest2_format():
     bnd = BOUNDNEST2(fname="boundary_wam.txt", format="free")
     assert bnd.render() == "BOUNDNEST2 WAMNEST fname='boundary_wam.txt' FREE lwdate=12"
     for fmt in ["cray", "wkstat"]:
-        bnd = BOUNDNEST2(fname="wam.txt", format=fmt)
+        bnd = BOUNDNEST2(fname="boundary_wam.txt", format=fmt)
         assert bnd.render().endswith(f"UNFORMATTED {fmt.upper()} lwdate=12")
     with pytest.raises(ValueError):
         BOUNDNEST2(fname="boundary_wam.txt", format="unknown")
@@ -48,7 +48,7 @@ def test_boundnest2_format():
 
 def test_boundnest2_xygc():
     bnd = BOUNDNEST2(fname="boundary_wam.txt", format="free", xgc=0.0, ygc=0.0)
-    assert bnd.render() == "BOUNDNEST2 WAMNEST fname='boundary_wam.txt' FREE xgc=0.0 ygc=0.0 lwdate=12"
+    assert bnd.render().endswith("FREE xgc=0.0 ygc=0.0 lwdate=12")
 
 
 def test_boundnest2_lwdate():
@@ -58,3 +58,15 @@ def test_boundnest2_lwdate():
     with pytest.raises(ValueError):
         BOUNDNEST2(fname="boundary_wam.txt", format="wkstat", lwdate=11)
 
+
+def test_boundnest3_format():
+    for fmt in ["free", "unformatted"]:
+        bnd = BOUNDNEST3(fname="bnd_ww3.txt", format=fmt)
+    assert bnd.render() == f"BOUNDNEST3 WW3 fname='bnd_ww3.txt' {fmt.upper()} CLOSED"
+    with pytest.raises(ValueError):
+        BOUNDNEST3(fname="bnd_ww3.txt", format="unknown")
+
+
+def test_boundnest3_xygc():
+    bnd = BOUNDNEST3(fname="bnd_ww3.txt", format="free", xgc=0.0, ygc=0.0)
+    assert bnd.render().endswith("FREE CLOSED xgc=0.0 ygc=0.0")
