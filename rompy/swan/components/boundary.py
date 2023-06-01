@@ -38,7 +38,7 @@ class BOUNDARY(BaseComponent, ABC):
 class BOUNDSPEC(BOUNDARY):
     """SWAN BOUNDSPEC boundary component.
 
-    `BOUNDSPEC`
+    `BOUNDSPEC SIDE|SEGMENT ... CONSTANT|VARIABLE PAR|FILE ...`
 
     This command BOUNDSPEC defines parametric spectra at the boundary. It consists of
     two parts, the first part defines the boundary side or segment where the spectra
