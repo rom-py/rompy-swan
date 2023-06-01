@@ -61,6 +61,13 @@ def inpgrid_dict():
 def boundary_dict():
     inst = dict(
         model_type="boundspec",
+        shapespec=dict(
+            model_type="shapespec",
+            shape=dict(
+                model_type="tma",
+                d="12.0",
+            ),
+        ),
         location=dict(
             model_type="side",
             side="west",

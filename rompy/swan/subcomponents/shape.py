@@ -114,7 +114,7 @@ class BIN(SHAPE):
 class SHAPESPEC(BaseSubComponent):
     """SWAN BOUND SHAPESPEC subcomponent.
 
-    `SHAPESPEC [shape.render()] [per_type] [dspr_type]`
+    `BOUND SHAPESPEC JONSWAP|PM|GAUSS|BIN|TMA PEAK|MEAN DSPR [POWER|DEGREES]`
 
     This command BOUND SHAPESPEC defines the shape of the spectra (both in frequency
     and direction) at the boundary of the computational grid in case of parametric
