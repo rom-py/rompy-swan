@@ -2,10 +2,10 @@
 from typing import Optional, Literal
 from pydantic import root_validator, confloat, constr, conint
 
-from rompy.swan.components.base import BaseComponent
+from rompy.swan.subcomponents.base import BaseSubComponent
 
 
-class SIDE(BaseComponent):
+class SIDE(BaseSubComponent):
     """SWAN SIDE BOUNDSPEC subcomponent.
 
     The boundary is one full side of the computational grid (in 1D cases either of the
@@ -29,7 +29,7 @@ class SIDE(BaseComponent):
         return repr
 
 
-class SEGMENTXY(BaseComponent):
+class SEGMENTXY(BaseSubComponent):
     """SWAN SEGMENT XY BOUNDSPEC subcomponent.
 
     The segment is defined by means of a series of points in terms of problem
@@ -58,7 +58,7 @@ class SEGMENTXY(BaseComponent):
         return repr + "\n\t"
 
 
-class SEGMENTIJ(BaseComponent):
+class SEGMENTIJ(BaseSubComponent):
     """SWAN SEGMENT IJ BOUNDSPEC subcomponent.
 
     The segment is defined by means of a series of computational grid points given in
@@ -84,7 +84,7 @@ class SEGMENTIJ(BaseComponent):
         return repr + "\n\t"
 
 
-class CONSTANTPAR(BaseComponent):
+class CONSTANTPAR(BaseSubComponent):
     """Constant parameter subcomponent.
 
     `CONSTANT PAR [hs] [per] [dir] [dd]`
@@ -121,7 +121,7 @@ class CONSTANTPAR(BaseComponent):
         return f"CONSTANT PAR hs={self.hs} per={self.per} dir={self.dir} dd={self.dd}"
 
 
-class VARIABLEPAR(BaseComponent):
+class VARIABLEPAR(BaseSubComponent):
     """Variable parameter subcomponent.
 
     `VARIABLE PAR < [len] [hs] [per] [dir] [dd] >`
@@ -180,7 +180,7 @@ class VARIABLEPAR(BaseComponent):
         return repr
 
 
-class CONSTANTFILE(BaseComponent):
+class CONSTANTFILE(BaseSubComponent):
     """Constant file subcomponent.
 
     `CONSTANT FILE 'fname' [seq]`
@@ -209,7 +209,7 @@ class CONSTANTFILE(BaseComponent):
             repr += f" seq={self.seq}"
 
 
-class VARIABLEFILE(BaseComponent):
+class VARIABLEFILE(BaseSubComponent):
     """Variable file subcomponent.
 
     `VARIABLE FILE < [len] 'fname' [seq] >`
