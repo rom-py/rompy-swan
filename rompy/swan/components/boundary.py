@@ -9,7 +9,7 @@ from abc import ABC, abstractmethod
 from pydantic import root_validator, confloat
 
 from rompy.swan.components.base import BaseComponent#, NONSTATIONARY, READINP, GridOptions
-from rompy.swan.subcomponents.boundary import SIDE, SEGMENTXY, SEGMENTIJ, CONSTANTPAR, VARIABLEPAR, CONSTANTFILE
+from rompy.swan.subcomponents.boundary import SIDE, SEGMENTXY, SEGMENTIJ, CONSTANTPAR, VARIABLEPAR, CONSTANTFILE, VARIABLEFILE
 from rompy.swan.subcomponents.shape import SHAPESPEC
 
 
@@ -53,9 +53,11 @@ class BOUNDSPEC(BOUNDARY):
     model_type: Literal["boundspec"]
         Model type discriminator.
     shapespec: Optional[SHAPESPEC]
-
+        Spectral shape specification.
     location: SIDE | SEGMENTXY | SEGMENTIJ
         Location to apply th boundary.
+    data: CONSTANTPAR | CONSTANTFILE | VARIABLEPAR | VARIABLEFILE
+        Spectral data.
 
     TODO: Add support for unstructured grid (k).
 
@@ -63,7 +65,7 @@ class BOUNDSPEC(BOUNDARY):
     model_type: Literal["boundspec"] = "boundspec"
     shapespec: SHAPESPEC = SHAPESPEC()
     location: SIDE | SEGMENTXY | SEGMENTIJ
-    data: CONSTANTPAR | CONSTANTFILE | VARIABLEPAR
+    data: CONSTANTPAR | CONSTANTFILE | VARIABLEPAR | VARIABLEFILE
 
     def __repr__(self):
         repr = f"{self.shapespec.render()}\n"
