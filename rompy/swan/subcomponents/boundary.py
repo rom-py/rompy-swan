@@ -3,7 +3,6 @@ from typing import Optional, Literal
 from pydantic import root_validator, confloat, constr, conint
 
 from rompy.swan.components.base import BaseComponent
-from rompy.swan.types import SideOptions
 
 
 class SIDE(BaseComponent):
@@ -129,7 +128,7 @@ class VARIABLEPAR(BaseComponent):
 
     Parameters
     ----------
-    model_type: Literal["par"]
+    model_type: Literal["variablepar"]
         Model type discriminator.
     hs: List[float]
         The significant wave height (m).
