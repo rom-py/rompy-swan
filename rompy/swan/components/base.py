@@ -35,27 +35,21 @@ class BaseComponent(RompyBaseModel):
 
     Parameters
     ----------
-    model_type: Literal["base"]
+    model_type: Literal["component"]
         Model type discriminator.
 
     Behaviour
     ---------
-    - Make all string input case-insensitive.
     - Define a render method to render the component to a cmd string.
+    - Restrict arguments to the defined ones.
 
     """
 
-    model_type: Literal["base"]
+    model_type: Literal["component"]
 
     class Config:
         """Configure the model."""
         extra = "forbid"
-
-    # @root_validator(pre=True)
-    # def to_lowercase(cls, values):
-    #     """Coerce to lower case before validation to allow defining as upper-case."""
-    #     values = {k: v.lower() if isinstance(v, str) else v for k, v in values.items()}
-    #     return values
 
     def render(self):
         """Render the component to a string."""
