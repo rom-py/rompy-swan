@@ -24,8 +24,7 @@ class SIDE(BaseSubComponent):
     direction: Literal["ccw", "clockwise"] = "ccw"
 
     def __repr__(self):
-        repr = f"BOUNDSPEC SIDE {self.side.upper()}"
-        repr += f" {self.direction.upper()}"
+        repr = f"BOUNDSPEC SIDE {self.side.upper()} {self.direction.upper()} "
         return repr
 
 

@@ -109,3 +109,33 @@ class BIN(SHAPE):
     
     """
     model_type: Literal["bin"] = "bin"
+
+
+class SHAPESPEC(BaseSubComponent):
+    """SWAN BOUND SHAPESPEC subcomponent.
+
+    `SHAPESPEC [shape.render()] [per_type] [dspr_type]`
+
+    This command BOUND SHAPESPEC defines the shape of the spectra (both in frequency
+    and direction) at the boundary of the computational grid in case of parametric
+    spectral input.
+
+    Parameters
+    ----------
+    model_type: Literal["shapespec"]
+        Model type discriminator.
+    shape: JONSWAP | PM | GAUSS | BIN | TMA
+        The spectral shape.
+    per_type: Literal['peak', 'mean']
+        The type of characteristic wave period 
+    dspr_type: Literal['power', 'degrees']
+
+    """
+
+    model_type: Literal["shapespec"] = "shapespec"
+    shape: JONSWAP | PM | GAUSS | BIN | TMA = JONSWAP()
+    per_type: Literal["peak", "mean"] = "peak"
+    dspr_type: Literal["power", "degrees"] = "power"
+
+    # def render(self):
+    #     raise RuntimeError("SHAPESPEC is an abstract class and cannot be rendered.")
