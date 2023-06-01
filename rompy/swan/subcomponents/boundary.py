@@ -24,12 +24,14 @@ class SIDE(BaseSubComponent):
     direction: Literal["ccw", "clockwise"] = "ccw"
 
     def __repr__(self):
-        repr = f"BOUNDSPEC SIDE {self.side.upper()} {self.direction.upper()} "
+        repr = f"SIDE {self.side.upper()} {self.direction.upper()} "
         return repr
 
 
 class SEGMENTXY(BaseSubComponent):
     """SWAN SEGMENT XY BOUNDSPEC subcomponent.
+
+    `SEGMENT XY < [x] [y] >`
 
     The segment is defined by means of a series of points in terms of problem
     coordinates; these points do not have to coincide with grid points. The (straight)
@@ -50,7 +52,7 @@ class SEGMENTXY(BaseSubComponent):
     points: list[tuple[float, float]]
     float_format: str = "0.8f"
 
-    def render(self):
+    def __repr__(self):
         repr = f"SEGMENT XY &"
         for point in self.points:
             repr += f"\n\t{point[0]:{self.float_format}} {point[1]:{self.float_format}} &"
@@ -59,6 +61,8 @@ class SEGMENTXY(BaseSubComponent):
 
 class SEGMENTIJ(BaseSubComponent):
     """SWAN SEGMENT IJ BOUNDSPEC subcomponent.
+
+    `SEGMENT IJ < [i] [j] >`
 
     The segment is defined by means of a series of computational grid points given in
     terms of grid indices (origin at 0,0); not all grid points on the segment have to
