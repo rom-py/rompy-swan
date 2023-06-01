@@ -66,7 +66,8 @@ class BOUNDSPEC(BOUNDARY):
     data: CONSTANTPAR | CONSTANTFILE | VARIABLEPAR
 
     def __repr__(self):
-        repr = f"BOUNDSPEC {self.location.render()}{self.data.render()}"
+        repr = f"{self.shapespec.render()}\n"
+        repr += f"BOUNDSPEC {self.location.render()}{self.data.render()}"
         return repr
 
 
