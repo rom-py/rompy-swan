@@ -137,5 +137,9 @@ class SHAPESPEC(BaseSubComponent):
     per_type: Literal["peak", "mean"] = "peak"
     dspr_type: Literal["power", "degrees"] = "power"
 
-    # def render(self):
-    #     raise RuntimeError("SHAPESPEC is an abstract class and cannot be rendered.")
+    def __repr__(self):
+        repr = (
+            f"BOUND SHAPESPEC {self.shape.render()} {self.per_type.upper()} "
+            f"DSPR {self.dspr_type.upper()}"
+        )
+        return repr
