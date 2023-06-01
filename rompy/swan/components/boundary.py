@@ -62,7 +62,7 @@ class BOUNDSPEC(BaseComponent):
 class BOUNDNEST1(BaseComponent):
     """Boundary spectra from a coarser SWAN nest at all sides of computational domain.
 
-    `BOUNDNEST1 NEST 'fname CLOSED|OPEN`
+    `BOUNDNEST1 NEST 'fname' CLOSED|OPEN`
 
     Parameters
     ----------
@@ -73,8 +73,8 @@ class BOUNDNEST1(BaseComponent):
         created by the previous SWAN coarse grid run. This file is structured
         according to the rules given in Appendix D for 2D spectra.
     rectangle: Literal["closed", "open"]
-        Defines if the boundary is defined over a closed (default) or an open
-        rectangle. Boundary generated from the NESTOUT command is aways closed.
+        Boundary is defined over a closed (default) or an open rectangle. Boundary
+        generated from the NESTOUT command is aways closed.
 
     With this optional command a nested SWAN run can be carried out with the boundary
     conditions obtained from a coarse grid SWAN run (generated in that previous SWAN
@@ -103,7 +103,7 @@ class BOUNDNEST1(BaseComponent):
 class BOUNDNEST2(BaseComponent):
     """Boundary spectra from a coarser SWAN nest at all sides of computational domain.
 
-    `BOUNDNEST2 WAMNEST 'fname FREE|UNFORMATTED (CRAY|WKSTAT) [xgc] [ygc] [lwdate]`
+    `BOUNDNEST2 WAMNEST 'fname' FREE|UNFORMATTED (CRAY|WKSTAT) [xgc] [ygc] [lwdate]`
 
     Parameters
     ----------
@@ -116,8 +116,8 @@ class BOUNDNEST2(BaseComponent):
             CBO9212010000
             CBO9212020000
             CBO9212030000
-    format: Literal["cray", wkstat", "free"]
-        Format of the WAM files.
+    format: Literal["cray", "wkstat", "free"]
+        Format of the WAM file.
         - cray: CRAY version of WAM.
         - wkstat: WORKSTATION version of WAM.
         - free: Free format (these files are not generated standard by WAM).
@@ -163,7 +163,7 @@ class BOUNDNEST2(BaseComponent):
     """
 
     model_type: Literal["boundnest2"] = "boundnest2"
-    fname: constr(min_length=1, max_length=98)
+    fname: constr(min_length=1, max_length=48)
     format: Literal["cray", "wkstat", "free"]
     xgc: Optional[float]
     ygc: Optional[float]
@@ -187,4 +187,76 @@ class BOUNDNEST2(BaseComponent):
         if self.ygc is not None:
             repr += f" ygc={self.ygc}"
         repr += f" lwdate={self.lwdate}"
+        return repr
+
+
+class BOUNDNEST3(BaseComponent):
+    """Boundary spectra from a coarser SWAN nest at all sides of computational domain.
+
+    `BOUNDNEST3 WW3 'fname' FREE|UNFORMATTED CLOSED|OPEN [xgc] [ygc]`
+
+    Parameters
+    ----------
+    model_type: Literal["boundnest2"]
+        Model type discriminator.
+    fname: str
+        The name of the file that contains the spectra computed by WAVEWATCH III.
+    format: Literal["unformatted", "free"]
+        Format of the WW3 file.
+        - unformatted: The input WW3 files are binary.
+        - free: The input WW3 files are formatted.
+    rectangle: Literal["closed", "open"]
+        Boundary is defined over a closed (default) or an open rectangle. Boundary
+        generated from the NESTOUT command is aways closed.
+    xgc: float
+        - If SWAN is used with Cartesian coordinates: longitude of south-west corner of
+          SWAN computational grid (in degrees); if the south-west corner of the nest in
+          the WAM computation is on land this value is required.
+        - If SWAN is used with spherical coordinates then [xgc] is ignored by SWAN.
+          Default: the location of the first spectrum encountered in the nest file.
+    ygc: float
+        - if SWAN is used with Cartesian coordinates: latitude of south-west corner of
+          SWAN computational grid (in degrees); if the south-west corner of the nest in
+          the WAM computation is on land this value is required.
+        - If SWAN is used with spherical coordinates then [ygc] is ignored by SWAN.
+          Default: the location of the first spectrum encountered in the nest file.
+
+    With this optional command a nested SWAN run can be carried out with the boundary
+    conditions obtained from a coarse grid WAVEWATCH III run. The spectral frequencies
+    and directions of the coarse grid run do not have to coincide with the frequencies
+    and directions used in the nested SWAN run; SWAN will interpolate to these
+    frequencies and directions in the nested run (see Section 2.6.3). The output files
+    of WAVEWATCH III have to be created with the post-processor of WAVEWATCH III as
+    output transfer files (formatted or unformatted) with WW_3 OUTP (output type 1 sub
+    type 3) at the locations along the nest boundary (i.e. computational grid points in
+    WAVEWATCH III). These locations are equal to the corner points of the SWAN nested
+    grid and optionally also distributed between the corner points of the SWAN nested
+    grid (the boundary of the WAVEWATCH III nested grid need not be closed and may
+    cover land). The locations should be output by WAVEWATCH III in sequence (going
+    along the nest boundary, clockwise or counterclockwise). Note that SWAN will accept
+    output of a WAVEWATCH III output location only if the SWAN grid point on the nest
+    boundary lies within a rectangle between two consecutive WAVEWATCH III output
+    locations with a width equal to 0.1 times the distance between these output
+    locations on either side of the line between these WAVEWATCH III output locations.
+    This BOUNDNEST3 command is not available for 1D computations. A nested SWAN run may
+    use either Cartesian or spherical coordinates. A curvilinear grid may be used in
+    the nested grid but the boundaries of this nest should conform to the rectangular
+    course grid nest boundaries.
+
+    """
+
+    model_type: Literal["boundnest3"] = "boundnest3"
+    fname: constr(min_length=1, max_length=48)
+    format: Literal["unformatted", "free"]
+    rectangle: Literal["closed", "open"] = "closed"
+    xgc: Optional[float]
+    ygc: Optional[float]
+
+    def __repr__(self):
+        repr = f"BOUNDNEST3 WW3 fname='{self.fname}' {self.format.upper()} "
+        repr += f"{self.rectangle.upper()}"
+        if self.xgc is not None:
+            repr += f" xgc={self.xgc}"
+        if self.ygc is not None:
+            repr += f" ygc={self.ygc}"
         return repr
