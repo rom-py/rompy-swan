@@ -1,7 +1,4 @@
-"""Test subcomponents."""
-import pytest
-from pydantic import ValidationError
-
+"""Test SWAN subcomponents."""
 from rompy.swan.subcomponents.shape import JONSWAP, TMA, PM, GAUSS, BIN
 
 
