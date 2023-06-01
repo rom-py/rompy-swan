@@ -200,6 +200,30 @@ class CONSTANTFILE(BaseSubComponent):
         Note: a TPAR file always contains only one location so in this case
         [seq] must always be 1.
 
+    Note
+    ----
+    There are three types of files:
+    - TPAR files containing nonstationary wave parameters.
+    - files containing stationary or nonstationary 1D spectra
+      (usually from measurements).
+    - files containing stationary or nonstationary 2D spectra
+      (from other computer programs or other SWAN runs).
+    A TPAR file is for only one location; it has the string TPAR on the first
+    line of the file and a number of lines which each contain 5 numbers, i.e.:
+    Time (ISO-notation), Hs, Period (average or peak period depending on the
+    choice given in command BOUND SHAPE), Peak Direction (Nautical or Cartesian,
+    depending on command SET), Directional spread (in degrees or as power of cos
+    depending on the choice given in command BOUND SHAPE).
+
+    Example of a TPAR file
+    ----------------------
+    TPAR
+    19920516.130000 4.2 12. -110. 22.
+    19920516.180000 4.2 12. -110. 22.
+    19920517.000000 1.2 8. -110. 22.
+    19920517.120000 1.4 8.5 -80. 26
+    19920517.200000 0.9 6.5 -95. 28
+
     """
     model_type: Literal["constantfile"] = "constantfile"
     fname: constr(max_length=40)
@@ -238,6 +262,30 @@ class VARIABLEFILE(BaseSubComponent):
         counterclockwise direction, depending on the options CCW or CLOCKWISE (see
         above). The option CCW is default. In case of a SEGMENT the length is
         measured from the indicated begin point of the segment.
+
+    Note
+    ----
+    There are three types of files:
+    - TPAR files containing nonstationary wave parameters.
+    - files containing stationary or nonstationary 1D spectra
+      (usually from measurements).
+    - files containing stationary or nonstationary 2D spectra
+      (from other computer programs or other SWAN runs).
+    A TPAR file is for only one location; it has the string TPAR on the first
+    line of the file and a number of lines which each contain 5 numbers, i.e.:
+    Time (ISO-notation), Hs, Period (average or peak period depending on the
+    choice given in command BOUND SHAPE), Peak Direction (Nautical or Cartesian,
+    depending on command SET), Directional spread (in degrees or as power of cos
+    depending on the choice given in command BOUND SHAPE).
+
+    Example of a TPAR file
+    ----------------------
+    TPAR
+    19920516.130000 4.2 12. -110. 22.
+    19920516.180000 4.2 12. -110. 22.
+    19920517.000000 1.2 8. -110. 22.
+    19920517.120000 1.4 8.5 -80. 26
+    19920517.200000 0.9 6.5 -95. 28
 
     """
     model_type: Literal["variablefile"] = "variablefile"
