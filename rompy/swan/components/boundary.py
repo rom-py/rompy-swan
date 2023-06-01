@@ -246,7 +246,7 @@ class BOUNDNEST3(BaseComponent):
     """
 
     model_type: Literal["boundnest3"] = "boundnest3"
-    fname: constr(min_length=1, max_length=48)
+    fname: constr(min_length=1, max_length=62)
     format: Literal["unformatted", "free"]
     rectangle: Literal["closed", "open"] = "closed"
     xgc: Optional[float]
