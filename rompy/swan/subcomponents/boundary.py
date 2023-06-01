@@ -8,6 +8,8 @@ from rompy.swan.subcomponents.base import BaseSubComponent
 class SIDE(BaseSubComponent):
     """SWAN SIDE BOUNDSPEC subcomponent.
 
+    `SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE`
+
     The boundary is one full side of the computational grid (in 1D cases either of the
     two ends of the 1D-grid). SHOULD NOT BE USED IN CASE OF CURVILINEAR GRIDS!
 
@@ -81,7 +83,7 @@ class SEGMENTIJ(BaseSubComponent):
     points: list[tuple[int, int]]
 
     def __repr__(self):
-        repr = f"SEGMENT XY &"
+        repr = f"SEGMENT IJ &"
         for point in self.points:
             repr += f"\n\t{point[0]} {point[1]} &"
         return repr + "\n\t"
@@ -169,7 +171,6 @@ class VARIABLEPAR(BaseSubComponent):
 
     @root_validator
     def ensure_equal_size(cls, values):
-        """Set the nonstationary suffix."""
         for key in ["hs", "per", "dir", "dd"]:
             if len(values[key]) != len(values["dist"]):
                 raise ValueError(f"Sizes of dist and {key} must be the size")
@@ -234,6 +235,7 @@ class CONSTANTFILE(BaseSubComponent):
         repr = f"CONSTANT FILE fname='{self.fname}'"
         if self.seq is not None:
             repr += f" seq={self.seq}"
+        return repr
 
 
 class VARIABLEFILE(BaseSubComponent):
@@ -251,7 +253,7 @@ class VARIABLEFILE(BaseSubComponent):
         sequences number of geographic location in the file (see Appendix D);
         useful for files which contain spectra for more than one location.
         Note: a TPAR file always contains only one location so in this case
-        [seq] must always be 1.
+        `seq` must always be 1.
     dist: Optional[list[float]]
         Is the distance from the first point of the side or segment to the point along
         the side or segment for which the incident wave spectrum is prescribed.
@@ -293,6 +295,18 @@ class VARIABLEFILE(BaseSubComponent):
     seq: Optional[list[conint(ge=1)]]
     dist: list[confloat(ge=0)]
 
+    @root_validator
+    def ensure_equal_size(cls, values):
+        for key in ["fname", "seq"]:
+            if values.get(key) is not None and len(values[key]) != len(values["dist"]):
+                raise ValueError(f"Sizes of dist and {key} must be the size")
+        if values.get("seq") is None:
+            values["seq"] = [1] * len(values["dist"])
+        return values
+
     def __repr__(self):
         """Render subcomponent cmd."""
-        raise NotImplementedError("VARIABLE FILE is not implemented yet")
+        repr = "VARIABLE FILE"
+        for dist, fname, seq in zip(self.dist, self.fname, self.seq):
+            repr += f" &\n\t\tlen={dist} fname='{fname}' seq={seq}"
+        return repr
