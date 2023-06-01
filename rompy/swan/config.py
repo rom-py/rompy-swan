@@ -261,6 +261,11 @@ class SwanConfigPydantic(BaseConfig):
     inpgrid: INPGRID
         The input grid SWAN component.
 
+    Note
+    ----
+    - BaseComponent types render empty strings and can be used to skip a certain
+      component from rendering to the cmd file.
+
     """
     model_type: Literal["swan"] = "swan"
     cgrid: COMPONENTS.get("cgrid")
