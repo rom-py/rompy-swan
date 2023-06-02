@@ -1,6 +1,8 @@
 """Test swan_config class."""
+import yaml
 import pytest
 import logging
+from pathlib import Path
 
 from rompy.core.model import BaseModel
 from rompy.swan.config import SwanConfigPydantic as SwanConfig
@@ -8,106 +10,22 @@ from rompy.swan.config import SwanConfigPydantic as SwanConfig
 
 logger = logging.getLogger(__name__)
 
-
-@pytest.fixture(scope="module")
-def cgrid_dict():
-    inst = dict(
-        model_type="regular",
-        mdc=36,
-        flow=0.04,
-        fhigh=0.4,
-        xlenc=100.0,
-        ylenc=100.0,
-        mxc=10,
-        myc=10,
-    )
-    yield inst
+HERE = Path(__file__).parent
 
 
 @pytest.fixture(scope="module")
-def inpgrid_dict():
-    inst_bottom = dict(
-        model_type="regular",
-        grid_type="bottom",
-        xpinp=0.0,
-        ypinp=0.0,
-        alpinp=0.0,
-        mxinp=10,
-        myinp=10,
-        dxinp=0.1,
-        dyinp=0.1,
-        excval=-999.0,
-        readinp=dict(
-            model_type="readinp",
-            fname1="bottom.txt",
-        ),
-    )
-    inst_wind = inst_bottom.copy()
-    inst_wind["grid_type"] = "wind"
-    inst_wind["nonstationary"] = dict(
-        tbeg="2023-01-01T00:00:00",
-        delt="PT30M",
-        tend="2023-02-01T00:00:00",
-        deltfmt="hr",
-    )
-    inst_wind["readinp"] = dict(
-        model_type="readinp",
-        fname1="wind.txt",
-    )
-    yield [inst_bottom, inst_wind]
+def config():
+    yield yaml.load((HERE / "swan_model.yml").read_text(), Loader=yaml.Loader)
 
 
-@pytest.fixture(scope="module")
-def boundary_dict():
-    inst = dict(
-        model_type="boundspec",
-        shapespec=dict(
-            model_type="shapespec",
-            shape=dict(
-                model_type="tma",
-                d="12.0",
-            ),
-        ),
-        location=dict(
-            model_type="side",
-            side="west",
-        ),
-        data=dict(
-            model_type="constantpar",
-            hs=1.0,
-            per=10.0,
-            dir=0.0,
-            dd=10.0,
-        ),
-    )
-    yield inst
-
-
-@pytest.fixture(scope="module")
-def initial_dict():
-    inst = dict(
-        model_type="initial",
-        kind=dict(
-            model_type="hotsingle",
-            fname="hotfile.txt",
-            format="free",
-        ),
-    )
-    yield inst
-
-
-def test_swan_model(
-        tmpdir,
-        cgrid_dict,
-        inpgrid_dict,
-        boundary_dict,
-        initial_dict,
-    ):
+def test_swan_model(tmpdir, config):
     config = SwanConfig(
-        cgrid=cgrid_dict,
-        inpgrid=inpgrid_dict,
-        boundary=boundary_dict,
-        initial=initial_dict,
+        project=config["project"],
+        set=config["set"],
+        cgrid=config["cgrid"],
+        inpgrid=config["inpgrid"],
+        boundary=config["boundary"],
+        initial=config["initial"],
     )
     model = BaseModel(
         run_id="test",
@@ -117,4 +35,3 @@ def test_swan_model(
     )
     # import ipdb; ipdb.set_trace()
     model.generate()
-    # sc.render_cmd()
