@@ -1,9 +1,13 @@
 """Spectral shape subcomponents."""
+import logging
 from typing import Literal
 from abc import ABC
 from pydantic import confloat
 
 from rompy.swan.subcomponents.base import BaseSubComponent
+
+
+logger = logging.getLogger(__name__)
 
 
 class SHAPE(BaseSubComponent, ABC):
