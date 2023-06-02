@@ -4,8 +4,9 @@ from pathlib import Path
 from typing_extensions import Literal
 from pydantic import root_validator
 
-from rompy.swan.components.base import BaseComponent, READINP
+from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.time import NONSTATIONARY
+from rompy.swan.subcomponents.readgrid import READINP
 from rompy.swan.types import GridOptions
 
 
