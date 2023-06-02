@@ -3,7 +3,8 @@ import logging
 from pydantic import root_validator, conint, constr
 from typing_extensions import Literal
 
-from rompy.swan.components.base import BaseComponent, READCOORD
+from rompy.swan.components.base import BaseComponent
+from rompy.swan.subcomponents.readgrid import READCOORD
 
 
 logger = logging.getLogger(__name__)
