@@ -9,9 +9,9 @@ from rompy.swan.components.inpgrid import (
     CURVILINEAR,
     UNSTRUCTURED,
     GridOptions,
-    NONSTATIONARY,
     READINP,
 )
+from rompy.swan.subcomponents.time import NONSTATIONARY
 
 
 logger = logging.getLogger(__name__)

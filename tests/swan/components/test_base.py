@@ -5,7 +5,6 @@ from pydantic import ValidationError
 
 from rompy.swan.components.base import (
     BaseComponent,
-    NONSTATIONARY,
     READGRID,
     READCOORD,
     READINP,
@@ -15,15 +14,6 @@ from rompy.swan.components.base import (
 logger = logging.getLogger(__name__)
 
 
-def test_nonstationary():
-    nonstat = NONSTATIONARY(
-        tbeg="2023-01-01T00:00:00",
-        delt="PT30M",
-        tend="2023-02-01T00:00:00",
-        suffix="inp",
-    )
-    logger.info(nonstat)
-    logger.info(nonstat.render())
 
 
 def test_readgrid_fac():

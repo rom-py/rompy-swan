@@ -1,8 +1,12 @@
 """Subcomponents to be rendered inside of components."""
+import logging
 from typing import Optional, Literal
 from pydantic import root_validator, confloat, constr, conint
 
 from rompy.swan.subcomponents.base import BaseSubComponent
+
+
+logger = logging.getLogger(__name__)
 
 
 class SIDE(BaseSubComponent):
