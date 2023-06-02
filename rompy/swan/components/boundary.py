@@ -7,9 +7,14 @@ from pydantic import root_validator, confloat, constr
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.shape import SHAPESPEC
 from rompy.swan.subcomponents.boundary import (
+    DEFAULT,
+    ZERO,
+    HOTSINGLE,
+    HOTMULTIPLE,
     SIDE,
     SEGMENTXY,
     SEGMENTIJ,
+    PAR,
     CONSTANTPAR,
     VARIABLEPAR,
     CONSTANTFILE,
@@ -18,6 +23,33 @@ from rompy.swan.subcomponents.boundary import (
 
 
 HERE = Path(__file__).parent
+
+
+class INITIAL(BaseComponent):
+    """SWAN BOUNDSPEC boundary component.
+
+    `INITIAL DEFAULT|ZERO|PAR|HOTSTART`
+
+    Parameters
+    ----------
+    model_type: Literal["initial"]
+        Model type discriminator.
+    kind: DEFAULT | ZERO | PAR | HOTSINGLE | HOTMULTIPLE
+        Initial condition type.
+
+    This command can be used to specify the initial values for a stationary (INITIAL HOTSTART
+    only) or nonstationary computation. The initial values thus specified override the default
+    initialization (see Section 2.6.3). Note that it is possible to obtain an initial state by
+    carrying out a previous stationary or nonstationary computation.
+
+    """
+
+    model_type: Literal["initial"] = "initial"
+    kind: DEFAULT | ZERO | PAR | HOTSINGLE | HOTMULTIPLE = DEFAULT()
+
+    def __repr__(self):
+        repr = f"INITIAL {self.kind.render()}"
+        return repr
 
 
 class BOUNDSPEC(BaseComponent):

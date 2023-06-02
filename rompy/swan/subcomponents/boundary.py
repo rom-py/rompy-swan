@@ -93,14 +93,14 @@ class SEGMENTIJ(BaseSubComponent):
         return repr + "\n\t"
 
 
-class CONSTANTPAR(BaseSubComponent):
-    """Constant parameter subcomponent.
+class PAR(BaseSubComponent):
+    """Parameter subcomponent.
 
-    `CONSTANT PAR [hs] [per] [dir] [dd]`
+    `PAR [hs] [per] [dir] [dd]`
 
     Parameters
     ----------
-    model_type: Literal["constantpar"]
+    model_type: Literal["par"]
         Model type discriminator.
     hs: float
         The significant wave height (m).
@@ -119,7 +119,7 @@ class CONSTANTPAR(BaseSubComponent):
         command BOUND SHAPE. Default: `dd=2`.
 
     """
-    model_type: Literal["constantpar"] = "constantpar"
+    model_type: Literal["par"] = "par"
     hs: confloat(gt=0.0)
     per: confloat(gt=0.0)
     dir: confloat(ge=-360.0, le=360.0)
@@ -127,7 +127,20 @@ class CONSTANTPAR(BaseSubComponent):
 
     def __repr__(self):
         """Render subcomponent cmd."""
-        return f"CONSTANT PAR hs={self.hs} per={self.per} dir={self.dir} dd={self.dd}"
+        return f"PAR hs={self.hs} per={self.per} dir={self.dir} dd={self.dd}"
+
+
+class CONSTANTPAR(PAR):
+    """Constant parameter subcomponent.
+
+    `CONSTANT PAR [hs] [per] [dir] [dd]`
+
+    """
+    model_type: Literal["constantpar"] = "constantpar"
+
+    def __repr__(self):
+        """Render subcomponent cmd."""
+        return f"CONSTANT {super().__repr__()}"
 
 
 class VARIABLEPAR(BaseSubComponent):
@@ -314,3 +327,114 @@ class VARIABLEFILE(BaseSubComponent):
         for dist, fname, seq in zip(self.dist, self.fname, self.seq):
             repr += f" &\n\t\tlen={dist} fname='{fname}' seq={seq}"
         return repr
+
+
+class DEFAULT(BaseSubComponent):
+    """Default initial conditions subcomponent.
+
+    `DEFAULT`
+
+    Parameters
+    ----------
+    model_type: Literal["default"]
+        Model type discriminator.
+
+    The initial spectra are computed from the local wind velocities, using the
+    deep-water growth curve of Kahma and Calkoen (1992), cut off at values of
+    significant wave height and peak frequency from Pierson and Moskowitz (1964).
+    The average (over the model area) spatial step size is used as fetch with local
+    wind. The shape of the spectrum is default JONSWAP with a cos2-directional
+    distribution (options are available: see command BOUND SHAPE).
+
+    """
+    model_type: Literal["default"] = "default"
+
+
+class ZERO(BaseSubComponent):
+    """ZERO initial conditions subcomponent.
+
+    `ZERO`
+
+    Parameters
+    ----------
+    model_type: Literal["zero"]
+        Model type discriminator.
+
+    The initial spectral densities are all 0; note that if waves are generated in the
+    model only by wind, waves can become non-zero only by the presence of the
+    ”A” term in the growth model; see the keyword AGROW in command GEN3.
+
+    """
+    model_type: Literal["zero"] = "zero"
+
+
+class HOTSINGLE(BaseSubComponent):
+    """SWAN Hotstart single subcomponent.
+
+    `HOTSTART SINGLE fname='fname' FREE|UNFORMATTED`
+
+    parameters
+    ----------
+    model_type: Literal["hotsingle"]
+        Model type discriminator.
+    fname: str
+        Name of the file containing the initial wave field.
+    format: Literal["free", "unformatted"]
+        Format of the file containing the initial wave field.
+        - FREE: free format.
+        - UNFORMATTED: binary format.
+
+    Initial wave field is read from file; this file was generated in a previous SWAN
+    run by means of the HOTFILE command. If the previous run was nonstationary,
+    the time found on the file will be assumed to be the initial time of computation. It
+    can also be used for stationary computation as first guess. The computational grid
+    (both in geographical space and in spectral space) must be identical to the one in
+    the run in which the initial wave field was computed
+
+    Input will be read from a single (concatenated) hotfile. In the case of a previous
+    parallel MPI run, the concatenated hotfile can be created from a set of multiple
+    hotfiles using the program hcat.exe, see Implementation Manual.
+
+    """
+    model_type: Literal["hotsingle"] = "hotsingle"
+    fname: constr(max_length=40)
+    format: Literal["free", "unformatted"] = "free"
+
+    def __repr__(self):
+        """Render subcomponent cmd."""
+        return f"HOTSTART SINGLE fname='{self.fname}' {self.format.upper()}"
+
+
+class HOTMULTIPLE(BaseSubComponent):
+    """SWAN Hotstart multiple subcomponent.
+
+    parameters
+    ----------
+    model_type: Literal["hotmultiple"]
+        Model type discriminator.
+    fname: str
+        Name of the file containing the boundary condition.
+    format: Literal["free", "unformatted"]
+        Format of the file containing the initial wave field.
+        - FREE: free format.
+        - UNFORMATTED: binary format.
+
+    Initial wave field is read from file; this file was generated in a previous SWAN
+    run by means of the HOTFILE command. If the previous run was nonstationary,
+    the time found on the file will be assumed to be the initial time of computation. It
+    can also be used for stationary computation as first guess. The computational grid
+    (both in geographical space and in spectral space) must be identical to the one in
+    the run in which the initial wave field was computed
+
+    Input will be read from multiple hotfiles obtained from a previous parallel MPI run.
+    The number of files equals the number of processors. Hence, for the present run the
+    same number of processors must be chosen.
+
+    """
+    model_type: Literal["hotmultiple"] = "hotmultiple"
+    fname: constr(max_length=40)
+    format: Literal["free", "unformatted"] = "free"
+
+    def __repr__(self):
+        """Render subcomponent cmd."""
+        return f"HOTSTART MULTIPLE fname='{self.fname}' {self.format.upper()}"
