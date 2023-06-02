@@ -397,7 +397,7 @@ class HOTSINGLE(BaseSubComponent):
 
     """
     model_type: Literal["hotsingle"] = "hotsingle"
-    fname: constr(max_length=40)
+    fname: constr(max_length=85)
     format: Literal["free", "unformatted"] = "free"
 
     def __repr__(self):
@@ -432,7 +432,7 @@ class HOTMULTIPLE(BaseSubComponent):
 
     """
     model_type: Literal["hotmultiple"] = "hotmultiple"
-    fname: constr(max_length=40)
+    fname: constr(max_length=85)
     format: Literal["free", "unformatted"] = "free"
 
     def __repr__(self):
