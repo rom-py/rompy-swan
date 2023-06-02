@@ -1,9 +1,51 @@
 """Test SWAN boundary components."""
 import pytest
 
-from rompy.swan.components.boundary import BOUNDSPEC, BOUNDNEST1, BOUNDNEST2, BOUNDNEST3
+from rompy.swan.components.boundary import INITIAL, BOUNDSPEC, BOUNDNEST1, BOUNDNEST2, BOUNDNEST3
 from rompy.swan.subcomponents.shape import SHAPESPEC, JONSWAP
-from rompy.swan.subcomponents.boundary import SIDE, CONSTANTPAR
+from rompy.swan.subcomponents.boundary import SIDE, PAR, CONSTANTPAR, ZERO, DEFAULT, HOTMULTIPLE, HOTSINGLE
+
+
+def test_initial_default():
+    par = INITIAL()
+    assert par.render() == f"INITIAL DEFAULT"
+
+
+def test_initial_zero():
+    par = INITIAL(kind=ZERO())
+    assert par.render() == f"INITIAL ZERO"
+
+
+def test_initial_par():
+    par = INITIAL(
+        kind=PAR(
+            hs=1.0,
+            per=10.0,
+            dir=0.0,
+            dd=10.0,
+        ),
+    )
+    assert par.render() == "INITIAL PAR hs=1.0 per=10.0 dir=0.0 dd=10.0"
+
+
+def test_initial_hotsingle():
+    par = INITIAL(
+        kind=HOTSINGLE(
+            fname="hotfile.txt",
+            format="unformatted",
+        ),
+    )
+    assert par.render() == "INITIAL HOTSTART SINGLE fname='hotfile.txt' UNFORMATTED"
+
+
+def test_initial_hotmultiple():
+    par = INITIAL(
+        kind=HOTMULTIPLE(
+            fname="hotfile.txt",
+            format="unformatted",
+        ),
+    )
+    assert par.render() == "INITIAL HOTSTART MULTIPLE fname='hotfile.txt' UNFORMATTED"
 
 
 def test_boundspec():
