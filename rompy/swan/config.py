@@ -1,13 +1,13 @@
 import logging
 from pathlib import Path
 
-from pydantic import validator, Field
+from pydantic import validator, root_validator, Field
 from typing_extensions import Literal
 
 from rompy.core import (
     BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 )
-from rompy.swan.components import base, cgrid, inpgrid, boundary
+from rompy.swan.components import base, cgrid, inpgrid, boundary, startup
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -18,6 +18,8 @@ logger = logging.getLogger(__name__)
 HERE = Path(__file__).parent
 
 COMPONENTS = {
+    "project": startup.PROJECT | base.BaseComponent,
+    "set": startup.SET | base.BaseComponent,
     "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED | base.BaseComponent,
     "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED | base.BaseComponent],
     "boundary": boundary.BOUNDSPEC | boundary.BOUNDNEST1 | boundary.BOUNDNEST2 | boundary.BOUNDNEST3 | base.BaseComponent,
@@ -268,9 +270,17 @@ class SwanConfigPydantic(BaseConfig):
     - BaseComponent types render empty strings and can be used to skip a certain
       component from rendering to the cmd file.
 
+    TODO: Implement discriminator for inpgrid which is a list of comopnents.
+
     """
     model_type: Literal["swan"] = "swan"
-    cgrid: COMPONENTS.get("cgrid")
+    project: COMPONENTS.get("project") = Field(..., discriminator="model_type")
+    set: COMPONENTS.get("set") = Field(..., discriminator="model_type")
+    cgrid: COMPONENTS.get("cgrid") = Field(..., discriminator="model_type")
     inpgrid: COMPONENTS.get("inpgrid")
-    boundary: COMPONENTS.get("boundary")
-    initial: COMPONENTS.get("initial")
+    boundary: COMPONENTS.get("boundary") = Field(..., discriminator="model_type")
+    initial: COMPONENTS.get("initial") = Field(..., discriminator="model_type")
+
+    @root_validator
+    def nor_not_defined_if_spherical(cls, values):
+        return values
