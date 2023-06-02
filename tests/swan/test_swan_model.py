@@ -83,11 +83,31 @@ def boundary_dict():
     yield inst
 
 
-def test_swan_model(tmpdir, cgrid_dict, inpgrid_dict, boundary_dict):
+@pytest.fixture(scope="module")
+def initial_dict():
+    inst = dict(
+        model_type="initial",
+        kind=dict(
+            model_type="hotsingle",
+            fname="hotfile.txt",
+            format="free",
+        ),
+    )
+    yield inst
+
+
+def test_swan_model(
+        tmpdir,
+        cgrid_dict,
+        inpgrid_dict,
+        boundary_dict,
+        initial_dict,
+    ):
     config = SwanConfig(
         cgrid=cgrid_dict,
         inpgrid=inpgrid_dict,
         boundary=boundary_dict,
+        initial=initial_dict,
     )
     model = BaseModel(
         run_id="test",
