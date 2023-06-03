@@ -15,6 +15,8 @@ class PROJECT(BaseComponent):
 
     Parameters
     ----------
+    model_type: Literal["project"]
+        Model type discriminator.
     name: Optional[str]
         Is the name of the project, at most 16 characters long.
     nr: str
@@ -42,14 +44,14 @@ class PROJECT(BaseComponent):
 
     def __repr__(self):
         repr = "PROJECT"
-        if self.name:
+        if self.name is not None:
             repr += f" name='{self.name}'"
         repr += f" nr='{self.nr}'"
-        if self.title1:
+        if self.title1 is not None:
             repr += f" title1='{self.title1}'"
-        if self.title2:
+        if self.title2 is not None:
             repr += f" title2='{self.title2}'"
-        if self.title3:
+        if self.title3 is not None:
             repr += f" title3='{self.title3}'"
         return repr
 
@@ -62,6 +64,8 @@ class SET(BaseComponent):
 
     Parameters
     ----------
+    model_type: Literal["set"]
+        Model type discriminator.
     level: float
         Increase in water level that is constant in space and time can be given with
         this option, `level` is the value of this increase (in m). For a variable water
@@ -205,7 +209,34 @@ class SET(BaseComponent):
 
 
 class MODE(BaseComponent):
-    pass
+    """SWAN Mode component.
+
+    `MODE STATIONARY|NONSTATIONARY TWODIMENSIONAL|ONEDIMENSIONAL`
+
+    Parameters
+    ----------
+    model_type: Literal["mode"]
+        Model type discriminator.
+    kind: Literal["stationary", "nonstationary"]
+        Indicates that the run will be either stationary or nonstationary.
+    dim: Literal["twodimensional", "onedimensional"]
+        Indicates that the run will be either one-dimensional (1D-mode) or
+        two-dimensional (2D-mode).
+
+    With this optional command the user indicates that the run will be either stationary
+    or nonstationary and one-dimensional (1D-mode) or two-dimensional (2D-mode). Non-
+    stationary means either (see command COMPUTE):
+    (a) one nonstationary computations or
+    (b) a sequence of stationary computations or
+    (c) a mix of (a) and (b).
+
+    """
+    model_type: Literal["mode"] = "mode"
+    kind: Literal["stationary", "nonstationary"] = "stationary"
+    dim: Literal["onedimensional", "twodimensional"] = "twodimensional"
+
+    def __repr__(self):
+        return f"MODE {self.kind.upper()} {self.dim.upper()}"
 
 
 class COORD(BaseComponent):

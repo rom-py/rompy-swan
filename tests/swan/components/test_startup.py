@@ -1,9 +1,7 @@
 """Test startup components."""
-import pytest
-import logging
 from pydantic import ValidationError
 
-from rompy.swan.components.startup import PROJECT, SET
+from rompy.swan.components.startup import PROJECT, SET, MODE
 
 
 def test_project():
@@ -31,3 +29,17 @@ def test_project_no_titles():
 def test_set():
     s = SET(direction_convention="nautical")
     assert s.render() == "SET NAUTICAL"
+
+
+def test_mode_default():
+    mode = MODE()
+    assert mode.render() == "MODE STATIONARY TWODIMENSIONAL"
+
+
+def test_mode_non_default():
+    mode = MODE(kind="stationary", dim="onedimensional")
+    assert mode.render() == "MODE STATIONARY ONEDIMENSIONAL"
+
+
+def test_coord():
+    pass

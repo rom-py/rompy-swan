@@ -22,6 +22,7 @@ def test_swan_model(tmpdir, config):
     config = SwanConfig(
         project=config["project"],
         set=config["set"],
+        mode=config["mode"],
         cgrid=config["cgrid"],
         inpgrid=config["inpgrid"],
         boundary=config["boundary"],

@@ -20,6 +20,7 @@ HERE = Path(__file__).parent
 COMPONENTS = {
     "project": startup.PROJECT | base.BaseComponent,
     "set": startup.SET | base.BaseComponent,
+    "mode": startup.MODE | base.BaseComponent,
     "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED | base.BaseComponent,
     "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED | base.BaseComponent],
     "boundary": boundary.BOUNDSPEC | boundary.BOUNDNEST1 | boundary.BOUNDNEST2 | boundary.BOUNDNEST3 | base.BaseComponent,
@@ -276,6 +277,7 @@ class SwanConfigPydantic(BaseConfig):
     model_type: Literal["swan"] = "swan"
     project: COMPONENTS.get("project") = Field(..., discriminator="model_type")
     set: COMPONENTS.get("set") = Field(..., discriminator="model_type")
+    mode: COMPONENTS.get("mode") = Field(..., discriminator="model_type")
     cgrid: COMPONENTS.get("cgrid") = Field(..., discriminator="model_type")
     inpgrid: COMPONENTS.get("inpgrid")
     boundary: COMPONENTS.get("boundary") = Field(..., discriminator="model_type")
