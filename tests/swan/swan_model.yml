@@ -13,6 +13,11 @@ set:
   cdcap: 0.0025
   direction_convention: nautical
 
+mode:
+  model_type: mode
+  kind: nonstationary
+  dim: twodimensional
+
 cgrid:
   model_type: regular
   mdc: 36
