@@ -8,8 +8,10 @@ from rompy.core.grid import RegularGrid
 
 
 class SwanGrid(RegularGrid):
-    grid_type: Literal["REG"] = Field("REG", description="Type of grid")
-    exc: Optional[float] = Field(None, description="Exclusion radius", ge=0, le=10_000)
+    grid_type: Literal["REG"] = Field(
+        "REG", description="Type of grid (REG=regular, CURV=curvilinear)"
+    )
+    exc: Optional[float] = Field(None, description="Missing value")
     gridfile: Optional[str] = Field(
         None, description="Name of grid file to load", max_length=100
     )
@@ -291,7 +293,8 @@ class SwanGrid(RegularGrid):
                         color="r",
                         lw=2,
                     )
-                    ax.scatter(specPoint.lon, specPoint.lat, marker="o", color="b")
+                    ax.scatter(specPoint.lon, specPoint.lat,
+                               marker="o", color="b")
                     ax.scatter(segLon, segLat, marker="x", color="g")
 
                 specPoint["lon"] = segLon
