@@ -1,16 +1,18 @@
 from typing import Optional
 
 import numpy as np
-from pydantic import root_validator, validator
+from pydantic import Field, root_validator, validator
 from typing_extensions import Literal
 
 from rompy.core.grid import RegularGrid
 
 
 class SwanGrid(RegularGrid):
-    grid_type: Literal["REG"] = "REG"
-    exc: Optional[float] = None
-    gridfile: Optional[str] = None
+    grid_type: Literal["REG"] = Field("REG", description="Type of grid")
+    exc: Optional[float] = Field(None, description="Exclusion radius", ge=0, le=10_000)
+    gridfile: Optional[str] = Field(
+        None, description="Name of grid file to load", max_length=100
+    )
 
     @validator("grid_type")
     def validate_grid_type(cls, v):
