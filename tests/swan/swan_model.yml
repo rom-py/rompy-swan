@@ -18,6 +18,11 @@ mode:
   kind: nonstationary
   dim: twodimensional
 
+coordinates:
+  model_type: coordinates
+  kind:
+    model_type: spherical
+
 cgrid:
   model_type: regular
   mdc: 36

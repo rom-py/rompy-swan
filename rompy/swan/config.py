@@ -21,6 +21,7 @@ COMPONENTS = {
     "project": startup.PROJECT | base.BaseComponent,
     "set": startup.SET | base.BaseComponent,
     "mode": startup.MODE | base.BaseComponent,
+    "coordinates": startup.COORDINATES | base.BaseComponent,
     "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED | base.BaseComponent,
     "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED | base.BaseComponent],
     "boundary": boundary.BOUNDSPEC | boundary.BOUNDNEST1 | boundary.BOUNDNEST2 | boundary.BOUNDNEST3 | base.BaseComponent,
@@ -278,11 +279,18 @@ class SwanConfigPydantic(BaseConfig):
     project: COMPONENTS.get("project") = Field(..., discriminator="model_type")
     set: COMPONENTS.get("set") = Field(..., discriminator="model_type")
     mode: COMPONENTS.get("mode") = Field(..., discriminator="model_type")
+    coordinates: COMPONENTS.get("coordinates") = Field(..., discriminator="model_type")
     cgrid: COMPONENTS.get("cgrid") = Field(..., discriminator="model_type")
     inpgrid: COMPONENTS.get("inpgrid")
     boundary: COMPONENTS.get("boundary") = Field(..., discriminator="model_type")
     initial: COMPONENTS.get("initial") = Field(..., discriminator="model_type")
 
     @root_validator
-    def nor_not_defined_if_spherical(cls, values):
+    def no_nor_if_spherical(cls, values):
+        """Ensure SET nor is not prescribed when using spherical coordinates."""
+        return values
+
+    @root_validator
+    def no_repeating_if_setup(cls, values):
+        """Ensure COORD repeating not set when using set-up."""
         return values

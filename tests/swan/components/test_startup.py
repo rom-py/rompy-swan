@@ -1,7 +1,7 @@
 """Test startup components."""
 from pydantic import ValidationError
 
-from rompy.swan.components.startup import PROJECT, SET, MODE
+from rompy.swan.components.startup import PROJECT, SET, MODE, COORDINATES
 
 
 def test_project():
@@ -41,5 +41,6 @@ def test_mode_non_default():
     assert mode.render() == "MODE STATIONARY ONEDIMENSIONAL"
 
 
-def test_coord():
-    pass
+def test_coord_default():
+    coord = COORDINATES()
+    assert coord.render() == "COORDINATES CARTESIAN"
