@@ -2,8 +2,9 @@
 import logging
 from typing import Literal, Optional
 from pydantic import validator, root_validator, constr, confloat, conint
-from rompy.swan.components.base import BaseComponent
 
+from rompy.swan.components.base import BaseComponent
+from rompy.swan.subcomponents.startup import CARTESIAN, SPHERICAL
 
 logger = logging.getLogger(__name__)
 
@@ -239,5 +240,36 @@ class MODE(BaseComponent):
         return f"MODE {self.kind.upper()} {self.dim.upper()}"
 
 
-class COORD(BaseComponent):
-    pass
+
+class COORDINATES(BaseComponent):
+    """SWAN Coordinates component.
+
+    `COORDINATES CARTESIAN|SPHERICAL REPEATING`
+
+    Parameters
+    ----------
+    model_type: Literal["coordinates"]
+        Model type discriminator.
+    kind: CARTESIAN | SPHERICAL
+        Coordinates kind.
+    repeating: bool
+        This option is only for academic cases. It means that wave energy leaving at
+        one end of the domain (in computational x-direction) enter at the other side;
+        it is as if the wave field repeats itself in x-direction with the length of the
+        domain in x-direction. This option cannot be used in combination with
+        computation of set-up (see command SETUP). This option is available only with
+        regular grids.
+
+    Command to choose between Cartesian and spherical coordinates (see Section 2.5).
+    A nested SWAN run must use the same coordinate system as the coarse grid SWAN run.
+
+    """
+    model_type: Literal["coordinates"] = "coordinates"
+    kind: CARTESIAN | SPHERICAL = CARTESIAN()
+    reapeating: bool = False
+
+    def __repr__(self):
+        repr = f"COORDINATES {self.kind.render()}"
+        if self.reapeating:
+            repr += " REPEATING"
+        return repr
