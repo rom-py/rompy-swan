@@ -212,32 +212,29 @@ class Outputs(RompyBaseModel):
 
 
 class SwanConfig(BaseConfig):
-    """SWAN configuration
+    """SWAN configuration"""
 
-    Parameters
-    ----------
-    grid : SwanGrid
-        Grid for SWAN
-    spectral_resolution : SwanSpectrum
-        Spectral resolution for SWAN
-    forcing : ForcingData
-        Forcing data for SWAN
-    physics : SwanPhysics
-        Physics options for SWAN
-    outputs : Outputs
-        Outputs for SWAN
-    """
-
-    grid: SwanGrid
-    model_type: Literal["swan"] = "swan"
-    spectral_resolution: SwanSpectrum = SwanSpectrum()
-    forcing: ForcingData = ForcingData()
-    physics: SwanPhysics = SwanPhysics()
-    outputs: Outputs = Outputs()
-    spectra_file: str = "boundary.spec"
-    template: str = "/source/rompy/rompy/templates/swan"
-    _datefmt: str = "%Y%m%d.%H%M%S"
-    # subnests: list[SwanConfig] = []
+    grid: SwanGrid = Field(description="The model grid for the SWAN run")
+    model_type: Literal["swan"] = Field(
+        "swan", description="The model type for SWAN.")
+    spectral_resolution: SwanSpectrum = Field(
+        SwanSpectrum(), description="The spectral resolution for SWAN."
+    )
+    forcing: ForcingData = Field(
+        ForcingData(), description="The forcing data for SWAN."
+    )
+    physics: SwanPhysics = Field(
+        SwanPhysics(), description="The physics options for SWAN."
+    )
+    outputs: Outputs = Field(Outputs(), description="The outputs for SWAN.")
+    spectra_file: str = Field(
+        "boundary.spec", description="The spectra file for SWAN.")
+    template: str = Field(
+        "/source/rompy/rompy/templates/swan", description="The template for SWAN."
+    )
+    _datefmt: str = Field(
+        "%Y%m%d.%H%M%S", description="The date format for SWAN.")
+    # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
 
     @property
     def domain(self):
