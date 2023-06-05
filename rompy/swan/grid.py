@@ -8,6 +8,11 @@ from rompy.core.grid import RegularGrid
 
 
 class SwanGrid(RegularGrid):
+    """
+    An object which provides an abstract representation of a regular SWAN
+    grid in some geographic space
+    """
+
     grid_type: Literal["REG"] = Field(
         "REG", description="Type of grid (REG=regular, CURV=curvilinear)"
     )
@@ -293,8 +298,7 @@ class SwanGrid(RegularGrid):
                         color="r",
                         lw=2,
                     )
-                    ax.scatter(specPoint.lon, specPoint.lat,
-                               marker="o", color="b")
+                    ax.scatter(specPoint.lon, specPoint.lat, marker="o", color="b")
                     ax.scatter(segLon, segLat, marker="x", color="g")
 
                 specPoint["lon"] = segLon
