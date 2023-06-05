@@ -87,7 +87,7 @@ class CGRID(BaseComponent):
         else:
             return f"SECTOR {self.dir1} {self.dir2}"
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{self.dir_sector} mdc={self.mdc}"
         if self.flow is not None:
             repr += f" flow={self.flow}"
@@ -138,7 +138,7 @@ class REGULAR(CGRID):
     mxc: int
     myc: int
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = (
             f"CGRID REGULAR xpc={self.xpc} ypc={self.ypc} alpc={self.alpc} "
             f"xlenc={self.xlenc} ylenc={self.ylenc} mxc={self.mxc} myc={self.myc} "
@@ -225,7 +225,7 @@ class CURVILINEAR(CGRID):
             repr = "UNFORMATTED"
         return repr
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"CGRID CURVILINEAR mxc={self.mxc} myc={self.myc}"
         if self.exception:
             repr += f" {self.exception}"
@@ -262,7 +262,7 @@ class UNSTRUCTURED(CGRID):
             raise ValueError(f"fname must be specified for {grid_type} grid")
         return values
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"CGRID UNSTRUCTURED {super().cmd()}"
         repr += f"\nREADGRID UNSTRUCTURED {self.grid_type.upper()}"
         if self.grid_type in ["triangle", "easymesh"]:
