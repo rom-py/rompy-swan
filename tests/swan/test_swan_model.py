@@ -4,7 +4,7 @@ import pytest
 import logging
 from pathlib import Path
 
-from rompy.core.model import BaseModel
+from rompy.core.model import ModelRun
 from rompy.swan.config import SwanConfigPydantic as SwanConfig
 
 
@@ -20,6 +20,7 @@ def config():
 
 def test_swan_model(tmpdir, config):
     config = SwanConfig(
+        template="/source/csiro/rompy/rompy/templates/swan2",
         project=config["project"],
         set=config["set"],
         mode=config["mode"],
@@ -29,11 +30,10 @@ def test_swan_model(tmpdir, config):
         boundary=config["boundary"],
         initial=config["initial"],
     )
-    model = BaseModel(
+    model = ModelRun(
         run_id="test",
         output_dir=str(tmpdir),
         config=config,
-        template="/source/csiro/rompy/rompy/templates/swan2",
     )
     # import ipdb; ipdb.set_trace()
     model.generate()

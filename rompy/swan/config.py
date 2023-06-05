@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 
 from pydantic import validator, root_validator, Field
-from typing import Literal
+from typing import Literal, Optional
 
 from rompy.core import (
     BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
