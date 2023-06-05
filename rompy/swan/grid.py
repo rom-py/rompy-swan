@@ -1,25 +1,30 @@
 from typing import Optional
 
 import numpy as np
-from pydantic import root_validator, validator
+from pydantic import Field, root_validator, validator
+from typing_extensions import Literal
 
 from rompy.core.grid import RegularGrid
 
 
 class SwanGrid(RegularGrid):
-    gridtype: Optional[str] = "REG"
-    exc: Optional[float] = None
-    gridfile: Optional[str] = None
+    grid_type: Literal["REG"] = Field(
+        "REG", description="Type of grid (REG=regular, CURV=curvilinear)"
+    )
+    exc: Optional[float] = Field(None, description="Missing value")
+    gridfile: Optional[str] = Field(
+        None, description="Name of grid file to load", max_length=100
+    )
 
-    @validator("gridtype")
-    def validate_gridtype(cls, v):
+    @validator("grid_type")
+    def validate_grid_type(cls, v):
         if v not in ["REG", "CURV"]:
-            raise ValueError("gridtype must be one of REG or CURV")
+            raise ValueError("grid_type must be one of REG or CURV")
         return v
 
     @root_validator
     def validate_grid(cls, values):
-        gridtype = values["gridtype"]
+        grid_type = values["grid_type"]
         x = values["x"]
         y = values["y"]
         x0 = values["x0"]
@@ -30,7 +35,7 @@ class SwanGrid(RegularGrid):
         ny = values["ny"]
         gridfile = values["gridfile"]
 
-        if gridtype == "REG":
+        if grid_type == "REG":
             # test if x is numpy array or None
             if isinstance(x, np.ndarray) or isinstance(y, np.ndarray):
                 if any([x0, y0, dx, dy, nx, ny]):
@@ -43,17 +48,17 @@ class SwanGrid(RegularGrid):
                     raise ValueError(
                         "x0, y0, dx, dy, nx, ny must be provided for REG grid"
                     )
-        elif gridtype == "CURV":
+        elif grid_type == "CURV":
             if not gridfile:
                 raise ValueError("gridfile must be provided for CURV grid")
         else:
-            raise ValueError("Unknown SwanGrid type = " + str(gridtype))
+            raise ValueError("Unknown SwanGrid type = " + str(grid_type))
         return values
 
     def _regen_grid(self):
-        if self.gridtype == "REG":
+        if self.grid_type == "REG":
             _x, _y = self._gen_reg_cgrid()
-        elif self.gridtype == "CURV":
+        elif self.grid_type == "CURV":
             _x, _y = self._gen_curv_cgrid()
         self.x = _x
         self.y = _y
@@ -79,7 +84,10 @@ class SwanGrid(RegularGrid):
             lons.append(re.sub("\n", "", grid_Data[idx]).split())
         for idx in np.arange(iy + 1, len(grid_Data)):
             lats.append(re.sub("\n", "", grid_Data[idx]).split())
-        flatten = lambda l: [item for sublist in l for item in sublist]
+
+        def flatten(l):
+            return [item for sublist in l for item in sublist]
+
         lons = np.array(flatten(lons)).astype(np.float)
         lats = np.array(flatten(lats)).astype(np.float)
 
@@ -164,28 +172,28 @@ class SwanGrid(RegularGrid):
     #
     @property
     def inpgrid(self):
-        if self.gridtype == "REG":
+        if self.grid_type == "REG":
             inpstr = f"REG {self.x0} {self.y0} {self.rot} {self.nx-1:0.0f} {self.ny-1:0.0f} {self.dx} {self.dy}"
             if self.exc is not None:
                 inpstr += f" EXC {self.exc}"
             return inpstr
-        elif self.gridtype == "CURV":
+        elif self.grid_type == "CURV":
             raise NotImplementedError("Curvilinear grids not supported yet")
             # return f'CURVilinear {self.nx-1:0.0f} {self.ny-1:0.0f} \nREADGRID COOR 1 \'{os.path.basename(self.gridpath)}\' 1 0 1 FREE'
 
     @property
     def cgrid(self):
-        if self.gridtype == "REG":
+        if self.grid_type == "REG":
             return f"REG {self.x0} {self.y0} {self.rot} {self.dx*self.nx} {self.dy*self.ny} {self.nx-1:0.0f} {self.ny-1:0.0f}"
-        elif self.gridtype == "CURV":
+        elif self.grid_type == "CURV":
             raise NotImplementedError("Curvilinear grids not supported yet")
             # return (f'CURVilinear {self.nx-1:0.0f} {self.ny-1:0.0f}',f'READGRID COOR 1 \'{os.path.basename(self.gridpath)}\' 1 0 1 FREE')
 
     @property
     def cgrid_read(self):
-        if self.gridtype == "REG":
+        if self.grid_type == "REG":
             return ""
-        elif self.gridtype == "CURV":
+        elif self.grid_type == "CURV":
             raise NotImplementedError("Curvilinear grids not supported yet")
             # return f'READGRID COOR 1 \'{os.path.basename(self.gridpath)}\' 1 0 1 FREE'
 
@@ -285,7 +293,8 @@ class SwanGrid(RegularGrid):
                         color="r",
                         lw=2,
                     )
-                    ax.scatter(specPoint.lon, specPoint.lat, marker="o", color="b")
+                    ax.scatter(specPoint.lon, specPoint.lat,
+                               marker="o", color="b")
                     ax.scatter(segLon, segLat, marker="x", color="g")
 
                 specPoint["lon"] = segLon
@@ -301,7 +310,7 @@ class SwanGrid(RegularGrid):
         return ds_boundary
 
     def __repr__(self):
-        return f"SwanGrid: {self.gridtype}, {self.nx}x{self.ny}"
+        return f"SwanGrid: {self.grid_type}, {self.nx}x{self.ny}"
 
     def __str__(self):
-        return f"SwanGrid: {self.gridtype}, {self.nx}x{self.ny}"
+        return f"SwanGrid: {self.grid_type}, {self.nx}x{self.ny}"
