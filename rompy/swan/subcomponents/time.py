@@ -91,7 +91,7 @@ class NONSTATIONARY(BaseSubComponent):
             dt /= 86400
         return f"{dt} {self.deltfmt.upper()}"
 
-    def cmd(self):
+    def cmd(self) -> str:
         """Render NONSTATIONARY string."""
         repr = "NONSTATIONARY"
         if self.suffix is not None:

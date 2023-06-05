@@ -28,6 +28,6 @@ class BaseSubComponent(RompyBaseModel, ABC):
     def cmd(self) -> str:
         return self.model_type.upper()
 
-    def render(self):
+    def render(self) -> str:
         """Render the sub-component to a string."""
         return self.cmd()

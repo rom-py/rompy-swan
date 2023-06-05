@@ -29,7 +29,7 @@ class SIDE(BaseSubComponent):
     side: Literal["north", "nw", "west", "sw", "south", "se", "east", "ne"]
     direction: Literal["ccw", "clockwise"] = "ccw"
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"SIDE {self.side.upper()} {self.direction.upper()} "
         return repr
 
@@ -58,7 +58,7 @@ class SEGMENTXY(BaseSubComponent):
     points: list[tuple[float, float]]
     float_format: str = "0.8f"
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"SEGMENT XY &"
         for point in self.points:
             repr += f"\n\t{point[0]:{self.float_format}} {point[1]:{self.float_format}} &"
@@ -86,7 +86,7 @@ class SEGMENTIJ(BaseSubComponent):
     model_type: Literal["segmentxy"] = "segmentxy"
     points: list[tuple[int, int]]
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"SEGMENT IJ &"
         for point in self.points:
             repr += f"\n\t{point[0]} {point[1]} &"
@@ -125,7 +125,7 @@ class PAR(BaseSubComponent):
     dir: confloat(ge=-360.0, le=360.0)
     dd: confloat(ge=0.0, le=360.0)
 
-    def cmd(self):
+    def cmd(self) -> str:
         """Render subcomponent cmd."""
         return f"PAR hs={self.hs} per={self.per} dir={self.dir} dd={self.dd}"
 
@@ -138,7 +138,7 @@ class CONSTANTPAR(PAR):
     """
     model_type: Literal["constantpar"] = "constantpar"
 
-    def cmd(self):
+    def cmd(self) -> str:
         """Render subcomponent cmd."""
         return f"CONSTANT {super().cmd()}"
 
@@ -193,7 +193,7 @@ class VARIABLEPAR(BaseSubComponent):
                 raise ValueError(f"Sizes of dist and {key} must be the size")
         return values
 
-    def cmd(self):
+    def cmd(self) -> str:
         """Render subcomponent cmd."""
         repr = "VARIABLE PAR"
         for dist, hs, per, dir, dd in zip(self.dist, self.hs, self.per, self.dir, self.dd):
@@ -247,7 +247,7 @@ class CONSTANTFILE(BaseSubComponent):
     fname: constr(max_length=40)
     seq: Optional[conint(ge=1)]
 
-    def cmd(self):
+    def cmd(self) -> str:
         """Render subcomponent cmd."""
         repr = f"CONSTANT FILE fname='{self.fname}'"
         if self.seq is not None:
@@ -321,7 +321,7 @@ class VARIABLEFILE(BaseSubComponent):
             values["seq"] = [1] * len(values["dist"])
         return values
 
-    def cmd(self):
+    def cmd(self) -> str:
         """Render subcomponent cmd."""
         repr = "VARIABLE FILE"
         for dist, fname, seq in zip(self.dist, self.fname, self.seq):
@@ -400,7 +400,7 @@ class HOTSINGLE(BaseSubComponent):
     fname: constr(max_length=85)
     format: Literal["free", "unformatted"] = "free"
 
-    def cmd(self):
+    def cmd(self) -> str:
         """Render subcomponent cmd."""
         return f"HOTSTART SINGLE fname='{self.fname}' {self.format.upper()}"
 
@@ -435,6 +435,6 @@ class HOTMULTIPLE(BaseSubComponent):
     fname: constr(max_length=85)
     format: Literal["free", "unformatted"] = "free"
 
-    def cmd(self):
+    def cmd(self) -> str:
         """Render subcomponent cmd."""
         return f"HOTSTART MULTIPLE fname='{self.fname}' {self.format.upper()}"

@@ -26,7 +26,7 @@ class JONSWAP(BaseSubComponent):
     model_type: Literal["jonswap"] = "jonswap"
     gamma: confloat(gt=0.0) = 3.3
 
-    def cmd(self):
+    def cmd(self) -> str:
         return f"{super().cmd()} gamma={self.gamma}"
 
 
@@ -48,7 +48,7 @@ class TMA(JONSWAP):
     model_type: Literal["tma"] = "tma"
     d: confloat(gt=0.0)
 
-    def cmd(self):
+    def cmd(self) -> str:
         return f"{super().cmd()} d={self.d}"
 
 
@@ -68,7 +68,7 @@ class GAUSS(BaseSubComponent):
     model_type: Literal["gauss"] = "gauss"
     sigfr: confloat(gt=0.0)
 
-    def cmd(self):
+    def cmd(self) -> str:
         return f"{super().cmd()} sigfr={self.sigfr}"
 
 
@@ -126,7 +126,7 @@ class SHAPESPEC(BaseSubComponent):
     per_type: Literal["peak", "mean"] = "peak"
     dspr_type: Literal["power", "degrees"] = "power"
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = (
             f"BOUND SHAPESPEC {self.shape.render()} {self.per_type.upper()} "
             f"DSPR {self.dspr_type.upper()}"
