@@ -131,7 +131,7 @@ class READCOORD(READGRID):
                 raise ValueError(f"{key} is not allowed for READCOORD")
         return values
 
-    def __repr__(self):
+    def cmd(self):
         repr = (
             f"READGRID COORDINATES fac={self.fac} fname='{self.fname}' "
             f"idla={self.idla} nhedf={self.nhedf} nhedvec={self.nhedvec} {self.format_repr}"
@@ -178,7 +178,7 @@ class READINP(READGRID):
             values["grid_type"] = "undefined"
         return values
 
-    def __repr__(self):
+    def cmd(self):
         repr = (
             f"READINP {self.grid_type.upper()} fac={self.fac} fname1='{self.fname1}'"
         )
