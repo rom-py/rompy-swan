@@ -1,6 +1,7 @@
 import logging
+from typing import Optional
 
-from pydantic import validator
+from pydantic import Field, validator
 from typing_extensions import Literal
 
 from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
@@ -12,15 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 class OutputLocs(RompyBaseModel):
-    """Output locations for SWAN
+    """Output locations"""
 
-    Parameters
-    ----------
-    coords : list[Coordinate]
-        list of coordinates to output spectra
-    """
-
-    coords: list[Coordinate] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
+    coords: list[Coordinate] = Field(
+        [], description="list of coordinates to output spectra"
+    )
+    # coords: list[Coordinate] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
 
     def __repr__(self):
         ret = __class__.__name__ + "\n"
@@ -67,14 +65,23 @@ class ForcingData(RompyBaseModel):
 
 
 class SwanSpectrum(Spectrum):
+    """SWAN Spectrum"""
+
     @property
     def cmd(self):
         return f"CIRCLE {self.ndirs} {self.fmin} {self.fmax} {self.nfreqs}"
 
 
 class SwanPhysics(RompyBaseModel):
-    friction: str = "MAD"
-    friction_coeff: float = 0.1
+    """Container class represting configuraable SWAN physics options"""
+
+    friction: str = Field(
+        default="MAD", description="The type of friction, either 'MAD' or 'TODO'."
+    )
+    friction_coeff: float = Field(
+        default=0.1,
+        description="The coefficient of friction for the given surface and object.",
+    )
 
     @validator("friction")
     def validate_friction(cls, v):
@@ -134,7 +141,24 @@ class SpecOutput(RompyBaseModel):
     """Spectral outputs for SWAN"""
 
     period: TimeRange | None = None
-    locations: OutputLocs | None = OutputLocs()  # TODO change to None
+    locations: OutputLocs = OutputLocs(coords=[])  # TODO change to None
+
+    def __str__(self):
+        ret = "\tSpec\n"
+        if self.period:
+            ret += f"\t\tperiod: {self.period}\n"
+        ret += f"\t\tlocations: {self.locations}\n"
+        return ret
+
+
+class SpecOutput(RompyBaseModel):
+    period: Optional[TimeRange] = Field(
+        None, description="Time range for which the spectral outputs are requested"
+    )
+    locations: Optional[OutputLocs] = Field(
+        OutputLocs(coords=[]),
+        description="Output locations for which the spectral outputs are requested",
+    )
 
     def __str__(self):
         ret = "\tSpec\n"
@@ -157,7 +181,8 @@ class Outputs(RompyBaseModel):
         ret = "OUTPUT OPTIONS BLOCK 8\n"
         ret += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 {' '.join(self.grid.variables)} OUT {self.grid.period.start.strftime(self._datefmt)} {out_intvl}\n"
         ret += "\n"
-        ret += f"POINTs 'pts' FILE 'out.loc'\n"
+        if self.spec.locations:
+            ret += f"POINTs 'pts' FILE 'out.loc'\n"
         ret += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.spec.period.start.strftime(self._datefmt)} {out_intvl}\n"
         ret += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.grid.period.start.strftime(self._datefmt)} {out_intvl}\n"
         return ret
@@ -223,6 +248,7 @@ class SwanConfig(BaseConfig):
         ret["grid"] = f"{self.domain}"
         ret["forcing"] = self.forcing.get(self.grid, runtime)
         ret["physics"] = f"{self.physics.cmd}"
+        # TODO raf to complete boundary bit
         ret["remaining"] = f"BOUND NEST '{self.spectra_file}' CLOSED\n"
         ret["outputs"] = self.outputs.cmd
         ret["output_locs"] = self.outputs.spec.locations
