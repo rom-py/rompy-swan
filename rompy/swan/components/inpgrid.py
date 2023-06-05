@@ -50,7 +50,7 @@ class INPGRID(BaseComponent):
             values["readinp"].grid_type = values["grid_type"]
         return values
 
-    def __repr__(self):
+    def cmd(self):
         return f"INPGRID {self.grid_type.upper()}"
 
 
@@ -96,9 +96,9 @@ class REGULAR(INPGRID):
     dxinp: float
     dyinp: float
 
-    def __repr__(self):
+    def cmd(self):
         repr = (
-            f"{super().__repr__()} REGULAR xpinp={self.xpinp} ypinp={self.ypinp} "
+            f"{super().cmd()} REGULAR xpinp={self.xpinp} ypinp={self.ypinp} "
             f"alpinp={self.alpinp} mxinp={self.mxinp} myinp={self.myinp} "
             f"dxinp={self.dxinp} dyinp={self.dyinp}"
         )
@@ -106,7 +106,8 @@ class REGULAR(INPGRID):
             repr += f" EXCEPTION excval={self.excval}"
         if self.nonstationary is not None:
             repr += f" {self.nonstationary.render()}"
-        repr += f"\n{self.readinp.render()}"
+        repr = [repr] + [self.readinp.render()]
+        # repr += f"\n{self.readinp.render()}"
         return repr
 
 
@@ -143,9 +144,9 @@ class CURVILINEAR(INPGRID):
     mxinp: int
     myinp: int
 
-    def __repr__(self):
+    def cmd(self):
         repr = (
-            f"{super().__repr__()} CURVILINEAR stagrx={self.stagrx} "
+            f"{super().cmd()} CURVILINEAR stagrx={self.stagrx} "
             f"stagry={self.stagry} mxinp={self.mxinp} myinp={self.myinp} "
         )
         if self.excval is not None:
@@ -166,8 +167,8 @@ class UNSTRUCTURED(INPGRID):
     """
     model_type: Literal["unstructured"] = "unstructured"
 
-    def __repr__(self):
-        repr = f"{super().__repr__()} UNSTRUCTURED"
+    def cmd(self):
+        repr = f"{super().cmd()} UNSTRUCTURED"
         if self.excval is not None:
             repr += f" EXCEPTION excval={self.excval}"
         if self.nonstationary is not None:

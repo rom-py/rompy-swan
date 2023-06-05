@@ -47,7 +47,7 @@ class INITIAL(BaseComponent):
     model_type: Literal["initial"] = "initial"
     kind: DEFAULT | ZERO | PAR | HOTSINGLE | HOTMULTIPLE = DEFAULT()
 
-    def __repr__(self):
+    def cmd(self):
         repr = f"INITIAL {self.kind.render()}"
         return repr
 
@@ -85,7 +85,7 @@ class BOUNDSPEC(BaseComponent):
     location: SIDE | SEGMENTXY | SEGMENTIJ
     data: CONSTANTPAR | CONSTANTFILE | VARIABLEPAR | VARIABLEFILE
 
-    def __repr__(self):
+    def cmd(self):
         repr = f"{self.shapespec.render()}\n"
         repr += f"BOUNDSPEC {self.location.render()}{self.data.render()}"
         return repr
@@ -128,7 +128,7 @@ class BOUNDNEST1(BaseComponent):
     fname: constr(min_length=1, max_length=98)
     rectangle: Literal["closed", "open"] = "closed"
 
-    def __repr__(self):
+    def cmd(self):
         return f"BOUNDNEST1 NEST fname='{self.fname}' {self.rectangle.upper()}"
 
 
@@ -212,7 +212,7 @@ class BOUNDNEST2(BaseComponent):
         else:
             raise ValueError(f"Unknown format {self.format}")
 
-    def __repr__(self):
+    def cmd(self):
         repr = f"BOUNDNEST2 WAMNEST fname='{self.fname}' {self.format_str}"
         if self.xgc is not None:
             repr += f" xgc={self.xgc}"
@@ -284,7 +284,7 @@ class BOUNDNEST3(BaseComponent):
     xgc: Optional[float]
     ygc: Optional[float]
 
-    def __repr__(self):
+    def cmd(self):
         repr = f"BOUNDNEST3 WW3 fname='{self.fname}' {self.format.upper()} "
         repr += f"{self.rectangle.upper()}"
         if self.xgc is not None:

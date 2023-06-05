@@ -13,7 +13,7 @@ class LongRender(BaseComponent):
     def options(self):
         return {c: f"{c}_value" for c in ascii_lowercase + ascii_uppercase}
 
-    def __repr__(self):
+    def cmd(self):
         """Render the component to a string."""
         repr = f"COMPONENT"
         for k, v in self.options.items():
@@ -27,5 +27,5 @@ class LongRender(BaseComponent):
 def test_max_132_characters():
     """Test that the render string is not longer than 132 characters."""
     lr = LongRender()
-    print(lr.render())
-    # assert len(long_render.render()) <= 132
+    for cmd_line in lr.render().split("\n"):
+        assert len(cmd_line) <= 132

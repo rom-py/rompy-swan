@@ -5,11 +5,12 @@ How to subclass
 
 - Define a new `model_type` Literal for the subclass (set the default value to avoid
   having to set it when instantiating the object)
-- Overwrite the __repr__ method to return the SWAN input file string
+- Overwrite the cmd method to return the SWAN input file string
 
 """
 import logging
 from typing_extensions import Literal
+from abc import abstractmethod
 
 from rompy.core import RompyBaseModel
 
@@ -17,6 +18,7 @@ from rompy.core import RompyBaseModel
 logger = logging.getLogger(__name__)
 
 MAX_LENGTH = 132
+SPACES = 4
 
 
 def split_string(cmd: str, max_length: int = MAX_LENGTH, spaces: int = 4) -> list:
@@ -69,14 +71,41 @@ class BaseComponent(RompyBaseModel):
         """Configure the model."""
         extra = "forbid"
 
-    def render(self) -> str:
-        """Render the component to a CMD string."""
-        spaces = 4
+    @abstractmethod
+    def cmd(self) -> str | list:
+        """Return the string or list of strings to render the component to the CMD."""
+        pass
+
+    def _render_split_cmd(self, cmd_line: str) -> str:
+        """Split cmd_line if longer than MAX_LENGTH.
+
+        Longer strings are recursively split by inserting a SWAN line continuation
+        character `&` follwed by newline and identation until no line it soo long.
+
+        Parameters
+        ----------
+        cmd_line: str
+            Command line to split.
+
+        Returns
+        -------
+        str
+            Split command line.
+
+        """
         # Split cmd at existing newlines
-        cmd_lines = self.__repr__().split("\n")
+        cmd_lines = cmd_line.split("\n")
         # Split each line before max_length
         cmds = []
         for cmd in cmd_lines:
-            cmds.extend(split_string(cmd, max_length=MAX_LENGTH, spaces=spaces))
-        # Return joined string with newline representations
-        return f" &\n{spaces * ' '}".join(cmds)
+            cmds.extend(split_string(cmd, max_length=MAX_LENGTH, spaces=SPACES))
+        # Joining lines
+        return f" &\n{SPACES * ' '}".join(cmds)
+
+    def render(self) -> str:
+        """Render the component to a string."""
+        cmd_lines = self.cmd()
+        if isinstance(cmd_lines, str):
+            cmd_lines = [cmd_lines]
+        cmd_lines = [self._render_split_cmd(cmd_line) for cmd_line in cmd_lines]
+        return "\n".join(cmd_lines)

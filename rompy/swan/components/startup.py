@@ -43,7 +43,7 @@ class PROJECT(BaseComponent):
     title2: Optional[constr(max_length=72)]
     title3: Optional[constr(max_length=72)]
 
-    def __repr__(self):
+    def cmd(self):
         repr = "PROJECT"
         if self.name is not None:
             repr += f" name='{self.name}'"
@@ -176,7 +176,7 @@ class SET(BaseComponent):
             logger.warning("pwtail only has effect if set after GEN command")
         return v
 
-    def __repr__(self):
+    def cmd(self):
         repr = "SET"
         if self.level is not None:
             repr += f" level={self.level}"
@@ -236,7 +236,7 @@ class MODE(BaseComponent):
     kind: Literal["stationary", "nonstationary"] = "stationary"
     dim: Literal["onedimensional", "twodimensional"] = "twodimensional"
 
-    def __repr__(self):
+    def cmd(self):
         return f"MODE {self.kind.upper()} {self.dim.upper()}"
 
 
@@ -268,7 +268,7 @@ class COORDINATES(BaseComponent):
     kind: CARTESIAN | SPHERICAL = CARTESIAN()
     reapeating: bool = False
 
-    def __repr__(self):
+    def cmd(self):
         repr = f"COORDINATES {self.kind.render()}"
         if self.reapeating:
             repr += " REPEATING"

@@ -294,3 +294,8 @@ class SwanConfigPydantic(BaseConfig):
     def no_repeating_if_setup(cls, values):
         """Ensure COORD repeating not set when using set-up."""
         return values
+
+    @root_validator
+    def alp_is_zero_if_spherical(cls, values):
+        """Ensure alp is zero when using spherical coordinates."""
+        return values
