@@ -10,22 +10,7 @@ from rompy.swan.subcomponents.base import BaseSubComponent
 logger = logging.getLogger(__name__)
 
 
-class SHAPE(BaseSubComponent, ABC):
-    """Abstract class for SWAN spectral shapes.
-
-    parameters
-    ----------
-    model_type: Literal["shape"]
-        Model type discriminator.
-
-    """
-    model_type: Literal["shape"]
-
-    def __repr__(self):
-        return self.model_type.upper()
-
-
-class JONSWAP(SHAPE):
+class JONSWAP(BaseSubComponent):
     """Jonswap spectral shape.
 
     `JONSWAP [gamma]`
@@ -41,8 +26,8 @@ class JONSWAP(SHAPE):
     model_type: Literal["jonswap"] = "jonswap"
     gamma: confloat(gt=0.0) = 3.3
 
-    def __repr__(self):
-        return f"{super().__repr__()} gamma={self.gamma}"
+    def cmd(self):
+        return f"{super().cmd()} gamma={self.gamma}"
 
 
 class TMA(JONSWAP):
@@ -63,11 +48,11 @@ class TMA(JONSWAP):
     model_type: Literal["tma"] = "tma"
     d: confloat(gt=0.0)
 
-    def __repr__(self):
-        return f"{super().__repr__()} d={self.d}"
+    def cmd(self):
+        return f"{super().cmd()} d={self.d}"
 
 
-class GAUSS(SHAPE):
+class GAUSS(BaseSubComponent):
     """Gaussian spectral shape.
 
     `GAUSS [sigfr]`
@@ -83,11 +68,11 @@ class GAUSS(SHAPE):
     model_type: Literal["gauss"] = "gauss"
     sigfr: confloat(gt=0.0)
 
-    def __repr__(self):
-        return f"{super().__repr__()} sigfr={self.sigfr}"
+    def cmd(self):
+        return f"{super().cmd()} sigfr={self.sigfr}"
 
 
-class PM(SHAPE):
+class PM(BaseSubComponent):
     """Pearson-Moskowitz spectral shape.
 
     `PM`
@@ -101,7 +86,7 @@ class PM(SHAPE):
     model_type: Literal["pm"] = "pm"
 
 
-class BIN(SHAPE):
+class BIN(BaseSubComponent):
     """Single frequency bin spectral shape.
 
     `BIN`
@@ -141,7 +126,7 @@ class SHAPESPEC(BaseSubComponent):
     per_type: Literal["peak", "mean"] = "peak"
     dspr_type: Literal["power", "degrees"] = "power"
 
-    def __repr__(self):
+    def cmd(self):
         repr = (
             f"BOUND SHAPESPEC {self.shape.render()} {self.per_type.upper()} "
             f"DSPR {self.dspr_type.upper()}"

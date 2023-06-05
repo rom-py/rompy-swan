@@ -25,9 +25,9 @@ class BaseSubComponent(RompyBaseModel, ABC):
         """Configure the model."""
         extra = "forbid"
 
-    def __repr__(self) -> str:
+    def cmd(self) -> str:
         return self.model_type.upper()
 
     def render(self):
         """Render the sub-component to a string."""
-        return f"{self.__repr__()}"
+        return self.cmd()

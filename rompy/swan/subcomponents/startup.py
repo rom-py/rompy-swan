@@ -56,9 +56,9 @@ class SPHERICAL(BaseSubComponent):
     model_type: Literal["spherical"] = "spherical"
     projection: Literal["ccm", "qc"] = None
 
-    def __repr__(self):
+    def cmd(self):
         """Render subcomponent cmd."""
-        repr = super().__repr__()
+        repr = super().cmd()
         if self.projection is not None:
             repr += f"{self.projection.upper()}"
         return repr
