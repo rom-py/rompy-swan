@@ -1,9 +1,23 @@
 """Test SWAN boundary components."""
 import pytest
 
-from rompy.swan.components.boundary import INITIAL, BOUNDSPEC, BOUNDNEST1, BOUNDNEST2, BOUNDNEST3
+from rompy.swan.components.boundary import (
+    INITIAL,
+    BOUNDSPEC,
+    BOUNDNEST1,
+    BOUNDNEST2,
+    BOUNDNEST3,
+)
 from rompy.swan.subcomponents.shape import SHAPESPEC, JONSWAP
-from rompy.swan.subcomponents.boundary import SIDE, PAR, CONSTANTPAR, ZERO, DEFAULT, HOTMULTIPLE, HOTSINGLE
+from rompy.swan.subcomponents.boundary import (
+    SIDE,
+    PAR,
+    CONSTANTPAR,
+    ZERO,
+    DEFAULT,
+    HOTMULTIPLE,
+    HOTSINGLE,
+)
 
 
 def test_initial_default():
@@ -51,9 +65,7 @@ def test_initial_hotmultiple():
 def test_boundspec():
     bnd = BOUNDSPEC(
         shapespec=SHAPESPEC(
-            shape=JONSWAP(
-                gamma=3.3
-            ),
+            shape=JONSWAP(gamma=3.3),
             per_type="peak",
             dspr_type="power",
         ),
@@ -96,7 +108,10 @@ def test_boundnest2_xygc():
 def test_boundnest2_lwdate():
     for lwdate in [10, 12, 14]:
         bnd = BOUNDNEST2(fname="boundary_wam.txt", format="free", lwdate=lwdate)
-        assert bnd.render() == f"BOUNDNEST2 WAMNEST fname='boundary_wam.txt' FREE lwdate={lwdate}"
+        assert (
+            bnd.render()
+            == f"BOUNDNEST2 WAMNEST fname='boundary_wam.txt' FREE lwdate={lwdate}"
+        )
     with pytest.raises(ValueError):
         BOUNDNEST2(fname="boundary_wam.txt", format="wkstat", lwdate=11)
 

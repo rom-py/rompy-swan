@@ -47,7 +47,7 @@ def split_string(cmd: str, max_length: int = MAX_LENGTH, spaces: int = 4) -> lis
     if split_index == -1:
         split_index = max_length
 
-    return [cmd[:split_index]] + split_string(cmd[split_index+1:])
+    return [cmd[:split_index]] + split_string(cmd[split_index + 1 :])
 
 
 class BaseComponent(RompyBaseModel):
@@ -69,6 +69,7 @@ class BaseComponent(RompyBaseModel):
 
     class Config:
         """Configure the model."""
+
         extra = "forbid"
 
     @abstractmethod

@@ -86,6 +86,7 @@ class REGULAR(INPGRID):
         `dyinp` may have any value.
 
     """
+
     model_type: Literal["regular"] = "regular"
     xpinp: float
     ypinp: float
@@ -136,6 +137,7 @@ class CURVILINEAR(INPGRID):
     TODO: Handle (or not) setting default values for mxinp and myinp from cgrid component in swan.
 
     """
+
     model_type: Literal["curvilinear"] = "curvilinear"
     stagrx: float = 0.0
     stagry: float = 0.0
@@ -163,6 +165,7 @@ class UNSTRUCTURED(INPGRID):
         Model type discriminator.
 
     """
+
     model_type: Literal["unstructured"] = "unstructured"
 
     def cmd(self) -> str:

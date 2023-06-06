@@ -65,6 +65,7 @@ class READGRID(BaseSubComponent, ABC):
         - 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
 
     """
+
     model_type: Literal["readgrid"] = "readgrid"
     grid_type: GridOptions | Literal["coordinates"]
     fac: confloat(gt=0.0) = 1.0
@@ -84,9 +85,13 @@ class READGRID(BaseSubComponent, ABC):
         if format == "free" and any([form, idfm]):
             logger.warn(f"FREE format specified, ignoring form={form} idfm={idfm}")
         elif format == "unformatted" and any([form, idfm]):
-            logger.warn(f"UNFORMATTED format specified, ignoring form={form} idfm={idfm}")
+            logger.warn(
+                f"UNFORMATTED format specified, ignoring form={form} idfm={idfm}"
+            )
         elif format == "fixed" and not any([form, idfm]):
-            raise ValueError("FIXED format requires one of form or idfm to be specified")
+            raise ValueError(
+                "FIXED format requires one of form or idfm to be specified"
+            )
         elif format == "fixed" and all([form, idfm]):
             raise ValueError("FIXED format accepts only one of form or idfm")
         return values
@@ -119,6 +124,7 @@ class READCOORD(READGRID):
         Name of the SWAN coordinates file.
 
     """
+
     model_type: Literal["readcoord"] = "readcoord"
     grid_type: Literal["coordinates"] = "coordinates"
     fname: str
@@ -166,6 +172,7 @@ class READINP(READGRID):
         lines (see `nhedvec`).
 
     """
+
     model_type: Literal["readinp"] = "readinp"
     grid_type: GridOptions | None = None
     fname1: str
@@ -179,9 +186,7 @@ class READINP(READGRID):
         return values
 
     def cmd(self) -> str:
-        repr = (
-            f"READINP {self.grid_type.upper()} fac={self.fac} fname1='{self.fname1}'"
-        )
+        repr = f"READINP {self.grid_type.upper()} fac={self.fac} fname1='{self.fname1}'"
         if self.fname2:
             repr += f" SERIES fname2='{self.fname2}'"
         repr += f" idla={self.idla} nhedf={self.nhedf} nhedt={self.nhedt} nhedvec={self.nhedvec} {self.format_repr}"

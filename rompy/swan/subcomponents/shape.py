@@ -23,6 +23,7 @@ class JONSWAP(BaseSubComponent):
         Peak enhancement parameter of the JONSWAP spectrum.
 
     """
+
     model_type: Literal["jonswap"] = "jonswap"
     gamma: confloat(gt=0.0) = 3.3
 
@@ -45,6 +46,7 @@ class TMA(JONSWAP):
         The reference depth at the wave maker in meters.
 
     """
+
     model_type: Literal["tma"] = "tma"
     d: confloat(gt=0.0)
 
@@ -65,6 +67,7 @@ class GAUSS(BaseSubComponent):
         Width of the Gaussian frequency spectrum expressed as a standard deviation in Hz.
 
     """
+
     model_type: Literal["gauss"] = "gauss"
     sigfr: confloat(gt=0.0)
 
@@ -81,8 +84,9 @@ class PM(BaseSubComponent):
     ----------
     model_type: Literal["pm"]
         Model type discriminator.
-    
+
     """
+
     model_type: Literal["pm"] = "pm"
 
 
@@ -95,8 +99,9 @@ class BIN(BaseSubComponent):
     ----------
     model_type: Literal["bin"]
         Model type discriminator.
-    
+
     """
+
     model_type: Literal["bin"] = "bin"
 
 
@@ -116,7 +121,7 @@ class SHAPESPEC(BaseSubComponent):
     shape: JONSWAP | PM | GAUSS | BIN | TMA
         The spectral shape.
     per_type: Literal['peak', 'mean']
-        The type of characteristic wave period 
+        The type of characteristic wave period
     dspr_type: Literal['power', 'degrees']
 
     """

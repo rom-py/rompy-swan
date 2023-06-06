@@ -7,6 +7,7 @@ from rompy.swan.components.base import BaseComponent
 
 class LongRender(BaseComponent):
     """Long render method."""
+
     model_type: Literal["test"] = "test"
 
     @property

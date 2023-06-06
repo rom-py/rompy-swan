@@ -25,6 +25,7 @@ class SIDE(BaseSubComponent):
         The side of the grid to apply the boundary to.
 
     """
+
     model_type: Literal["side"] = "side"
     side: Literal["north", "nw", "west", "sw", "south", "se", "east", "ne"]
     direction: Literal["ccw", "clockwise"] = "ccw"
@@ -54,6 +55,7 @@ class SEGMENTXY(BaseSubComponent):
         The format to use for the floats in the points.
 
     """
+
     model_type: Literal["segmentxy"] = "segmentxy"
     points: list[tuple[float, float]]
     float_format: str = "0.8f"
@@ -61,7 +63,9 @@ class SEGMENTXY(BaseSubComponent):
     def cmd(self) -> str:
         repr = f"SEGMENT XY &"
         for point in self.points:
-            repr += f"\n\t{point[0]:{self.float_format}} {point[1]:{self.float_format}} &"
+            repr += (
+                f"\n\t{point[0]:{self.float_format}} {point[1]:{self.float_format}} &"
+            )
         return repr + "\n\t"
 
 
@@ -83,6 +87,7 @@ class SEGMENTIJ(BaseSubComponent):
         Pairs of (i, j) values to define the segment.
 
     """
+
     model_type: Literal["segmentxy"] = "segmentxy"
     points: list[tuple[int, int]]
 
@@ -119,6 +124,7 @@ class PAR(BaseSubComponent):
         command BOUND SHAPE. Default: `dd=2`.
 
     """
+
     model_type: Literal["par"] = "par"
     hs: confloat(gt=0.0)
     per: confloat(gt=0.0)
@@ -136,6 +142,7 @@ class CONSTANTPAR(PAR):
     `CONSTANT PAR [hs] [per] [dir] [dd]`
 
     """
+
     model_type: Literal["constantpar"] = "constantpar"
 
     def cmd(self) -> str:
@@ -179,6 +186,7 @@ class VARIABLEPAR(BaseSubComponent):
         measured from the indicated begin point of the segment.
 
     """
+
     model_type: Literal["variablepar"] = "variablepar"
     hs: list[confloat(ge=0.0)]
     per: list[confloat(ge=0.0)]
@@ -196,7 +204,9 @@ class VARIABLEPAR(BaseSubComponent):
     def cmd(self) -> str:
         """Render subcomponent cmd."""
         repr = "VARIABLE PAR"
-        for dist, hs, per, dir, dd in zip(self.dist, self.hs, self.per, self.dir, self.dd):
+        for dist, hs, per, dir, dd in zip(
+            self.dist, self.hs, self.per, self.dir, self.dd
+        ):
             repr += f" &\n\t\tlen={dist} hs={hs} per={per} dir={dir} dd={dd}"
         return repr
 
@@ -243,6 +253,7 @@ class CONSTANTFILE(BaseSubComponent):
     19920517.200000 0.9 6.5 -95. 28
 
     """
+
     model_type: Literal["constantfile"] = "constantfile"
     fname: constr(max_length=40)
     seq: Optional[conint(ge=1)]
@@ -307,6 +318,7 @@ class VARIABLEFILE(BaseSubComponent):
     19920517.200000 0.9 6.5 -95. 28
 
     """
+
     model_type: Literal["variablefile"] = "variablefile"
     fname: list[constr(max_length=40)]
     seq: Optional[list[conint(ge=1)]]
@@ -347,6 +359,7 @@ class DEFAULT(BaseSubComponent):
     distribution (options are available: see command BOUND SHAPE).
 
     """
+
     model_type: Literal["default"] = "default"
 
 
@@ -365,6 +378,7 @@ class ZERO(BaseSubComponent):
     ”A” term in the growth model; see the keyword AGROW in command GEN3.
 
     """
+
     model_type: Literal["zero"] = "zero"
 
 
@@ -396,6 +410,7 @@ class HOTSINGLE(BaseSubComponent):
     hotfiles using the program hcat.exe, see Implementation Manual.
 
     """
+
     model_type: Literal["hotsingle"] = "hotsingle"
     fname: constr(max_length=85)
     format: Literal["free", "unformatted"] = "free"
@@ -431,6 +446,7 @@ class HOTMULTIPLE(BaseSubComponent):
     same number of processors must be chosen.
 
     """
+
     model_type: Literal["hotmultiple"] = "hotmultiple"
     fname: constr(max_length=85)
     format: Literal["free", "unformatted"] = "free"

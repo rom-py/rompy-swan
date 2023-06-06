@@ -48,6 +48,7 @@ class CGRID(BaseComponent):
     CIRCLE, neither `dir1` nor `dir2` should be specified.
 
     """
+
     model_type: Literal["cgrid"] = "cgrid"
     mdc: int
     flow: float | None = None
@@ -129,6 +130,7 @@ class REGULAR(CGRID):
         than the number of grid points in this domain).  In 1D-mode, `myc` should be 0.
 
     """
+
     model_type: Literal["regular"] = "regular"
     xpc: float = 0.0
     ypc: float = 0.0
@@ -174,6 +176,7 @@ class CURVILINEAR(CGRID):
         Grid coordinates reader.
 
     """
+
     model_type: Literal["curvilinear"] = "curvilinear"
     mxc: int
     myc: int
@@ -199,9 +202,13 @@ class CURVILINEAR(CGRID):
         if format == "free" and any([form, idfm]):
             logger.warn(f"FREE format specified, ignoring form={form} idfm={idfm}")
         elif format == "unformatted" and any([form, idfm]):
-            logger.warn(f"UNFORMATTED format specified, ignoring form={form} idfm={idfm}")
+            logger.warn(
+                f"UNFORMATTED format specified, ignoring form={form} idfm={idfm}"
+            )
         elif format == "fixed" and not any([form, idfm]):
-            raise ValueError("FIXED format requires one of form or idfm to be specified")
+            raise ValueError(
+                "FIXED format requires one of form or idfm to be specified"
+            )
         elif format == "fixed" and all([form, idfm]):
             raise ValueError("FIXED format accepts only one of form or idfm")
         return values
@@ -247,6 +254,7 @@ class UNSTRUCTURED(CGRID):
         Name of the file containing the unstructured grid.
 
     """
+
     model_type: Literal["unstructured"] = "unstructured"
     grid_type: Literal["adcirc", "triangle", "easymesh"] = "adcirc"
     fname: constr(max_length=80) | None = None

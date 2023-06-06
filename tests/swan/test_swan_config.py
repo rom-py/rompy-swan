@@ -42,7 +42,7 @@ def inpgrid_instance():
         ),
         readinp=inpgrid.READINP(
             fname1="wind.txt",
-        )
+        ),
     )
     inst_bottom = inst_wind.copy()
     inst_bottom.grid_type = "BOTTOM"

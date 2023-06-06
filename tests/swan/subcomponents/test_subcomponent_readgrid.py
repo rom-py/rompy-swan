@@ -9,8 +9,6 @@ from rompy.swan.subcomponents.readgrid import READGRID, READCOORD, READINP
 logger = logging.getLogger(__name__)
 
 
-
-
 def test_readgrid_fac():
     READGRID(grid_type="coordinates", fac=1.0)
     with pytest.raises(ValidationError):
