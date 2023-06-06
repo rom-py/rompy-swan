@@ -1,7 +1,7 @@
 """Time subcomponents."""
 import logging
 from datetime import datetime, timedelta
-from typing_extensions import Literal
+from typing import Literal
 from pydantic import root_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent

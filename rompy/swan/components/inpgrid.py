@@ -1,7 +1,6 @@
 """Input grid for SWAN."""
 from typing import Literal
 from pathlib import Path
-from typing_extensions import Literal
 from pydantic import root_validator
 
 from rompy.swan.components.base import BaseComponent

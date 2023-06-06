@@ -1,7 +1,6 @@
 """Boundary for SWAN."""
 from typing import Literal, Optional, Any
 from pathlib import Path
-from typing_extensions import Literal
 from pydantic import root_validator, confloat, constr
 
 from rompy.swan.components.base import BaseComponent
