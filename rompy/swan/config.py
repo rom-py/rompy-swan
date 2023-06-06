@@ -230,7 +230,7 @@ class SwanConfig(BaseConfig):
     spectra_file: str = Field(
         "boundary.spec", description="The spectra file for SWAN.")
     template: str = Field(
-        "/source/rompy/rompy/templates/swan", description="The template for SWAN."
+        str(HERE.parent / "templates/swan"), description="The template for SWAN."
     )
     _datefmt: str = Field(
         "%Y%m%d.%H%M%S", description="The date format for SWAN.")
