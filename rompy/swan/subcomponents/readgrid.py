@@ -1,6 +1,6 @@
 """Readgrid subcomponents."""
 import logging
-from typing_extensions import Literal
+from typing import Literal
 from abc import ABC
 
 from pydantic import root_validator, conint, confloat

@@ -1,7 +1,7 @@
 """Computational grid for SWAN."""
 import logging
 from pydantic import root_validator, conint, constr
-from typing_extensions import Literal
+from typing import Literal
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.readgrid import READCOORD

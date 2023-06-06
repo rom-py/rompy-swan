@@ -9,7 +9,7 @@ How to subclass
 
 """
 import logging
-from typing_extensions import Literal
+from typing import Literal
 from abc import abstractmethod
 
 from rompy.core import RompyBaseModel
