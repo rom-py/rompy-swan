@@ -18,6 +18,7 @@ class CARTESIAN(BaseSubComponent):
     to x- and y-axes chosen by the user in the various commands.
 
     """
+
     model_type: Literal["cartesian"] = "cartesian"
 
 
@@ -53,6 +54,7 @@ class SPHERICAL(BaseSubComponent):
     (see commands CGRID, INPUT GRID and FRAME, respectively).
 
     """
+
     model_type: Literal["spherical"] = "spherical"
     projection: Literal["ccm", "qc"] = None
 

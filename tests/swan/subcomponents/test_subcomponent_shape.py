@@ -12,7 +12,6 @@ def test_tma():
     assert shape.render() == "TMA gamma=3.3 d=10.0"
 
 
-
 def test_gauss():
     shape = GAUSS(sigfr=0.05)
     assert shape.render() == "GAUSS sigfr=0.05"

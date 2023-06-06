@@ -23,6 +23,7 @@ class BaseSubComponent(RompyBaseModel, ABC):
 
     class Config:
         """Configure the model."""
+
         extra = "forbid"
 
     def cmd(self) -> str:

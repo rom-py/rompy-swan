@@ -2,7 +2,15 @@
 import pytest
 from pydantic import ValidationError
 
-from rompy.swan.subcomponents.boundary import CONSTANTPAR, VARIABLEPAR, CONSTANTFILE, VARIABLEFILE, SIDE, SEGMENTXY, SEGMENTIJ
+from rompy.swan.subcomponents.boundary import (
+    CONSTANTPAR,
+    VARIABLEPAR,
+    CONSTANTFILE,
+    VARIABLEFILE,
+    SIDE,
+    SEGMENTXY,
+    SEGMENTIJ,
+)
 
 
 def test_side():

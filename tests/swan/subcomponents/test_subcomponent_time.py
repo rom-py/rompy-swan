@@ -11,4 +11,7 @@ def test_nonstationary():
         tend="2023-02-01T00:00:00",
         suffix="inp",
     )
-    assert nonstat.render() == "NONSTATIONARY tbeginp=20230101.000000 deltinp=1800.0 SEC tendinp=20230201.000000"
+    assert (
+        nonstat.render()
+        == "NONSTATIONARY tbeginp=20230101.000000 deltinp=1800.0 SEC tendinp=20230201.000000"
+    )

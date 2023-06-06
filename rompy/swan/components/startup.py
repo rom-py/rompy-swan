@@ -36,6 +36,7 @@ class PROJECT(BaseComponent):
     SWAN run (project name e.g., an engineering project) in the print and plot file.
 
     """
+
     model_type: Literal["project"] = "project"
     name: Optional[constr(max_length=16)]
     nr: constr(max_length=4)
@@ -137,7 +138,7 @@ class SET(BaseComponent):
             - command GEN3 JANSSEN: `pwtail = 5`.
         If the user wishes to use another value, then this SET command should be
         located in the command file after the GEN1, GEN2 or GEN3 command (these will
-        override the SET command with respect to `pwtail`).    
+        override the SET command with respect to `pwtail`).
     froudmax: float
         Is the maximum Froude number (`U/√gd` with `U` the current and `d` the water
         depth). The currents taken from a circulation model may mismatch with given
@@ -154,6 +155,7 @@ class SET(BaseComponent):
     With this optional command the user assigns values to various general parameters.
 
     """
+
     model_type: Literal["set"] = "set"
     level: Optional[confloat(ge=0.0)]
     nor: Optional[confloat(ge=-360.0, le=360.0)]
@@ -232,6 +234,7 @@ class MODE(BaseComponent):
     (c) a mix of (a) and (b).
 
     """
+
     model_type: Literal["mode"] = "mode"
     kind: Literal["stationary", "nonstationary"] = "stationary"
     dim: Literal["onedimensional", "twodimensional"] = "twodimensional"
@@ -263,6 +266,7 @@ class COORDINATES(BaseComponent):
     A nested SWAN run must use the same coordinate system as the coarse grid SWAN run.
 
     """
+
     model_type: Literal["coordinates"] = "coordinates"
     kind: CARTESIAN | SPHERICAL = CARTESIAN()
     reapeating: bool = False
