@@ -9,6 +9,8 @@ from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRan
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
+from rompy.swan.boundary import DataBoundary
+
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +42,7 @@ class ForcingData(RompyBaseModel):
     bottom: SwanDataGrid | None = None  # TODO Raf should probably be required?
     wind: SwanDataGrid | None = None
     current: SwanDataGrid | None = None
-    boundary: SwanDataGrid | None = None
+    boundary: DataBoundary | None = None
 
     def get(self, grid, runtime):
         ret = []
