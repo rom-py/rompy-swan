@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from pathlib import Path
 
 from pydantic import Field, validator
 from typing_extensions import Literal
@@ -10,6 +11,8 @@ from .data import SwanDataGrid
 from .grid import SwanGrid
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_TEMPLATE = str(Path(__file__).parent.parent / "templates" / "swan")
 
 
 class OutputLocs(RompyBaseModel):
@@ -213,7 +216,7 @@ class SwanConfig(BaseConfig):
     spectra_file: str = Field(
         "boundary.spec", description="The spectra file for SWAN.")
     template: str = Field(
-        "/source/rompy/rompy/templates/swan", description="The template for SWAN."
+        DEFAULT_TEMPLATE, description="The template for SWAN."
     )
     _datefmt: str = Field(
         "%Y%m%d.%H%M%S", description="The date format for SWAN.")
