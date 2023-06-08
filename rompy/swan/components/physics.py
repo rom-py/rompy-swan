@@ -5,28 +5,13 @@ from abc import ABC
 from pydantic import validator, root_validator, constr, confloat, conint, Field
 
 from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.startup import CARTESIAN, SPHERICAL
+from rompy.swan.subcomponents.physics import JANSSEN, KOMEN, WESTHUYSEN, ST6, ST6C1, ST6C2, ST6C3, ST6C4, ST6C5
+
 
 logger = logging.getLogger(__name__)
 
 
-"""
-[cf10]: controls the linear wave growth.
-Default: [cf10] = 188.
-[cf20] controls the exponential wave growth.
-Default: [cf20] = 0.59
-[cf30] controls the exponential wave growth.
-Default: [cf30] = 0.12
-[cf40] controls the dissipation rate, i.e., the time decay scale.
-Default: [cf40] = 250.
-[edmlpm] maximum non-dimensionless energy density of the wind sea part of the spectrum
-according to Pierson Moskowitz.
-Default: [edmlpm] = 0.0036
-[cdrag] drag coefficient.
-Default: [cdrag] = 0.0012
-[umin] minimum wind velocity (relative to current; all wind speeds are taken at 10 m above sea level). Default: [umin] = 1.
-[cfpm] coefficient which determines the Pierson Moskowitz frequency: dP M = 2πg [cfpm] /U10 Default: [cfpm] = 0.13
-"""
+SOURCE_TERMS = JANSSEN | KOMEN | WESTHUYSEN | ST6 | ST6C1 | ST6C2 | ST6C3 | ST6C4 | ST6C5
 
 
 class GEN1(BaseComponent):
@@ -97,7 +82,9 @@ class GEN2(GEN1):
     (see Scientific/Technical documentation).
 
     """
-    model_type: Literal["gen2"] = "gen2"
+    model_type: Literal["gen2"] = Field(
+        default="gen2", description="Model type discriminator"
+    )
     cf50: Optional[float] = Field(
         description="Controls the spectral energy scale of the limit spectrum (SWAN default: 0.0023)"
     )
@@ -136,17 +123,15 @@ class GEN3(BaseComponent):
     `GEN3 JANSSEN|KOMEN|WESTHUYSEN|ST6 (...) AGROW [a]`
 
     With this command the user indicates that SWAN should run in third-generation mode
-    for wind input, quadruplet interactions and whitecapping. Triads, bottom friction
-    and depth-induced breaking are not activated by this command. See also the
-    Scientific/Technical documentation for more information. The option GEN3 WESTH is
-    default. Note that SWAN converts U10 to U* using a wind drag formula to be
-    specified below. The choices with respect to option GEN3 ST6 are elaborated on
-    here. Some background information on these choices can be found in
-    Rogers et al. (2012) (henceforth denoted as RBW12).
+    for wind input, quadruplet interactions and whitecapping.
 
     """
-    model_type: Literal["gen3"] = "gen3"
-
+    model_type: Literal["gen3"] = Field(
+        default="gen3", description="Model type discriminator"
+    )
+    source_terms: SOURCE_TERMS = Field(
+        default=WESTHUYSEN(), description="SWAN source terms to be used"
+    )
     # @root_validator
     # def no_wind_drag_if_st6(cls, values):
     #     """ Ensure WU is not prescribed with ST6."""
