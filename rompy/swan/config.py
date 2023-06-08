@@ -1,5 +1,6 @@
 import logging
 from typing import Optional
+from pathlib import Path
 
 from pydantic import Field, validator
 from typing_extensions import Literal
@@ -8,8 +9,12 @@ from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRan
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
+from rompy.swan.boundary import DataBoundary
+
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_TEMPLATE = str(Path(__file__).parent.parent / "templates" / "swan")
 
 
 class OutputLocs(RompyBaseModel):
@@ -37,7 +42,7 @@ class ForcingData(RompyBaseModel):
     bottom: SwanDataGrid | None = None  # TODO Raf should probably be required?
     wind: SwanDataGrid | None = None
     current: SwanDataGrid | None = None
-    boundary: SwanDataGrid | None = None
+    boundary: DataBoundary | None = None
 
     def get(self, grid, runtime):
         ret = []
@@ -213,7 +218,7 @@ class SwanConfig(BaseConfig):
     spectra_file: str = Field(
         "boundary.spec", description="The spectra file for SWAN.")
     template: str = Field(
-        "/source/rompy/rompy/templates/swan", description="The template for SWAN."
+        DEFAULT_TEMPLATE, description="The template for SWAN."
     )
     _datefmt: str = Field(
         "%Y%m%d.%H%M%S", description="The date format for SWAN.")
