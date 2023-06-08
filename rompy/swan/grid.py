@@ -1,8 +1,7 @@
-from typing import Optional
+from typing import Optional, Literal
 
 import numpy as np
 from pydantic import Field, root_validator, validator
-from typing_extensions import Literal
 
 from rompy.core.grid import RegularGrid
 
