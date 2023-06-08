@@ -9,7 +9,7 @@ from typing import Literal, Optional
 from rompy.core import (
     BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 )
-from rompy.swan.components import base, cgrid, inpgrid, boundary, startup
+from rompy.swan.components import base, cgrid, inpgrid, boundary, startup, physics
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -30,6 +30,7 @@ COMPONENTS = {
     "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED | base.BaseComponent],
     "boundary": boundary.BOUNDSPEC | boundary.BOUNDNEST1 | boundary.BOUNDNEST2 | boundary.BOUNDNEST3 | base.BaseComponent,
     "initial": boundary.INITIAL | base.BaseComponent,
+    "physics": physics.GEN1 | physics.GEN2 | physics.GEN3
 }
 
 DEFAULT_TEMPLATE = str(Path(__file__).parent.parent / "templates" / "swan")
@@ -312,6 +313,7 @@ class SwanConfigPydantic(BaseConfig):
     inpgrid: COMPONENTS.get("inpgrid")
     boundary: COMPONENTS.get("boundary") = Field(..., discriminator="model_type")
     initial: COMPONENTS.get("initial") = Field(..., discriminator="model_type")
+    physics: COMPONENTS.get("physics") = Field(..., discriminator="model_type")
 
     @root_validator
     def no_nor_if_spherical(cls, values):
