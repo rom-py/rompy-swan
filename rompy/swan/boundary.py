@@ -1,17 +1,18 @@
 """SWAN boundary classes."""
 from abc import ABC, abstractmethod
-from typing import Literal, Optional
 from pathlib import Path
-from pydantic import Field, root_validator, confloat
-import intake
-import xarray as xr
-import wavespectra
-import numpy as np
+from typing import Literal, Optional
 
+import intake
+import numpy as np
+import wavespectra
+import xarray as xr
+from pydantic import Field, confloat, root_validator
+
+from rompy.core.data import DataBlob
+from rompy.core.filters import Filter
 from rompy.core.time import TimeRange
 from rompy.core.types import RompyBaseModel
-from rompy.core.filters import Filter
-from rompy.core.data import DataBlob
 from rompy.swan.grid import SwanGrid
 
 
@@ -148,7 +149,7 @@ class DataBoundary(RompyBaseModel):
     id: str = Field(description="Unique identifier for this data source")
     dataset: DatasetXarray | DatasetIntake | DatasetWavespectra = Field(
         description="Dataset reader, must return a wavespectra-enabled xarray dataset in the open method",
-        discriminator="model_type"
+        discriminator="model_type",
     )
     grid: Optional[SwanGrid] = Field(
         default=None,
@@ -242,11 +243,11 @@ class DataBoundary(RompyBaseModel):
         """Time filter"""
         self.filter.crop.update({"time": slice(time.start, time.end)})
 
-    def get(self, stage_dir: str) -> str:
+    def get(self, stage_dir: str, grid: SwanGrid) -> str:
         """Write the data source to a new location"""
         if self.grid is None:
             raise ValueError("grid must be defined before calling get")
-        xbnd, ybnd = self._boundary_points(self.grid)
+        xbnd, ybnd = self._boundary_points(grid)
         ds = self.ds.spec.sel(
             lons=xbnd,
             lats=ybnd,
