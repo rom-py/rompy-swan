@@ -3,3 +3,4 @@ sphinx
 pydata_sphinx_theme
 autodoc_pydantic
 sphinx-collections
+nbsphinx
