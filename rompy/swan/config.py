@@ -1,18 +1,36 @@
 import logging
 from typing import Optional
+
 from pathlib import Path
 
-from pydantic import Field, validator
-from typing_extensions import Literal
+from pydantic import validator, root_validator, Field
+from typing import Literal, Optional
 
-from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
+from rompy.core import (
+    BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
+)
+from rompy.swan.components import base, cgrid, inpgrid, boundary, startup
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
 from rompy.swan.boundary import DataBoundary
 
 
+
 logger = logging.getLogger(__name__)
+
+HERE = Path(__file__).parent
+
+COMPONENTS = {
+    "project": startup.PROJECT | base.BaseComponent,
+    "set": startup.SET | base.BaseComponent,
+    "mode": startup.MODE | base.BaseComponent,
+    "coordinates": startup.COORDINATES | base.BaseComponent,
+    "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED | base.BaseComponent,
+    "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED | base.BaseComponent],
+    "boundary": boundary.BOUNDSPEC | boundary.BOUNDNEST1 | boundary.BOUNDNEST2 | boundary.BOUNDNEST3 | base.BaseComponent,
+    "initial": boundary.INITIAL | base.BaseComponent,
+}
 
 DEFAULT_TEMPLATE = str(Path(__file__).parent.parent / "templates" / "swan")
 
@@ -263,3 +281,49 @@ class SwanConfig(BaseConfig):
         ret += f"physics: {self.physics}\n"
         ret += f"outputs: {self.outputs}\n"
         return ret
+
+
+class SwanConfigPydantic(BaseConfig):
+    """SWAN config class.
+
+    Parameters
+    ----------
+    model_type: Literal["swan"]
+        Model type discriminator.
+    cgrid : CGRID
+        The computational grid SWAN component.
+    inpgrid: INPGRID
+        The input grid SWAN component.
+
+    Note
+    ----
+    - BaseComponent types render empty strings and can be used to skip a certain
+      component from rendering to the cmd file.
+
+    TODO: Implement discriminator for inpgrid which is a list of comopnents.
+
+    """
+    model_type: Literal["swan"] = "swan"
+    project: COMPONENTS.get("project") = Field(..., discriminator="model_type")
+    set: COMPONENTS.get("set") = Field(..., discriminator="model_type")
+    mode: COMPONENTS.get("mode") = Field(..., discriminator="model_type")
+    coordinates: COMPONENTS.get("coordinates") = Field(..., discriminator="model_type")
+    cgrid: COMPONENTS.get("cgrid") = Field(..., discriminator="model_type")
+    inpgrid: COMPONENTS.get("inpgrid")
+    boundary: COMPONENTS.get("boundary") = Field(..., discriminator="model_type")
+    initial: COMPONENTS.get("initial") = Field(..., discriminator="model_type")
+
+    @root_validator
+    def no_nor_if_spherical(cls, values):
+        """Ensure SET nor is not prescribed when using spherical coordinates."""
+        return values
+
+    @root_validator
+    def no_repeating_if_setup(cls, values):
+        """Ensure COORD repeating not set when using set-up."""
+        return values
+
+    @root_validator
+    def alp_is_zero_if_spherical(cls, values):
+        """Ensure alp is zero when using spherical coordinates."""
+        return values
