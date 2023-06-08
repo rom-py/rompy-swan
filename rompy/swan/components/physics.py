@@ -137,3 +137,46 @@ class GEN3(BaseComponent):
     #     """ Ensure WU is not prescribed with ST6."""
         # return values
 
+
+class ARDHUIN(BaseComponent):
+    """Nonbreaking dissipation of Ardhuin et al. (2010)."""
+
+    model_type: Literal["ardhuin"] = Field(
+        default="ardhuin", description="Model type discriminator"
+    )
+    cdsv: Optional[float] = Field(
+        description="Coefficient related to laminar atmospheric boundary layer (SWAN default: 1.2)"
+    )
+
+    def cmd(self):
+        repr = "ARDHUIN"
+        if self.cdsv is not None:
+            repr += f" cdsv={self.cdsv}"
+        return repr
+
+
+class ZIEGER(BaseComponent):
+    """Nonbreaking dissipation of Zieger et al. (2015)."""
+
+    model_type: Literal["zieger"] = Field(
+        default="zieger", description="Model type discriminator"
+    )
+    b1: Optional[float] = Field(
+        description="Non-dimensional proportionality coefficient"
+    )
+    negatinp: Optional[float]
+
+    def cmd(self):
+        repr = "ZIEGER"
+        if self.b1 is not None:
+            repr += f" b1={self.b1}"
+        return repr
+
+
+class SSWELL(BaseComponent):
+    """Swell dissipation component."""
+
+    model_type: Literal["sswell"] = Field(
+        default="sswell", description="Model type discriminator"
+    )
+    kind: ARDHUIN | ZIEGER = Field(ARDHUIN(), description="Swell dissipation formulation")
