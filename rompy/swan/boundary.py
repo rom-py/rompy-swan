@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Literal, Optional
+import logging
 
 import intake
 import numpy as np
@@ -14,6 +15,8 @@ from rompy.core.filters import Filter
 from rompy.core.time import TimeRange
 from rompy.core.types import RompyBaseModel
 from rompy.swan.grid import SwanGrid
+
+logger = logging.getLogger(__name__)
 
 
 def find_minimum_distance(points: list[tuple[float, float]]) -> float:
@@ -144,16 +147,28 @@ class DatasetWavespectra(Dataset):
 
 
 class DataBoundary(RompyBaseModel):
-    """SWAN BOUNDNEST1 NEST data class."""
+    """SWAN BOUNDNEST1 NEST data class.
+
+    Notes
+    -----
+    The `tolerance` behaves differently with sel_methods `idw` and `nearest`; in `idw`
+    sites with no enough neighbours within `tolerance` are masked whereas in `nearest`
+    an exception is raised (see wavespectra documentation for more details).
+
+    Be aware that when using `idw` missing values will be returned for sites with less
+    than 2 neighbours within `tolerance` in the original dataset. This is okay for land
+    mask areas but could cause boundary issues when on an open boundary location. To
+    avoid this either use `nearest` or increase `tolerance` to include more neighbours.
+
+    """
 
     id: str = Field(description="Unique identifier for this data source")
     dataset: DatasetXarray | DatasetIntake | DatasetWavespectra = Field(
         description="Dataset reader, must return a wavespectra-enabled xarray dataset in the open method",
         discriminator="model_type",
     )
-    grid: Optional[SwanGrid] = Field(
-        default=None,
-        description="Grid specification to use for selecting boundary points from the dataset",
+    spacing: Optional[float] = Field(
+        description="Spacing between boundary points, by default defined as the minimum distance between points in the dataset",
     )
     sel_method: Literal["idw", "nearest"] = Field(
         default="idw",
@@ -216,31 +231,24 @@ class DataBoundary(RompyBaseModel):
 
     def _boundary_points(self, grid):
         """Coordinates of boundary points based on grid bbox and dataset resolution."""
-        x0, y0, x1, y1 = grid.bbox(buffer=0)
-        dx, dy = self._boundary_resolutions(grid)
-        x = np.clip(np.arange(x0, x1 + dx, dx), x0, x1)
-        y = np.clip(np.arange(y0, y1 + dy, dy), y0, y1)
-        xbnd = np.concatenate(
-            (
-                x,
-                np.repeat(x[-1], y.size - 1),
-                x[-2::-1],
-                np.repeat(x[0], y.size - 1),
+        if self.spacing is None:
+            dx, dy = self._boundary_resolutions(grid)
+            spacing = min(dx, dy)
+        else:
+            spacing = self.spacing
+        points = grid.points_along_boundary(spacing=spacing)
+        if len(points) < 4:
+            logger.warning(
+                f"There are only {len(points)} boundary points (less than 1 point per grid side), "
+                f"consider setting a smaller spacing (the current spacing is {spacing})"
             )
-        )
-        ybnd = np.concatenate(
-            (
-                np.repeat(y[0], x.size),
-                y[1:],
-                np.repeat(y[-1], x.size - 1),
-                y[-2::-1],
-            )
-        )
+        xbnd = np.array([p.x for p in points.geoms])
+        ybnd = np.array([p.y for p in points.geoms])
         return xbnd, ybnd
 
     def _filter_grid(self, grid, buffer=0.1):
         """Required by SwanForcing"""
-        self.grid = grid
+        pass
 
     def _filter_time(self, time: TimeRange):
         """Time filter"""
@@ -248,8 +256,6 @@ class DataBoundary(RompyBaseModel):
 
     def get(self, stage_dir: str, grid: SwanGrid) -> str:
         """Write the data source to a new location"""
-        if self.grid is None:
-            raise ValueError("grid must be defined before calling get")
         xbnd, ybnd = self._boundary_points(grid)
         ds = self.ds.spec.sel(
             lons=xbnd,
