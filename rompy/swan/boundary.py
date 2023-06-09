@@ -263,7 +263,8 @@ class DataBoundary(RompyBaseModel):
             method=self.sel_method,
             tolerance=self.tolerance,
         )
-        filename = Path(stage_dir) / f"{self.id}.bnd"
-        ds.spec.to_swan(filename)
+        filename = f"{self.id}.bnd"
+        filepath = Path(stage_dir) / filename
+        ds.spec.to_swan(filepath)
         cmd = f"BOUNDNEST1 NEST '{filename}' {self.rectangle.upper()}"
         return cmd
