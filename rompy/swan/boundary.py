@@ -184,7 +184,10 @@ class DataBoundary(RompyBaseModel):
     @property
     def ds(self):
         """Return the filtered xarray dataset instance."""
-        return self.filter(self.dataset.open())
+        dset = self.filter(self.dataset.open())
+        if dset.efth.size == 0:
+            raise ValueError(f"Empty dataset after applying filter {self.filter}")
+        return dset
 
     def _boundary_resolutions(self, grid):
         """Boundary resolution based on the shortest distance between points.
