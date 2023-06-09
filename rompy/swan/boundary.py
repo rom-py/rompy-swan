@@ -237,7 +237,7 @@ class DataBoundary(RompyBaseModel):
         else:
             spacing = self.spacing
         points = grid.points_along_boundary(spacing=spacing)
-        if len(points) < 4:
+        if len(points.geoms) < 4:
             logger.warning(
                 f"There are only {len(points)} boundary points (less than 1 point per grid side), "
                 f"consider setting a smaller spacing (the current spacing is {spacing})"
