@@ -4,14 +4,12 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Literal, Optional
 
-import intake
 import numpy as np
 import wavespectra
 import xarray as xr
 from pydantic import Field, confloat, root_validator
 
-from rompy.core import Dataset, DatasetIntake, DatasetXarray
-from rompy.core.data import DataBlob
+from rompy.core import Dataset, DatasetIntake, DatasetXarray, DataGrid
 from rompy.core.filters import Filter
 from rompy.core.time import TimeRange
 from rompy.core.types import RompyBaseModel
@@ -98,7 +96,7 @@ class DatasetWavespectra(Dataset):
         return getattr(wavespectra, self.reader)(self.uri, **self.kwargs)
 
 
-class DataBoundary(RompyBaseModel):
+class DataBoundary(DataGrid):
     """SWAN BOUNDNEST1 NEST data class.
 
     Notes
@@ -151,7 +149,7 @@ class DataBoundary(RompyBaseModel):
     @property
     def ds(self):
         """Return the filtered xarray dataset instance."""
-        dset = self.filter(self.dataset.open())
+        dset = super().ds
         if dset.efth.size == 0:
             raise ValueError(
                 f"Empty dataset after applying filter {self.filter}")
@@ -202,10 +200,6 @@ class DataBoundary(RompyBaseModel):
     def _filter_grid(self, grid, buffer=0.1):
         """Required by SwanForcing"""
         pass
-
-    def _filter_time(self, time: TimeRange):
-        """Time filter"""
-        self.filter.crop.update({"time": slice(time.start, time.end)})
 
     def get(self, stage_dir: str, grid: SwanGrid) -> str:
         """Write the data source to a new location"""
