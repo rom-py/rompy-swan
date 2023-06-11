@@ -134,6 +134,59 @@ class WESTHUYSEN(SourceTerms):
         return repr
 
 
+class ARDHUIN(BaseSubComponent):
+    """Nonbreaking dissipation of Ardhuin et al. (2010).
+
+    References
+    ----------
+    Ardhuin, F., A. Rogers, A. Babanin, J. Filipot, J. Magne, A. Roland, and P. van
+    der Westhuysen, 2010: Semiempirical dissipation source functions for ocean waves.
+    Part I: Definition, calibration, and validation, J. Phys. Oceanogr., 40, 1917-1941.
+
+    """
+
+    model_type: Literal["ardhuin"] = Field(
+        default="ardhuin", description="Model type discriminator"
+    )
+    cdsv: Optional[float] = Field(
+        description="Coefficient related to laminar atmospheric boundary layer (SWAN default: 1.2)"
+    )
+
+    def cmd(self):
+        repr = "ARDHUIN"
+        if self.cdsv is not None:
+            repr += f" cdsv={self.cdsv}"
+        return repr
+
+
+class ZIEGER(BaseSubComponent):
+    """Nonbreaking dissipation of Young et al. (2013) updated by Zieger et al. (2015).
+
+    References
+    ----------
+    Zieger, S., A.V. Babanin, W. E. Rogers and I.R. Young, 2015: Observation-based
+    source terms in the third-generation wave model WAVEWATCH, Ocean Model., 96, 2-25.
+
+    Young, I.R., A.V.Babanin and S. Zieger, 2013: The Decay Rate of Ocean Swell
+    Observed by Altimeter, J. Phys. Oceanogr., 43, 3233-3233.
+
+    """
+
+    model_type: Literal["zieger"] = Field(
+        default="zieger", description="Model type discriminator"
+    )
+    b1: Optional[float] = Field(
+        description="Non-dimensional proportionality coefficient"
+    )
+    negatinp: Optional[float]
+
+    def cmd(self):
+        repr = "ZIEGER"
+        if self.b1 is not None:
+            repr += f" b1={self.b1}"
+        return repr
+
+
 class ST6(SourceTerms):
     """St6 source terms subcomponent.
 
@@ -193,6 +246,10 @@ class ST6(SourceTerms):
     cdfac: Optional[confloat(gt=0.0)] = Field(
         description="Counter bias in the input wind fields by providing a multiplier on the drag coefficient",
     )
+    sswell: ARDHUIN | ZIEGER = Field(
+        default=ARDHUIN(),
+        description="Swell dissipation type",
+    )
 
     @root_validator
     def debias_only_with_hwang(cls, values):
@@ -225,6 +282,7 @@ class ST6(SourceTerms):
             repr += f" DEBIAS cdfac={self.cdfac}"
         if self.agrow:
             repr += f" AGROW a={self.a}"
+        # repr = [repr, self.sswell.cmd()]
         return repr
 
 
