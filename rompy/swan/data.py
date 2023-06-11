@@ -19,10 +19,6 @@ FILL_VALUE = -99.0
 class SwanDataGrid(DataGrid):
     """This class is used to write SWAN data from a dataset."""
 
-    dataset: DatasetXarray | DatasetIntake = Field(
-        description="Dataset reader, must return a wavespectra-enabled xarray dataset in the open method",
-        discriminator="model_type",
-    )
     z1: str = Field(
         description="Scaler paramater u componet of vecotr field",
         default=None,
