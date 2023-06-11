@@ -91,3 +91,8 @@ initial:
     model_type: hotsingle
     fname: hotfile.txt
     format: free
+
+physics:
+  model_type: gen3
+  source_terms:
+    model_type: st6c1
