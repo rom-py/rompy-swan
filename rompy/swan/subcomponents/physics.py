@@ -577,7 +577,7 @@ class BREAKING(BaseSubComponent):
     With this command the user can influence depth-induced wave breaking in shallow
     water. If this command is not used, SWAN will account for wave breaking anyhow
     (with default options and values). If the user wants to specifically ignore wave
-    breaking, he should use the command: OFF BREAKING
+    breaking, he should use the command: OFF BREAKING.
 
     """
     model_type: Literal["breaking"] = Field(
@@ -655,4 +655,140 @@ class BKD(BREAKING):
             repr += f" a2={self.a2}"
         if self.a3 is not None:
             repr += f" a3={self.a3}"
+        return repr
+
+
+#======================================================================================
+# FRICTION
+#======================================================================================
+class FRICTION(BaseSubComponent):
+    """Wave bottom friction subcomponent.
+
+    `FRICITON`
+
+    With this optional command the user can activate bottom friction. If this command
+    is not used, SWAN will not account for bottom friction. In SWAN four different
+    formulations are available, i.e., that of Hasselmann et al. (1973, JONSWAP),
+    Collins (1972), Madsen et al. (1988) and Smith et al. (2011). The default option
+    is: JONSWAP with a constant friction coefficient. The recommended value for typical
+    sandy bottoms is 0.038 m2s-3. Note that this value is to be applied for both wind
+    sea and swell conditions. (The use of the previous default value of 0.067 m2s-3 is
+    discouraged, even for wind sea conditions!) For smoother seafloors, like the Gulf
+    of Mexico, a lower value of 0.019 m2s-3 is advised.
+
+    """
+    model_type: Literal["friction"] = Field(
+        default="friction", description="Model type discriminator"
+    )
+
+    def cmd(self):
+        return f"FRICTION"
+
+
+class JONSWAP(FRICTION):
+    """Jonswap friction subcomponent.
+
+    `FRICTION JONSWAP CONSTANT [cfjon]`
+
+    Indicates that the semi-empirical expression derived from the JONSWAP results for
+    bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
+    This option is default.
+
+    References
+    ----------
+    Hasselmann, K., Barnett, T.P., Bouws, E., Carlson, H., Cartwright, D.E., Enke, K.,
+    Ewing, J.A., Gienapp, H., Hasselmann, D.E., Kruseman, P., Meerburg, A., Müller, P.,
+    Olbers, D.J., Richter, K., Sell, W., Walden, H., 1973. Measurements of wind-wave
+    growth and swell decay during the Joint North Sea Wave Project (JONSWAP). Deutches
+    Hydrographisches Institut, Hamburg, Germany, Rep. No. 12, 95 pp.
+
+    """
+    model_type: Literal["jonswap"] = Field(
+        default="jonswap", description="Model type discriminator"
+    )
+    cfjon: Optional[float] = Field(
+        description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)"
+    )
+
+    def cmd(self):
+        repr = f"{super().cmd()} JONSWAP CONSTANT"
+        if self.cfjon is not None:
+            repr += f" cfjon={self.cfjon}"
+        return repr
+
+
+class COLLINS(FRICTION):
+    """Collins (1972)friction subcomponent.
+
+    `FRICTION JONSWAP CONSTANT [cfjon]`
+
+    Indicates that the semi-empirical expression derived from the JONSWAP results for
+    bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
+    This option is default.
+
+    References
+    ----------
+    Collins, M.B., 1972. The effect of bottom friction on the propagation of long
+    waves. Coastal Engineering, 1972, 1, 163-181.
+
+    """
+    model_type: Literal["collins"] = Field(
+        default="collins", description="Model type discriminator"
+    )
+    cfw: Optional[float] = Field(
+        description="Collins bottom friction coefficient (SWAN default: 0.015)"
+    )
+
+    def cmd(self):
+        repr = f"{super().cmd()} COLLINS"
+        if self.cfw is not None:
+            repr += f" cfw={self.cfw}"
+        return repr
+
+
+class MADSEN(FRICTION):
+    """Madsen friction subcomponent.
+
+    `FRICTION JONSWAP CONSTANT [cfjon]`
+
+    Indicates that the semi-empirical expression derived from the JONSWAP results for
+    bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
+    This option is default.
+
+    """
+    model_type: Literal["jonswap"] = Field(
+        default="jonswap", description="Model type discriminator"
+    )
+    cfjon: Optional[float] = Field(
+        description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)"
+    )
+
+    def cmd(self):
+        repr = f"{super().cmd()} JONSWAP CONSTANT"
+        if self.cfjon is not None:
+            repr += f" cfjon={self.cfjon}"
+        return repr
+
+
+class RIPPLES(FRICTION):
+    """Ripples friction subcomponent.
+
+    `FRICTION JONSWAP CONSTANT [cfjon]`
+
+    Indicates that the semi-empirical expression derived from the JONSWAP results for
+    bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
+    This option is default.
+
+    """
+    model_type: Literal["jonswap"] = Field(
+        default="jonswap", description="Model type discriminator"
+    )
+    cfjon: Optional[float] = Field(
+        description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)"
+    )
+
+    def cmd(self):
+        repr = f"{super().cmd()} JONSWAP CONSTANT"
+        if self.cfjon is not None:
+            repr += f" cfjon={self.cfjon}"
         return repr
