@@ -112,3 +112,7 @@ physics:
   quadrupl:
     iquad: 2
     lambda: 0.25
+  breaking:
+    model_type: constant
+    alpha: 1.0
+    gamma: 0.73

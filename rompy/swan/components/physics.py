@@ -21,6 +21,8 @@ from rompy.swan.subcomponents.physics import (
     WCAPKOMEN,
     WCAPAB,
     QUADRUPL,
+    CONSTANT,
+    BKD,
 )
 
 
@@ -178,21 +180,25 @@ class PHYSICS(BaseComponent):
     )
     gen: GEN1 | GEN2 | GEN3 = Field(
         default=GEN3(),
-        description="Wave generation",
+        description="Wave generation specification",
         discriminator="model_type",
     )
     sswell: ROGERS | ARDHUIN | ZIEGER | None = Field(
         default=None,
-        description="Swell dissipation type",
+        description="Swell dissipation specification",
         discriminator="model_type",
     )
     wcapping: WCAPKOMEN | WCAPAB | None = Field(
         default=None,
-        description="Swell dissipation type",
+        description="Whitecapping specification",
         discriminator="model_type",
     )
     quadrupl: Optional[QUADRUPL] = Field(
-        description="Swell dissipation type",
+        description="Quadruplet interactions specification",
+    )
+    breaking: CONSTANT | BKD | None = Field(
+        description="Wave breaking specification",
+        discriminator="model_type",
     )
 
     @root_validator
@@ -209,4 +215,6 @@ class PHYSICS(BaseComponent):
             repr += [self.wcapping.render()]
         if self.quadrupl is not None:
             repr += [self.quadrupl.render()]
+        if self.breaking is not None:
+            repr += [self.breaking.render()]
         return repr
