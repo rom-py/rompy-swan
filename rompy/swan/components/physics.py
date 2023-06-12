@@ -20,6 +20,7 @@ from rompy.swan.subcomponents.physics import (
     ZIEGER,
     WCAPKOMEN,
     WCAPAB,
+    QUADRUPL,
 )
 
 
@@ -190,6 +191,9 @@ class PHYSICS(BaseComponent):
         description="Swell dissipation type",
         discriminator="model_type",
     )
+    quadrupl: Optional[QUADRUPL] = Field(
+        description="Swell dissipation type",
+    )
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -203,4 +207,6 @@ class PHYSICS(BaseComponent):
             repr += [self.sswell.negatinp.render()]
         if self.wcapping is not None:
             repr += [self.wcapping.render()]
+        if self.quadrupl is not None:
+            repr += [self.quadrupl.render()]
         return repr
