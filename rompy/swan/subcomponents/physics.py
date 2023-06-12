@@ -509,7 +509,7 @@ class WCAPAB(WESTHUYSEN):
 class QUADRUPL(BaseSubComponent):
     """Nonlinear quadruplet wave interactions subcomponent.
 
-    ``
+    `QUADRUPL [iquad] [lambda] [Cnl4] [Csh1] [Csh2] [Csh3]`
 
     With this option the user can influence the computation of nonlinear quadruplet
     wave interactions which are usually included in the computations. Can be
@@ -563,4 +563,96 @@ class QUADRUPL(BaseSubComponent):
             repr += f" Csh2={self.csh2}"
         if self.csh3 is not None:
             repr += f" Csh3={self.csh3}"
+        return repr
+
+
+#======================================================================================
+# BREAKING
+#======================================================================================
+class BREAKING(BaseSubComponent):
+    """Wave breaking subcomponent.
+
+    `BREAKING`
+
+    With this command the user can influence depth-induced wave breaking in shallow
+    water. If this command is not used, SWAN will account for wave breaking anyhow
+    (with default options and values). If the user wants to specifically ignore wave
+    breaking, he should use the command: OFF BREAKING
+
+    """
+    model_type: Literal["breaking"] = Field(
+        default="breaking", description="Model type discriminator"
+    )
+
+    def cmd(self):
+        return f"BREAKING"
+
+
+class CONSTANT(BREAKING):
+    """Constant wave breaking index subcomponent.
+
+    `BREAKING CONSTANT [alpha] [gamma]`
+
+    Indicates that a constant breaker index is to be used.
+
+    """
+    model_type: Literal["constant"] = Field(
+        default="constant", description="Model type discriminator"
+    )
+    alpha: Optional[float] = Field(
+        description="Proportionality coefficient of the rate of dissipation (SWAN default: 1.0)"
+    )
+    gamma: Optional[float] = Field(
+        description="The breaker index, i.e. the ratio of maximum individual wave height over depth (SWAN default: 0.73)"
+    )
+
+    def cmd(self):
+        repr = f"{super().cmd()} CONSTANT"
+        if self.alpha is not None:
+            repr += f" alpha={self.alpha}"
+        if self.gamma is not None:
+            repr += f" gamma={self.gamma}"
+        return repr
+
+
+class BKD(BREAKING):
+    """Variable wave breaking index subcomponent.
+
+    `BREAKING BKD [alpha] [gamma0] [a1] [a2] [a3]`
+
+    Indicates that the breaker index scales with both the bottom slope ($beta$) and the
+    dimensionless depth (kd).
+
+    """
+    model_type: Literal["bkd"] = Field(
+        default="bkd", description="Model type discriminator"
+    )
+    alpha: Optional[float] = Field(
+        description="Proportionality coefficient of the rate of dissipation (SWAN default: 1.0)"
+    )
+    gamma0: Optional[float] = Field(
+        description="The reference $gamma$ for horizontal slopes (SWAN default: 0.54)"
+    )
+    a1: Optional[float] = Field(
+        description="First tunable coefficient for the breaker index (SWAN default: 7.59)"
+    )
+    a2: Optional[float] = Field(
+        description="Second tunable coefficient for the breaker index (SWAN default: -8.06)"
+    )
+    a3: Optional[float] = Field(
+        description="Third tunable coefficient for the breaker index (SWAN default: 8.09)"
+    )
+
+    def cmd(self):
+        repr = f"{super().cmd()} BKD"
+        if self.alpha is not None:
+            repr += f" alpha={self.alpha}"
+        if self.gamma0 is not None:
+            repr += f" gamma0={self.gamma0}"
+        if self.a1 is not None:
+            repr += f" a1={self.a1}"
+        if self.a2 is not None:
+            repr += f" a2={self.a2}"
+        if self.a3 is not None:
+            repr += f" a3={self.a3}"
         return repr
