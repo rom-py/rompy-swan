@@ -501,3 +501,66 @@ class WCAPAB(WESTHUYSEN):
         if self.cds3 is not None:
             repr += f" cds3={self.cds3}"
         return repr
+
+
+#======================================================================================
+# QUADRUPL
+#======================================================================================
+class QUADRUPL(BaseSubComponent):
+    """Nonlinear quadruplet wave interactions subcomponent.
+
+    ``
+
+    With this option the user can influence the computation of nonlinear quadruplet
+    wave interactions which are usually included in the computations. Can be
+    de-activated with command OFF QUAD. Note that the DIA approximation of the
+    quadruplet interactions is a poor approximation for long-crested waves and
+    frequency resolutions that are deviating much more than 10% (see command CGRID).
+    Note that DIA is usually updated per sweep, either semi-implicit (`iquad = 1`) or
+    explicit (`iquad = 2`). However, when ambient current is included, the bounds of
+    the directional sector within a sweep may be different for each frequency bin
+    (particularly the higher frequencies are modified by the current). So there may be
+    some overlap of frequency bins between the sweeps, implying non-conservation of
+    wave energy. To prevent this the user is advised to choose the integration of DIA
+    per iteration instead of per sweep, i.e. `iquad = 3`. If you want to speed up your
+    computation a bit more, than the choice `iquad = 8` is a good choice.
+
+    """
+
+    model_type: Literal["quadrupl"] = Field(
+        default="quadrupl", description="Model type discriminator"
+    )
+    iquad: Literal[1, 2, 3, 8, 4, 51, 52, 53] = Field(
+        default=2,
+        description="Numerical procedures for integrating the quadruplets: 1 = semi-implicit per sweep, 2 = explicit per sweep, 3 = explicit per iteration, 8 = explicit per iteration, but with a more efficient implementation, 4 = multiple DIA, 51 = XNL (deep water transfer), 52 = XNL (deep water transfer with WAM depth scaling), 53  XNL (finite depth transfer)",
+    )
+    clambda: Optional[float] = Field(
+        alias="lambda",
+        description="Coefficient for quadruplet configuration in case of DIA (SWAN default: 0.25)",
+    )
+    cn14: Optional[float] = Field(
+        description="Proportionality coefficient for quadruplet interactions in case of DIA (SWAN default: 3.0e7",
+    )
+    csh1: Optional[float] = Field(
+        description="Coefficient for shallow water scaling in case of DIA (SWAN default: 5.5",
+    )
+    csh2: Optional[float] = Field(
+        description="Coefficient for shallow water scaling in case of DIA (SWAN default: 0.833333",
+    )
+    csh3: Optional[float] = Field(
+        description="Coefficient for shallow water scaling in case of DIA (SWAN default: -1.25",
+    )
+
+    def cmd(self):
+        repr = f"QUADRUPL iquad={self.iquad}"
+        if self.clambda is not None:
+            repr += f" lambda={self.clambda}"
+        if self.cn14 is not None:
+            repr += f" Cn14={self.cn14}"
+        if self.csh1 is not None:
+            repr += f" Csh1={self.csh1}"
+        if self.csh2 is not None:
+            repr += f" Csh2={self.csh2}"
+        if self.csh3 is not None:
+            repr += f" Csh3={self.csh3}"
+        return repr
