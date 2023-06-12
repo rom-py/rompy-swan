@@ -1,17 +1,39 @@
 """Model physics components."""
 import logging
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 from abc import ABC
 from pydantic import validator, root_validator, constr, confloat, conint, Field
 
 from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.physics import JANSSEN, KOMEN, WESTHUYSEN, ST6, ST6C1, ST6C2, ST6C3, ST6C4, ST6C5
+from rompy.swan.subcomponents.physics import (
+    JANSSEN,
+    KOMEN,
+    WESTHUYSEN,
+    ST6,
+    ST6C1,
+    ST6C2,
+    ST6C3,
+    ST6C4,
+    ST6C5,
+    ARDHUIN,
+    ZIEGER,
+)
 
 
 logger = logging.getLogger(__name__)
 
 
-SOURCE_TERMS = JANSSEN | KOMEN | WESTHUYSEN | ST6 | ST6C1 | ST6C2 | ST6C3 | ST6C4 | ST6C5
+SOURCE_TERMS = Union[
+    JANSSEN,
+    KOMEN,
+    WESTHUYSEN,
+    ST6,
+    ST6C1,
+    ST6C2,
+    ST6C3,
+    ST6C4,
+    ST6C5,
+]
 
 
 class GEN1(BaseComponent):
@@ -82,6 +104,7 @@ class GEN2(GEN1):
     (see Scientific/Technical documentation).
 
     """
+
     model_type: Literal["gen2"] = Field(
         default="gen2", description="Model type discriminator"
     )
@@ -126,6 +149,7 @@ class GEN3(BaseComponent):
     for wind input, quadruplet interactions and whitecapping.
 
     """
+
     model_type: Literal["gen3"] = Field(
         default="gen3", description="Model type discriminator"
     )
@@ -134,5 +158,31 @@ class GEN3(BaseComponent):
     )
 
     def cmd(self):
-        repr = f"GEN3 {self.source_terms.render()}"
+        repr = f"GEN3 {self.source_terms.cmd()}"
+        return repr
+
+
+class PHYSICS(BaseComponent):
+    """Physics component."""
+
+    model_type: Literal["physics"] = Field(
+        default="physics", description="Model type discriminator"
+    )
+    gen: GEN1 | GEN2 | GEN3 = Field(
+        default=GEN3(),
+        description="Wave generation",
+        discriminator="model_type",
+    )
+    sswell: ARDHUIN | ZIEGER | None = Field(
+        default=None,
+        description="Swell dissipation type",
+        discriminator="model_type",
+    )
+
+    def cmd(self):
+        repr = [self.gen.render()]
+        if self.sswell is not None:
+            repr += [f"{self.sswell.render()}"]
+        if self.sswell is not None and self.sswell.model_type == "zieger":
+            repr += [self.sswell.negatinp.render()]
         return repr
