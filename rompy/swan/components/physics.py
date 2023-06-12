@@ -23,6 +23,10 @@ from rompy.swan.subcomponents.physics import (
     QUADRUPL,
     CONSTANT,
     BKD,
+    JONSWAP,
+    COLLINS,
+    MADSEN,
+    RIPPLES,
 )
 
 
@@ -199,6 +203,10 @@ class PHYSICS(BaseComponent):
     breaking: CONSTANT | BKD | None = Field(
         description="Wave breaking specification",
         discriminator="model_type",
+    )
+    friction: JONSWAP | COLLINS | MADSEN | RIPPLES | None = Field(
+        default=JONSWAP(),
+        description="Bottom friction specification",
     )
 
     @root_validator
