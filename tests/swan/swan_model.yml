@@ -103,3 +103,16 @@ physics:
   #     model_type: westhuysen
   sswell:
     model_type: zieger
+  # wcapping:
+  #   model_type: wcapkomen
+  #   cds2: 2.36e-5
+  #   stpm: 3.02e-3
+  #   powst: 2
+  #   delta: 1
+  #   powk: 1
+  wcapping:
+    model_type: wcapab
+    cds2: 5.0e-5
+    br: 1.75e-3
+    current: True
+    cds3: 0.8
