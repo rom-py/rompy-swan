@@ -718,13 +718,15 @@ class JONSWAP(FRICTION):
 
 
 class COLLINS(FRICTION):
-    """Collins (1972)friction subcomponent.
+    """Collins (1972) friction subcomponent.
 
-    `FRICTION JONSWAP CONSTANT [cfjon]`
+    `FRICTION COLLINS [cfw]`
 
-    Indicates that the semi-empirical expression derived from the JONSWAP results for
-    bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
-    This option is default.
+    Note that `cfw` is allowed to vary over the computational region; in that case use
+    the commands INPGRID FRICTION and READINP FRICTION to define and read the friction
+    data. This command FRICTION is still required to define the type of friction
+    expression. The value of `cfw` in this command is then not required (it will be
+    ignored).
 
     References
     ----------
@@ -747,48 +749,65 @@ class COLLINS(FRICTION):
 
 
 class MADSEN(FRICTION):
-    """Madsen friction subcomponent.
+    """Madsen et al (1988) friction subcomponent.
 
-    `FRICTION JONSWAP CONSTANT [cfjon]`
+    `FRICTION MADSEN [kn]`
 
-    Indicates that the semi-empirical expression derived from the JONSWAP results for
-    bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
-    This option is default.
+    Note that `kn` is allowed to vary over the computational region; in that case use
+    the commands INPGRID FRICTION and READINP FRICTION to define and read the friction
+    data. This command FRICTION is still required to define the type of friction
+    expression. The value of `kn` in this command is then not required (it will be
+    ignored).
+
+    References
+    ----------
+    Madsen, O.S., Sørensen, O.R., Schäffer, H.A., 1988. Surf zone dynamics simulated by
+    a Boussinesq type model. Part I. Model description and cross-shore motion of
+    regular waves. Coastal Engineering, 1988, 12, 115-145.
 
     """
-    model_type: Literal["jonswap"] = Field(
-        default="jonswap", description="Model type discriminator"
+    model_type: Literal["madsen"] = Field(
+        default="madsen", description="Model type discriminator"
     )
-    cfjon: Optional[float] = Field(
-        description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)"
+    kn: Optional[float] = Field(
+        description="equivalent roughness length scale of the bottom (in m) (SWAN default: 0.05)"
     )
 
     def cmd(self):
-        repr = f"{super().cmd()} JONSWAP CONSTANT"
-        if self.cfjon is not None:
-            repr += f" cfjon={self.cfjon}"
+        repr = f"{super().cmd()} MADSEN"
+        if self.kn is not None:
+            repr += f" kn={self.kn}"
         return repr
 
 
 class RIPPLES(FRICTION):
     """Ripples friction subcomponent.
 
-    `FRICTION JONSWAP CONSTANT [cfjon]`
+    `FRICTION RIPPLES [S] [D]`
 
-    Indicates that the semi-empirical expression derived from the JONSWAP results for
-    bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
-    This option is default.
+    Indicates that the expression of Smith et al. (2011) should be activated. Here
+    friction depends on the formation of bottom ripples and sediment size.
+
+    References
+    ----------
+    Smith, J.M., McCall, R.T., 2011. A model for wave dissipation in the surf zone
+    based on field observations. Coastal Engineering, 2011, 58, 917-928.
 
     """
-    model_type: Literal["jonswap"] = Field(
-        default="jonswap", description="Model type discriminator"
+    model_type: Literal["ripples"] = Field(
+        default="ripples", description="Model type discriminator"
     )
-    cfjon: Optional[float] = Field(
-        description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)"
+    s: Optional[float] = Field(
+        description="The specific gravity of the sediment (SWAN default: 2.65)"
+    )
+    d: Optional[float] = Field(
+        description="The sediment diameter (in m) (SWAN default: 0.0001)"
     )
 
     def cmd(self):
-        repr = f"{super().cmd()} JONSWAP CONSTANT"
-        if self.cfjon is not None:
-            repr += f" cfjon={self.cfjon}"
+        repr = f"{super().cmd()} RIPPLES"
+        if self.s is not None:
+            repr += f" S={self.s}"
+        if self.d is not None:
+            repr += f" D={self.d}"
         return repr

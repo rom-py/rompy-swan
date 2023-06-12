@@ -116,3 +116,7 @@ physics:
     model_type: constant
     alpha: 1.0
     gamma: 0.73
+  friction:
+    model_type: collins
+    cfw: 0.015
+  

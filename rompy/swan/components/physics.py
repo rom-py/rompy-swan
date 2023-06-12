@@ -225,4 +225,6 @@ class PHYSICS(BaseComponent):
             repr += [self.quadrupl.render()]
         if self.breaking is not None:
             repr += [self.breaking.render()]
+        if self.friction is not None:
+            repr += [self.friction.render()]
         return repr
