@@ -93,6 +93,13 @@ initial:
     format: free
 
 physics:
-  model_type: gen3
-  source_terms:
-    model_type: st6c1
+  gen:
+    model_type: gen3
+    source_terms:
+      model_type: st6c1
+  # gen:
+  #   model_type: gen3
+  #   source_terms:
+  #     model_type: westhuysen
+  sswell:
+    model_type: zieger
