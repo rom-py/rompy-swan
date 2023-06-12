@@ -6,6 +6,9 @@ from abc import ABC
 from rompy.swan.subcomponents.base import BaseSubComponent
 
 
+#======================================================================================
+# Source terms
+#======================================================================================
 class SourceTerms(BaseSubComponent, ABC):
     """Source term subcomponent base class."""
 
@@ -310,6 +313,9 @@ class NEGATINP(BaseSubComponent):
         return f"NEGATINP rdcoef={self.rdcoef}"
 
 
+#======================================================================================
+# SSWELL
+#======================================================================================
 class SSWELL(BaseSubComponent):
     """Swell dissipation sub-component.
 
@@ -360,7 +366,6 @@ class ROGERS(SSWELL):
         if self.feswell is not None:
             repr += f" feswell={self.feswell}"
         return repr
-
 
 
 class ARDHUIN(SSWELL):
@@ -416,4 +421,83 @@ class ZIEGER(SSWELL):
         repr = f"{super().cmd()} ZIEGER"
         if self.b1 is not None:
             repr += f" b1={self.b1}"
+        return repr
+
+
+#======================================================================================
+# WCAPPING
+#======================================================================================
+class WCAPKOMEN(KOMEN):
+    """Komen whitecapping sub-component.
+
+    `WCAPPING KOMEN [cds2] [stpm] [powst] [delta] [powk]`
+
+    Notes
+    -----
+    The SWAN default for `delta` has been changed since version 40.91A. The setting
+    `delta = 1` will improve the prediction of the wave energy at low frequencies, and
+    hence the mean wave period. The original default was `delta = 0`, which corresponds
+    to WAM Cycle 3. See the Scientific/Technical documentation for further details.
+
+    """
+    model_type: Literal["wcapkomen"] = Field(
+        default="wcapkomen", description="Model type discriminator"
+    )
+    powst: Optional[float] = Field(
+        description="Power of steepness normalized with the wave steepness of a Pierson-Moskowitz spectrum (SWAN default: 2)"
+    )
+    delta: Optional[float] = Field(
+        description="Coefficient which determines the dependency of the whitecapping on wave number (SWAN default: 1)"
+    )
+    powk: Optional[float] = Field(
+        description="power of wave number normalized with the mean wave number (SWAN default: 1)",
+    )
+
+    def cmd(self):
+        repr = f"WCAPPING KOMEN"
+        if self.cds2 is not None:
+            repr += f" cds2={self.cds2}"
+        if self.stpm is not None:
+            repr += f" stpm={self.stpm}"
+        if self.powst is not None:
+            repr += f" powst={self.powst}"
+        if self.delta is not None:
+            repr += f" delta={self.delta}"
+        if self.powk is not None:
+            repr += f" powk={self.powk}"
+        return repr
+
+
+class WCAPAB(WESTHUYSEN):
+    """Whitecapping according to Alves and Banner (2003).
+
+    `WCAPPING AB [cds2] [br] [cds3]`
+
+    References
+    ----------
+    Alves, J.H.G.M. and M.L. Banner, 2003: A unified formulation of the wave-action
+    balance equation, J. Phys. Oceanogr., 33, 2343-2356.
+
+    """
+    model_type: Literal["wcapab"] = Field(
+        default="wcapab", description="Model type discriminator"
+    )
+    current: bool = Field(
+        default=False,
+        description="Indicates that enhanced current-induced dissipation as proposed by Van der Westhuysen (2012) is to be added",
+    )
+    cds3: Optional[float] = Field(
+        description="Proportionality coefficient (SWAN default: 0.8)"
+    )
+
+    def cmd(self):
+        repr = f"WCAPPING AB"
+        if self.cds2 is not None:
+            repr += f" cds2={self.cds2}"
+        if self.br is not None:
+            repr += f" br={self.br}"
+        if self.current:
+            repr += f" CURRENT"
+        if self.cds3 is not None:
+            repr += f" cds3={self.cds3}"
         return repr

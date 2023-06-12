@@ -15,8 +15,11 @@ from rompy.swan.subcomponents.physics import (
     ST6C3,
     ST6C4,
     ST6C5,
+    ROGERS,
     ARDHUIN,
     ZIEGER,
+    WCAPKOMEN,
+    WCAPAB,
 )
 
 
@@ -157,8 +160,12 @@ class GEN3(BaseComponent):
         default=WESTHUYSEN(), description="SWAN source terms to be used"
     )
 
+    @root_validator
+    def check_source_terms(cls, values):
+        return values
+
     def cmd(self):
-        repr = f"GEN3 {self.source_terms.cmd()}"
+        repr = f"GEN3 {self.source_terms.render()}"
         return repr
 
 
@@ -173,11 +180,20 @@ class PHYSICS(BaseComponent):
         description="Wave generation",
         discriminator="model_type",
     )
-    sswell: ARDHUIN | ZIEGER | None = Field(
+    sswell: ROGERS | ARDHUIN | ZIEGER | None = Field(
         default=None,
         description="Swell dissipation type",
         discriminator="model_type",
     )
+    wcapping: WCAPKOMEN | WCAPAB | None = Field(
+        default=None,
+        description="Swell dissipation type",
+        discriminator="model_type",
+    )
+
+    @root_validator
+    def deactivate_physics(cls, values):
+        return values
 
     def cmd(self):
         repr = [self.gen.render()]
@@ -185,4 +201,6 @@ class PHYSICS(BaseComponent):
             repr += [f"{self.sswell.render()}"]
         if self.sswell is not None and self.sswell.model_type == "zieger":
             repr += [self.sswell.negatinp.render()]
+        if self.wcapping is not None:
+            repr += [self.wcapping.render()]
         return repr
