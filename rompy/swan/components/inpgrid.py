@@ -1,7 +1,7 @@
 """Input grid for SWAN."""
-from typing import Literal
+from typing import Literal, Union, Annotated
 from pathlib import Path
-from pydantic import root_validator
+from pydantic import Field, root_validator
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.time import NONSTATIONARY
@@ -174,4 +174,28 @@ class UNSTRUCTURED(INPGRID):
             repr += f" EXCEPTION excval={self.excval}"
         if self.nonstationary is not None:
             repr += f" {self.nonstationary.render()}"
+        return repr
+
+
+INPGRID_TYPES = Annotated[
+    Union[REGULAR, CURVILINEAR, UNSTRUCTURED],
+    Field(discriminator="model_type"),
+]
+
+
+class INPGRIDS(BaseComponent):
+    """SWAN input grids."""
+
+    model_type: Literal["inpgrids"] = Field(
+        default="inpgrids", description="Model type discriminator"
+    )
+    options: list[INPGRID_TYPES] = Field(
+        min_items=1,
+        description="List of input grid components",
+    )
+
+    def cmd(self) -> str | list:
+        repr = []
+        for inpgrid in self.options:
+            repr += [inpgrid.render()]
         return repr
