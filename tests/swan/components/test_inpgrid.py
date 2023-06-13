@@ -122,4 +122,4 @@ def test_inpgrids(nonstat, readinp):
     inpgrids = INPGRIDS(
         options=[bottom, wind]
     )
-    import ipdb; ipdb.set_trace()
+    logger.info(inpgrids.render())

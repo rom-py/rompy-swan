@@ -197,5 +197,12 @@ class INPGRIDS(BaseComponent):
     def cmd(self) -> str | list:
         repr = []
         for inpgrid in self.options:
-            repr += [inpgrid.render()]
+            repr += [inpgrid.cmd()]
         return repr
+
+    def render(self) -> str:
+        """Override base class to allow rendering list of components."""
+        cmds = []
+        for cmd in self.cmd():
+            cmds.append(super().render(cmd))
+        return "\n\n".join(cmds)
