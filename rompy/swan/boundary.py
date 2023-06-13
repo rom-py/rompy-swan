@@ -9,7 +9,7 @@ import wavespectra
 import xarray as xr
 from pydantic import Field, confloat, root_validator
 
-from rompy.core import Dataset, DatasetIntake, DatasetXarray, DataGrid
+from rompy.core import DataGrid, Dataset, DatasetIntake, DatasetXarray
 from rompy.core.filters import Filter
 from rompy.core.time import TimeRange
 from rompy.core.types import RompyBaseModel
@@ -215,3 +215,93 @@ class DataBoundary(DataGrid):
         ds.spec.to_swan(filepath)
         cmd = f"BOUNDNEST1 NEST '{filename}' {self.rectangle.upper()}"
         return cmd
+
+        # Plot the model domain
+        if model_grid:
+            bx, by = model_grid.boundary_points()
+            poly = plt.Polygon(list(zip(bx, by)), facecolor="r", alpha=0.05)
+            ax.add_patch(poly)
+            ax.plot(bx, by, lw=2, color="k")
+        return fig, ax
+
+    def plot(self, model_grid=None, cmap="turbo", fscale=10, ax=None, **kwargs):
+        return scatter_plot(
+            self, model_grid=model_grid, cmap=cmap, fscale=fscale, ax=ax, **kwargs
+        )
+
+    def plot_boundary(
+        self, model_grid=None, cmap="turbo", fscale=10, ax=None, **kwargs
+    ):
+        """Plot the boundary points on a map."""
+
+        xbnd, ybnd = self._boundary_points(model_grid)
+        ds = self.ds.spec.sel(
+            lons=xbnd,
+            lats=ybnd,
+            method=self.sel_method,
+            tolerance=self.tolerance,
+        )
+        fig, ax = model_grid.plot(ax=ax, fscale=fscale, **kwargs)
+        return scatter_plot(
+            self,
+            ds=ds,
+            model_grid=model_grid,
+            cmap=cmap,
+            fscale=fscale,
+            ax=ax,
+            **kwargs,
+        )
+
+
+def scatter_plot(
+    bnd, ds=None, model_grid=None, cmap="turbo", fscale=10, ax=None, **kwargs
+):
+    """Plot the grid"""
+
+    import cartopy.crs as ccrs
+    import cartopy.feature as cfeature
+    import matplotlib.pyplot as plt
+    from cartopy.mpl.gridliner import LATITUDE_FORMATTER, LONGITUDE_FORMATTER
+
+    if ds is None:
+        ds = bnd.ds
+
+    # First set some plot parameters:
+    minLon, minLat, maxLon, maxLat = (
+        ds[bnd.lonname].values[0],
+        ds[bnd.latname].values[0],
+        ds[bnd.lonname].values[-1],
+        ds[bnd.latname].values[-1],
+    )
+    extents = [minLon, maxLon, minLat, maxLat]
+
+    if ax is None:
+        # create figure and plot/map
+        fig, ax = plt.subplots(
+            1,
+            1,
+            figsize=(fscale, fscale * (maxLat - minLat) / (maxLon - minLon)),
+            subplot_kw={"projection": ccrs.PlateCarree()},
+        )
+        # ax.set_extent(extents, crs=ccrs.PlateCarree())
+
+        coastline = cfeature.GSHHSFeature(
+            scale="auto", edgecolor="black", facecolor=cfeature.COLORS["land"]
+        )
+
+        ax.add_feature(coastline)
+        ax.add_feature(cfeature.BORDERS, linewidth=2)
+
+        gl = ax.gridlines(
+            crs=ccrs.PlateCarree(),
+            draw_labels=True,
+            linewidth=2,
+            color="gray",
+            alpha=0.5,
+            linestyle="--",
+        )
+
+        gl.xformatter = LONGITUDE_FORMATTER
+        gl.yformatter = LATITUDE_FORMATTER
+
+    ax.scatter(ds[bnd.lonname], ds[bnd.latname], transform=ccrs.PlateCarree())
