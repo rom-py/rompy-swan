@@ -5,7 +5,7 @@ import logging
 from pathlib import Path
 
 from rompy.core.model import ModelRun
-from rompy.swan.config import SwanConfigPydantic as SwanConfig
+from rompy.swan.config import SwanConfigComponents as SwanConfig
 
 
 logger = logging.getLogger(__name__)
