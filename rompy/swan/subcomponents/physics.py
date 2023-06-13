@@ -702,6 +702,8 @@ class JONSWAP(FRICTION):
     growth and swell decay during the Joint North Sea Wave Project (JONSWAP). Deutches
     Hydrographisches Institut, Hamburg, Germany, Rep. No. 12, 95 pp.
 
+    TODO: Implement VARIABLE option?
+
     """
     model_type: Literal["jonswap"] = Field(
         default="jonswap", description="Model type discriminator"
@@ -772,9 +774,15 @@ class MADSEN(FRICTION):
     kn: Optional[float] = Field(
         description="equivalent roughness length scale of the bottom (in m) (SWAN default: 0.05)"
     )
-#======================================================================================
-# FRICTION
-#======================================================================================class RIPPLES(FRICTION):
+
+    def cmd(self):
+        repr = f"{super().cmd()} MADSEN"
+        if self.kn is not None:
+            repr += f" kn={self.kn}"
+        return repr
+
+
+class RIPPLES(FRICTION):
     """Ripples friction subcomponent.
 
     `FRICTION RIPPLES [S] [D]`
