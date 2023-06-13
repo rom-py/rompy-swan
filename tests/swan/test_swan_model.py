@@ -1,12 +1,13 @@
 """Test swan_config class."""
-import yaml
-import pytest
 import logging
+import os
 from pathlib import Path
+
+import pytest
+import yaml
 
 from rompy.core.model import ModelRun
 from rompy.swan.config import SwanConfigPydantic as SwanConfig
-
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ def config():
 
 def test_swan_model(tmpdir, config):
     config = SwanConfig(
-        template="/source/csiro/rompy/rompy/templates/swan2",
+        template=os.path.join(HERE, "../../rompy/templates/swan2"),
         project=config["project"],
         set=config["set"],
         mode=config["mode"],

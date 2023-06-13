@@ -1,21 +1,16 @@
 import logging
-from typing import Optional
-
 from pathlib import Path
-
-from pydantic import validator, root_validator, Field
 from typing import Literal, Optional
 
-from rompy.core import (
-    BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
-)
-from rompy.swan.components import base, cgrid, inpgrid, boundary, startup
+from pydantic import Field, root_validator, validator
+
+from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
+                        TimeRange)
+from rompy.swan.boundary import DataBoundary
+from rompy.swan.components import base, boundary, cgrid, inpgrid, startup
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
-from rompy.swan.boundary import DataBoundary
-
-
 
 logger = logging.getLogger(__name__)
 
@@ -26,9 +21,21 @@ COMPONENTS = {
     "set": startup.SET | base.BaseComponent,
     "mode": startup.MODE | base.BaseComponent,
     "coordinates": startup.COORDINATES | base.BaseComponent,
-    "cgrid": cgrid.REGULAR | cgrid.CURVILINEAR | cgrid.UNSTRUCTURED | base.BaseComponent,
-    "inpgrid": list[inpgrid.REGULAR | inpgrid.CURVILINEAR | inpgrid.UNSTRUCTURED | base.BaseComponent],
-    "boundary": boundary.BOUNDSPEC | boundary.BOUNDNEST1 | boundary.BOUNDNEST2 | boundary.BOUNDNEST3 | base.BaseComponent,
+    "cgrid": cgrid.REGULAR
+    | cgrid.CURVILINEAR
+    | cgrid.UNSTRUCTURED
+    | base.BaseComponent,
+    "inpgrid": list[
+        inpgrid.REGULAR
+        | inpgrid.CURVILINEAR
+        | inpgrid.UNSTRUCTURED
+        | base.BaseComponent
+    ],
+    "boundary": boundary.BOUNDSPEC
+    | boundary.BOUNDNEST1
+    | boundary.BOUNDNEST2
+    | boundary.BOUNDNEST3
+    | base.BaseComponent,
     "initial": boundary.INITIAL | base.BaseComponent,
 }
 
@@ -57,34 +64,45 @@ class OutputLocs(RompyBaseModel):
 
 
 class ForcingData(RompyBaseModel):
-    bottom: SwanDataGrid | None = None  # TODO Raf should probably be required?
-    wind: SwanDataGrid | None = None
-    current: SwanDataGrid | None = None
-    boundary: DataBoundary | None = None
+    bottom: SwanDataGrid | None = Field(
+        None, description="Bathymetry data for SWAN"
+    )  # TODO Raf should probably be required?
+    wind: SwanDataGrid | None = Field(
+        None, description="The wind data for SWAN.")
+    current: SwanDataGrid | None = Field(
+        None, description="The current data for SWAN.")
+    boundary: DataBoundary | None = Field(
+        None, description="The boundary data for SWAN."
+    )
 
     def get(self, grid, runtime):
-        ret = []
-        for forcing in self:
-            if forcing[1]:
-                logger.info(f"\t processing {forcing[0]} forcing")
-                forcing[1]._filter_grid(grid)
-                forcing[1]._filter_time(runtime.period)
-                ret.append(forcing[1].get(runtime.staging_dir, grid))
-        return "\n".join(ret)
+        forcing = []
+        boundary = []
+        for source in self:
+            if source[1]:
+                logger.info(f"\t Processing {source[0]} forcing")
+                source[1]._filter_grid(grid)
+                source[1]._filter_time(runtime.period)
+                if source[0] == "boundary":
+                    boundary.append(source[1].get(runtime.staging_dir, grid))
+                else:
+                    forcing.append(source[1].get(runtime.staging_dir, grid))
+        return dict(forcing="\n".join(forcing), boundary="\n".join(boundary))
 
-    def __str__(self):
-        ret = ""
-        for forcing in self:
-            if forcing[1]:
-                ret += f"{forcing[0]}:"
-                if forcing[1].url:
-                    ret += f" {forcing[1].url}\n"
-                if forcing[1].path:
-                    ret += f" {forcing[1].path}\n"
-                if forcing[1].catalog:
-                    ret += f" {forcing[1].catalog}"
-                    ret += f" {forcing[1].dataset}\n"
-        return ret
+    # below is broken need to move to bnd and forcing to common base object
+    # def __str__(self):
+    #     ret = ""
+    #     for forcing in self:
+    #         if forcing[1]:
+    #             ret += f"{forcing[0]}:"
+    #             if forcing[1].url:
+    #                 ret += f" {forcing[1].url}\n"
+    #             if forcing[1].path:
+    #                 ret += f" {forcing[1].path}\n"
+    #             if forcing[1].catalog:
+    #                 ret += f" {forcing[1].catalog}"
+    #                 ret += f" {forcing[1].dataset}\n"
+    #     return ret
 
 
 class SwanSpectrum(Spectrum):
@@ -236,8 +254,7 @@ class SwanConfig(BaseConfig):
     spectra_file: str = Field(
         "boundary.spec", description="The spectra file for SWAN.")
     template: str = Field(
-        DEFAULT_TEMPLATE, description="The template for SWAN."
-    )
+        DEFAULT_TEMPLATE, description="The template for SWAN.")
     _datefmt: str = Field(
         "%Y%m%d.%H%M%S", description="The date format for SWAN.")
     # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
@@ -269,7 +286,7 @@ class SwanConfig(BaseConfig):
         ret["forcing"] = self.forcing.get(self.grid, runtime)
         ret["physics"] = f"{self.physics.cmd}"
         # TODO raf to complete boundary bit
-        ret["remaining"] = f"BOUND NEST '{self.spectra_file}' CLOSED\n"
+        # ret["remaining"] = f"BOUND NEST '{self.spectra_file}' CLOSED\n"
         ret["outputs"] = self.outputs.cmd
         ret["output_locs"] = self.outputs.spec.locations
         return ret
@@ -303,14 +320,17 @@ class SwanConfigPydantic(BaseConfig):
     TODO: Implement discriminator for inpgrid which is a list of comopnents.
 
     """
+
     model_type: Literal["swan"] = "swan"
     project: COMPONENTS.get("project") = Field(..., discriminator="model_type")
     set: COMPONENTS.get("set") = Field(..., discriminator="model_type")
     mode: COMPONENTS.get("mode") = Field(..., discriminator="model_type")
-    coordinates: COMPONENTS.get("coordinates") = Field(..., discriminator="model_type")
+    coordinates: COMPONENTS.get(
+        "coordinates") = Field(..., discriminator="model_type")
     cgrid: COMPONENTS.get("cgrid") = Field(..., discriminator="model_type")
     inpgrid: COMPONENTS.get("inpgrid")
-    boundary: COMPONENTS.get("boundary") = Field(..., discriminator="model_type")
+    boundary: COMPONENTS.get("boundary") = Field(...,
+                                                 discriminator="model_type")
     initial: COMPONENTS.get("initial") = Field(..., discriminator="model_type")
 
     @root_validator
