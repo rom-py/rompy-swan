@@ -342,3 +342,8 @@ class SwanConfigComponents(BaseConfig):
     def alp_is_zero_if_spherical(cls, values):
         """Ensure alp is zero when using spherical coordinates."""
         return values
+
+    @root_validator
+    def cgrid_contain_inpgrids(cls, values):
+        """Ensure all inpgrids are inside the cgrid area."""
+        return values
