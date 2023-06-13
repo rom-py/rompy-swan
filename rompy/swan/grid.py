@@ -1,4 +1,4 @@
-from typing import Optional, Literal
+from typing import Literal, Optional
 
 import numpy as np
 from pydantic import Field, root_validator, validator
@@ -100,80 +100,6 @@ class SwanGrid(RegularGrid):
 
         return x, y
 
-    # # The folling properties and setters are necessary
-    # # to ensure the grid is regnerated when any one of them changes
-    # TODO this needs ot be ported to a framework that works with pydantic
-    # @property
-    # def x0(self):
-    #     return self._x0
-    #
-    # @x0.setter
-    # def x0(self, x0):
-    #     self._x0 = x0
-    #     self._regen_grid()
-    #
-    # @property
-    # def y0(self):
-    #     return self._y0
-    #
-    # @y0.setter
-    # def y0(self, y0):
-    #     self._y0 = y0
-    #     self._regen_grid()
-    #
-    # @property
-    # def rot(self):
-    #     return self._rot
-    #
-    # @rot.setter
-    # def rot(self, rot):
-    #     self._rot = rot
-    #     self._regen_grid()
-    #
-    # @property
-    # def dx(self):
-    #     return self._dx
-    #
-    # @dx.setter
-    # def dx(self, dx):
-    #     self._dx = dx
-    #     self._regen_grid()
-    #
-    # @property
-    # def dy(self):
-    #     return self._dy
-    #
-    # @dy.setter
-    # def dy(self, dy):
-    #     self._dy = dy
-    #     self._regen_grid()
-    #
-    # @property
-    # def nx(self):
-    #     return self._nx
-    #
-    # @nx.setter
-    # def nx(self, nx):
-    #     self._nx = nx
-    #     self._regen_grid()
-    #
-    # @property
-    # def ny(self):
-    #     return self._ny
-    #
-    # @ny.setter
-    # def ny(self, ny):
-    #     self._ny = ny
-    #     self._regen_grid()
-    #
-    # @property
-    # def exc(self):
-    #     return self._exc
-    #
-    # @exc.setter
-    # def exc(self, exc):
-    #     self._exc = exc
-    #
     @property
     def inpgrid(self):
         if self.grid_type == "REG":
@@ -297,7 +223,8 @@ class SwanGrid(RegularGrid):
                         color="r",
                         lw=2,
                     )
-                    ax.scatter(specPoint.lon, specPoint.lat, marker="o", color="b")
+                    ax.scatter(specPoint.lon, specPoint.lat,
+                               marker="o", color="b")
                     ax.scatter(segLon, segLat, marker="x", color="g")
 
                 specPoint["lon"] = segLon
