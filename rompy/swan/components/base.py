@@ -9,7 +9,7 @@ How to subclass
 
 """
 import logging
-from typing import Literal
+from typing import Literal, Optional
 from abc import abstractmethod
 
 from rompy.core import RompyBaseModel
@@ -72,11 +72,6 @@ class BaseComponent(RompyBaseModel):
 
         extra = "forbid"
 
-    @abstractmethod
-    def cmd(self) -> str | list:
-        """Return the string or list of strings to render the component to the CMD."""
-        pass
-
     def _render_split_cmd(self, cmd_line: str) -> str:
         """Split cmd_line if longer than MAX_LENGTH.
 
@@ -103,9 +98,26 @@ class BaseComponent(RompyBaseModel):
         # Joining lines
         return f" &\n{SPACES * ' '}".join(cmds)
 
-    def render(self) -> str:
-        """Render the component to a string."""
-        cmd_lines = self.cmd()
+    @abstractmethod
+    def cmd(self) -> str | list:
+        """Return the string or list of strings to render the component to the CMD."""
+        pass
+
+    def render(self, cmd: Optional[str | list] = None) -> str:
+        """Render the component to a string.
+
+        Parameters
+        ----------
+        cmd: Optional[str | list]
+            Command string or list of command strings to render, by default self.cmd().
+
+        Returns
+        -------
+        cdmstr: str
+            The rendered command file component.
+
+        """
+        cmd_lines = cmd or self.cmd()
         if isinstance(cmd_lines, str):
             cmd_lines = [cmd_lines]
         cmd_lines = [self._render_split_cmd(cmd_line) for cmd_line in cmd_lines]
