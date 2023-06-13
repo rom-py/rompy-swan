@@ -1,7 +1,7 @@
-project:
+project: # null
   model_type: project
   name: Test rompy setup
-  nr: 001
+  nr: '0001'
 
 set:
   model_type: set
