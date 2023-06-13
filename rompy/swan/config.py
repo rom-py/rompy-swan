@@ -289,21 +289,44 @@ class SwanConfigComponents(BaseConfig):
         default="swan",
         description="Model type discriminator",
     )
-    project: PROJECT_TYPES = Field(description="SWAN PROJECT component")
-    set: SET_TYPES = Field(description="SWAN SET component")
-    mode: MODE_TYPES = Field(description="SWAN MODE component")
-    coordinates: COORDINATES_TYPES = Field(description="SWAN COORDINATES component")
+    project: PROJECT_TYPES = Field(
+        default=None,
+        description="SWAN PROJECT component",
+    )
+    set: SET_TYPES = Field(
+        default=None,
+        description="SWAN SET component",
+    )
+    mode: MODE_TYPES = Field(
+        default=None,
+        description="SWAN MODE component",
+    )
+    coordinates: COORDINATES_TYPES = Field(
+        default=None,
+        description="SWAN COORDINATES component",
+    )
     cgrid: CGRID_TYPES = Field(
+        default=None,
         description="SWAN CGRID component",
         discriminator="model_type",
     )
-    inpgrid: INPGRID_TYPES = Field(description="SWAN INPGRID components")
+    inpgrid: INPGRID_TYPES = Field(
+        default=None,
+        description="SWAN INPGRID components"
+    )
     boundary: BOUNDARY_TYPES = Field(
+        default=None,
         description="SWAN BOUNDARY component",
         discriminator="model_type",
     )
-    initial: INITIAL_TYPES = Field(description="SWAN INITIAL component")
-    physics: PHYSICS_TYPES = Field(description="SWAN PHYSICS component")
+    initial: INITIAL_TYPES = Field(
+        default=None,
+        description="SWAN INITIAL component",
+    )
+    physics: PHYSICS_TYPES = Field(
+        default=None,
+        description="SWAN PHYSICS component",
+    )
 
     @root_validator
     def no_nor_if_spherical(cls, values):
