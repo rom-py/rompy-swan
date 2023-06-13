@@ -51,7 +51,7 @@ class JANSSEN(SourceTerms):
         description="Coefficient which determines the dependency of the whitecapping on wave number (mix with Komen et al. formulation) (SWAN default: 0.5)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = "JANSSEN"
         if self.cds1 is not None:
             repr += f" cds1={self.cds1}"
@@ -85,7 +85,7 @@ class KOMEN(SourceTerms):
         description="Value of the wave steepness for a Pierson-Moskowitz spectrum ($s^2_{PM}$) (SWAN default: 3.02e-3)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = "KOMEN"
         if self.cds2 is not None:
             repr += f" cds2={self.cds2}"
@@ -128,7 +128,7 @@ class WESTHUYSEN(SourceTerms):
         description="Threshold saturation level	(SWAN default: 1.75e-3)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = "WESTHUYSEN"
         if self.cds2 is not None:
             repr += f" cds2={self.cds2}"
@@ -212,13 +212,13 @@ class ST6(SourceTerms):
         return values
 
     @property
-    def u10_cmd(self):
+    def u10_cmd(self) -> str:
         if self.u10 == "true10":
             return "TRUE10"
         else:
             return f"U10PROXY windscaling={self.windscaling}"
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"ST6 a1sds={self.a1sds} a2sds={self.a2sds}"
         if self.p1sds is not None:
             repr += f" p1sds={self.p1sds}"
@@ -309,7 +309,7 @@ class NEGATINP(BaseSubComponent):
         description="Coefficient representing the strength of negative wind input",
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         return f"NEGATINP rdcoef={self.rdcoef}"
 
 
@@ -334,7 +334,7 @@ class SSWELL(BaseSubComponent):
         default="sswell", description="Model type discriminator"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         return "SSWELL"
 
 
@@ -359,7 +359,7 @@ class ROGERS(SSWELL):
         description="Swell dissipation factor"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} ROGERS"
         if self.cdsv is not None:
             repr += f" cdsv={self.cdsv}"
@@ -386,7 +386,7 @@ class ARDHUIN(SSWELL):
         description="Coefficient related to laminar atmospheric boundary layer (SWAN default: 1.2)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} ARDHUIN"
         if self.cdsv is not None:
             repr += f" cdsv={self.cdsv}"
@@ -417,7 +417,7 @@ class ZIEGER(SSWELL):
         description="Negative wind input specification",
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} ZIEGER"
         if self.b1 is not None:
             repr += f" b1={self.b1}"
@@ -453,7 +453,7 @@ class WCAPKOMEN(KOMEN):
         description="power of wave number normalized with the mean wave number (SWAN default: 1)",
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"WCAPPING KOMEN"
         if self.cds2 is not None:
             repr += f" cds2={self.cds2}"
@@ -490,7 +490,7 @@ class WCAPAB(WESTHUYSEN):
         description="Proportionality coefficient (SWAN default: 0.8)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"WCAPPING AB"
         if self.cds2 is not None:
             repr += f" cds2={self.cds2}"
@@ -551,7 +551,7 @@ class QUADRUPL(BaseSubComponent):
         description="Coefficient for shallow water scaling in case of DIA (SWAN default: -1.25",
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"QUADRUPL iquad={self.iquad}"
         if self.clambda is not None:
             repr += f" lambda={self.clambda}"
@@ -584,7 +584,7 @@ class BREAKING(BaseSubComponent):
         default="breaking", description="Model type discriminator"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         return f"BREAKING"
 
 
@@ -606,7 +606,7 @@ class CONSTANT(BREAKING):
         description="The breaker index, i.e. the ratio of maximum individual wave height over depth (SWAN default: 0.73)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} CONSTANT"
         if self.alpha is not None:
             repr += f" alpha={self.alpha}"
@@ -643,7 +643,7 @@ class BKD(BREAKING):
         description="Third tunable coefficient for the breaker index (SWAN default: 8.09)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} BKD"
         if self.alpha is not None:
             repr += f" alpha={self.alpha}"
@@ -681,7 +681,7 @@ class FRICTION(BaseSubComponent):
         default="friction", description="Model type discriminator"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         return f"FRICTION"
 
 
@@ -712,7 +712,7 @@ class JONSWAP(FRICTION):
         description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} JONSWAP CONSTANT"
         if self.cfjon is not None:
             repr += f" cfjon={self.cfjon}"
@@ -743,7 +743,7 @@ class COLLINS(FRICTION):
         description="Collins bottom friction coefficient (SWAN default: 0.015)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} COLLINS"
         if self.cfw is not None:
             repr += f" cfw={self.cfw}"
@@ -775,7 +775,7 @@ class MADSEN(FRICTION):
         description="equivalent roughness length scale of the bottom (in m) (SWAN default: 0.05)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} MADSEN"
         if self.kn is not None:
             repr += f" kn={self.kn}"
@@ -806,7 +806,7 @@ class RIPPLES(FRICTION):
         description="The sediment diameter (in m) (SWAN default: 0.0001)"
     )
 
-    def cmd(self):
+    def cmd(self) -> str:
         repr = f"{super().cmd()} RIPPLES"
         if self.s is not None:
             repr += f" S={self.s}"
@@ -830,7 +830,7 @@ class TRIAD(BaseSubComponent):
     model_type: Literal["triad"] = Field(
         default="triad", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"TRIAD"
 
 
@@ -857,7 +857,7 @@ class VEGETATION(BaseSubComponent):
     model_type: Literal["vegetation"] = Field(
         default="vegetation", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"VEGETATION"
 
 
@@ -882,7 +882,7 @@ class MUD(BaseSubComponent):
     model_type: Literal["mud"] = Field(
         default="mud", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"MUD"
 
 
@@ -919,7 +919,7 @@ class SICE(BaseSubComponent):
     model_type: Literal["sice"] = Field(
         default="sice", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"SICE"
 
 
@@ -941,7 +941,7 @@ class TURBULENCE(BaseSubComponent):
     model_type: Literal["turbulence"] = Field(
         default="turbulence", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"TURBULENCE"
 
 
@@ -962,7 +962,7 @@ class BRAGG(BaseSubComponent):
     model_type: Literal["bragg"] = Field(
         default="bragg", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"BRAGG"
 
 
@@ -983,7 +983,7 @@ class LIMITER(BaseSubComponent):
     model_type: Literal["limiter"] = Field(
         default="limiter", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"LIMITER"
 
 
@@ -1005,7 +1005,7 @@ class OBSTACLE(BaseSubComponent):
     model_type: Literal["obstacle"] = Field(
         default="obstacle", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"OBSTACLE"
 
 #======================================================================================
@@ -1032,7 +1032,7 @@ class OBSTACLE_FIG(BaseSubComponent):
     model_type: Literal["obstacle_fig"] = Field(
         default="obstacle_fig", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"OBSTACLE FIG"
 
 
@@ -1048,7 +1048,7 @@ class SETUP(BaseSubComponent):
     model_type: Literal["setup"] = Field(
         default="setup", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"SETUP"
 
 #======================================================================================
@@ -1063,7 +1063,7 @@ class DIFFRACTION(BaseSubComponent):
     model_type: Literal["diffraction"] = Field(
         default="diffraction", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"DIFFRACTION"
 
 
@@ -1079,7 +1079,7 @@ class SURFBEAT(BaseSubComponent):
     model_type: Literal["surfbeat"] = Field(
         default="surfbeat", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"SURFBEAT"
 
 
@@ -1095,5 +1095,5 @@ class SCAT(BaseSubComponent):
     model_type: Literal["scat"] = Field(
         default="scat", description="Model type discriminator"
     )
-    def cmd(self):
+    def cmd(self) -> str:
         return f"SCAT"
