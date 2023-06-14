@@ -7,7 +7,7 @@ import pandas as pd
 import xarray as xr
 from pydantic import Field, root_validator, validator
 
-from rompy.core import DataGrid
+from rompy.core import DataGrid, DatasetIntake, DatasetXarray
 
 from .grid import SwanGrid
 
@@ -23,7 +23,8 @@ class SwanDataGrid(DataGrid):
         description="Scaler paramater u componet of vecotr field",
         default=None,
     )
-    z2: str = Field(description="v componet of vecotr field", type=str, default=None)
+    z2: str = Field(description="v componet of vecotr field",
+                    type=str, default=None)
     var: str = Field(
         description="SWAN variable name (WIND, BOTTOM, CURRENT)",
         default="WIND",
@@ -32,13 +33,12 @@ class SwanDataGrid(DataGrid):
     # root validator
     @root_validator
     def ensure_z1_in_data_vars(cls, values):
-        params = values.get("params")
-        data_vars = params.get("data_vars", [])
+        data_vars = values.get("variables", [])
         for z in [values.get("z1"), values.get("z2")]:
             if z and z not in data_vars:
                 logger.debug(f"Adding {z} to data_vars")
                 data_vars.append(z)
-        values["params"]["data_vars"] = data_vars
+        values["variables"] = data_vars
         return values
 
     @validator("var")
@@ -123,7 +123,7 @@ def dset_to_swan(
         dset = dset.expand_dims(time_dim, 0)
 
     # Write to ascii
-    logger.info(f"Writing SWAN ASCII file: {output_file}")
+    logger.debug(f"Writing SWAN ASCII file: {output_file}")
     with open(output_file, "w") as stream:
         for time in dset[time_dim]:
             logger.debug(
