@@ -11,6 +11,7 @@ How to subclass
 import logging
 from typing import Literal, Optional
 from abc import abstractmethod
+from pydantic import Field
 
 from rompy.core import RompyBaseModel
 
@@ -65,7 +66,7 @@ class BaseComponent(RompyBaseModel):
 
     """
 
-    model_type: Literal["component"]
+    model_type: Literal["component"] = Field(description="Model type discriminator")
 
     class Config:
         """Configure the model."""
