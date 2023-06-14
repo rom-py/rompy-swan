@@ -189,14 +189,14 @@ class INPGRIDS(BaseComponent):
     model_type: Literal["inpgrids"] = Field(
         default="inpgrids", description="Model type discriminator"
     )
-    options: list[INPGRID_TYPES] = Field(
+    inpgrids: list[INPGRID_TYPES] = Field(
         min_items=1,
         description="List of input grid components",
     )
 
     def cmd(self) -> str | list:
         repr = []
-        for inpgrid in self.options:
+        for inpgrid in self.inpgrids:
             repr += [inpgrid.cmd()]
         return repr
 
