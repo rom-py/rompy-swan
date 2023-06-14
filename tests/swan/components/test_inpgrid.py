@@ -120,6 +120,6 @@ def test_inpgrids(nonstat, readinp):
     )
 
     inpgrids = INPGRIDS(
-        options=[bottom, wind]
+        inpgrids=[bottom, wind]
     )
     logger.info(inpgrids.render())
