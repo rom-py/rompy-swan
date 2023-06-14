@@ -137,3 +137,6 @@ dmypy.json
 !.vscode/launch.json
 !.vscode/extensions.json
 *.code-workspace
+
+# Notebook data
+notebooks/tmp
