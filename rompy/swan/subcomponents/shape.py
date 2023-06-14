@@ -2,7 +2,7 @@
 import logging
 from typing import Literal
 from abc import ABC
-from pydantic import confloat
+from pydantic import Field, confloat
 
 from rompy.swan.subcomponents.base import BaseSubComponent
 
@@ -15,17 +15,15 @@ class JONSWAP(BaseSubComponent):
 
     `JONSWAP [gamma]`
 
-    parameters
-    ----------
-    model_type: Literal["jonswap"]
-        Model type discriminator.
-    gamma: float
-        Peak enhancement parameter of the JONSWAP spectrum.
-
     """
 
-    model_type: Literal["jonswap"] = "jonswap"
-    gamma: confloat(gt=0.0) = 3.3
+    model_type: Literal["jonswap"] = Field(
+        default="jonswap", description="Model type discriminator"
+    )
+    gamma: confloat(gt=0.0) = Field(
+        default=3.3,
+        description="Peak enhancement parameter of the JONSWAP spectrum.",
+    )
 
     def cmd(self) -> str:
         return f"{super().cmd()} gamma={self.gamma}"
@@ -36,19 +34,14 @@ class TMA(JONSWAP):
 
     `TMA [gamma] [d]`
 
-    parameters
-    ----------
-    model_type: Literal["tma"]
-        Model type discriminator.
-    gamma: float
-        Peak enhancement parameter of the JONSWAP spectrum.
-    d: float
-        The reference depth at the wave maker in meters.
-
     """
 
-    model_type: Literal["tma"] = "tma"
-    d: confloat(gt=0.0)
+    model_type: Literal["tma"] = Field(
+        default="tma", description="Model type discriminator"
+    )
+    d: confloat(gt=0.0) = Field(
+        description="The reference depth at the wave maker in meters.",
+    )
 
     def cmd(self) -> str:
         return f"{super().cmd()} d={self.d}"
@@ -59,17 +52,17 @@ class GAUSS(BaseSubComponent):
 
     `GAUSS [sigfr]`
 
-    parameters
-    ----------
-    model_type: Literal["gauss"]
-        Model type discriminator.
-    sigfr: float
-        Width of the Gaussian frequency spectrum expressed as a standard deviation in Hz.
-
     """
 
-    model_type: Literal["gauss"] = "gauss"
-    sigfr: confloat(gt=0.0)
+    model_type: Literal["gauss"] = Field(
+        default="gauss", description="Model type discriminator"
+    )
+    sigfr: confloat(gt=0.0) = Field(
+        description=(
+            "Width of the Gaussian frequency spectrum expressed "
+            "as a standard deviation in Hz."
+        ),
+    )
 
     def cmd(self) -> str:
         return f"{super().cmd()} sigfr={self.sigfr}"
@@ -80,14 +73,11 @@ class PM(BaseSubComponent):
 
     `PM`
 
-    parameters
-    ----------
-    model_type: Literal["pm"]
-        Model type discriminator.
-
     """
 
-    model_type: Literal["pm"] = "pm"
+    model_type: Literal["pm"] = Field(
+        default="pm", description="Model type discriminator"
+    )
 
 
 class BIN(BaseSubComponent):
@@ -95,14 +85,11 @@ class BIN(BaseSubComponent):
 
     `BIN`
 
-    parameters
-    ----------
-    model_type: Literal["bin"]
-        Model type discriminator.
-
     """
 
-    model_type: Literal["bin"] = "bin"
+    model_type: Literal["bin"] = Field(
+        default="bin", description="Model type discriminator"
+    )
 
 
 class SHAPESPEC(BaseSubComponent):
@@ -114,22 +101,23 @@ class SHAPESPEC(BaseSubComponent):
     and direction) at the boundary of the computational grid in case of parametric
     spectral input.
 
-    Parameters
-    ----------
-    model_type: Literal["shapespec"]
-        Model type discriminator.
-    shape: JONSWAP | PM | GAUSS | BIN | TMA
-        The spectral shape.
-    per_type: Literal['peak', 'mean']
-        The type of characteristic wave period
-    dspr_type: Literal['power', 'degrees']
-
     """
 
-    model_type: Literal["shapespec"] = "shapespec"
-    shape: JONSWAP | PM | GAUSS | BIN | TMA = JONSWAP()
-    per_type: Literal["peak", "mean"] = "peak"
-    dspr_type: Literal["power", "degrees"] = "power"
+    model_type: Literal["shapespec"] = Field(
+        default="shapespec", description="Model type discriminator"
+    )
+    shape: JONSWAP | PM | GAUSS | BIN | TMA = Field(
+        default=JONSWAP(),
+        description="The spectral shape",
+    )
+    per_type: Literal["peak", "mean"] = Field(
+        default="peak",
+        description="The type of characteristic wave period",
+    )
+    dspr_type: Literal["power", "degrees"] = Field(
+        default="power",
+        description="The type of directional spreading",
+    )
 
     def cmd(self) -> str:
         repr = (
