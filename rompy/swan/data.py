@@ -123,7 +123,7 @@ def dset_to_swan(
         dset = dset.expand_dims(time_dim, 0)
 
     # Write to ascii
-    logger.info(f"Writing SWAN ASCII file: {output_file}")
+    logger.debug(f"Writing SWAN ASCII file: {output_file}")
     with open(output_file, "w") as stream:
         for time in dset[time_dim]:
             logger.debug(

@@ -4,8 +4,7 @@ from typing import Literal, Optional
 
 from pydantic import Field, root_validator, validator
 
-from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
-                        TimeRange)
+from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 from rompy.swan.boundary import DataBoundary
 from rompy.swan.components import base, boundary, cgrid, inpgrid, startup
 
@@ -89,20 +88,12 @@ class ForcingData(RompyBaseModel):
                     forcing.append(source[1].get(runtime.staging_dir, grid))
         return dict(forcing="\n".join(forcing), boundary="\n".join(boundary))
 
-    # below is broken need to move to bnd and forcing to common base object
-    # def __str__(self):
-    #     ret = ""
-    #     for forcing in self:
-    #         if forcing[1]:
-    #             ret += f"{forcing[0]}:"
-    #             if forcing[1].url:
-    #                 ret += f" {forcing[1].url}\n"
-    #             if forcing[1].path:
-    #                 ret += f" {forcing[1].path}\n"
-    #             if forcing[1].catalog:
-    #                 ret += f" {forcing[1].catalog}"
-    #                 ret += f" {forcing[1].dataset}\n"
-    #     return ret
+    def __str__(self):
+        ret = ""
+        for forcing in self:
+            if forcing[1]:
+                ret += f"\t{forcing[0]}: {forcing[1].dataset}\n"
+        return ret
 
 
 class SwanSpectrum(Spectrum):
@@ -174,7 +165,7 @@ class GridOutput(RompyBaseModel):
         ret = "\tGrid:\n"
         if self.period:
             ret += f"\t\tperiod: {self.period}\n"
-        ret += f"\t\tvariables: {' '.join(self.variables)}\n"
+        ret += f"\tvariables: {' '.join(self.variables)}\n"
         return ret
 
 
@@ -187,8 +178,8 @@ class SpecOutput(RompyBaseModel):
     def __str__(self):
         ret = "\tSpec\n"
         if self.period:
-            ret += f"\t\tperiod: {self.period}\n"
-        ret += f"\t\tlocations: {self.locations}\n"
+            ret += f"\tperiod: {self.period}\n"
+        ret += f"\tlocations: {self.locations}\n"
         return ret
 
 
@@ -229,7 +220,7 @@ class Outputs(RompyBaseModel):
         return ret
 
     def __str__(self):
-        ret = "Outputs:\n"
+        ret = ""
         ret += f"{self.grid}"
         ret += f"{self.spec}"
         return ret
@@ -292,11 +283,12 @@ class SwanConfig(BaseConfig):
         return ret
 
     def __str__(self):
-        ret = f"grid: {self.grid}\n"
-        ret += f"spectral_resolution: {self.spectral_resolution}\n"
-        ret += f"forcing: {self.forcing}\n"
-        ret += f"physics: {self.physics}\n"
-        ret += f"outputs: {self.outputs}\n"
+        ret = f"grid: \n\t{self.grid}\n"
+        ret += f"spectral_resolution: \n\t{self.spectral_resolution}\n"
+        ret += f"forcing: \n{self.forcing}\n"
+        ret += f"physics: \n\t{self.physics}\n"
+        ret += f"outputs: \n{self.outputs}\n"
+        ret += f"template: \n\t{self.template}\n"
         return ret
 
 
