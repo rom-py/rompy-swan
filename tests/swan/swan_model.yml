@@ -25,9 +25,10 @@ coordinates:
 
 cgrid:
   model_type: regular
-  mdc: 36
-  flow: 0.04
-  fhigh: 0.4
+  spectrum:
+    mdc: 36
+    flow: 0.04
+    fhigh: 0.4
   xlenc: 100.0
   ylenc: 100.0
   mxc: 10
