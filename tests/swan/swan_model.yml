@@ -34,8 +34,8 @@ cgrid:
   myc: 10
 
 inpgrid:
-  -
-    model_type: regular
+  inpgrids:
+  - model_type: regular
     grid_type: bottom
     xpinp: 0.0
     ypinp: 0.0
@@ -48,8 +48,7 @@ inpgrid:
     readinp:
       model_type: readinp
       fname1: bottom.txt
-  -
-    model_type: regular
+  - model_type: regular
     grid_type: wind
     xpinp: 0.0
     ypinp: 0.0
