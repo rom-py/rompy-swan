@@ -1,18 +1,21 @@
 """SWAN boundary classes."""
+import logging
 from abc import ABC, abstractmethod
-from typing import Literal, Optional
 from pathlib import Path
-from pydantic import Field, root_validator, confloat
-import intake
-import xarray as xr
-import wavespectra
-import numpy as np
+from typing import Literal, Optional
 
+import numpy as np
+import wavespectra
+import xarray as xr
+from pydantic import Field, confloat, root_validator
+
+from rompy.core import DataGrid, Dataset, DatasetIntake, DatasetXarray
+from rompy.core.filters import Filter
 from rompy.core.time import TimeRange
 from rompy.core.types import RompyBaseModel
-from rompy.core.filters import Filter
-from rompy.core.data import DataBlob
 from rompy.swan.grid import SwanGrid
+
+logger = logging.getLogger(__name__)
 
 
 def find_minimum_distance(points: list[tuple[float, float]]) -> float:
@@ -73,55 +76,6 @@ def find_minimum_distance(points: list[tuple[float, float]]) -> float:
     return min(min_distance, strip_min)
 
 
-class Dataset(RompyBaseModel, ABC):
-    """Abstract base class for a dataset."""
-
-    @abstractmethod
-    def open(self):
-        """Return a dataset instance with the wavespectra accessor."""
-        pass
-
-
-class DatasetXarray(Dataset):
-    """Wavespectra dataset from xarray reader."""
-
-    model_type: Literal["xarray"] = Field(
-        default="xarray",
-        description="Model type discriminator",
-    )
-    uri: str | Path = Field(description="Path to the dataset")
-    engine: Optional[str] = Field(
-        default=None,
-        description="Engine to use for reading the dataset with xarray.open_dataset",
-    )
-    kwargs: dict = Field(
-        default={},
-        description="Keyword arguments to pass to xarray.open_dataset",
-    )
-
-    def open(self):
-        return xr.open_dataset(self.uri, engine=self.engine, **self.kwargs)
-
-
-class DatasetIntake(Dataset):
-    """Wavespectra dataset from intake catalog."""
-
-    model_type: Literal["intake"] = Field(
-        default="intake",
-        description="Model type discriminator",
-    )
-    dataset_id: str = Field(description="The id of the dataset to read in the catalog")
-    catalog_uri: str | Path = Field(description="The URI of the catalog to read from")
-    kwargs: dict = Field(
-        default={},
-        description="Keyword arguments to pass to intake.open_catalog",
-    )
-
-    def open(self):
-        cat = intake.open_catalog(self.catalog_uri)
-        return cat[self.dataset_id](**self.kwargs).to_dask()
-
-
 class DatasetWavespectra(Dataset):
     """Wavespectra dataset from wavespectra reader."""
 
@@ -142,17 +96,29 @@ class DatasetWavespectra(Dataset):
         return getattr(wavespectra, self.reader)(self.uri, **self.kwargs)
 
 
-class DataBoundary(RompyBaseModel):
-    """SWAN BOUNDNEST1 NEST data class."""
+class DataBoundary(DataGrid):
+    """SWAN BOUNDNEST1 NEST data class.
+
+    Notes
+    -----
+    The `tolerance` behaves differently with sel_methods `idw` and `nearest`; in `idw`
+    sites with no enough neighbours within `tolerance` are masked whereas in `nearest`
+    an exception is raised (see wavespectra documentation for more details).
+
+    Be aware that when using `idw` missing values will be returned for sites with less
+    than 2 neighbours within `tolerance` in the original dataset. This is okay for land
+    mask areas but could cause boundary issues when on an open boundary location. To
+    avoid this either use `nearest` or increase `tolerance` to include more neighbours.
+
+    """
 
     id: str = Field(description="Unique identifier for this data source")
     dataset: DatasetXarray | DatasetIntake | DatasetWavespectra = Field(
         description="Dataset reader, must return a wavespectra-enabled xarray dataset in the open method",
-        discriminator="model_type"
+        discriminator="model_type",
     )
-    grid: Optional[SwanGrid] = Field(
-        default=None,
-        description="Grid specification to use for selecting boundary points from the dataset",
+    spacing: Optional[float] = Field(
+        description="Spacing between boundary points, by default defined as the minimum distance between points in the dataset",
     )
     sel_method: Literal["idw", "nearest"] = Field(
         default="idw",
@@ -183,7 +149,11 @@ class DataBoundary(RompyBaseModel):
     @property
     def ds(self):
         """Return the filtered xarray dataset instance."""
-        return self.filter(self.dataset.open())
+        dset = super().ds
+        if dset.efth.size == 0:
+            raise ValueError(
+                f"Empty dataset after applying filter {self.filter}")
+        return dset
 
     def _boundary_resolutions(self, grid):
         """Boundary resolution based on the shortest distance between points.
@@ -212,48 +182,126 @@ class DataBoundary(RompyBaseModel):
 
     def _boundary_points(self, grid):
         """Coordinates of boundary points based on grid bbox and dataset resolution."""
-        x0, y0, x1, y1 = grid.bbox(buffer=0)
-        dx, dy = self._boundary_resolutions(grid)
-        x = np.clip(np.arange(x0, x1 + dx, dx), x0, x1)
-        y = np.clip(np.arange(y0, y1 + dy, dy), y0, y1)
-        xbnd = np.concatenate(
-            (
-                x,
-                np.repeat(x[-1], y.size - 1),
-                x[-2::-1],
-                np.repeat(x[0], y.size - 1),
+        if self.spacing is None:
+            dx, dy = self._boundary_resolutions(grid)
+            spacing = min(dx, dy)
+        else:
+            spacing = self.spacing
+        points = grid.points_along_boundary(spacing=spacing)
+        if len(points.geoms) < 4:
+            logger.warning(
+                f"There are only {len(points)} boundary points (less than 1 point per grid side), "
+                f"consider setting a smaller spacing (the current spacing is {spacing})"
             )
-        )
-        ybnd = np.concatenate(
-            (
-                np.repeat(y[0], x.size),
-                y[1:],
-                np.repeat(y[-1], x.size - 1),
-                y[-2::-1],
-            )
-        )
+        xbnd = np.array([p.x for p in points.geoms])
+        ybnd = np.array([p.y for p in points.geoms])
         return xbnd, ybnd
 
     def _filter_grid(self, grid, buffer=0.1):
         """Required by SwanForcing"""
-        self.grid = grid
+        pass
 
-    def _filter_time(self, time: TimeRange):
-        """Time filter"""
-        self.filter.crop.update({"time": slice(time.start, time.end)})
-
-    def get(self, stage_dir: str) -> str:
+    def get(self, stage_dir: str, grid: SwanGrid) -> str:
         """Write the data source to a new location"""
-        if self.grid is None:
-            raise ValueError("grid must be defined before calling get")
-        xbnd, ybnd = self._boundary_points(self.grid)
+        xbnd, ybnd = self._boundary_points(grid)
         ds = self.ds.spec.sel(
             lons=xbnd,
             lats=ybnd,
             method=self.sel_method,
             tolerance=self.tolerance,
         )
-        filename = Path(stage_dir) / f"{self.id}.bnd"
-        ds.spec.to_swan(filename)
+        filename = f"{self.id}.bnd"
+        filepath = Path(stage_dir) / filename
+        ds.spec.to_swan(filepath)
         cmd = f"BOUNDNEST1 NEST '{filename}' {self.rectangle.upper()}"
         return cmd
+
+        # Plot the model domain
+        if model_grid:
+            bx, by = model_grid.boundary_points()
+            poly = plt.Polygon(list(zip(bx, by)), facecolor="r", alpha=0.05)
+            ax.add_patch(poly)
+            ax.plot(bx, by, lw=2, color="k")
+        return fig, ax
+
+    def plot(self, model_grid=None, cmap="turbo", fscale=10, ax=None, **kwargs):
+        return scatter_plot(
+            self, model_grid=model_grid, cmap=cmap, fscale=fscale, ax=ax, **kwargs
+        )
+
+    def plot_boundary(
+        self, model_grid=None, cmap="turbo", fscale=10, ax=None, **kwargs
+    ):
+        """Plot the boundary points on a map."""
+
+        xbnd, ybnd = self._boundary_points(model_grid)
+        ds = self.ds.spec.sel(
+            lons=xbnd,
+            lats=ybnd,
+            method=self.sel_method,
+            tolerance=self.tolerance,
+        )
+        fig, ax = model_grid.plot(ax=ax, fscale=fscale, **kwargs)
+        return scatter_plot(
+            self,
+            ds=ds,
+            model_grid=model_grid,
+            cmap=cmap,
+            fscale=fscale,
+            ax=ax,
+            **kwargs,
+        )
+
+
+def scatter_plot(
+    bnd, ds=None, model_grid=None, cmap="turbo", fscale=10, ax=None, **kwargs
+):
+    """Plot the grid"""
+
+    import cartopy.crs as ccrs
+    import cartopy.feature as cfeature
+    import matplotlib.pyplot as plt
+    from cartopy.mpl.gridliner import LATITUDE_FORMATTER, LONGITUDE_FORMATTER
+
+    if ds is None:
+        ds = bnd.ds
+
+    # First set some plot parameters:
+    minLon, minLat, maxLon, maxLat = (
+        ds[bnd.lonname].values[0],
+        ds[bnd.latname].values[0],
+        ds[bnd.lonname].values[-1],
+        ds[bnd.latname].values[-1],
+    )
+    extents = [minLon, maxLon, minLat, maxLat]
+
+    if ax is None:
+        # create figure and plot/map
+        fig, ax = plt.subplots(
+            1,
+            1,
+            figsize=(fscale, fscale * (maxLat - minLat) / (maxLon - minLon)),
+            subplot_kw={"projection": ccrs.PlateCarree()},
+        )
+        # ax.set_extent(extents, crs=ccrs.PlateCarree())
+
+        coastline = cfeature.GSHHSFeature(
+            scale="auto", edgecolor="black", facecolor=cfeature.COLORS["land"]
+        )
+
+        ax.add_feature(coastline)
+        ax.add_feature(cfeature.BORDERS, linewidth=2)
+
+        gl = ax.gridlines(
+            crs=ccrs.PlateCarree(),
+            draw_labels=True,
+            linewidth=2,
+            color="gray",
+            alpha=0.5,
+            linestyle="--",
+        )
+
+        gl.xformatter = LONGITUDE_FORMATTER
+        gl.yformatter = LATITUDE_FORMATTER
+
+    ax.scatter(ds[bnd.lonname], ds[bnd.latname], transform=ccrs.PlateCarree())

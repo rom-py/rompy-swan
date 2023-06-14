@@ -4,14 +4,12 @@ from pathlib import Path
 from pydantic import validator, root_validator, Field
 from typing import Literal, Optional, Union
 
-from rompy.core import (
-    BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
-)
+from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
+from rompy.swan.boundary import DataBoundary
 from rompy.swan.components import base, cgrid, inpgrid, boundary, startup, physics
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
-from rompy.swan.boundary import DataBoundary
 
 
 logger = logging.getLogger(__name__)
@@ -53,33 +51,36 @@ class OutputLocs(RompyBaseModel):
 
 
 class ForcingData(RompyBaseModel):
-    bottom: SwanDataGrid | None = None  # TODO Raf should probably be required?
-    wind: SwanDataGrid | None = None
-    current: SwanDataGrid | None = None
-    boundary: DataBoundary | None = None
+    bottom: SwanDataGrid | None = Field(
+        None, description="Bathymetry data for SWAN"
+    )  # TODO Raf should probably be required?
+    wind: SwanDataGrid | None = Field(
+        None, description="The wind data for SWAN.")
+    current: SwanDataGrid | None = Field(
+        None, description="The current data for SWAN.")
+    boundary: DataBoundary | None = Field(
+        None, description="The boundary data for SWAN."
+    )
 
     def get(self, grid, runtime):
-        ret = []
-        for forcing in self:
-            if forcing[1]:
-                logger.info(f"\t processing {forcing[0]} forcing")
-                forcing[1]._filter_grid(grid)
-                forcing[1]._filter_time(runtime.period)
-                ret.append(forcing[1].get(runtime.staging_dir, grid))
-        return "\n".join(ret)
+        forcing = []
+        boundary = []
+        for source in self:
+            if source[1]:
+                logger.info(f"\t Processing {source[0]} forcing")
+                source[1]._filter_grid(grid)
+                source[1]._filter_time(runtime.period)
+                if source[0] == "boundary":
+                    boundary.append(source[1].get(runtime.staging_dir, grid))
+                else:
+                    forcing.append(source[1].get(runtime.staging_dir, grid))
+        return dict(forcing="\n".join(forcing), boundary="\n".join(boundary))
 
     def __str__(self):
         ret = ""
         for forcing in self:
             if forcing[1]:
-                ret += f"{forcing[0]}:"
-                if forcing[1].url:
-                    ret += f" {forcing[1].url}\n"
-                if forcing[1].path:
-                    ret += f" {forcing[1].path}\n"
-                if forcing[1].catalog:
-                    ret += f" {forcing[1].catalog}"
-                    ret += f" {forcing[1].dataset}\n"
+                ret += f"\t{forcing[0]}: {forcing[1].dataset}\n"
         return ret
 
 
@@ -95,7 +96,8 @@ class SwanPhysics(RompyBaseModel):
     """Container class represting configuraable SWAN physics options"""
 
     friction: str = Field(
-        default="MAD", description="The type of friction, either 'MAD' or 'TODO'."
+        default="MAD",
+        description="The type of friction, either MAD, COLL, JON or RIP",
     )
     friction_coeff: float = Field(
         default=0.1,
@@ -104,7 +106,7 @@ class SwanPhysics(RompyBaseModel):
 
     @validator("friction")
     def validate_friction(cls, v):
-        if v not in ["MAD", "OTHER", "ANDANOTHER"]:
+        if v not in ["JON", "COLL", "MAD" "RIP"]:
             raise ValueError(
                 "friction must be one of MAD, OTHER or ANDANOTHER"
             )  # TODO Raf to add actual friction options
@@ -152,7 +154,7 @@ class GridOutput(RompyBaseModel):
         ret = "\tGrid:\n"
         if self.period:
             ret += f"\t\tperiod: {self.period}\n"
-        ret += f"\t\tvariables: {' '.join(self.variables)}\n"
+        ret += f"\tvariables: {' '.join(self.variables)}\n"
         return ret
 
 
@@ -165,8 +167,8 @@ class SpecOutput(RompyBaseModel):
     def __str__(self):
         ret = "\tSpec\n"
         if self.period:
-            ret += f"\t\tperiod: {self.period}\n"
-        ret += f"\t\tlocations: {self.locations}\n"
+            ret += f"\tperiod: {self.period}\n"
+        ret += f"\tlocations: {self.locations}\n"
         return ret
 
 
@@ -207,7 +209,7 @@ class Outputs(RompyBaseModel):
         return ret
 
     def __str__(self):
-        ret = "Outputs:\n"
+        ret = ""
         ret += f"{self.grid}"
         ret += f"{self.spec}"
         return ret
@@ -232,8 +234,7 @@ class SwanConfig(BaseConfig):
     spectra_file: str = Field(
         "boundary.spec", description="The spectra file for SWAN.")
     template: str = Field(
-        DEFAULT_TEMPLATE, description="The template for SWAN."
-    )
+        DEFAULT_TEMPLATE, description="The template for SWAN.")
     _datefmt: str = Field(
         "%Y%m%d.%H%M%S", description="The date format for SWAN.")
     # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
@@ -264,18 +265,17 @@ class SwanConfig(BaseConfig):
         ret["grid"] = f"{self.domain}"
         ret["forcing"] = self.forcing.get(self.grid, runtime)
         ret["physics"] = f"{self.physics.cmd}"
-        # TODO raf to complete boundary bit
-        ret["remaining"] = f"BOUND NEST '{self.spectra_file}' CLOSED\n"
         ret["outputs"] = self.outputs.cmd
         ret["output_locs"] = self.outputs.spec.locations
         return ret
 
     def __str__(self):
-        ret = f"grid: {self.grid}\n"
-        ret += f"spectral_resolution: {self.spectral_resolution}\n"
-        ret += f"forcing: {self.forcing}\n"
-        ret += f"physics: {self.physics}\n"
-        ret += f"outputs: {self.outputs}\n"
+        ret = f"grid: \n\t{self.grid}\n"
+        ret += f"spectral_resolution: \n\t{self.spectral_resolution}\n"
+        ret += f"forcing: \n{self.forcing}\n"
+        ret += f"physics: \n\t{self.physics}\n"
+        ret += f"outputs: \n{self.outputs}\n"
+        ret += f"template: \n\t{self.template}\n"
         return ret
 
 
