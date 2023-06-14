@@ -108,7 +108,8 @@ class SwanPhysics(RompyBaseModel):
     """Container class represting configuraable SWAN physics options"""
 
     friction: str = Field(
-        default="MAD", description="The type of friction, either 'MAD' or 'TODO'."
+        default="MAD",
+        description="The type of friction, either MAD, COLL, JON or RIP",
     )
     friction_coeff: float = Field(
         default=0.1,
@@ -117,7 +118,7 @@ class SwanPhysics(RompyBaseModel):
 
     @validator("friction")
     def validate_friction(cls, v):
-        if v not in ["MAD", "OTHER", "ANDANOTHER"]:
+        if v not in ["JON", "COLL", "MAD" "RIP"]:
             raise ValueError(
                 "friction must be one of MAD, OTHER or ANDANOTHER"
             )  # TODO Raf to add actual friction options
@@ -276,8 +277,6 @@ class SwanConfig(BaseConfig):
         ret["grid"] = f"{self.domain}"
         ret["forcing"] = self.forcing.get(self.grid, runtime)
         ret["physics"] = f"{self.physics.cmd}"
-        # TODO raf to complete boundary bit
-        # ret["remaining"] = f"BOUND NEST '{self.spectra_file}' CLOSED\n"
         ret["outputs"] = self.outputs.cmd
         ret["output_locs"] = self.outputs.spec.locations
         return ret
