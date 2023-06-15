@@ -14,9 +14,6 @@ from rompy.swan.subcomponents.physics import (
     ST6C3,
     ST6C4,
     ST6C5,
-    QUADRUPL,
-    CONSTANT,
-    BKD,
     JONSWAP,
     COLLINS,
     MADSEN,
@@ -400,6 +397,148 @@ class WCAPAB(WESTHUYSEN):
 
 
 #======================================================================================
+# QUADRUPL
+#======================================================================================
+class QUADRUPL(BaseComponent):
+    """Nonlinear quadruplet wave interactions.
+
+    `QUADRUPL [iquad] [lambda] [Cnl4] [Csh1] [Csh2] [Csh3]`
+
+    With this option the user can influence the computation of nonlinear quadruplet
+    wave interactions which are usually included in the computations. Can be
+    de-activated with command OFF QUAD. Note that the DIA approximation of the
+    quadruplet interactions is a poor approximation for long-crested waves and
+    frequency resolutions that are deviating much more than 10% (see command CGRID).
+    Note that DIA is usually updated per sweep, either semi-implicit (`iquad = 1`) or
+    explicit (`iquad = 2`). However, when ambient current is included, the bounds of
+    the directional sector within a sweep may be different for each frequency bin
+    (particularly the higher frequencies are modified by the current). So there may be
+    some overlap of frequency bins between the sweeps, implying non-conservation of
+    wave energy. To prevent this the user is advised to choose the integration of DIA
+    per iteration instead of per sweep, i.e. `iquad = 3`. If you want to speed up your
+    computation a bit more, than the choice `iquad = 8` is a good choice.
+
+    """
+
+    model_type: Literal["quadrupl"] = Field(
+        default="quadrupl", description="Model type discriminator"
+    )
+    iquad: Literal[1, 2, 3, 8, 4, 51, 52, 53] = Field(
+        default=2,
+        description=(
+            "Numerical procedures for integrating the quadruplets: 1 = semi-implicit "
+            "per sweep, 2 = explicit per sweep, 3 = explicit per iteration, "
+            "8 = explicit per iteration, but with a more efficient implementation, "
+            "4 = multiple DIA, 51 = XNL (deep water transfer), 52 = XNL (deep water "
+            "transfer with WAM depth scaling), 53  XNL (finite depth transfer)"
+        ),
+    )
+    clambda: Optional[float] = Field(
+        alias="lambda",
+        description="Coefficient for quadruplet configuration in case of DIA (SWAN default: 0.25)",
+    )
+    cn14: Optional[float] = Field(
+        description="Proportionality coefficient for quadruplet interactions in case of DIA (SWAN default: 3.0e7",
+    )
+    csh1: Optional[float] = Field(
+        description="Coefficient for shallow water scaling in case of DIA (SWAN default: 5.5",
+    )
+    csh2: Optional[float] = Field(
+        description="Coefficient for shallow water scaling in case of DIA (SWAN default: 0.833333",
+    )
+    csh3: Optional[float] = Field(
+        description="Coefficient for shallow water scaling in case of DIA (SWAN default: -1.25",
+    )
+
+    def cmd(self) -> str:
+        repr = f"QUADRUPL iquad={self.iquad}"
+        if self.clambda is not None:
+            repr += f" lambda={self.clambda}"
+        if self.cn14 is not None:
+            repr += f" Cn14={self.cn14}"
+        if self.csh1 is not None:
+            repr += f" Csh1={self.csh1}"
+        if self.csh2 is not None:
+            repr += f" Csh2={self.csh2}"
+        if self.csh3 is not None:
+            repr += f" Csh3={self.csh3}"
+        return repr
+
+
+#======================================================================================
+# BREAKING
+#======================================================================================
+class BREAKCONSTANT(BaseComponent):
+    """Constant wave breaking index.
+
+    `BREAKING CONSTANT [alpha] [gamma]`
+
+    Indicates that a constant breaker index is to be used.
+
+    """
+    model_type: Literal["constant"] = Field(
+        default="constant", description="Model type discriminator"
+    )
+    alpha: Optional[float] = Field(
+        description="Proportionality coefficient of the rate of dissipation (SWAN default: 1.0)"
+    )
+    gamma: Optional[float] = Field(
+        description="The breaker index, i.e. the ratio of maximum individual wave height over depth (SWAN default: 0.73)"
+    )
+
+    def cmd(self) -> str:
+        repr = "BREAKING CONSTANT"
+        if self.alpha is not None:
+            repr += f" alpha={self.alpha}"
+        if self.gamma is not None:
+            repr += f" gamma={self.gamma}"
+        return repr
+
+
+class BREAKBKD(BaseComponent):
+    """Variable wave breaking index.
+
+    `BREAKING BKD [alpha] [gamma0] [a1] [a2] [a3]`
+
+    Indicates that the breaker index scales with both the bottom slope ($beta$) and the
+    dimensionless depth (kd).
+
+    """
+    model_type: Literal["bkd"] = Field(
+        default="bkd", description="Model type discriminator"
+    )
+    alpha: Optional[float] = Field(
+        description="Proportionality coefficient of the rate of dissipation (SWAN default: 1.0)"
+    )
+    gamma0: Optional[float] = Field(
+        description="The reference $gamma$ for horizontal slopes (SWAN default: 0.54)"
+    )
+    a1: Optional[float] = Field(
+        description="First tunable coefficient for the breaker index (SWAN default: 7.59)"
+    )
+    a2: Optional[float] = Field(
+        description="Second tunable coefficient for the breaker index (SWAN default: -8.06)"
+    )
+    a3: Optional[float] = Field(
+        description="Third tunable coefficient for the breaker index (SWAN default: 8.09)"
+    )
+
+    def cmd(self) -> str:
+        repr = "BREAKING BKD"
+        if self.alpha is not None:
+            repr += f" alpha={self.alpha}"
+        if self.gamma0 is not None:
+            repr += f" gamma0={self.gamma0}"
+        if self.a1 is not None:
+            repr += f" a1={self.a1}"
+        if self.a2 is not None:
+            repr += f" a2={self.a2}"
+        if self.a3 is not None:
+            repr += f" a3={self.a3}"
+        return repr
+
+
+#======================================================================================
 # Physics group component
 #======================================================================================
 class PHYSICS(BaseComponent):
@@ -430,7 +569,7 @@ class PHYSICS(BaseComponent):
     quadrupl: Optional[QUADRUPL] = Field(
         description="Quadruplet interactions specification",
     )
-    breaking: CONSTANT | BKD | None = Field(
+    breaking: BREAKCONSTANT | BREAKBKD | None = Field(
         description="Wave breaking specification",
         discriminator="model_type",
     )
