@@ -103,6 +103,9 @@ physics:
   #     model_type: westhuysen
   sswell:
     model_type: zieger
+  negatinp:
+    model_type: negatinp
+    rdcoef: 0.1
   wcapping:
     model_type: wcapab
     cds2: 5.0e-5
