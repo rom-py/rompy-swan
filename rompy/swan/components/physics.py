@@ -668,6 +668,292 @@ class RIPPLES(BaseComponent):
 
 
 #======================================================================================
+# TRIAD
+#======================================================================================
+class TRIAD(BaseComponent):
+    """Wave triad interactions.
+
+    `TRIAD`
+
+    With this command the user can activate the triad wave-wave interactions. If this
+    command is not used, SWAN will not account for triads.
+
+    """
+    model_type: Literal["triad"] = Field(
+        default="triad", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"TRIAD"
+
+
+#======================================================================================
+# VEGETATION
+#======================================================================================
+class VEGETATION(BaseComponent):
+    """Vegetation dumping.
+
+    `VEGETATION`
+
+    With this command the user can activate wave damping due to vegetation based on the
+    Dalrymple's formula (1984) as implemented by Suzuki et al. (2011). This damping is
+    uniform over the wave frequencies. An alternative is the frequency-dependent
+    (canopy) dissipation model of Jacobsen et al. (2019). If this command is not used,
+    SWAN will not account for vegetation effects.
+
+    References
+    ----------
+    Dalrymple, R.A., 1984. Water wave interactions with vegetation: Part 1. A fully
+    nonlinear theory. Journal of Fluid Mechanics, 1984, 140, 197-229.
+
+    """
+    model_type: Literal["vegetation"] = Field(
+        default="vegetation", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"VEGETATION"
+
+
+#======================================================================================
+# MUD
+#======================================================================================
+class MUD(BaseComponent):
+    """Mud dumping.
+
+    `MUD`
+
+    With this command the user can activate wave damping due to mud based on Ng (2000).
+    If this command or the commands INPGRID MUDLAY and READINP MUDLAY are not used,
+    SWAN will not account for muddy bottom effects.
+
+    References
+    ----------
+    Ng, C.O., 2000. Wave attenuation in mudflat and salt marsh vegetation. Journal of
+    Coastal Research, 2000, 16, 379-389.
+
+    """
+    model_type: Literal["mud"] = Field(
+        default="mud", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"MUD"
+
+
+#======================================================================================
+# SICE
+#======================================================================================
+class SICE(BaseComponent):
+    """Sea ice dissipation.
+
+    `SICE`
+
+    Using this command, the user activates a sink term to represent the dissipation of
+    wave energy by sea ice. The R19 method is empirical/parametric: a polynomial based
+    on wave frequency (Rogers, 2019). This polynomial (in 1/m) has seven dimensional
+    coefficients; see Scientific/Technical documentation for details. If this command
+    is not used, SWAN will not account for sea ice effects.
+
+    References
+    ----------
+    Doble, M.J., Bidlot, J.R., Wadhams, P., 2015. Sea ice and ocean wave modelling in
+    the Arctic: Interactions between waves and ice in a coupled atmosphere-wave-ice
+    model. Ocean Modelling, 2015, 96, 141-155.
+
+    Meylan, M.H., Bennetts, L.G., Thomas, T., 2014. Dissipation of ocean waves by sea
+    ice. Geophysical Research Letters, 2014, 41, 7561-7568.
+
+    Meylan, M.H., Bennetts, L.G., Williams, T.D., 2018. Wave attenuation by pancake
+    ice. Journal of Geophysical Research: Oceans, 2018, 123, 1-16.
+
+    Rogers, W.E., 2019. Wave attenuation by sea ice: A new parametric model. Journal of
+    Geophysical Research: Oceans, 2019, 124, 1-15.
+
+    """
+    model_type: Literal["sice"] = Field(
+        default="sice", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"SICE"
+
+
+#======================================================================================
+# TURBULENCE
+#======================================================================================
+class TURBULENCE(BaseComponent):
+    """Turbulent viscosity.
+
+    `TURBULENCE`
+
+    With this optional command the user can activate turbulent viscosity. This physical
+    effect is also activated by reading values of the turbulent viscosity using the
+    `READGRID TURB` command, but then with the default value of `ctb`. The command
+    `READGRID TURB` is necessary if this command `TURB` is used since the value of the
+    viscosity is assumed to vary over space.
+
+    """
+    model_type: Literal["turbulence"] = Field(
+        default="turbulence", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"TURBULENCE"
+
+
+#======================================================================================
+# BRAGG
+#======================================================================================
+class BRAGG(BaseComponent):
+    """Bragg scattering.
+
+    `BRAGG`
+
+    Using this optional command, the user activates a source term to represent the
+    scattering of waves due to changes in the small-scale bathymetry based on the
+    theory of Ardhuin and Herbers (2002). If this command is not used, SWAN will not
+    account for Bragg scattering.
+
+    """
+    model_type: Literal["bragg"] = Field(
+        default="bragg", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"BRAGG"
+
+
+#======================================================================================
+# LIMITER
+#======================================================================================
+class LIMITER(BaseComponent):
+    """Physics limiter.
+
+    `LIMITER`
+
+    With this command the user can de-activate permanently the quadruplets when
+    the actual Ursell number exceeds `ursell`. Moreover, as soon as the actual
+    fraction of breaking waves exceeds `qb` then the action limiter will not be
+    used in case of decreasing action density.
+
+    """
+    model_type: Literal["limiter"] = Field(
+        default="limiter", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"LIMITER"
+
+
+#======================================================================================
+# OBSTACLE
+#======================================================================================
+class OBSTACLE(BaseComponent):
+    """Sub-grid obstacle.
+
+    `OBSTACLE`
+
+    With this optional command the user provides the characteristics of a (line
+    of) sub-grid obstacle(s) through which waves are transmitted or against which
+    waves are reflected (possibly both at the same time). The obstacle is sub-grid
+    in the sense that it is narrow compared to the spatial meshes; its length should
+    be at least one mesh length.
+
+    """
+    model_type: Literal["obstacle"] = Field(
+        default="obstacle", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"OBSTACLE"
+
+
+#======================================================================================
+# OBSTACLE FIG
+#======================================================================================
+class OBSTACLE_FIG(BaseComponent):
+    """Obstacle for free infragravity radiation.
+
+    `OBSTACLE FIG`
+
+    With this optional command the user specifies the obstacles along which the
+    free infra-gravity (FIG) energy is radiated. By placing the obstacles close to
+    the shorelines SWAN will include the FIG source term along the coastlines
+    according to the parametrization of Ardhuin et al. (2014).
+
+    References
+    ----------
+    Ardhuin, F., A. Rogers, A. Babanin, L. Filipot, A. Magne, A. Roland, and P.
+    van der Westhuysen, Semiempirical Dissipation Source Functions for Ocean Waves.
+    Part I: Definition, Calibration, and Validation, J. Phys. Oceanogr., 44(9),
+    2352-2368, 2014.
+
+    """
+    model_type: Literal["obstacle_fig"] = Field(
+        default="obstacle_fig", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"OBSTACLE FIG"
+
+
+#======================================================================================
+# SETUP
+#======================================================================================
+class SETUP(BaseComponent):
+    """Wave setup.
+
+    `SETUP`
+
+    """
+    model_type: Literal["setup"] = Field(
+        default="setup", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"SETUP"
+
+
+#======================================================================================
+# DIFFRACTION
+#======================================================================================
+class DIFFRACTION(BaseComponent):
+    """Wave diffraction.
+
+    `DIFFRACTION`
+
+    """
+    model_type: Literal["diffraction"] = Field(
+        default="diffraction", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"DIFFRACTION"
+
+
+#======================================================================================
+# SURFBEAT
+#======================================================================================
+class SURFBEAT(BaseComponent):
+    """Surfbeat.
+
+    `SURFBEAT`
+
+    """
+    model_type: Literal["surfbeat"] = Field(
+        default="surfbeat", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"SURFBEAT"
+
+
+#======================================================================================
+# SCAT
+#======================================================================================
+class SCAT(BaseComponent):
+    """Scattering.
+
+    `SCAT`
+
+    """
+    model_type: Literal["scat"] = Field(
+        default="scat", description="Model type discriminator"
+    )
+    def cmd(self) -> str:
+        return f"SCAT"
+
+
+#======================================================================================
 # Physics group component
 #======================================================================================
 class PHYSICS(BaseComponent):
