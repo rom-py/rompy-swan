@@ -194,13 +194,18 @@ class BIN(BaseSubComponent):
 
 
 class SHAPESPEC(BaseSubComponent):
-    """SWAN BOUND SHAPESPEC subcomponent.
+    """Spectral shape specification.
 
     `BOUND SHAPESPEC JONSWAP|PM|GAUSS|BIN|TMA PEAK|MEAN DSPR [POWER|DEGREES]`
 
     This command BOUND SHAPESPEC defines the shape of the spectra (both in frequency
     and direction) at the boundary of the computational grid in case of parametric
     spectral input.
+
+    Notes
+    -----
+    While technically a component `BOUND SHAPESPEC`, this is only intended to be used
+    as a subcomponent of the `BOUNDSPEC` component.
 
     """
 
