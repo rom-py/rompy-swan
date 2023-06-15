@@ -21,32 +21,36 @@ TIME_FORMATS = {
 
 
 class NONSTATIONARY(BaseSubComponent):
-    """SWAN Nonstationary subcomponent.
+    """SWAN Nonstationary specification.
 
     `NONSTATIONARY [tbeg] [delt] SEC|MIN|HR|DAY [tend]`
 
     Notes
     -----
     Format to render time specification:
-    - 1 : ISO-notation 19870530.153000
-    - 2 : (as in HP compiler) '30-May-87 15:30:00'
-    - 3 : (as in Lahey compiler) 05/30/87.15:30:00
-    - 4 : 15:30:00
-    - 5 : 87/05/30 15:30:00'
-    - 6 : as in WAM 8705301530
+
+    * 1: ISO-notation 19870530.153000
+    * 2: (as in HP compiler) '30-May-87 15:30:00'
+    * 3: (as in Lahey compiler) 05/30/87.15:30:00
+    * 4: 15:30:00
+    * 5: 87/05/30 15:30:00'
+    * 6: as in WAM 8705301530
 
     The datetime types can be specified as:
-    - existing datetime object
-    - int or float, assumed as Unix time, i.e. seconds (if >= -2e10 or <= 2e10) or
+
+    * existing datetime object
+    * int or float, assumed as Unix time, i.e. seconds (if >= -2e10 or <= 2e10) or
       milliseconds (if < -2e10 or > 2e10) since 1 January 1970.
-    - ISO 8601 time string.
+    * ISO 8601 time string.
 
     The timedelta type can be specified as:
-    - existing timedelta object
-    - int or float, assumed as seconds
-    - ISO 8601 duration string, following formats work:
-      [-][DD ][HH:MM]SS[.ffffff]
-      [±]P[DD]DT[HH]H[MM]M[SS]S (ISO 8601 format for timedelta)
+
+    * existing timedelta object
+    * int or float, assumed as seconds
+    * ISO 8601 duration string, following formats work:
+
+      - `[-][DD ][HH:MM]SS[.ffffff]`
+      - `[±]P[DD]DT[HH]H[MM]M[SS]S` (ISO 8601 format for timedelta)
 
     """
 

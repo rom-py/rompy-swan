@@ -4,7 +4,7 @@ from pathlib import Path
 from pydantic import Field, constr
 
 from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.shape import SHAPESPEC
+from rompy.swan.subcomponents.spectrum import SHAPESPEC
 from rompy.swan.subcomponents.boundary import (
     DEFAULT,
     ZERO,
@@ -25,7 +25,7 @@ HERE = Path(__file__).parent
 
 
 class INITIAL(BaseComponent):
-    """SWAN BOUNDSPEC boundary component.
+    """Initial conditions.
 
     `INITIAL DEFAULT|ZERO|PAR|HOTSTART`
 
@@ -50,7 +50,7 @@ class INITIAL(BaseComponent):
 
 
 class BOUNDSPEC(BaseComponent):
-    """SWAN BOUNDSPEC boundary component.
+    """Parametric or spectra boundary along sides or segments.
 
     `BOUNDSPEC SIDE|SEGMENT ... CONSTANT|VARIABLE PAR|FILE ...`
 
@@ -88,7 +88,7 @@ class BOUNDSPEC(BaseComponent):
 
 
 class BOUNDNEST1(BaseComponent):
-    """Boundary spectra from a coarser SWAN nest at all sides of computational domain.
+    """Boundary spectra from a coarser SWAN nest.
 
     `BOUNDNEST1 NEST 'fname' CLOSED|OPEN`
 
@@ -132,7 +132,7 @@ class BOUNDNEST1(BaseComponent):
 
 
 class BOUNDNEST2(BaseComponent):
-    """Boundary spectra from a coarser SWAN nest at all sides of computational domain.
+    """Boundary spectra from WAM.
 
     `BOUNDNEST2 WAMNEST 'fname' FREE|UNFORMATTED (CRAY|WKSTAT) [xgc] [ygc] [lwdate]`
 
@@ -235,7 +235,7 @@ class BOUNDNEST2(BaseComponent):
 
 
 class BOUNDNEST3(BaseComponent):
-    """Boundary spectra from a coarser SWAN nest at all sides of computational domain.
+    """Boundary spectra from WAVEWATCHIII.
 
     `BOUNDNEST3 WW3 'fname' FREE|UNFORMATTED CLOSED|OPEN [xgc] [ygc]`
 

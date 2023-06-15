@@ -213,8 +213,8 @@ INPGRID_TYPES = Annotated[
 class INPGRIDS(BaseComponent):
     """SWAN input grids group component.
 
-    This group component defines a list of input grid components. The render method is
-    overridden to allow rendering a list of components instead of a single component.
+    This group component is a convenience to allow defining and rendering
+    a list of input grid components.
 
     """
 
