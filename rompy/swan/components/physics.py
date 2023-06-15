@@ -671,7 +671,14 @@ class RIPPLES(BaseComponent):
 # Physics group component
 #======================================================================================
 class PHYSICS(BaseComponent):
-    """Physics component."""
+    """Physics group component.
+
+    The physics group component is a convenience to allow specifying several individual
+    components in a single command and check for consistency between them.
+
+    TODO: Implement OFF command
+
+    """
 
     model_type: Literal["physics"] = Field(
         default="physics", description="Model type discriminator"
