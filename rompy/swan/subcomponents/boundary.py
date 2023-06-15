@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class SIDE(BaseSubComponent):
-    """SWAN SIDE BOUNDSPEC subcomponent.
+    """Boundary over one side of computational domain.
 
     `SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE`
 
@@ -36,7 +36,7 @@ class SIDE(BaseSubComponent):
 
 
 class SEGMENTXY(BaseSubComponent):
-    """SWAN SEGMENT XY BOUNDSPEC subcomponent.
+    """Boundary over a segment defined from point coordinates.
 
     `SEGMENT XY < [x] [y] >`
 
@@ -68,7 +68,7 @@ class SEGMENTXY(BaseSubComponent):
 
 
 class SEGMENTIJ(BaseSubComponent):
-    """SWAN SEGMENT IJ BOUNDSPEC subcomponent.
+    """Boundary over a segment defined from grid indices.
 
     `SEGMENT IJ < [i] [j] >`
 
@@ -94,7 +94,7 @@ class SEGMENTIJ(BaseSubComponent):
 
 
 class PAR(BaseSubComponent):
-    """Parameter subcomponent.
+    """Spectral parameters.
 
     `PAR [hs] [per] [dir] [dd]`
 
@@ -136,7 +136,7 @@ class PAR(BaseSubComponent):
 
 
 class CONSTANTPAR(PAR):
-    """Constant parameter subcomponent.
+    """Constant spectral parameters.
 
     `CONSTANT PAR [hs] [per] [dir] [dd]`
 
@@ -152,7 +152,7 @@ class CONSTANTPAR(PAR):
 
 
 class VARIABLEPAR(BaseSubComponent):
-    """Variable parameter subcomponent.
+    """Variable spectral parameter.
 
     `VARIABLE PAR < [len] [hs] [per] [dir] [dd] >`
 
@@ -218,7 +218,7 @@ class VARIABLEPAR(BaseSubComponent):
 
 
 class CONSTANTFILE(BaseSubComponent):
-    """Constant file subcomponent.
+    """Constant file specification.
 
     `CONSTANT FILE 'fname' [seq]`
 
@@ -273,7 +273,7 @@ class CONSTANTFILE(BaseSubComponent):
 
 
 class VARIABLEFILE(BaseSubComponent):
-    """Variable file subcomponent.
+    """Variable file specification.
 
     `VARIABLE FILE < [len] 'fname' [seq] >`
 
@@ -352,7 +352,7 @@ class VARIABLEFILE(BaseSubComponent):
 
 
 class DEFAULT(BaseSubComponent):
-    """Default initial conditions subcomponent.
+    """Default initial conditions.
 
     `DEFAULT`
 
@@ -371,7 +371,7 @@ class DEFAULT(BaseSubComponent):
 
 
 class ZERO(BaseSubComponent):
-    """ZERO initial conditions subcomponent.
+    """Zero initial conditions.
 
     `ZERO`
 
@@ -387,7 +387,7 @@ class ZERO(BaseSubComponent):
 
 
 class HOTSINGLE(BaseSubComponent):
-    """SWAN Hotstart single subcomponent.
+    """Hotstart single initial conditions.
 
     `HOTSTART SINGLE fname='fname' FREE|UNFORMATTED`
 
@@ -424,7 +424,7 @@ class HOTSINGLE(BaseSubComponent):
 
 
 class HOTMULTIPLE(BaseSubComponent):
-    """SWAN Hotstart multiple subcomponent.
+    """Hotstart multiple initial conditions.
 
     Initial wave field is read from file; this file was generated in a previous SWAN
     run by means of the HOTFILE command. If the previous run was nonstationary,
