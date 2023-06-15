@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class PROJECT(BaseComponent):
-    """SWAN Project component.
+    """SWAN Project.
 
     `PROJECT 'name' 'nr' 'title' 'title2 'title3'`
 
@@ -57,7 +57,7 @@ class PROJECT(BaseComponent):
 
 
 class SET(BaseComponent):
-    """SWAN SET component.
+    """SWAN set.
 
     `SET [level] [nor] [depmin] [maxmes] [maxerr] [grav] [rho] [cdcap] &`
         `[inrhog] [hsrerr] NAUTICAL|CARTESIAN [pwtail] [froudmax] [icewind]`
@@ -236,7 +236,7 @@ class SET(BaseComponent):
 
 
 class MODE(BaseComponent):
-    """SWAN Mode component.
+    """SWAN Mode.
 
     `MODE STATIONARY|NONSTATIONARY TWODIMENSIONAL|ONEDIMENSIONAL`
 
@@ -271,7 +271,7 @@ class MODE(BaseComponent):
 
 
 class COORDINATES(BaseComponent):
-    """SWAN Coordinates component.
+    """SWAN Coordinates.
 
     `COORDINATES CARTESIAN|SPHERICAL REPEATING`
 
