@@ -46,7 +46,7 @@ SOURCE_TERMS = Union[
 # Wave generation GEN1 | GEN2 | GEN3
 #======================================================================================
 class GEN1(BaseComponent):
-    """Physics component GEN1.
+    """First generation source terms GEN1.
 
     `GEN1 [cf10] [cf20] [cf30] [cf40] [edmlpm] [cdrag] [umin] [cfpm]`
 
@@ -105,7 +105,7 @@ class GEN1(BaseComponent):
 
 
 class GEN2(GEN1):
-    """Physics component GEN2.
+    """Second generation source terms GEN2.
 
     `GEN2 [cf10] [cf20] [cf30] [cf40] [cf50] [cf60] [edmlpm] [cdrag] [umin] [cfpm]`
 
@@ -150,7 +150,7 @@ class GEN2(GEN1):
 
 
 class GEN3(BaseComponent):
-    """Physics component GEN3.
+    """Third generation source terms GEN3.
 
     `GEN3 JANSSEN|KOMEN|WESTHUYSEN|ST6 (...) AGROW [a]`
 
@@ -179,10 +179,10 @@ class GEN3(BaseComponent):
 # Swell dissipation SSWELL
 #======================================================================================
 class NEGATINP(BaseComponent):
-    """Nonbreaking dissipation of Young et al. (2013) updated by Zieger et al. (2015).
+    """Negative wind input.
 
-    With this optional command the user activates negative wind input. This is intended
-    only for use with non-breaking swell dissipation SSWELL ZIEGER. Parameter `rdcoef`
+    With this optional command the user activates negative wind input. **This is intended
+    only for use with non-breaking swell dissipation SSWELL ZIEGER**. Parameter `rdcoef`
     is a fraction between 0 and 1, representing the strength of negative wind input. As
     an example, with [rdcoef]=0.04, for a spectral bin that is opposed to the wind
     direction, the wind input factor W(k, θ) is negative, and its magnitude is 4% of
@@ -289,7 +289,9 @@ class ARDHUIN(SSWELL):
 
 
 class ZIEGER(SSWELL):
-    """Nonbreaking dissipation of Young et al. (2013) updated by Zieger et al. (2015).
+    """Nonbreaking dissipation of Zieger et al. (2015).
+
+    Swell dissipation of Young et al. (2013) updated by Zieger et al. (2015).
 
     References
     ----------
