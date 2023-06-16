@@ -443,8 +443,7 @@ class QUADRUPL(BaseComponent):
             "transfer with WAM depth scaling), 53  XNL (finite depth transfer)"
         ),
     )
-    clambda: Optional[float] = Field(
-        alias="lambda",
+    lambd: Optional[float] = Field(
         description="Coefficient for quadruplet configuration in case of DIA (SWAN default: 0.25)",
     )
     cn14: Optional[float] = Field(
@@ -462,8 +461,8 @@ class QUADRUPL(BaseComponent):
 
     def cmd(self) -> str:
         repr = f"QUADRUPL iquad={self.iquad}"
-        if self.clambda is not None:
-            repr += f" lambda={self.clambda}"
+        if self.lambd is not None:
+            repr += f" lambda={self.lambd}"
         if self.cn14 is not None:
             repr += f" Cn14={self.cn14}"
         if self.csh1 is not None:
@@ -1010,7 +1009,7 @@ class PHYSICS(BaseComponent):
         discriminator="model_type",
     )
     friction: JONSWAP | COLLINS | MADSEN | RIPPLES | None = Field(
-        default=JONSWAP(),
+        default=None,
         description="Bottom friction specification",
     )
 
