@@ -4,7 +4,8 @@ from pathlib import Path
 from pydantic import validator, root_validator, Field
 from typing import Literal, Optional, Union
 
-from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
+from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
+                        TimeRange)
 from rompy.swan.boundary import DataBoundary
 from rompy.swan.components import base, cgrid, inpgrid, boundary, startup, physics
 
@@ -54,10 +55,8 @@ class ForcingData(RompyBaseModel):
     bottom: SwanDataGrid | None = Field(
         None, description="Bathymetry data for SWAN"
     )  # TODO Raf should probably be required?
-    wind: SwanDataGrid | None = Field(
-        None, description="The wind data for SWAN.")
-    current: SwanDataGrid | None = Field(
-        None, description="The current data for SWAN.")
+    wind: SwanDataGrid | None = Field(None, description="The wind data for SWAN.")
+    current: SwanDataGrid | None = Field(None, description="The current data for SWAN.")
     boundary: DataBoundary | None = Field(
         None, description="The boundary data for SWAN."
     )
@@ -108,7 +107,7 @@ class SwanPhysics(RompyBaseModel):
     def validate_friction(cls, v):
         if v not in ["JON", "COLL", "MAD" "RIP"]:
             raise ValueError(
-                "friction must be one of MAD, OTHER or ANDANOTHER"
+                "friction must be one of JON, COLL, MAD or RIP"
             )  # TODO Raf to add actual friction options
         return v
 
@@ -219,8 +218,7 @@ class SwanConfig(BaseConfig):
     """SWAN configuration"""
 
     grid: SwanGrid = Field(description="The model grid for the SWAN run")
-    model_type: Literal["swan"] = Field(
-        "swan", description="The model type for SWAN.")
+    model_type: Literal["swan"] = Field("swan", description="The model type for SWAN.")
     spectral_resolution: SwanSpectrum = Field(
         SwanSpectrum(), description="The spectral resolution for SWAN."
     )
@@ -231,12 +229,9 @@ class SwanConfig(BaseConfig):
         SwanPhysics(), description="The physics options for SWAN."
     )
     outputs: Outputs = Field(Outputs(), description="The outputs for SWAN.")
-    spectra_file: str = Field(
-        "boundary.spec", description="The spectra file for SWAN.")
-    template: str = Field(
-        DEFAULT_TEMPLATE, description="The template for SWAN.")
-    _datefmt: str = Field(
-        "%Y%m%d.%H%M%S", description="The date format for SWAN.")
+    spectra_file: str = Field("boundary.spec", description="The spectra file for SWAN.")
+    template: str = Field(DEFAULT_TEMPLATE, description="The template for SWAN.")
+    _datefmt: str = Field("%Y%m%d.%H%M%S", description="The date format for SWAN.")
     # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
 
     @property
