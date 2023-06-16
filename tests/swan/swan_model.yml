@@ -114,7 +114,7 @@ physics:
     cds3: 0.8
   quadrupl:
     iquad: 2
-    lambda: 0.25
+    lambd: 0.25
   breaking:
     model_type: constant
     alpha: 1.0
