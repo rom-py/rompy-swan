@@ -154,7 +154,9 @@ class GEN3(BaseComponent):
         default="gen3", description="Model type discriminator"
     )
     source_terms: SOURCE_TERMS = Field(
-        default=WESTHUYSEN(), description="SWAN source terms to be used"
+        default=WESTHUYSEN(),
+        description="SWAN source terms to be used",
+        discriminator="model_type",
     )
 
     @root_validator
@@ -311,7 +313,7 @@ class ZIEGER(SSWELL):
 #======================================================================================
 # WCAPPING
 #======================================================================================
-class WCAPKOMEN(KOMEN):
+class WCAPKOMEN(BaseComponent):
     """Whitecapping according to Komen (1984).
 
     `WCAPPING KOMEN [cds2] [stpm] [powst] [delta] [powk]`
@@ -331,6 +333,12 @@ class WCAPKOMEN(KOMEN):
     """
     model_type: Literal["wcapkomen"] = Field(
         default="wcapkomen", description="Model type discriminator"
+    )
+    cds2: Optional[float] = Field(
+        description="Coefficient for determining the rate of whitecapping dissipation ($Cds$) (SWAN default: 2.36e-5)"
+    )
+    stpm: Optional[float] = Field(
+        description="Value of the wave steepness for a Pierson-Moskowitz spectrum ($s^2_{PM}$) (SWAN default: 3.02e-3)"
     )
     powst: Optional[float] = Field(
         description="Power of steepness normalized with the wave steepness of a Pierson-Moskowitz spectrum (SWAN default: 2)"
@@ -357,10 +365,10 @@ class WCAPKOMEN(KOMEN):
         return repr
 
 
-class WCAPAB(WESTHUYSEN):
+class WCAPAB(BaseComponent):
     """Whitecapping according to Alves and Banner (2003).
 
-    `WCAPPING AB [cds2] [br] [cds3]`
+    `WCAPPING AB [cds2] [br] CURRENT [cds3]`
 
     References
     ----------
@@ -370,6 +378,12 @@ class WCAPAB(WESTHUYSEN):
     """
     model_type: Literal["wcapab"] = Field(
         default="wcapab", description="Model type discriminator"
+    )
+    cds2: Optional[float] = Field(
+        description="proportionality coefficient due to Alves and Banner (2003) (SWAN default: 5.0e-5)."
+    )
+    br: Optional[float] = Field(
+        description="Threshold saturation level	(SWAN default: 1.75e-3)"
     )
     current: bool = Field(
         default=False,
