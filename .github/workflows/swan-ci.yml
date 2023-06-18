@@ -7,7 +7,6 @@ on:
       - .github/workflows/swan-ci.yml
     branches:
       - "main"
-      - "docker"
 
 jobs:
   build:
