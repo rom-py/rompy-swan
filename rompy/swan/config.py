@@ -56,7 +56,7 @@ class OutputLocs(RompyBaseModel):
 class ForcingData(RompyBaseModel):
     bottom: SwanDataGrid | None = Field(
         None, description="Bathymetry data for SWAN"
-    )  # TODO Raf should probably be required?
+    )
     wind: SwanDataGrid | None = Field(None, description="The wind data for SWAN.")
     current: SwanDataGrid | None = Field(None, description="The current data for SWAN.")
     boundary: DataBoundary | None = Field(
