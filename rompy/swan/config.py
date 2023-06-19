@@ -43,22 +43,23 @@ class OutputLocs(RompyBaseModel):
     def __repr__(self):
         ret = __class__.__name__ + "\n"
         for coord in self.coords:
-            ret += f"  {coord[0]} {coord[1]}\n"
+            ret += f"  {coord.lat} {coord.lon}\n"
         return ret
 
     def __str__(self):
         ret = ""
         for coord in self.coords:
-            ret += f"  {coord[0]} {coord[1]}\n"
+            ret += f"  {coord.lat} {coord.lon}\n"
         return ret
 
 
 class ForcingData(RompyBaseModel):
     bottom: SwanDataGrid | None = Field(
-        None, description="Bathymetry data for SWAN"
-    )
-    wind: SwanDataGrid | None = Field(None, description="The wind data for SWAN.")
-    current: SwanDataGrid | None = Field(None, description="The current data for SWAN.")
+        None, description="Bathymetry data for SWAN")
+    wind: SwanDataGrid | None = Field(
+        None, description="The wind data for SWAN.")
+    current: SwanDataGrid | None = Field(
+        None, description="The current data for SWAN.")
     boundary: DataBoundary | None = Field(
         None, description="The boundary data for SWAN."
     )
@@ -220,7 +221,8 @@ class SwanConfig(BaseConfig):
     """SWAN configuration"""
 
     grid: SwanGrid = Field(description="The model grid for the SWAN run")
-    model_type: Literal["swan"] = Field("swan", description="The model type for SWAN.")
+    model_type: Literal["swan"] = Field(
+        "swan", description="The model type for SWAN.")
     spectral_resolution: SwanSpectrum = Field(
         SwanSpectrum(), description="The spectral resolution for SWAN."
     )
@@ -231,9 +233,12 @@ class SwanConfig(BaseConfig):
         SwanPhysics(), description="The physics options for SWAN."
     )
     outputs: Outputs = Field(Outputs(), description="The outputs for SWAN.")
-    spectra_file: str = Field("boundary.spec", description="The spectra file for SWAN.")
-    template: str = Field(DEFAULT_TEMPLATE, description="The template for SWAN.")
-    _datefmt: str = Field("%Y%m%d.%H%M%S", description="The date format for SWAN.")
+    spectra_file: str = Field(
+        "boundary.spec", description="The spectra file for SWAN.")
+    template: str = Field(
+        DEFAULT_TEMPLATE, description="The template for SWAN.")
+    _datefmt: str = Field(
+        "%Y%m%d.%H%M%S", description="The date format for SWAN.")
     # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
 
     @property
@@ -299,7 +304,8 @@ class SwanConfigComponents(BaseConfig):
         description="SWAN CGRID component",
         discriminator="model_type",
     )
-    inpgrid: INPGRID_TYPES = Field(default=None, description="SWAN INPGRID components")
+    inpgrid: INPGRID_TYPES = Field(
+        default=None, description="SWAN INPGRID components")
     boundary: BOUNDARY_TYPES = Field(
         default=None,
         description="SWAN BOUNDARY component",
