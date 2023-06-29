@@ -83,7 +83,7 @@ class DatasetWavespectra(Dataset):
         default="wavespectra",
         description="Model type discriminator",
     )
-    uri: str | Path = Field(description="Path to the dataset")
+    dataset: str | Path = Field(description="Path to the dataset")
     reader: str = Field(
         description="Name of the wavespectra reader to use, e.g., read_swan",
     )
@@ -93,7 +93,7 @@ class DatasetWavespectra(Dataset):
     )
 
     def open(self):
-        return getattr(wavespectra, self.reader)(self.uri, **self.kwargs)
+        return getattr(wavespectra, self.reader)(self.dataset, **self.kwargs)
 
 
 class DataBoundary(DataGrid):
@@ -215,14 +215,6 @@ class DataBoundary(DataGrid):
         ds.spec.to_swan(filepath)
         cmd = f"BOUNDNEST1 NEST '{filename}' {self.rectangle.upper()}"
         return cmd
-
-        # Plot the model domain
-        if model_grid:
-            bx, by = model_grid.boundary_points()
-            poly = plt.Polygon(list(zip(bx, by)), facecolor="r", alpha=0.05)
-            ax.add_patch(poly)
-            ax.plot(bx, by, lw=2, color="k")
-        return fig, ax
 
     def plot(self, model_grid=None, cmap="turbo", fscale=10, ax=None, **kwargs):
         return scatter_plot(
