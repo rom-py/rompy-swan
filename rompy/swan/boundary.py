@@ -9,9 +9,15 @@ import wavespectra
 import xarray as xr
 from pydantic import Field, confloat, root_validator
 
-from rompy.core import DataGrid, Dataset, DatasetIntake, DatasetXarray
 from rompy.core.filters import Filter
-from rompy.core.time import TimeRange
+from rompy.core.data import (
+    DataGrid,
+    SourceBase,
+    SourceDataset,
+    SourceOpenDataset,
+    SourceIntake,
+    SourceDatamesh,
+)
 from rompy.core.types import RompyBaseModel
 from rompy.swan.grid import SwanGrid
 
@@ -76,7 +82,7 @@ def find_minimum_distance(points: list[tuple[float, float]]) -> float:
     return min(min_distance, strip_min)
 
 
-class DatasetWavespectra(Dataset):
+class SourceWavespectra(SourceBase):
     """Wavespectra dataset from wavespectra reader."""
 
     model_type: Literal["wavespectra"] = Field(
@@ -113,7 +119,7 @@ class DataBoundary(DataGrid):
     """
 
     id: str = Field(description="Unique identifier for this data source")
-    dataset: DatasetXarray | DatasetIntake | DatasetWavespectra = Field(
+    dataset: SourceDataset | SourceOpenDataset | SourceIntake | SourceDatamesh | SourceWavespectra = Field(
         description="Dataset reader, must return a wavespectra-enabled xarray dataset in the open method",
         discriminator="model_type",
     )
