@@ -100,7 +100,7 @@ class SourceWavespectra(SourceBase):
     def __str__(self) -> str:
         return f"SourceWavespectra(uri={self.uri}, reader={self.reader})"
 
-    def open(self):
+    def _open(self):
         return getattr(wavespectra, self.reader)(self.uri, **self.kwargs)
 
 

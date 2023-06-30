@@ -104,16 +104,7 @@ class SwanDataGrid(DataGrid):
         return f"{inpgrid}\n{readgrid}\n"
 
     def __str__(self):
-        ret = f"{self.id}\n"
-        if self.url:
-            ret += f"\turl: {self.url}\n"
-        if self.path:
-            ret += f"\tpath: {self.path}\n"
-        if self.catalog:
-            ret += f"\tcatalog: {self.catalog}\n"
-            ret += f"\tdataset: {self.dataset}\n"
-            ret += f"\tparams: {self.params}\n"
-        return ret
+        return f"SWANDataGrid {self.id}"
 
 
 def dset_to_swan(
