@@ -1,17 +1,22 @@
 """SWAN boundary classes."""
 import logging
-from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 
 import numpy as np
 import wavespectra
 import xarray as xr
 from pydantic import Field, confloat, root_validator
 
-from rompy.core import DataGrid, Dataset, DatasetIntake, DatasetXarray
 from rompy.core.filters import Filter
-from rompy.core.time import TimeRange
+from rompy.core.data import (
+    DataGrid,
+    SourceBase,
+    SourceDataset,
+    SourceFile,
+    SourceIntake,
+    SourceDatamesh,
+)
 from rompy.core.types import RompyBaseModel
 from rompy.swan.grid import SwanGrid
 
@@ -76,7 +81,7 @@ def find_minimum_distance(points: list[tuple[float, float]]) -> float:
     return min(min_distance, strip_min)
 
 
-class DatasetWavespectra(Dataset):
+class SourceWavespectra(SourceBase):
     """Wavespectra dataset from wavespectra reader."""
 
     model_type: Literal["wavespectra"] = Field(
@@ -92,8 +97,20 @@ class DatasetWavespectra(Dataset):
         description="Keyword arguments to pass to wavespectra.read_swan",
     )
 
-    def open(self):
+    def __str__(self) -> str:
+        return f"SourceWavespectra(uri={self.uri}, reader={self.reader})"
+
+    def _open(self):
         return getattr(wavespectra, self.reader)(self.uri, **self.kwargs)
+
+
+BOUNDARY_SOURCE_TYPES = Union[
+    SourceDataset,
+    SourceFile,
+    SourceIntake,
+    SourceDatamesh,
+    SourceWavespectra,
+]
 
 
 class DataBoundary(DataGrid):
@@ -110,27 +127,42 @@ class DataBoundary(DataGrid):
     mask areas but could cause boundary issues when on an open boundary location. To
     avoid this either use `nearest` or increase `tolerance` to include more neighbours.
 
+    TODO: Break this into a core and a swan specific class.
+    TODO: Allow specifying resolutions along x and y instead of a single value.
+
     """
 
     id: str = Field(description="Unique identifier for this data source")
-    dataset: DatasetXarray | DatasetIntake | DatasetWavespectra = Field(
-        description="Dataset reader, must return a wavespectra-enabled xarray dataset in the open method",
+    source: BOUNDARY_SOURCE_TYPES = Field(
+        description=(
+            "Dataset source reader, must return a wavespectra-enabled "
+            "xarray dataset in the open method"
+        ),
         discriminator="model_type",
     )
     spacing: Optional[float] = Field(
-        description="Spacing between boundary points, by default defined as the minimum distance between points in the dataset",
+        description=(
+            "Spacing between boundary points, by default defined as the minimum "
+            "distance between points in the dataset"
+        ),
     )
     sel_method: Literal["idw", "nearest"] = Field(
         default="idw",
-        description="Wavespectra method to use for selecting boundary points from the dataset",
+        description=(
+            "Wavespectra method to use for selecting boundary points from the dataset"
+        ),
     )
     tolerance: confloat(ge=0) = Field(
         default=1.0,
-        description="Wavespectra tolerance for selecting boundary points from the dataset",
+        description=(
+        "Wavespectra tolerance for selecting boundary points from the dataset"
+        ),
     )
     rectangle: Literal["closed", "open"] = Field(
         default="closed",
-        description="Defines whether boundary is defined over an closed or open rectangle",
+        description=(
+            "Defines whether boundary is defined over an closed or open rectangle"
+        ),
     )
     filter: Optional[Filter] = Field(
         default=Filter(),
@@ -139,11 +171,11 @@ class DataBoundary(DataGrid):
 
     @root_validator
     def assert_has_wavespectra_accessor(cls, values):
-        dataset = values.get("dataset")
-        if dataset is not None:
-            dset = dataset.open()
+        source = values.get("source")
+        if source is not None:
+            dset = source.open()
             if not hasattr(dset, "spec"):
-                raise ValueError(f"Wavespectra compatible dataset is required")
+                raise ValueError(f"Wavespectra compatible source is required")
         return values
 
     @property
@@ -215,14 +247,6 @@ class DataBoundary(DataGrid):
         ds.spec.to_swan(filepath)
         cmd = f"BOUNDNEST1 NEST '{filename}' {self.rectangle.upper()}"
         return cmd
-
-        # Plot the model domain
-        if model_grid:
-            bx, by = model_grid.boundary_points()
-            poly = plt.Polygon(list(zip(bx, by)), facecolor="r", alpha=0.05)
-            ax.add_patch(poly)
-            ax.plot(bx, by, lw=2, color="k")
-        return fig, ax
 
     def plot(self, model_grid=None, cmap="turbo", fscale=10, ax=None, **kwargs):
         return scatter_plot(

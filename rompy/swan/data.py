@@ -7,7 +7,7 @@ import pandas as pd
 import xarray as xr
 from pydantic import Field, root_validator, validator
 
-from rompy.core import DataGrid, DatasetIntake, DatasetXarray
+from rompy.core import DataGrid
 
 from .grid import SwanGrid
 
@@ -83,8 +83,8 @@ class SwanDataGrid(DataGrid):
             inpgrid, readgrid = self.ds.swan.to_bottom_grid(
                 output_file,
                 fmt="%4.2f",
-                x=self.lonname,
-                y=self.latname,
+                x=self.coords.x,
+                y=self.coords.y,
                 z=self.z1,
                 fac=self.fac,
                 rot=0.0,
@@ -93,8 +93,8 @@ class SwanDataGrid(DataGrid):
         else:
             inpgrid, readgrid = self.ds.swan.to_inpgrid(
                 output_file=output_file,
-                x=self.lonname,
-                y=self.latname,
+                x=self.coords.x,
+                y=self.coords.y,
                 z1=self.z1,
                 z2=self.z2,
                 fac=self.fac,
@@ -104,16 +104,7 @@ class SwanDataGrid(DataGrid):
         return f"{inpgrid}\n{readgrid}\n"
 
     def __str__(self):
-        ret = f"{self.id}\n"
-        if self.url:
-            ret += f"\turl: {self.url}\n"
-        if self.path:
-            ret += f"\tpath: {self.path}\n"
-        if self.catalog:
-            ret += f"\tcatalog: {self.catalog}\n"
-            ret += f"\tdataset: {self.dataset}\n"
-            ret += f"\tparams: {self.params}\n"
-        return ret
+        return f"SWANDataGrid {self.id}"
 
 
 def dset_to_swan(
