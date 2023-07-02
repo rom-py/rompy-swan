@@ -13,7 +13,7 @@ from rompy.core.data import (
     DataGrid,
     SourceBase,
     SourceDataset,
-    SourceOpenDataset,
+    SourceFile,
     SourceIntake,
     SourceDatamesh,
 )
@@ -106,7 +106,7 @@ class SourceWavespectra(SourceBase):
 
 BOUNDARY_SOURCE_TYPES = Union[
     SourceDataset,
-    SourceOpenDataset,
+    SourceFile,
     SourceIntake,
     SourceDatamesh,
     SourceWavespectra,
