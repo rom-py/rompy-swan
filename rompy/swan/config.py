@@ -82,7 +82,7 @@ class ForcingData(RompyBaseModel):
         ret = ""
         for forcing in self:
             if forcing[1]:
-                ret += f"\t{forcing[0]}: {forcing[1].dataset}\n"
+                ret += f"\t{forcing[0]}: {forcing[1].source}\n"
         return ret
 
 
