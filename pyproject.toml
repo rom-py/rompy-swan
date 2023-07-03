@@ -59,7 +59,7 @@ dynamic = ["version"]
 "Documentation" = "https://wavespectra.readthedocs.io/en/latest/"
 "Source" = "https://github.com/rom-py/rompy"
 "Tracker" = "https://github.com/rom-py/rompy/issues"
-"Changelog" = "https://github.com/rom-py/rompy/blob/master/HISTORY.rst"
+"Changelog" = "https://github.com/rom-py/rompy/blob/main/HISTORY.rst"
 
 [project.scripts]
 rompy = "rompy.cli:main"
