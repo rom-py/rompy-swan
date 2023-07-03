@@ -56,7 +56,7 @@ dependencies = [
 dynamic = ["version"]
 
 [project.urls]
-"Documentation" = "https://wavespectra.readthedocs.io/en/latest/"
+"Documentation" = "https://oceanum.github.io/rompy/index.html"
 "Source" = "https://github.com/rom-py/rompy"
 "Tracker" = "https://github.com/rom-py/rompy/issues"
 "Changelog" = "https://github.com/rom-py/rompy/blob/main/HISTORY.rst"
@@ -85,6 +85,9 @@ docs = [
     "sphinx",
     "sphinx-collections",
 ]
+
+[tool.setuptools.packages.find]
+exclude = ["docker", "docs", "notebooks", "scripts", "tests"]
 
 [tool.setuptools.package-data]
 "*" = ["*.y*ml", "*.csv", "*.html"]
