@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from rompy import ModelRun
+from rompy.model import ModelRun
 from rompy.swan.config import SwanConfigComponents as SwanConfig
 
 logger = logging.getLogger(__name__)
@@ -37,5 +37,4 @@ def test_swan_model(tmpdir, config):
         output_dir=str(tmpdir),
         config=config,
     )
-    # import ipdb; ipdb.set_trace()
     model.generate()
