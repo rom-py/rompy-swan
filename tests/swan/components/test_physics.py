@@ -98,6 +98,7 @@ def test_vegetation():
         "VEGETATION iveg=1 height=1.0 diamtr=0.1 nstems=1 drag=0.1"
     )
 
+
 def test_vegetation_number_of_layers():
     layers = 3
     v = VEGETATION(
@@ -107,6 +108,9 @@ def test_vegetation_number_of_layers():
         nstems=[2] * layers,
     )
     assert v.render().count("height") == layers
+
+
+def test_vegetation_number_of_layers_mismatch():
     with pytest.raises(ValidationError):
         VEGETATION(
             height=1.0,
