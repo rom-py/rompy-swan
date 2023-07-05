@@ -278,3 +278,73 @@ class ST6C5(ST6C1):
     a1sds: Literal[6.5e-6] = Field(default=6.5e-6)
     a2sds: Literal[8.5e-5] = Field(default=8.5e-5)
     windscaling: Literal[35.0] = Field(default=35.0)
+
+
+# =====================================================================================
+# Triads
+# =====================================================================================
+class ELDEBERKY(BaseSubComponent):
+    """Biphase parameterization as a funtion of the Ursell number of Eldeberky (1999).
+
+    `BIPHASE ELDEBERKY [urcrit]`
+
+    References
+    ----------
+    Eldeberky, Y., 1999. A new parameterization of wave-wave interactions for
+    wave models. Journal of Physical Oceanography, 1999, 29, 2753-2766.
+
+    Elderberky, Y., 1996. A laboratory study of wave-wave interactions in a random
+    sea. Journal of Physical Oceanography, 1996, 26, 147-160.
+
+    Doering, J.C., Bowen, A.J., 1995. A field study of wave-wave interactions in
+    random seas. Journal of Physical Oceanography, 1995, 25, 2753-2766.
+
+    """
+
+    model_type: Literal["eldeberky"] = Field(
+        default="eldeberky", description="Model type discriminator"
+    )
+    urcrit: Optional[float] = Field(
+        description=(
+            "The critical Ursell number appearing in the parametrization. Note: the "
+            "value of `urcrit` is setted by Eldeberky (1996) at 0.2 based on a "
+            "laboratory experiment, whereas Doering and Bowen (1995) employed the "
+            "value of 0.63 based on the field experiment data (SWAN default: 0.63)"
+        )
+    )
+
+    def cmd(self) -> str:
+        repr = "BIPHASE ELDEBERKY"
+        if self.urcrit is not None:
+            repr += f" urcrit={self.urcrit}"
+        return repr
+
+
+class DEWIT(BaseSubComponent):
+    """Biphase parameterization based on bed slope and peak period of De Wit (2022).
+
+    `BIPHASE DEWIT [lpar]`
+
+    References
+    ----------
+    De Wit, R., 2022. A new parameterization of wave-wave interactions for wave models.
+    Journal of Physical Oceanography, 2022, 52, 2753-2766.
+
+    """
+
+    model_type: Literal["dewit"] = Field(
+        default="dewit", description="Model type discriminator"
+    )
+    lpar: Optional[float] = Field(
+        description=(
+            "Scales spatial averaging of the De Wit's biphase in terms of a multiple "
+            "of peak wave length of the incident wave field. Note: `lpar` = 0` means "
+            "no averaging (SWAN default: 0)"
+        )
+    )
+
+    def cmd(self) -> str:
+        repr = "BIPHASE DEWIT"
+        if self.lpar is not None:
+            repr += f" lpar={self.lpar}"
+        return repr
