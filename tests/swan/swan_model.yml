@@ -125,4 +125,10 @@ physics:
   triad:
     model_type: dcta
     trfac: 4.4
+  vegetation:
+    model_type: vegetation
+    height: 1.0
+    diamtr: 0.1
+    nstems: 1
+    drag: 0.1
   

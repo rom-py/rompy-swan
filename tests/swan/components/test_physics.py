@@ -1,7 +1,8 @@
 """Test startup components."""
+import pytest
 from pydantic import ValidationError
 
-from rompy.swan.components.physics import GEN1, GEN2, GEN3, DCTA, LTA, SPB
+from rompy.swan.components.physics import GEN1, GEN2, GEN3, DCTA, LTA, SPB, VEGETATION
 
 
 # =====================================================================================
@@ -82,3 +83,34 @@ def test_triad_spb():
     assert phys.render() == "TRIAD SPB BIPHASE ELDEBERKY"
     phys = SPB(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.9, a=0.95, b=0.0)
     assert phys.render() == "TRIAD SPB trfac=0.9 a=0.95 b=0.0 BIPHASE DEWIT lpar=0.0"
+
+
+# =====================================================================================
+# VEGETATION
+# =====================================================================================
+def test_vegetation():
+    vegetation = VEGETATION(
+        height=1.0,
+        diamtr=0.1,
+        drag=0.1,
+    )
+    assert vegetation.render() == (
+        "VEGETATION iveg=1 height=1.0 diamtr=0.1 nstems=1 drag=0.1"
+    )
+
+def test_vegetation_number_of_layers():
+    layers = 3
+    v = VEGETATION(
+        height=[1.0] * layers,
+        diamtr=[0.1] * layers,
+        drag=[0.1] * layers,
+        nstems=[2] * layers,
+    )
+    assert v.render().count("height") == layers
+    with pytest.raises(ValidationError):
+        VEGETATION(
+            height=1.0,
+            diamtr=[0.1, 0.1],
+            drag=[0.1],
+            nstems=[2, 2, 2],
+        )

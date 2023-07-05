@@ -940,7 +940,7 @@ class SPB(TRIAD):
 class VEGETATION(BaseComponent):
     """Vegetation dumping.
 
-    `VEGETATION`
+    `VEGETATION [iveg] < [height] [diamtr] [nstems] [drag] >`
 
     With this command the user can activate wave damping due to vegetation based on the
     Dalrymple's formula (1984) as implemented by Suzuki et al. (2011). This damping is
@@ -948,19 +948,86 @@ class VEGETATION(BaseComponent):
     (canopy) dissipation model of Jacobsen et al. (2019). If this command is not used,
     SWAN will not account for vegetation effects.
 
+    The vegetation (rigid plants) can be divided over a number of vertical segments and
+    so, the possibility to vary the vegetation vertically is included. Each vertical
+    layer represents some characteristics of the plants. These variables as indicated
+    below can be repeated as many vertical layers to be chosen.
+
     References
     ----------
     Dalrymple, R.A., 1984. Water wave interactions with vegetation: Part 1. A fully
     nonlinear theory. Journal of Fluid Mechanics, 1984, 140, 197-229.
+
+    Jacobsen, N.G., Fuhrman, D.R., Fredsøe, J., 2019. A frequency-dependent canopy
+    dissipation model for vegetation in SWAN. Coastal Engineering, 2019, 146, 1-14.
+
+    Suzuki, T., Horikawa, K., Kakinuma, T., 2011. Numerical simulation of wave
+    propagation over submerged vegetation. Coastal Engineering Journal, 2011, 53, 1-27.
+
+    Notes
+    -----
+    Vertical layering of the vegetation is not yet implemented for the
+    Jacobsen et al. (2019) method
 
     """
 
     model_type: Literal["vegetation"] = Field(
         default="vegetation", description="Model type discriminator"
     )
+    iveg: Literal[1, 2] = Field(
+        default=1,
+        description=(
+            "Indicates the method for the vegetation computation (SWAN default: 1):\n"
+            "\n* 1: Suzuki et al. (2011)\n* 2: Jacobsen et al. (2019)\n"
+        ),
+    )
+    height: Union[float, list[float]] = Field(
+        description="The plant height per layer (in m)"
+    )
+    diamtr: Union[float, list[float]] = Field(
+        description="The diameter of each plant stand per layer (in m)"
+    )
+    drag: Union[float, list[float]] = Field(
+        description="The drag coefficient per layer"
+    )
+    nstems: Union[int, list[int]] = Field(
+        default=1,
+        description=(
+            "The number of plant stands per square meter for each layer. Note that "
+            "`nstems` is allowed to vary over the computational region to account for "
+            "the zonation of vegetation. In that case use the commands "
+            "`IMPGRID NPLANTS` and `READINP NPLANTS` to define and read the "
+            "vegetation density. The (vertically varying) value of `nstems` in this "
+            "command will be multiplied by this horizontally varying plant density "
+            "(SWAN default: 1)"
+        )
+    )
+
+    @root_validator
+    def number_of_layers(cls, values):
+        """Assert that the number of layers is the same for all variables."""
+        sizes = {}
+        for key in ["height", "diamtr", "drag", "nstems"]:
+            if values.get(key) is not None and not isinstance(values.get(key), list):
+                values[key] = [values[key]]
+                sizes.update({key: len(values[key])})
+        if len(set(sizes.values())) > 1:
+            raise ValueError(
+                "The number of layers must be the same for all variables. "
+                f"Got these number of layers: {sizes}"
+            )
+        if values.get("iveg", 1) == 2 and sizes.get("nstems", 1) > 1:
+            logger.warning(
+                "Vertical layering of the vegetation is not yet implemented for the "
+                "Jacobsen et al. (2019) method, please define single layer"
+            )
+        return values
 
     def cmd(self) -> str:
-        return f"VEGETATION"
+        repr = f"VEGETATION iveg={self.iveg}"
+        for h, d, dr, n in zip(self.height, self.diamtr, self.drag, self.nstems):
+            repr += f" height={h} diamtr={d} nstems={n} drag={dr}"
+        return repr
 
 
 # =====================================================================================
@@ -1260,6 +1327,10 @@ TRIAD_TYPE = Annotated[
     Union[DCTA, LTA, SPB],
     Field(description="Triad interactions component", discriminator="model_type")
 ]
+VEGETATION_TYPE = Annotated[
+    VEGETATION,
+    Field(description="Vegetation component", discriminator="model_type")
+]
 
 class PHYSICS(BaseComponent):
     """Physics group component.
@@ -1280,6 +1351,7 @@ class PHYSICS(BaseComponent):
     breaking: Optional[BREAKING_TYPE]
     friction: Optional[FRICTION_TYPE]
     triad: Optional[TRIAD_TYPE]
+    vegetation: Optional[VEGETATION_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -1317,4 +1389,6 @@ class PHYSICS(BaseComponent):
             repr += [self.friction.render()]
         if self.triad is not None:
             repr += [self.triad.render()]
+        if self.vegetation is not None:
+            repr += [self.vegetation.render()]
         return repr

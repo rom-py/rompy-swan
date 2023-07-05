@@ -21,15 +21,6 @@ def config_dict():
     yield yaml.load((HERE / "swan_model.yml").read_text(), Loader=yaml.Loader)
 
 
-class MySource(SourceTerms):
-    model_type: Literal["my_source"] = Field(
-        default="my_source", description="Model type discriminator"
-    )
-
-    def cmd(self) -> str:
-        return "MYSOURCE"
-
-
 def test_swan_model(tmpdir, config_dict):
     config = SwanConfig(
         template=str(HERE / "../../rompy/templates/swancomp"),
