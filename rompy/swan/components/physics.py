@@ -14,6 +14,8 @@ from rompy.swan.subcomponents.physics import (
     ST6C3,
     ST6C4,
     ST6C5,
+    ELDEBERKY,
+    DEWIT,
 )
 
 
@@ -432,7 +434,7 @@ class WCAPAB(BaseComponent):
         description=(
             "Indicates that enhanced current-induced dissipation "
             "as proposed by Van der Westhuysen (2012) is to be added"
-        )
+        ),
     )
     cds3: Optional[float] = Field(
         description="Proportionality coefficient (SWAN default: 0.8)"
@@ -593,9 +595,7 @@ class BREAKBKD(BaseComponent):
         )
     )
     gamma0: Optional[float] = Field(
-        description=(
-            "The reference $gamma$ for horizontal slopes (SWAN default: 0.54)"
-        )
+        description=("The reference $gamma$ for horizontal slopes (SWAN default: 0.54)")
     )
     a1: Optional[float] = Field(
         description=(
@@ -784,9 +784,101 @@ class TRIAD(BaseComponent):
     model_type: Literal["triad"] = Field(
         default="triad", description="Model type discriminator"
     )
+    biphase: Union[ELDEBERKY, DEWIT] = Field(
+        default_factory=ELDEBERKY,
+        description="Defines the parameterization of biphase (self-self interaction)",
+    )
 
     def cmd(self) -> str:
         return f"TRIAD"
+
+
+class DCTA(TRIAD):
+    """Triad interactions with the DCTA method of Booij et al. (2009).
+
+    `TRIAD DCTA [trfac] [p] COLL|NONC BIPHHASE ELDEBERKY|DEWIT`
+
+    References
+    ----------
+    Booij, N., Ris, R.C., Holthuijsen, L.H., 2009. A third-generation wave model for
+    coastal regions: 1. Model description and validation. Journal of Geophysical
+    Research, 2009, 114, C09015.
+
+    """
+
+    model_type: Literal["dcta"] = Field(
+        default="dcta", description="Model type discriminator"
+    )
+    trfac: Optional[float] = Field(
+        description=(
+            "Scaling factor that controls the intensity of "
+            "the triad interaction due to DCTA (SWAN default: 4.4)"
+        ),
+    )
+    p: Optional[float] = Field(
+        description=(
+            "Shape coefficient to force the high-frequency tail" "(SWAN default: 4/3)"
+        ),
+    )
+    noncolinear: bool = Field(
+        default=False,
+        description=(
+            "If True, the noncolinear triad interactions "
+            "with the DCTA framework are accounted for"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} DCTA"
+        if self.trfac is not None:
+            repr += f" trfac={self.trfac}"
+        if self.p is not None:
+            repr += f" p={self.p}"
+        if self.noncolinear:
+            repr += " NONC"
+        else:
+            repr += " COLL"
+        repr += f" {self.biphase.render()}"
+        return repr
+
+
+class LTA(TRIAD):
+    """Triad interactions with the LTA method of Eldeberky (1996).
+
+    `TRIAD LTA [trfac] [cutfr] BIPHHASE ELDEBERKY|DEWIT`
+
+    References
+    ----------
+    Eldeberky, Y.A., 1996. A new model for wave diffraction and refraction. Coastal
+    Engineering, 1996, 27, 1-24.
+
+    """
+
+    model_type: Literal["lta"] = Field(
+        default="lta", description="Model type discriminator"
+    )
+    trfac: Optional[float] = Field(
+        description=(
+            "Scaling factor that controls the intensity of "
+            "the triad interaction due to LTA (SWAN default: 0.8)"
+        ),
+    )
+    cutfr: Optional[float] = Field(
+        description=(
+            "Controls the maximum frequency that is considered in the LTA "
+            "computation. The value of `cutfr` is the ratio of this maximum "
+            "frequency over the mean frequency (SWAN default: 2.5)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} LTA"
+        if self.trfac is not None:
+            repr += f" trfac={self.trfac}"
+        if self.cutfr is not None:
+            repr += f" cutfr={self.cutfr}"
+        repr += f" {self.biphase.render()}"
+        return repr
 
 
 # =====================================================================================
