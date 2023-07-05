@@ -881,6 +881,59 @@ class LTA(TRIAD):
         return repr
 
 
+class SPB(TRIAD):
+    """Triad interactions according to the SPB method of Becq-Girard et al. (1999).
+
+    `TRIAD SPB [trfac] [a] [b] BIPHHASE ELDEBERKY|DEWIT`
+
+    References
+    ----------
+    Becq-Girard, V., Lyard, F., Cancet, M., Roblou, L., 1999. A new third-generation
+    wave model for coastal regions: 2. Verification and validation for wave refraction
+    and diffraction. Journal of Geophysical Research, 1999, 104, 783-802.
+
+    """
+
+    model_type: Literal["spb"] = Field(
+        default="spb", description="Model type discriminator"
+    )
+    trfac: Optional[float] = Field(
+        description=(
+            "Scaling factor that controls the intensity of "
+            "the triad interaction due to SPB (SWAN default: 0.9)"
+        ),
+    )
+    a: Optional[float] = Field(
+        description=(
+            "First calibration parameter for tuning K in Eq. (5.1) of "
+            "Becq-Girard et al. (1999). This parameter is associated with broadening "
+            "of the resonance condition. The default value is 0.95 and is calibrated "
+            "by means of laboratory experiments (SWAN default: 0.95)"
+        ),
+    )
+    b: Optional[float] = Field(
+        description=(
+            "Second calibration parameter for tuning K in Eq. (5.1) of "
+            "Becq-Girard et al. (1999). This parameter is associated with broadening "
+            "of the resonance condition. The default value is -0.75 and is calibrated "
+            "by means of laboratory experiments. However, it may not be appropriate "
+            "for true 2D field cases as it does not scale with the wave field "
+            "characteristics. Hence, this parameter is set to zero (SWAN default: 0.0)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} SPB"
+        if self.trfac is not None:
+            repr += f" trfac={self.trfac}"
+        if self.a is not None:
+            repr += f" a={self.a}"
+        if self.b is not None:
+            repr += f" b={self.b}"
+        repr += f" {self.biphase.render()}"
+        return repr
+
+
 # =====================================================================================
 # VEGETATION
 # =====================================================================================
