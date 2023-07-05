@@ -207,8 +207,9 @@ class NEGATINP(BaseComponent):
 
     References
     ----------
-    Zieger, S., A.V. Babanin, W. E. Rogers and I.R. Young, 2015: Observation-based
-    source terms in the third-generation wave model WAVEWATCH, Ocean Model., 96, 2-25.
+    Zieger, S., Babanin, A.V., Rogers, W.E. and Young, I.R., 2015. Observation-based
+    source terms in the third-generation wave model WAVEWATCH. Ocean Modelling, 96,
+    pp.2-25.
 
     """
 
@@ -251,9 +252,10 @@ class ROGERS(SSWELL):
 
     References
     ----------
-    Rogers, W.E., A.V. Babanin and D.W. Wang, 2012: Observation-Consistent Input and
-    Whitecapping Dissipation in a Model for Wind-Generated Surface Waves: Description
-    and Simple Calculations, J. Atmos. Oceanic Technol., 29:9, 1329-1346.
+    Rogers, W.E., Babanin, A.V. and Wang, D.W., 2012. Observation-consistent input and
+    whitecapping dissipation in a model for wind-generated surface waves: Description
+    and simple calculations. Journal of Atmospheric and Oceanic Technology, 29(9),
+    pp.1329-1346.
 
     """
 
@@ -282,9 +284,11 @@ class ARDHUIN(SSWELL):
 
     References
     ----------
-    Ardhuin, F., A. Rogers, A. Babanin, J. Filipot, J. Magne, A. Roland, and P. van
-    der Westhuysen, 2010: Semiempirical dissipation source functions for ocean waves.
-    Part I: Definition, calibration, and validation, J. Phys. Oceanogr., 40, 1917-1941.
+    Ardhuin, F., Rogers, E., Babanin, A.V., Filipot, J.F., Magne, R., Roland, A.,
+    Van Der Westhuysen, A., Queffeulou, P., Lefevre, J.M., Aouf, L. and Collard, F.,
+    2010. Semiempirical dissipation source functions for ocean waves. Part I:
+    Definition, calibration, and validation. Journal of Physical Oceanography, 40(9),
+    pp.1917-1941.
 
     """
 
@@ -312,11 +316,12 @@ class ZIEGER(SSWELL):
 
     References
     ----------
-    Zieger, S., A.V. Babanin, W. E. Rogers and I.R. Young, 2015: Observation-based
-    source terms in the third-generation wave model WAVEWATCH, Ocean Model., 96, 2-25.
+    Zieger, S., Babanin, A.V., Rogers, W.E. and Young, I.R., 2015. Observation-based
+    source terms in the third-generation wave model WAVEWATCH. Ocean Modelling, 96,
+    pp.2-25.
 
-    Young, I.R., A.V.Babanin and S. Zieger, 2013: The Decay Rate of Ocean Swell
-    Observed by Altimeter, J. Phys. Oceanogr., 43, 3233-3233.
+    Young, I.R., Babanin, A.V. and Zieger, S., 2013. The decay rate of ocean swell
+    observed by altimeter. Journal of physical oceanography, 43(11), pp.2322-2333.
 
     """
 
@@ -351,8 +356,8 @@ class WCAPKOMEN(BaseComponent):
 
     References
     ----------
-    Komen, G.J., S. Hasselmann, and K. Hasselmann, 1984: On the existence of a fully
-    developed wind-sea spectrum, J. Phys. Oceanogr., 14, 1271-1285.
+    Komen, G.J., Hasselmann, S. and Hasselmann, K., 1984. On the existence of a fully
+    developed wind-sea spectrum. Journal of physical oceanography, 14(8), pp.1271-1285.
 
     """
 
@@ -412,8 +417,9 @@ class WCAPAB(BaseComponent):
 
     References
     ----------
-    Alves, J.H.G.M. and M.L. Banner, 2003: A unified formulation of the wave-action
-    balance equation, J. Phys. Oceanogr., 33, 2343-2356.
+    Alves, J.H.G. and Banner, M.L., 2003. Performance of a saturation-based
+    dissipation-rate source term in modeling the fetch-limited evolution of wind waves.
+    Journal of Physical Oceanography, 33(6), pp.1274-1298.
 
     """
 
@@ -643,10 +649,10 @@ class JONSWAP(BaseComponent):
     References
     ----------
     Hasselmann, K., Barnett, T.P., Bouws, E., Carlson, H., Cartwright, D.E., Enke, K.,
-    Ewing, J.A., Gienapp, H., Hasselmann, D.E., Kruseman, P., Meerburg, A., Müller, P.,
-    Olbers, D.J., Richter, K., Sell, W., Walden, H., 1973. Measurements of wind-wave
-    growth and swell decay during the Joint North Sea Wave Project (JONSWAP). Deutches
-    Hydrographisches Institut, Hamburg, Germany, Rep. No. 12, 95 pp.
+    Ewing, J.A., Gienapp, A., Hasselmann, D.E., Kruseman, P. and Meerburg, A., 1973.
+    Measurements of wind-wave growth and swell decay during the Joint North Sea Wave
+    Project (JONSWAP). Deutches Hydrographisches Institut, Hamburg, Germany,
+    Rep. No. 12, 95 pp.
 
     TODO: Implement VARIABLE option?
 
@@ -679,8 +685,8 @@ class COLLINS(BaseComponent):
 
     References
     ----------
-    Collins, M.B., 1972. The effect of bottom friction on the propagation of long
-    waves. Coastal Engineering, 1972, 1, 163-181.
+    Collins, J.I., 1972. Prediction of shallow-water spectra. Journal of Geophysical
+    Research, 77(15), pp.2693-2707.
 
     """
 
@@ -711,9 +717,11 @@ class MADSEN(BaseComponent):
 
     References
     ----------
-    Madsen, O.S., Sørensen, O.R., Schäffer, H.A., 1988. Surf zone dynamics simulated by
-    a Boussinesq type model. Part I. Model description and cross-shore motion of
-    regular waves. Coastal Engineering, 1988, 12, 115-145.
+    Madsen, O.S., Poon, Y.K. and Graber, H.C., 1988. Spectral wave attenuation by
+    bottom friction: Theory. In Coastal engineering 1988 (pp. 492-504).
+
+    Madsen, O.S. and Rosengaus, M.M., 1988. Spectral wave attenuation by bottom
+    friction: Experiments. In Coastal Engineering 1988 (pp. 849-857).
 
     """
 
@@ -744,8 +752,10 @@ class RIPPLES(BaseComponent):
 
     References
     ----------
-    Smith, J.M., McCall, R.T., 2011. A model for wave dissipation in the surf zone
-    based on field observations. Coastal Engineering, 2011, 58, 917-928.
+    Smith, G.A., Babanin, A.V., Riedel, P., Young, I.R., Oliver, S. and Hubbert, G.,
+    2011. Introduction of a new friction routine into the SWAN model that evaluates
+    roughness due to bedform and sediment size changes. Coastal Engineering, 58(4),
+    pp.317-326.
 
     """
 
@@ -800,9 +810,9 @@ class DCTA(TRIAD):
 
     References
     ----------
-    Booij, N., Ris, R.C., Holthuijsen, L.H., 2009. A third-generation wave model for
-    coastal regions: 1. Model description and validation. Journal of Geophysical
-    Research, 2009, 114, C09015.
+    Booij, N., Holthuijsen, L.H. and Bénit, M.P., 2009. A distributed collinear triad
+    approximation in SWAN. In Proceedings Of Coastal Dynamics 2009: Impacts of Human
+    Activities on Dynamic Coastal Processes (With CD-ROM) (pp. 1-10).
 
     """
 
@@ -849,8 +859,9 @@ class LTA(TRIAD):
 
     References
     ----------
-    Eldeberky, Y.A., 1996. A new model for wave diffraction and refraction. Coastal
-    Engineering, 1996, 27, 1-24.
+    Eldeberky, Y., Polnikov, V. and Battjes, J.A., 1996. A statistical approach for
+    modeling triad interactions in dispersive waves. In Coastal Engineering 1996
+    (pp. 1088-1101).
 
     """
 
@@ -888,9 +899,9 @@ class SPB(TRIAD):
 
     References
     ----------
-    Becq-Girard, V., Lyard, F., Cancet, M., Roblou, L., 1999. A new third-generation
-    wave model for coastal regions: 2. Verification and validation for wave refraction
-    and diffraction. Journal of Geophysical Research, 1999, 104, 783-802.
+    Becq-Girard, F., Forget, P. and Benoit, M., 1999. Non-linear propagation of
+    unidirectional wave fields over varying topography. Coastal Engineering, 38(2),
+    pp.91-113.
 
     """
 
@@ -955,19 +966,22 @@ class VEGETATION(BaseComponent):
 
     References
     ----------
-    Dalrymple, R.A., 1984. Water wave interactions with vegetation: Part 1. A fully
-    nonlinear theory. Journal of Fluid Mechanics, 1984, 140, 197-229.
+    Dalrymple, R.A., Kirby, J.T. and Hwang, P.A., 1984. Wave diffraction due to areas
+    of energy dissipation. Journal of waterway, port, coastal, and ocean engineering,
+    110(1), pp.67-79.
 
-    Jacobsen, N.G., Fuhrman, D.R., Fredsøe, J., 2019. A frequency-dependent canopy
-    dissipation model for vegetation in SWAN. Coastal Engineering, 2019, 146, 1-14.
+    Jacobsen, N.G., Bakker, W., Uijttewaal, W.S. and Uittenbogaard, R., 2019.
+    Experimental investigation of the wave-induced motion of and force distribution
+    along a flexible stem. Journal of Fluid Mechanics, 880, pp.1036-1069.
 
-    Suzuki, T., Horikawa, K., Kakinuma, T., 2011. Numerical simulation of wave
-    propagation over submerged vegetation. Coastal Engineering Journal, 2011, 53, 1-27.
+    Suzuki, T., Zijlema, M., Burger, B., Meijer, M.C. and Narayan, S., 2012. Wave
+    dissipation by vegetation with layer schematization in SWAN. Coastal Engineering,
+    59(1), pp.64-71.
 
     Notes
     -----
     Vertical layering of the vegetation is not yet implemented for the
-    Jacobsen et al. (2019) method
+    Jacobsen et al. (2019) method.
 
     """
 
@@ -1044,8 +1058,8 @@ class MUD(BaseComponent):
 
     References
     ----------
-    Ng, C.O., 2000. Wave attenuation in mudflat and salt marsh vegetation. Journal of
-    Coastal Research, 2000, 16, 379-389.
+    Ng, C., 2000, Water waves over a muddy bed: A two layer Stokes' boundary layer
+    model, Coastal Eng., 40, 221-242.
 
     """
 
