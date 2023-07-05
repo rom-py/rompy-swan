@@ -1,9 +1,24 @@
 """Test physics sub-components."""
 import pytest
 
-from rompy.swan.subcomponents.physics import JANSSEN, KOMEN, WESTHUYSEN, ST6, ST6C1, ST6C2, ST6C3, ST6C4, ST6C5
+from rompy.swan.subcomponents.physics import (
+    JANSSEN,
+    KOMEN,
+    WESTHUYSEN,
+    ST6,
+    ST6C1,
+    ST6C2,
+    ST6C3,
+    ST6C4,
+    ST6C5,
+    ELDEBERKY,
+    DEWIT,
+)
 
 
+# =====================================================================================
+# Source terms
+# =====================================================================================
 def test_janssen():
     jans = JANSSEN()
     assert jans.render() == "JANSSEN DRAG WU"
@@ -30,29 +45,63 @@ def test_st6_default():
         a1sds=4.7e-7,
         a2sds=6.6e-6,
     )
-    assert st6.render() == "ST6 a1sds=4.7e-07 a2sds=6.6e-06 UP HWANG VECTAU U10PROXY windscaling=32.0"
+    assert st6.render() == (
+        "ST6 a1sds=4.7e-07 a2sds=6.6e-06 UP HWANG VECTAU U10PROXY windscaling=32.0"
+    )
 
 
 def test_st6_c1():
     st6 = ST6C1()
-    assert st6.render() == "ST6 a1sds=4.7e-07 a2sds=6.6e-06 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY windscaling=28.0 AGROW a=0.0015"
+    assert st6.render() == (
+        "ST6 a1sds=4.7e-07 a2sds=6.6e-06 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY "
+        "windscaling=28.0 AGROW a=0.0015"
+    )
 
 
 def test_st6_c2():
     st6 = ST6C2()
-    assert st6.render() == "ST6 a1sds=4.7e-07 a2sds=6.6e-06 p1sds=4.0 p2sds=4.0 UP FAN VECTAU U10PROXY windscaling=28.0 AGROW a=0.0015"
+    assert st6.render() == (
+        "ST6 a1sds=4.7e-07 a2sds=6.6e-06 p1sds=4.0 p2sds=4.0 UP FAN VECTAU U10PROXY "
+        "windscaling=28.0 AGROW a=0.0015"
+    )
 
 
 def test_st6_c3():
     st6 = ST6C3()
-    assert st6.render() == "ST6 a1sds=2.8e-06 a2sds=3.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY windscaling=32.0 AGROW a=0.0015"
+    assert st6.render() == (
+        "ST6 a1sds=2.8e-06 a2sds=3.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY "
+        "windscaling=32.0 AGROW a=0.0015"
+    )
 
 
 def test_st6_c4():
     st6 = ST6C4()
-    assert st6.render() == "ST6 a1sds=2.8e-06 a2sds=3.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY windscaling=32.0 DEBIAS cdfac=0.89 AGROW a=0.0015"
+    assert st6.render() == (
+        "ST6 a1sds=2.8e-06 a2sds=3.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY "
+        "windscaling=32.0 DEBIAS cdfac=0.89 AGROW a=0.0015"
+    )
 
 
 def test_st6_c5():
     st6 = ST6C5()
-    assert st6.render() == "ST6 a1sds=6.5e-06 a2sds=8.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY windscaling=35.0 DEBIAS cdfac=0.89 AGROW a=0.0015"
+    assert st6.render() == (
+        "ST6 a1sds=6.5e-06 a2sds=8.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY "
+        "windscaling=35.0 DEBIAS cdfac=0.89 AGROW a=0.0015"
+    )
+
+
+# =====================================================================================
+# Triads
+# =====================================================================================
+def test_biphase_elderberky():
+    biphase = ELDEBERKY()
+    assert biphase.render() == "BIPHASE ELDEBERKY"
+    biphase = ELDEBERKY(urcrit=0.63)
+    assert biphase.render() == "BIPHASE ELDEBERKY urcrit=0.63"
+
+
+def test_biphase_dewit():
+    biphase = DEWIT()
+    assert biphase.render() == "BIPHASE DEWIT"
+    biphase = DEWIT(lpar=0)
+    assert biphase.render() == "BIPHASE DEWIT lpar=0.0"
