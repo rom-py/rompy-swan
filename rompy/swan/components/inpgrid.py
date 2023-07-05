@@ -181,6 +181,7 @@ class CURVILINEAR(INPGRID):
             repr += f" EXCEPTION excval={self.excval}"
         if self.nonstationary is not None:
             repr += f" {self.nonstationary.render()}"
+        repr = [repr] + [self.readinp.render()]
         return repr
 
 
@@ -201,6 +202,7 @@ class UNSTRUCTURED(INPGRID):
             repr += f" EXCEPTION excval={self.excval}"
         if self.nonstationary is not None:
             repr += f" {self.nonstationary.render()}"
+        repr = [repr] + [self.readinp.render()]
         return repr
 
 
