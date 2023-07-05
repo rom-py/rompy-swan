@@ -1,6 +1,6 @@
 """Model physics components."""
 import logging
-from typing import Literal, Optional, Union
+from typing import Literal, Optional, Union, Annotated
 from pydantic import validator, root_validator, Field, confloat
 
 from rompy.swan.components.base import BaseComponent
@@ -1228,6 +1228,39 @@ class SCAT(BaseComponent):
 # =====================================================================================
 # Physics group component
 # =====================================================================================
+GEN_TYPE = Annotated[
+    Union[GEN1, GEN2, GEN3],
+    Field(description="Wave generation component", discriminator="model_type")
+]
+SSWELL_TYPE = Annotated[
+    Union[ROGERS, ARDHUIN, ZIEGER],
+    Field(description="Swell dissipation component", discriminator="model_type")
+]
+NEGATINP_TYPE = Annotated[
+    NEGATINP,
+    Field(description="Negative wind input component", discriminator="model_type")
+]
+WCAPPING_TYPE = Annotated[
+    Union[WCAPKOMEN, WCAPAB],
+    Field(description="Whitecapping component", discriminator="model_type")
+]
+QUADRUPL_TYPE = Annotated[
+    QUADRUPL,
+    Field(description="Quadruplet interactions component", discriminator="model_type")
+]
+BREAKING_TYPE = Annotated[
+    Union[BREAKCONSTANT, BREAKBKD],
+    Field(description="Wave breaking component", discriminator="model_type")
+]
+FRICTION_TYPE = Annotated[
+    Union[JONSWAP, COLLINS, MADSEN, RIPPLES],
+    Field(description="Bottom friction component", discriminator="model_type")
+]
+TRIAD_TYPE = Annotated[
+    Union[DCTA, LTA, SPB],
+    Field(description="Triad interactions component", discriminator="model_type")
+]
+
 class PHYSICS(BaseComponent):
     """Physics group component.
 
@@ -1239,36 +1272,14 @@ class PHYSICS(BaseComponent):
     model_type: Literal["physics"] = Field(
         default="physics", description="Model type discriminator"
     )
-    gen: GEN1 | GEN2 | GEN3 = Field(
-        default_factory=GEN3,
-        description="Wave generation specification",
-        discriminator="model_type",
-    )
-    sswell: ROGERS | ARDHUIN | ZIEGER | None = Field(
-        default=None,
-        description="Swell dissipation specification",
-        discriminator="model_type",
-    )
-    negatinp: Optional[NEGATINP] = Field(
-        default=None,
-        description="Negative wind input specification",
-    )
-    wcapping: WCAPKOMEN | WCAPAB | None = Field(
-        default=None,
-        description="Whitecapping specification",
-        discriminator="model_type",
-    )
-    quadrupl: Optional[QUADRUPL] = Field(
-        description="Quadruplet interactions specification",
-    )
-    breaking: BREAKCONSTANT | BREAKBKD | None = Field(
-        description="Wave breaking specification",
-        discriminator="model_type",
-    )
-    friction: JONSWAP | COLLINS | MADSEN | RIPPLES | None = Field(
-        default=None,
-        description="Bottom friction specification",
-    )
+    gen: Optional[GEN_TYPE]
+    sswell: Optional[SSWELL_TYPE]
+    negatinp: Optional[NEGATINP_TYPE]
+    wcapping: Optional[WCAPPING_TYPE]
+    quadrupl: Optional[QUADRUPL_TYPE]
+    breaking: Optional[BREAKING_TYPE]
+    friction: Optional[FRICTION_TYPE]
+    triad: Optional[TRIAD_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -1304,4 +1315,6 @@ class PHYSICS(BaseComponent):
             repr += [self.breaking.render()]
         if self.friction is not None:
             repr += [self.friction.render()]
+        if self.triad is not None:
+            repr += [self.triad.render()]
         return repr

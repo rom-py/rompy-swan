@@ -122,4 +122,7 @@ physics:
   friction:
     model_type: collins
     cfw: 0.015
+  triad:
+    model_type: dcta
+    trfac: 4.4
   
