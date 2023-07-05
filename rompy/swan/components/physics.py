@@ -1014,7 +1014,7 @@ class VEGETATION(BaseComponent):
             "vegetation density. The (vertically varying) value of `nstems` in this "
             "command will be multiplied by this horizontally varying plant density "
             "(SWAN default: 1)"
-        )
+        ),
     )
 
     @root_validator
@@ -1022,9 +1022,11 @@ class VEGETATION(BaseComponent):
         """Assert that the number of layers is the same for all variables."""
         sizes = {}
         for key in ["height", "diamtr", "drag", "nstems"]:
-            if values.get(key) is not None and not isinstance(values.get(key), list):
+            if values.get(key) is None:
+                continue
+            elif not isinstance(values.get(key), list):
                 values[key] = [values[key]]
-                sizes.update({key: len(values[key])})
+            sizes.update({key: len(values[key])})
         if len(set(sizes.values())) > 1:
             raise ValueError(
                 "The number of layers must be the same for all variables. "
@@ -1311,40 +1313,40 @@ class SCAT(BaseComponent):
 # =====================================================================================
 GEN_TYPE = Annotated[
     Union[GEN1, GEN2, GEN3],
-    Field(description="Wave generation component", discriminator="model_type")
+    Field(description="Wave generation component", discriminator="model_type"),
 ]
 SSWELL_TYPE = Annotated[
     Union[ROGERS, ARDHUIN, ZIEGER],
-    Field(description="Swell dissipation component", discriminator="model_type")
+    Field(description="Swell dissipation component", discriminator="model_type"),
 ]
 NEGATINP_TYPE = Annotated[
     NEGATINP,
-    Field(description="Negative wind input component", discriminator="model_type")
+    Field(description="Negative wind input component", discriminator="model_type"),
 ]
 WCAPPING_TYPE = Annotated[
     Union[WCAPKOMEN, WCAPAB],
-    Field(description="Whitecapping component", discriminator="model_type")
+    Field(description="Whitecapping component", discriminator="model_type"),
 ]
 QUADRUPL_TYPE = Annotated[
     QUADRUPL,
-    Field(description="Quadruplet interactions component", discriminator="model_type")
+    Field(description="Quadruplet interactions component", discriminator="model_type"),
 ]
 BREAKING_TYPE = Annotated[
     Union[BREAKCONSTANT, BREAKBKD],
-    Field(description="Wave breaking component", discriminator="model_type")
+    Field(description="Wave breaking component", discriminator="model_type"),
 ]
 FRICTION_TYPE = Annotated[
     Union[JONSWAP, COLLINS, MADSEN, RIPPLES],
-    Field(description="Bottom friction component", discriminator="model_type")
+    Field(description="Bottom friction component", discriminator="model_type"),
 ]
 TRIAD_TYPE = Annotated[
     Union[DCTA, LTA, SPB],
-    Field(description="Triad interactions component", discriminator="model_type")
+    Field(description="Triad interactions component", discriminator="model_type"),
 ]
 VEGETATION_TYPE = Annotated[
-    VEGETATION,
-    Field(description="Vegetation component", discriminator="model_type")
+    VEGETATION, Field(description="Vegetation component", discriminator="model_type")
 ]
+
 
 class PHYSICS(BaseComponent):
     """Physics group component.

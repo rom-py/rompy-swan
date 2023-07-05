@@ -6,9 +6,9 @@ from abc import ABC
 from rompy.swan.subcomponents.base import BaseSubComponent
 
 
-#======================================================================================
+# ======================================================================================
 # Source terms
-#======================================================================================
+# ======================================================================================
 class SourceTerms(BaseSubComponent, ABC):
     """Source term subcomponent base class."""
 
@@ -22,7 +22,10 @@ class SourceTerms(BaseSubComponent, ABC):
     )
     a: Optional[float] = Field(
         default=0.0015,
-        description="Proportionality coefficient when activating the Cavaleri and Malanotte (1981) wave growth term",
+        description=(
+            "Proportionality coefficient when activating the Cavaleri and Malanotte "
+            "(1981) wave growth term"
+        ),
     )
 
 
@@ -33,11 +36,15 @@ class JANSSEN(SourceTerms):
 
     References
     ----------
-    Janssen, P.A.E.M., 1989: Wave induced stress and the drag of air flow
-    over sea waves, J. Phys. Oceanogr., 19, 745-754.
+    Janssen, P.A., 1989. Wave-induced stress and the drag of air flow over sea waves.
+    Journal of Physical Oceanography, 19(6), pp.745-754.
 
-    Janssen, P.A.E.M., 1991: Quasi-linear theory of wind-wave generation
-    applied to wave forecasting, J. Phys. Oceanogr., 21, 1631-1642.
+    Janssen, P.A.E.M., Lionello, P. and Zambresky, L., 1989. On the interaction of wind
+    and waves. Philosophical transactions of the royal society of London. Series A,
+    Mathematical and Physical Sciences, 329(1604), pp.289-301.
+
+    Janssen, P.A., 1991. Quasi-linear theory of wind-wave generation applied to wave
+    forecasting. Journal of physical oceanography, 21(11), pp.1631-1642.
 
     """
 
@@ -45,10 +52,16 @@ class JANSSEN(SourceTerms):
         default="janssen", description="Model type discriminator"
     )
     cds1: Optional[float] = Field(
-        description="Coefficient for determining the rate of whitecapping dissipation ($Cds / s^4_{PM}$) (SWAN default: 4.5)"
+        description=(
+            "Coefficient for determining the rate of whitecapping dissipation "
+            "($Cds / s^4_{PM}$) (SWAN default: 4.5)"
+        ),
     )
     delta: Optional[float] = Field(
-        description="Coefficient which determines the dependency of the whitecapping on wave number (mix with Komen et al. formulation) (SWAN default: 0.5)"
+        description=(
+            "Coefficient which determines the dependency of the whitecapping on wave "
+            "number (mix with Komen et al. formulation) (SWAN default: 0.5)"
+        ),
     )
 
     def cmd(self) -> str:
@@ -70,8 +83,8 @@ class KOMEN(SourceTerms):
 
     References
     ----------
-    Komen, G.J., S. Hasselmann, and K. Hasselmann, 1984: On the existence of a fully
-    developed wind-sea spectrum, J. Phys. Oceanogr., 14, 1271-1285.
+    Komen, G.J., Hasselmann, S. and Hasselmann, K., 1984. On the existence of a fully
+    developed wind-sea spectrum. Journal of physical oceanography, 14(8), pp.1271-1285.
 
     """
 
@@ -79,10 +92,16 @@ class KOMEN(SourceTerms):
         default="komen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
-        description="Coefficient for determining the rate of whitecapping dissipation ($Cds$) (SWAN default: 2.36e-5)"
+        description=(
+            "Coefficient for determining the rate of whitecapping dissipation "
+            "(`Cds`) (SWAN default: 2.36e-5)"
+        ),
     )
     stpm: Optional[float] = Field(
-        description="Value of the wave steepness for a Pierson-Moskowitz spectrum ($s^2_{PM}$) (SWAN default: 3.02e-3)"
+        description=(
+            "Value of the wave steepness for a Pierson-Moskowitz spectrum "
+            "(`s^2_PM`) (SWAN default: 3.02e-3)"
+        ),
     )
 
     def cmd(self) -> str:
@@ -112,9 +131,9 @@ class WESTHUYSEN(SourceTerms):
 
     References
     ----------
-    Van der Westhuysen, A.J., M. Zijlema and J.A. Battjes, 2007: Nonlinear
-    saturation-based whitecapping dissipation in SWAN for deep and shallow water,
-    Coast. Engng, 54:2, 151-170.
+    van der Westhuysen, A.J., Zijlema, M. and Battjes, J.A., 2007. Nonlinear
+    saturation-based whitecapping dissipation in SWAN for deep and shallow water.
+    Coastal Engineering, 54(2), pp.151-170.
 
     """
 
@@ -122,7 +141,10 @@ class WESTHUYSEN(SourceTerms):
         default="westhuysen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
-        description="proportionality coefficient due to Alves and Banner (2003) (SWAN default: 5.0e-5)."
+        description=(
+            "proportionality coefficient due to Alves and Banner (2003) "
+            "(SWAN default: 5.0e-5)."
+        ),
     )
     br: Optional[float] = Field(
         description="Threshold saturation level	(SWAN default: 1.75e-3)"
@@ -156,9 +178,14 @@ class ST6(SourceTerms):
 
     References
     ----------
-    Rogers, W.E., A.V. Babanin and D.W. Wang, 2012: Observation-Consistent Input and
-    Whitecapping Dissipation in a Model for Wind-Generated Surface Waves: Description
-    and Simple Calculations, J. Atmos. Oceanic Technol., 29:9, 1329-1346.
+    Fan, Y., Lin, S.J., Held, I.M., Yu, Z. and Tolman, H.L., 2012. Global ocean surface
+    wave simulation using a coupled atmosphere–wave model. Journal of Climate, 25(18),
+    pp.6233-6252.
+
+    Rogers, W.E., Babanin, A.V. and Wang, D.W., 2012. Observation-consistent input and
+    whitecapping dissipation in a model for wind-generated surface waves: Description
+    and simple calculations. Journal of Atmospheric and Oceanic Technology, 29(9),
+    pp.1329-1346.
 
     """
 
@@ -172,22 +199,38 @@ class ST6(SourceTerms):
         description="Coefficient related to local dissipation term T2 (a2 in RBW12)"
     )
     p1sds: Optional[float] = Field(
-        description="Power coefficient controlling strength of dissipation term T1 (L in RBW12, SWAN default: 4)"
+        description=(
+            "Power coefficient controlling strength of dissipation term T1 "
+            "(L in RBW12, SWAN default: 4)"
+        ),
     )
     p2sds: Optional[float] = Field(
-        description="Power coefficient controlling strength of dissipation term T2 (M in RBW12, SWAN default: 4)"
+        description=(
+            "Power coefficient controlling strength of dissipation term T2 "
+            "(M in RBW12, SWAN default: 4)"
+        ),
     )
     normalization: Literal["up", "down"] = Field(
         default="up",
-        description="Selection of normalization of exceedance level by ET(f) (`up`) or E(f) (`down`) as in RBW12 (right column, page 1333), `up` is default and strongly recommended",
+        description=(
+            "Selection of normalization of exceedance level by ET(f) (`up`) or E(f) "
+            "(`down`) as in RBW12 (right column, page 1333), `up` is default and "
+            "strongly recommended"
+        ),
     )
     wind_drag: Literal["hwang", "fan", "ecmwf"] = Field(
         default="hwang",
-        description="Wind drag formula, `hwang` is the default and is unchanged from RBW12, `fan` is from Fan et al. (2012), `ecmwf` follows teh WAM Cycle 4 methodology",
+        description=(
+            "Wind drag formula, `hwang` is the default and is unchanged from RBW12, "
+            "`fan` is from Fan et al. (2012), `ecmwf` follows WAM Cycle 4 methodology"
+        ),
     )
     tau: Literal["vectau", "scatau"] = Field(
         default="vectau",
-        description="Use vector (vectau) or scalar (scatau) calculation for the wind strerss (Eq. 12 in RBW12), `vectau` is the default and strongly recommended",
+        description=(
+            "Use vector (vectau) or scalar (scatau) calculation for the wind strerss "
+            "(Eq. 12 in RBW12), `vectau` is the default and strongly recommended"
+        ),
     )
     u10: Literal["u10proxy", "true10"] = Field(
         default="u10proxy",
@@ -198,7 +241,10 @@ class ST6(SourceTerms):
         description="Factor to scale U10 with U* when using U10PROXY",
     )
     cdfac: Optional[confloat(gt=0.0)] = Field(
-        description="Counter bias in the input wind fields by providing a multiplier on the drag coefficient",
+        description=(
+            "Counter bias in the input wind fields by providing a multiplier "
+            "on the drag coefficient"
+        ),
     )
 
     @root_validator
@@ -290,14 +336,17 @@ class ELDEBERKY(BaseSubComponent):
 
     References
     ----------
-    Eldeberky, Y., 1999. A new parameterization of wave-wave interactions for
-    wave models. Journal of Physical Oceanography, 1999, 29, 2753-2766.
+    Eldeberky, Y., Polnikov, V. and Battjes, J.A., 1996. A statistical approach for
+    modeling triad interactions in dispersive waves. In Coastal Engineering 1996
+    (pp. 1088-1101).
 
-    Elderberky, Y., 1996. A laboratory study of wave-wave interactions in a random
-    sea. Journal of Physical Oceanography, 1996, 26, 147-160.
+    Eldeberky, Y. and Madsen, P.A., 1999. Deterministic and stochastic evolution
+    equations for fully dispersive and weakly nonlinear waves. Coastal Engineering,
+    38(1), pp.1-24.
 
-    Doering, J.C., Bowen, A.J., 1995. A field study of wave-wave interactions in
-    random seas. Journal of Physical Oceanography, 1995, 25, 2753-2766.
+    Doering, J.C. and Bowen, A.J., 1995. Parametrization of orbital velocity
+    asymmetries of shoaling and breaking waves using bispectral analysis. Coastal
+    engineering, 26(1-2), pp.15-33.
 
     """
 
@@ -327,8 +376,9 @@ class DEWIT(BaseSubComponent):
 
     References
     ----------
-    De Wit, R., 2022. A new parameterization of wave-wave interactions for wave models.
-    Journal of Physical Oceanography, 2022, 52, 2753-2766.
+    De Wit, F.P., 2022. Wave shape prediction in complex coastal systems (Doctoral
+    dissertation, PhD. thesis. Delft University of Technology. https://repository.
+    tudelft. nl/islandora/object/uuid% 3A0fb850a4-4294-4181-9d74-857de21265c2).
 
     """
 
