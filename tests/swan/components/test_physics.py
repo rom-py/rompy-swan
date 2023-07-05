@@ -1,7 +1,7 @@
 """Test startup components."""
 from pydantic import ValidationError
 
-from rompy.swan.components.physics import GEN1, GEN2, GEN3, DCTA, LTA
+from rompy.swan.components.physics import GEN1, GEN2, GEN3, DCTA, LTA, SPB
 
 
 # =====================================================================================
@@ -75,3 +75,10 @@ def test_triad_lta():
     assert phys.render() == "TRIAD LTA BIPHASE ELDEBERKY"
     phys = LTA(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.8, cutfr=2.5)
     assert phys.render() == "TRIAD LTA trfac=0.8 cutfr=2.5 BIPHASE DEWIT lpar=0.0"
+
+
+def test_triad_spb():
+    phys = SPB()
+    assert phys.render() == "TRIAD SPB BIPHASE ELDEBERKY"
+    phys = SPB(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.9, a=0.95, b=0.0)
+    assert phys.render() == "TRIAD SPB trfac=0.9 a=0.95 b=0.0 BIPHASE DEWIT lpar=0.0"
