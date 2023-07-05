@@ -2,7 +2,7 @@
 import pytest
 from pydantic import ValidationError
 
-from rompy.swan.components.physics import GEN1, GEN2, GEN3, DCTA, LTA, SPB, VEGETATION
+from rompy.swan.components.physics import GEN1, GEN2, GEN3, DCTA, LTA, SPB, VEGETATION, MUD
 
 
 # =====================================================================================
@@ -118,3 +118,16 @@ def test_vegetation_number_of_layers_mismatch():
             drag=[0.1],
             nstems=[2, 2, 2],
         )
+
+
+# =====================================================================================
+# MUD
+# =====================================================================================
+def test_mud_default():
+    phys = MUD()
+    assert phys.render() == "MUD"
+
+
+def test_mud_arguments():
+    phys = MUD(layer=2.0, rhom=1300, viscm=0.0076)
+    assert phys.render() == "MUD layer=2.0 rhom=1300.0 viscm=0.0076"

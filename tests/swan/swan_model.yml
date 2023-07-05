@@ -131,4 +131,8 @@ physics:
     diamtr: 0.1
     nstems: 1
     drag: 0.1
-  
+  mud:
+    model_type: mud
+    layer: 2.0
+    rhom: 1300.0
+    viscm: 0.0076
