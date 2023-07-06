@@ -1105,7 +1105,7 @@ class MUD(BaseComponent):
 class SICE(BaseComponent):
     """Sea ice dissipation default.
 
-    `SICE`
+    `SICE [aice]`
 
     Using this command, the user activates a sink term to represent the dissipation of
     wave energy by sea ice. The default method is R19 empirical/parametric: a
@@ -1165,6 +1165,8 @@ class SICE(BaseComponent):
 
 class R19(SICE):
     """Sea ice dissipation based on the empirical polynomial of Rogers et al (2019).
+
+    `SICE [aice] R19 [c0] [c1] [c2] [c3] [c4] [c5] [c6]`
 
     The default options recover the polynomial of Meylan et al. (2014), calibrated for
     a case of ice floes, mostly 10 to 25 m in diameter, in the marginal ice zone near
@@ -1251,6 +1253,8 @@ class R19(SICE):
 class D15(SICE):
     """Sea ice dissipation based on the method of Doble et al. (2015).
 
+    `SICE [aice] D15 [chf]`
+
     References
     ----------
     Doble, M.J., De Carolis, G., Meylan, M.H., Bidlot, J.R. and Wadhams, P., 2015.
@@ -1276,6 +1280,8 @@ class D15(SICE):
 class M18(SICE):
     """Sea ice dissipation based on the method of Meylan et al. (2018).
 
+    `SICE [aice] M18 [chf]`
+
     References
     ----------
     Meylan, M.H., Bennetts, L.G. and Kohout, A.L., 2014. In situ measurements and
@@ -1300,6 +1306,8 @@ class M18(SICE):
 
 class R21B(SICE):
     """Sea ice dissipation based on the method of Rogers et al. (2021).
+
+    `SICE [aice] R21B [chf] [npf]`
 
     References
     ----------
