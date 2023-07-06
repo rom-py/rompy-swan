@@ -1405,21 +1405,96 @@ class TURBULENCE(BaseComponent):
 class BRAGG(BaseComponent):
     """Bragg scattering.
 
-    `BRAGG`
+    `BRAGG [ibrag] [nreg] [cutoff]`
 
     Using this optional command, the user activates a source term to represent the
     scattering of waves due to changes in the small-scale bathymetry based on the
     theory of Ardhuin and Herbers (2002). If this command is not used, SWAN will not
     account for Bragg scattering.
 
+    The underlying process is related to the bed elevation spectrum that describes the
+    random variability of the bathymetry at the scale of the wave length on top of a
+    slowly varying depth. To input this spectrum in the model, two options are
+    available. One option is to read a spectrum from a file. This single bottom
+    spectrum will subsequently be applied in all active grid points. The assumption
+    being made here is that the inputted bottom is gently sloping. Note that the bottom
+    spectrum must be given as a function of the wave number `k`.
+
+    Another option is to compute the spectrum by a Fourier transform from `x` to `k` of
+    the bed modulations around a computational grid point. First, one must define a
+    square region with a fixed size around the grid point in order to perform the
+    Fourier transform. The size should correspond to a multiple of the wave length at
+    which refraction is resolved (i.e. consistent with the mild slope assumption).
+    Next, the amplitude modulation of the small-scale bathymetry is obtained by
+    substracting a slowly varying bed level from the inputted high-resolution
+    bathymetric data within this square region. Here, the smooth bed level is achieved
+    using a bilinear fit. During the computation, however, SWAN employs the gently
+    sloping bed as the mean of the original bathymetry within the given square around
+    each computational grid point. Finally, the corresponding bottom spectrum is
+    computed with an FFT.
+
+    Notes
+    -----
+    The Bragg scattering source term to the action balance equation gives rise to a
+    fairly stiff equation. The best remedy is to run SWAN in the nonstationary mode
+    with a relatively small time step or in the stationary mode with some under
+    relaxation (see command `NUM STAT [alfa]`).
+
     """
 
-    model_type: Literal["bragg"] = Field(
+    model_type: Literal["bragg", "BRAGG"] = Field(
         default="bragg", description="Model type discriminator"
+    )
+    ibrag: Optional[Literal[1, 2, 3]] = Field(
+        description=(
+            "Indicates the computation of Bragg scattering term:\n\n* 1: source term "
+            "is calculated per sweep and bottom spectrum is interpolated at the "
+            "difference wave number a priori (thus requiring storage)\n* 2: source "
+            "term is calculated per sweep and bottom spectrum is interpolated at the "
+            "difference wave number per sweep (no storage)\n* 3: source term is "
+            "calculated per iteration and bottom spectrum is interpolated at the "
+            "difference wave number per iteration (no storage)\n(SWAN default: 1)"
+        ),
+    )
+    nreg: Optional[int] = Field(
+        description=(
+            "Size of square region around computational grid point (centered) for "
+            "computing the mean depth and, if desired, the bed elevation spectrum. It "
+            "is expressed in terms of the number of grid points (per direction) "
+            "of the inputted bottom grid"
+        ),
+    )
+    cutoff: Optional[float] = Field(
+        description=(
+            "Cutoff to the ratio between surface and bottom wave numbers. Note: see"
+            "the Scientific/Technical documentation for details (SWAN default: 5.0)"
+        ),
     )
 
     def cmd(self) -> str:
-        return f"BRAGG"
+        repr = "BRAGG"
+        if self.ibrag is not None:
+            repr += f" ibrag={self.ibrag}"
+        if self.nreg is not None:
+            repr += f" nreg={self.nreg}"
+        if self.cutoff is not None:
+            repr += f" cutoff={self.cutoff}"
+        return repr
+
+
+class BRAGGFT(BRAGG):
+    """Bragg scattering with bottom spectrum computed from FFT.
+
+    `BRAGG [ibrag] [nreg] [cutoff] FT`
+
+    """
+
+    model_type: Literal["braggft", "BRAGGFT"] = Field(
+        default="braggft", description="Model type discriminator"
+    )
+
+    def cmd(self) -> str:
+        return f"{super().cmd()} FT"
 
 
 # =====================================================================================

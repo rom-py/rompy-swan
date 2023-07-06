@@ -5,7 +5,7 @@ from abc import ABC
 
 from pydantic import Field, root_validator, conint, confloat
 
-from rompy.swan.types import GridOptions
+from rompy.swan.types import GridOptions, IDLA
 from rompy.swan.subcomponents.base import BaseSubComponent
 
 logger = logging.getLogger(__name__)
@@ -14,22 +14,9 @@ logger = logging.getLogger(__name__)
 class READGRID(BaseSubComponent, ABC):
     """SWAN grid reader base class.
 
-    Notes
-    -----
-    IDLA options:
-    - 1: SWAN reads the map from left to right starting in the upper-left-hand
-        corner of the map (it is assumed that the x-axis of the grid is pointing
-        to the right and the y-axis upwards). A new line in the map should start on
-        a new line in the file.
-    - 2: As `1` but a new line in the map need not start on a new line in the file.
-    - 3: SWAN reads the map from left to right starting in the lower-left-hand corner
-        of the map. A new line in the map should start on a new line in the file.
-    - 4: As `3` but a new line in the map need not start on a new line in the file.
-    - 5: SWAN reads the map from top to bottom starting in the lower-left-hand corner
-        of the map. A new column in the map should start on a new line in the file.
-    - 6: As `5` but a new column in the map need not start on a new line in the file.
-
     File format identifiers:
+    ------------------------
+
     - 1: Format according to BODKAR convention (a standard of the Ministry of
         Transport and Public Works in the Netherlands). Format string: (10X,12F5.0).
     - 5: Format (16F5.0), an input line consists of 16 fields of 5 places each.
@@ -52,7 +39,7 @@ class READGRID(BaseSubComponent, ABC):
             "obtain values in m. To change sign use a negative `fac`."
         )
     )
-    idla: conint(ge=1, le=6) = Field(
+    idla: IDLA = Field(
         default=1,
         description=(
             "Prescribes the order in which the values of bottom levels "
