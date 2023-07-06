@@ -16,6 +16,7 @@ from rompy.swan.components.physics import (
     D15,
     M18,
     R21B,
+    TURBULENCE,
 )
 
 
@@ -196,3 +197,21 @@ def test_sice_r21b():
     assert sice.render() == "SICE R21B"
     sice = R21B(aice=0.5, chf=2.9, npf=4.5)
     assert sice.render() == "SICE aice=0.5 R21B chf=2.9 npf=4.5"
+
+
+# =====================================================================================
+# TURBULENCE
+# =====================================================================================
+def test_turbulence_current():
+    turb = TURBULENCE(tbcur=0.004)
+    assert turb.render() == "TURBULENCE CURRENT tbcur=0.004"
+
+
+def test_turbulence_no_current():
+    turb = TURBULENCE(ctb=0.01, current=False)
+    assert turb.render() == "TURBULENCE ctb=0.01"
+
+
+def test_turbulence_tbcur_only_with_current():
+    with pytest.raises(ValidationError):
+        TURBULENCE(tbcur=0.004, current=False)
