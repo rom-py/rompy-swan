@@ -17,6 +17,9 @@ from rompy.swan.components.physics import (
     M18,
     R21B,
     TURBULENCE,
+    BRAGG,
+    BRAGGFT,
+    BRAGGFILE,
 )
 
 
@@ -215,3 +218,34 @@ def test_turbulence_no_current():
 def test_turbulence_tbcur_only_with_current():
     with pytest.raises(ValidationError):
         TURBULENCE(tbcur=0.004, current=False)
+
+
+# =====================================================================================
+# BRAGG
+# =====================================================================================
+def test_bragg_default():
+    bragg = BRAGG()
+    assert bragg.render() == "BRAGG"
+    bragg = BRAGG(ibrag=1, nreg=200, cutoff=5.0)
+    assert bragg.render() == "BRAGG ibrag=1 nreg=200 cutoff=5.0"
+
+
+def test_bragg_ft():
+    bragg = BRAGGFT()
+    assert bragg.render() == "BRAGG FT"
+    bragg = BRAGGFT(ibrag=1, nreg=200, cutoff=5.0)
+    assert bragg.render() == "BRAGG ibrag=1 nreg=200 cutoff=5.0 FT"
+
+
+def test_bragg_file():
+    bragg = BRAGGFILE(fname="bragg.txt", mkx=200, dkx=0.1)
+    assert bragg.render() == "BRAGG FILE fname='bragg.txt' mkx=200 dkx=0.1"
+    bragg = BRAGGFILE(fname="bragg.txt", idla=1, mkx=200, mky=200, dkx=0.1, dky=0.1)
+    assert bragg.render() == (
+        "BRAGG FILE fname='bragg.txt' idla=1 mkx=200 mky=200 dkx=0.1 dky=0.1"
+    )
+
+
+def test_bragg_file_idla():
+    with pytest.raises(ValidationError):
+        BRAGGFILE(fname="bragg.txt", idla=7, mkx=200, mky=200, dkx=0.1, dky=0.1)

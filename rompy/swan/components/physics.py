@@ -1544,7 +1544,7 @@ class BRAGGFILE(BRAGG):
     )
 
     def cmd(self) -> str:
-        repr = f"{super().cmd()} FILE {self.fname}"
+        repr = f"{super().cmd()} FILE fname='{self.fname}'"
         if self.idla is not None:
             repr += f" idla={self.idla.value}"
         repr += f" mkx={self.mkx}"
@@ -1754,6 +1754,10 @@ TURBULENCE_TYPE = Annotated[
     TURBULENCE,
     Field(description="Turbulent dissipation component", discriminator="model_type"),
 ]
+BRAGG_TYPE = Annotated[
+    Union[BRAGG, BRAGGFT, BRAGGFILE],
+    Field(description="Bragg scattering component", discriminator="model_type")
+]
 
 
 class PHYSICS(BaseComponent):
@@ -1779,6 +1783,7 @@ class PHYSICS(BaseComponent):
     mud: Optional[MUD_TYPE]
     sice: Optional[SICE_TYPE]
     turbulence: Optional[TURBULENCE_TYPE]
+    bragg: Optional[BRAGG_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -1824,4 +1829,6 @@ class PHYSICS(BaseComponent):
             repr += [self.sice.render()]
         if self.turbulence is not None:
             repr += [self.turbulence.render()]
+        if self.bragg is not None:
+            repr += [self.bragg.render()]
         return repr

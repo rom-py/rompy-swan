@@ -142,3 +142,8 @@ physics:
     ctb: 0.01
     current: True
     tbcur: 0.004
+  bragg:
+    model_type: braggft
+    ibrag: 1
+    nreg: 200
+    cutoff: 5.0
