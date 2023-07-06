@@ -90,6 +90,7 @@ class GEN1(BaseComponent):
     )
 
     def cmd(self):
+        """Command line string for this component."""
         repr = "GEN1"
         if self.cf10 is not None:
             repr += f" cf10={self.cf10}"
@@ -137,6 +138,7 @@ class GEN2(GEN1):
     )
 
     def cmd(self):
+        """Command line string for this component."""
         repr = "GEN2"
         if self.cf10 is not None:
             repr += f" cf10={self.cf10}"
@@ -185,6 +187,7 @@ class GEN3(BaseComponent):
         return values
 
     def cmd(self):
+        """Command line string for this component."""
         repr = f"GEN3 {self.source_terms.render()}"
         return repr
 
@@ -223,6 +226,7 @@ class NEGATINP(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"NEGATINP rdcoef={self.rdcoef}"
 
 
@@ -245,6 +249,7 @@ class SSWELL(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return "SSWELL"
 
 
@@ -272,6 +277,7 @@ class ROGERS(SSWELL):
     feswell: Optional[float] = Field(description="Swell dissipation factor")
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} ROGERS"
         if self.cdsv is not None:
             repr += f" cdsv={self.cdsv}"
@@ -304,6 +310,7 @@ class ARDHUIN(SSWELL):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} ARDHUIN"
         if self.cdsv is not None:
             repr += f" cdsv={self.cdsv}"
@@ -334,6 +341,7 @@ class ZIEGER(SSWELL):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} ZIEGER"
         if self.b1 is not None:
             repr += f" b1={self.b1}"
@@ -397,6 +405,7 @@ class WCAPKOMEN(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"WCAPPING KOMEN"
         if self.cds2 is not None:
             repr += f" cds2={self.cds2}"
@@ -448,6 +457,7 @@ class WCAPAB(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"WCAPPING AB"
         if self.cds2 is not None:
             repr += f" cds2={self.cds2}"
@@ -529,6 +539,7 @@ class QUADRUPL(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"QUADRUPL"
         if self.iquad is not None:
             repr += f" iquad={self.iquad}"
@@ -574,6 +585,7 @@ class BREAKCONSTANT(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "BREAKING CONSTANT"
         if self.alpha is not None:
             repr += f" alpha={self.alpha}"
@@ -621,6 +633,7 @@ class BREAKBKD(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "BREAKING BKD"
         if self.alpha is not None:
             repr += f" alpha={self.alpha}"
@@ -667,6 +680,7 @@ class JONSWAP(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "FRICTION JONSWAP CONSTANT"
         if self.cfjon is not None:
             repr += f" cfjon={self.cfjon}"
@@ -699,6 +713,7 @@ class COLLINS(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "FRICTION COLLINS"
         if self.cfw is not None:
             repr += f" cfw={self.cfw}"
@@ -737,6 +752,7 @@ class MADSEN(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "FRICTION MADSEN"
         if self.kn is not None:
             repr += f" kn={self.kn}"
@@ -771,6 +787,7 @@ class RIPPLES(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "FRICTION RIPPLES"
         if self.s is not None:
             repr += f" S={self.s}"
@@ -801,6 +818,7 @@ class TRIAD(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"TRIAD"
 
 
@@ -840,6 +858,7 @@ class DCTA(TRIAD):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} DCTA"
         if self.trfac is not None:
             repr += f" trfac={self.trfac}"
@@ -884,6 +903,7 @@ class LTA(TRIAD):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} LTA"
         if self.trfac is not None:
             repr += f" trfac={self.trfac}"
@@ -935,6 +955,7 @@ class SPB(TRIAD):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} SPB"
         if self.trfac is not None:
             repr += f" trfac={self.trfac}"
@@ -1041,6 +1062,7 @@ class VEGETATION(BaseComponent):
         return values
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"VEGETATION iveg={self.iveg}"
         for h, d, dr, n in zip(self.height, self.diamtr, self.drag, self.nstems):
             repr += f" height={h} diamtr={d} nstems={n} drag={dr}"
@@ -1090,6 +1112,7 @@ class MUD(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "MUD"
         if self.layer is not None:
             repr += f" layer={self.layer}"
@@ -1158,6 +1181,7 @@ class SICE(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "SICE"
         if self.aice is not None:
             repr += f" aice={self.aice}"
@@ -1233,6 +1257,7 @@ class R19(SICE):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} {self.model_type.upper()}"
         if self.c0 is not None:
             repr += f" c0={self.c0}"
@@ -1272,6 +1297,7 @@ class D15(SICE):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} {self.model_type.upper()}"
         if self.chf is not None:
             repr += f" chf={self.chf}"
@@ -1299,6 +1325,7 @@ class M18(SICE):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} {self.model_type.upper()}"
         if self.chf is not None:
             repr += f" chf={self.chf}"
@@ -1332,6 +1359,7 @@ class R21B(SICE):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} {self.model_type.upper()}"
         if self.chf is not None:
             repr += f" chf={self.chf}"
@@ -1390,6 +1418,7 @@ class TURBULENCE(BaseComponent):
         return value
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "TURBULENCE"
         if self.ctb is not None:
             repr += f" ctb={self.ctb}"
@@ -1473,6 +1502,7 @@ class BRAGG(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = "BRAGG"
         if self.ibrag is not None:
             repr += f" ibrag={self.ibrag}"
@@ -1495,6 +1525,7 @@ class BRAGGFT(BRAGG):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"{super().cmd()} FT"
 
 
@@ -1544,6 +1575,7 @@ class BRAGGFILE(BRAGG):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         repr = f"{super().cmd()} FILE fname='{self.fname}'"
         if self.idla is not None:
             repr += f" idla={self.idla.value}"
@@ -1574,9 +1606,23 @@ class LIMITER(BaseComponent):
     model_type: Literal["limiter"] = Field(
         default="limiter", description="Model type discriminator"
     )
+    ursell: Optional[float] = Field(
+        description=(
+            "The upper threshold for Ursell number (SWAN default: 10.0)"
+        ),
+    )
+    qb: Optional[float] = Field(
+        description="The threshold for fraction of breaking waves (SWAN default: 1.0)"
+    )
 
     def cmd(self) -> str:
-        return f"LIMITER"
+        """Command file string for this component."""
+        repr = "LIMITER"
+        if self.ursell is not None:
+            repr += f" ursell={self.ursell}"
+        if self.qb is not None:
+            repr += f" qb={self.qb}"
+        return repr
 
 
 # =====================================================================================
@@ -1600,6 +1646,7 @@ class OBSTACLE(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"OBSTACLE"
 
 
@@ -1630,6 +1677,7 @@ class OBSTACLE_FIG(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"OBSTACLE FIG"
 
 
@@ -1648,6 +1696,7 @@ class SETUP(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"SETUP"
 
 
@@ -1666,6 +1715,7 @@ class DIFFRACTION(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"DIFFRACTION"
 
 
@@ -1684,6 +1734,7 @@ class SURFBEAT(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"SURFBEAT"
 
 
@@ -1702,6 +1753,7 @@ class SCAT(BaseComponent):
     )
 
     def cmd(self) -> str:
+        """Command file string for this component."""
         return f"SCAT"
 
 
@@ -1758,6 +1810,9 @@ BRAGG_TYPE = Annotated[
     Union[BRAGG, BRAGGFT, BRAGGFILE],
     Field(description="Bragg scattering component", discriminator="model_type")
 ]
+LIMITER_TYPE = Annotated[
+    LIMITER, Field(description="Limiter component", discriminator="model_type")
+]
 
 
 class PHYSICS(BaseComponent):
@@ -1784,6 +1839,7 @@ class PHYSICS(BaseComponent):
     sice: Optional[SICE_TYPE]
     turbulence: Optional[TURBULENCE_TYPE]
     bragg: Optional[BRAGG_TYPE]
+    limiter: Optional[LIMITER_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -1831,4 +1887,6 @@ class PHYSICS(BaseComponent):
             repr += [self.turbulence.render()]
         if self.bragg is not None:
             repr += [self.bragg.render()]
+        if self.limiter is not None:
+            repr += [self.limiter.render()]
         return repr

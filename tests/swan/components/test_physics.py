@@ -20,6 +20,7 @@ from rompy.swan.components.physics import (
     BRAGG,
     BRAGGFT,
     BRAGGFILE,
+    LIMITER,
 )
 
 
@@ -249,3 +250,13 @@ def test_bragg_file():
 def test_bragg_file_idla():
     with pytest.raises(ValidationError):
         BRAGGFILE(fname="bragg.txt", idla=7, mkx=200, mky=200, dkx=0.1, dky=0.1)
+
+
+# =====================================================================================
+# LIMITER
+# =====================================================================================
+def test_limiter():
+    lim = LIMITER()
+    assert lim.render() == "LIMITER"
+    lim = LIMITER(ursell=10.0, qb=1.0)
+    assert lim.render() == "LIMITER ursell=10.0 qb=1.0"
