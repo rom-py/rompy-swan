@@ -4,6 +4,7 @@ from typing import Literal, Optional, Union, Annotated
 from pydantic import validator, root_validator, Field, confloat
 
 from rompy.swan.components.base import BaseComponent
+from rompy.swan.types import IDLA
 from rompy.swan.subcomponents.physics import (
     JANSSEN,
     KOMEN,
@@ -1495,6 +1496,64 @@ class BRAGGFT(BRAGG):
 
     def cmd(self) -> str:
         return f"{super().cmd()} FT"
+
+
+class BRAGGFILE(BRAGG):
+    """Bragg scattering with bottom spectrum from file.
+
+    `BRAGG [ibrag] [nreg] [cutoff] FILE 'fname' [idla] [mkx] [mky] [dkx] [dky]`
+
+    """
+
+    model_type: Literal["braggfile", "BRAGGFILE"] = Field(
+        default="braggfile", description="Model type discriminator"
+    )
+    fname: str = Field(
+        description="Name of file containing the bottom spectrum",
+        max_length=40,
+    )
+    idla: Optional[IDLA] = Field(
+        description=(
+            "Order in which the values should be given in the input files"
+        ),
+    )
+    mkx: int = Field(
+        description=(
+            "Number of cells in x-direction of the wave number grid related to bottom "
+            "spectrum (this is one less than the number of points in this direction)"
+        ),
+    )
+    mky: Optional[int] = Field(
+        description=(
+            "Number of cells in y-direction of the wave number grid related to bottom "
+            "spectrum (this is one less than the number of points in this direction)"
+            "(SWAN default: `mky = mkx`)"
+        ),
+    )
+    dkx: float = Field(
+        description=(
+            "Mesh size in x-direction of the wave number grid related to bottom "
+            "spectrum (1/m)"
+        ),
+    )
+    dky: Optional[float] = Field(
+        description=(
+            "Mesh size in y-direction of the wave number grid related to bottom "
+            "spectrum (1/m) (SWAN default: `dky = dkx`)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} FILE {self.fname}"
+        if self.idla is not None:
+            repr += f" idla={self.idla.value}"
+        repr += f" mkx={self.mkx}"
+        if self.mky is not None:
+            repr += f" mky={self.mky}"
+        repr += f" dkx={self.dkx}"
+        if self.dky is not None:
+            repr += f" dky={self.dky}"
+        return repr
 
 
 # =====================================================================================

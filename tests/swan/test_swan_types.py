@@ -1,96 +1,93 @@
-"""Test swan_config class."""
+"""Test swan_types."""
 import pytest
-import logging
-from rompy.swan.config import SwanConfigComponents as SwanConfig
-from rompy.swan.config import cgrid, inpgrid
+from rompy.swan.types import IDLA, GridOptions, BoundShapeOptions, SideOptions
 
 
-logger = logging.getLogger(__name__)
+def test_idla():
+    assert IDLA(1) == IDLA.ONE == 1
+    assert IDLA(2) == IDLA.TWO == 2
+    assert IDLA(3) == IDLA.THREE == 3
+    assert IDLA(4) == IDLA.FOUR == 4
+    assert IDLA(5) == IDLA.FIVE == 5
+    assert IDLA(6) == IDLA.SIX == 6
+    with pytest.raises(ValueError):
+        IDLA(7)
 
 
-@pytest.fixture(scope="module")
-def cgrid_instance():
-    inst = cgrid.REGULAR(
-        mdc=36,
-        flow=0.04,
-        fhigh=0.4,
-        xlenc=100.0,
-        ylenc=100.0,
-        mxc=10,
-        myc=10,
-    )
-    yield inst
+def test_grid_options():
+    assert GridOptions.BOTTOM.name == "BOTTOM"
+    assert GridOptions.BOTTOM.value == "bottom"
+    assert GridOptions.WLEVEL.name == "WLEVEL"
+    assert GridOptions.WLEVEL.value == "wlevel"
+    assert GridOptions.CURRENT.name == "CURRENT"
+    assert GridOptions.CURRENT.value == "current"
+    assert GridOptions.VX.name == "VX"
+    assert GridOptions.VX.value == "vx"
+    assert GridOptions.VY.name == "VY"
+    assert GridOptions.VY.value == "vy"
+    assert GridOptions.WIND.name == "WIND"
+    assert GridOptions.WIND.value == "wind"
+    assert GridOptions.WX.name == "WX"
+    assert GridOptions.WX.value == "wx"
+    assert GridOptions.WY.name == "WY"
+    assert GridOptions.WY.value == "wy"
+    assert GridOptions.FRICTION.name == "FRICTION"
+    assert GridOptions.FRICTION.value == "friction"
+    assert GridOptions.NPLANTS.name == "NPLANTS"
+    assert GridOptions.NPLANTS.value == "nplants"
+    assert GridOptions.TURBVISC.name == "TURBVISC"
+    assert GridOptions.TURBVISC.value == "turbvisc"
+    assert GridOptions.MUDLAYER.name == "MUDLAYER"
+    assert GridOptions.MUDLAYER.value == "mudlayer"
+    assert GridOptions.AICE.name == "AICE"
+    assert GridOptions.AICE.value == "aice"
+    assert GridOptions.HICE.name == "HICE"
+    assert GridOptions.HICE.value == "hice"
+    assert GridOptions.HSS.name == "HSS"
+    assert GridOptions.HSS.value == "hss"
+    assert GridOptions.TSS.name == "TSS"
+    assert GridOptions.TSS.value == "tss"
+    for option in GridOptions:
+        assert option.name == option.value.upper()
+    with pytest.raises(ValueError):
+        GridOptions("invalid")
 
 
-@pytest.fixture(scope="module")
-def inpgrid_instance():
-    inst_wind = inpgrid.REGULAR(
-        grid_type="WIND",
-        xpinp=0.0,
-        ypinp=0.0,
-        alpinp=0.0,
-        mxinp=10,
-        myinp=10,
-        dxinp=0.1,
-        dyinp=0.1,
-        excval=-999.0,
-        nonstationary=inpgrid.NONSTATIONARY(
-            tbeg="2023-01-01T00:00:00",
-            delt="PT30M",
-            tend="2023-02-01T00:00:00",
-            deltfmt="hr",
-        ),
-        readinp=inpgrid.READINP(
-            fname1="wind.txt",
-        ),
-    )
-    inst_bottom = inst_wind.copy()
-    inst_bottom.grid_type = "BOTTOM"
-    inst_bottom.nonstationary = None
-    inst_bottom.readinp.fname1 = "bottom.txt"
-    yield [inst_bottom, inst_wind]
+def test_bound_shape_options():
+    assert BoundShapeOptions.JONSWAP.name == "JONSWAP"
+    assert BoundShapeOptions.JONSWAP.value == "jonswap"
+    assert BoundShapeOptions.PM.name == "PM"
+    assert BoundShapeOptions.PM.value == "pm"
+    assert BoundShapeOptions.GAUSS.name == "GAUSS"
+    assert BoundShapeOptions.GAUSS.value == "gauss"
+    assert BoundShapeOptions.BIN.name == "BIN"
+    assert BoundShapeOptions.BIN.value == "bin"
+    assert BoundShapeOptions.TMA.name == "TMA"
+    assert BoundShapeOptions.TMA.value == "tma"
+    for option in BoundShapeOptions:
+        assert option.name == option.value.upper()
+    with pytest.raises(ValueError):
+        BoundShapeOptions("square")
 
 
-def _test_swan_config_from_objects(cgrid_instance, inpgrid_instance):
-    sc = SwanConfig(
-        cgrid=cgrid_instance,
-        inpgrid=inpgrid_instance,
-    )
-    sc._write_cmd()
-
-
-def _test_swan_config_from_dict():
-    cgrid_dict = {
-        "model_type": "regular",
-        "mdc": 36,
-        "flow": 0.04,
-        "fhigh": 0.4,
-        "xlenc": 100.0,
-        "ylenc": 100.0,
-        "mxc": 10,
-        "myc": 10,
-    }
-    inpgrid_wind_dict = {
-        "model_type": "regular",
-        "grid_type": "wind",
-        "xpinp": 0.0,
-        "ypinp": 0.0,
-        "alpinp": 0.0,
-        "mxinp": 10,
-        "myinp": 10,
-        "dxinp": 0.1,
-        "dyinp": 0.1,
-        "excval": -999.0,
-        "nonstationary": {
-            "tbeg": "2023-01-01T00:00:00",
-            "delt": "PT30M",
-            "tend": "2023-02-01T00:00:00",
-            "deltfmt": "hr",
-        },
-        "readinp": {"fname1": "wind.txt"},
-    }
-    sc = SwanConfig(
-        cgrid=cgrid_dict,
-        inpgrid=[inpgrid_wind_dict],
-    )
-    sc._write_cmd()
+def test_side_options():
+    assert SideOptions.NORTH.name == "NORTH"
+    assert SideOptions.NORTH.value == "north"
+    assert SideOptions.NW.name == "NW"
+    assert SideOptions.NW.value == "nw"
+    assert SideOptions.WEST.name == "WEST"
+    assert SideOptions.WEST.value == "west"
+    assert SideOptions.SW.name == "SW"
+    assert SideOptions.SW.value == "sw"
+    assert SideOptions.SOUTH.name == "SOUTH"
+    assert SideOptions.SOUTH.value == "south"
+    assert SideOptions.SE.name == "SE"
+    assert SideOptions.SE.value == "se"
+    assert SideOptions.EAST.name == "EAST"
+    assert SideOptions.EAST.value == "east"
+    assert SideOptions.NE.name == "NE"
+    assert SideOptions.NE.value == "ne"
+    for option in SideOptions:
+        assert option.name == option.value.upper()
+    with pytest.raises(ValueError):
+        SideOptions("center")
