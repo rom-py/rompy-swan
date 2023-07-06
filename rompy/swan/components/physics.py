@@ -1,6 +1,6 @@
 """Model physics components."""
 import logging
-from typing import Literal, Optional, Union
+from typing import Literal, Optional, Union, Annotated
 from pydantic import validator, root_validator, Field, confloat
 
 from rompy.swan.components.base import BaseComponent
@@ -14,6 +14,8 @@ from rompy.swan.subcomponents.physics import (
     ST6C3,
     ST6C4,
     ST6C5,
+    ELDEBERKY,
+    DEWIT,
 )
 
 
@@ -33,9 +35,9 @@ SOURCE_TERMS = Union[
 ]
 
 
-#======================================================================================
+# =====================================================================================
 # Wave generation GEN1 | GEN2 | GEN3
-#======================================================================================
+# =====================================================================================
 class GEN1(BaseComponent):
     """First generation source terms GEN1.
 
@@ -59,19 +61,31 @@ class GEN1(BaseComponent):
         description="Controls the exponential wave growth (SWAN default: 0.12)"
     )
     cf40: Optional[float] = Field(
-        description="Controls the dissipation rate, i.e., the time decay scale (SWAN default: 250.0)"
+        description=(
+            "Controls the dissipation rate, i.e., the time decay scale "
+            "(SWAN default: 250.0)"
+        )
     )
     edmlpm: Optional[float] = Field(
-        description="Maximum non-dimensionless energy density of the wind sea part of the spectrum according to Pierson Moskowitz (SWAN default: 0.0036)"
+        description=(
+            "Maximum non-dimensionless energy density of the wind sea part of the "
+            "spectrum according to Pierson Moskowitz (SWAN default: 0.0036)"
+        )
     )
     cdrag: Optional[float] = Field(
         description="Drag coefficient (SWAN default: 0.0012)"
     )
     umin: Optional[float] = Field(
-        description="Minimum wind velocity (relative to current; all wind speeds are taken at 10 m above sea level) (SWAN default: 1)"
+        description=(
+            "Minimum wind velocity (relative to current; all wind speeds "
+            "are taken at 10 m above sea level) (SWAN default: 1)"
+        )
     )
     cfpm: Optional[float] = Field(
-        description="Coefficient which determines the Pierson Moskowitz frequency: $delta_{PM} = 2pi g / U_{10}$ (SWAN default: 0.13)"
+        description=(
+            "Coefficient which determines the Pierson Moskowitz frequency: "
+            "`delta_PM = 2pi g / U_10` (SWAN default: 0.13)"
+        )
     )
 
     def cmd(self):
@@ -109,10 +123,16 @@ class GEN2(GEN1):
         default="gen2", description="Model type discriminator"
     )
     cf50: Optional[float] = Field(
-        description="Controls the spectral energy scale of the limit spectrum (SWAN default: 0.0023)"
+        description=(
+            "Controls the spectral energy scale of the limit spectrum "
+            "(SWAN default: 0.0023)"
+        )
     )
     cf60: Optional[float] = Field(
-        description="Ccontrols the spectral energy scale of the limit spectrum (SWAN default: -0.223"
+        description=(
+            "Ccontrols the spectral energy scale of the limit spectrum "
+            "(SWAN default: -0.223"
+        )
     )
 
     def cmd(self):
@@ -154,7 +174,7 @@ class GEN3(BaseComponent):
         default="gen3", description="Model type discriminator"
     )
     source_terms: SOURCE_TERMS = Field(
-        default=WESTHUYSEN(),
+        default_factory=WESTHUYSEN,
         description="SWAN source terms to be used",
         discriminator="model_type",
     )
@@ -168,27 +188,28 @@ class GEN3(BaseComponent):
         return repr
 
 
-#======================================================================================
+# =====================================================================================
 # Swell dissipation SSWELL
-#======================================================================================
+# =====================================================================================
 class NEGATINP(BaseComponent):
     """Negative wind input.
 
-    With this optional command the user activates negative wind input. **This is intended
-    only for use with non-breaking swell dissipation SSWELL ZIEGER**. Parameter `rdcoef`
-    is a fraction between 0 and 1, representing the strength of negative wind input. As
-    an example, with [rdcoef]=0.04, for a spectral bin that is opposed to the wind
-    direction, the wind input factor W(k, θ) is negative, and its magnitude is 4% of
-    the corresponding value of the spectral bin that is in the opposite direction
-    (i.e. in the wind direction). See Zieger et al. (2015) eq. 11, where a0 is their
-    notation for [rdcoef]. Default [rdcoef]=0.0 and `rdcoef=0.04` is recommended,
-    though as implied by Zieger et al. (2015), this value is not well-established, so
-    the user is encouraged to experiment with other values.
+    With this optional command the user activates negative wind input. **This is
+    intended only for use with non-breaking swell dissipation SSWELL ZIEGER**.
+    Parameter `rdcoef` is a fraction between 0 and 1, representing the strength of
+    negative wind input. As an example, with [rdcoef]=0.04, for a spectral bin that is
+    opposed to the wind direction, the wind input factor W(k, θ) is negative, and its
+    magnitude is 4% of the corresponding value of the spectral bin that is in the
+    opposite direction (i.e. in the wind direction). See Zieger et al. (2015) eq. 11,
+    where a0 is their notation for [rdcoef]. Default [rdcoef]=0.0 and `rdcoef=0.04` is
+    recommended, though as implied by Zieger et al. (2015), this value is not
+    well-established, so the user is encouraged to experiment with other values.
 
     References
     ----------
-    Zieger, S., A.V. Babanin, W. E. Rogers and I.R. Young, 2015: Observation-based
-    source terms in the third-generation wave model WAVEWATCH, Ocean Model., 96, 2-25.
+    Zieger, S., Babanin, A.V., Rogers, W.E. and Young, I.R., 2015. Observation-based
+    source terms in the third-generation wave model WAVEWATCH. Ocean Modelling, 96,
+    pp.2-25.
 
     """
 
@@ -231,9 +252,10 @@ class ROGERS(SSWELL):
 
     References
     ----------
-    Rogers, W.E., A.V. Babanin and D.W. Wang, 2012: Observation-Consistent Input and
-    Whitecapping Dissipation in a Model for Wind-Generated Surface Waves: Description
-    and Simple Calculations, J. Atmos. Oceanic Technol., 29:9, 1329-1346.
+    Rogers, W.E., Babanin, A.V. and Wang, D.W., 2012. Observation-consistent input and
+    whitecapping dissipation in a model for wind-generated surface waves: Description
+    and simple calculations. Journal of Atmospheric and Oceanic Technology, 29(9),
+    pp.1329-1346.
 
     """
 
@@ -241,11 +263,12 @@ class ROGERS(SSWELL):
         default="rogers", description="Model type discriminator"
     )
     cdsv: Optional[float] = Field(
-        description="Coefficient related to laminar atmospheric boundary layer (SWAN default: 1.2)"
+        description=(
+            "Coefficient related to laminar atmospheric boundary layer "
+            "(SWAN default: 1.2)"
+        )
     )
-    feswell: Optional[float] = Field(
-        description="Swell dissipation factor"
-    )
+    feswell: Optional[float] = Field(description="Swell dissipation factor")
 
     def cmd(self) -> str:
         repr = f"{super().cmd()} ROGERS"
@@ -261,9 +284,11 @@ class ARDHUIN(SSWELL):
 
     References
     ----------
-    Ardhuin, F., A. Rogers, A. Babanin, J. Filipot, J. Magne, A. Roland, and P. van
-    der Westhuysen, 2010: Semiempirical dissipation source functions for ocean waves.
-    Part I: Definition, calibration, and validation, J. Phys. Oceanogr., 40, 1917-1941.
+    Ardhuin, F., Rogers, E., Babanin, A.V., Filipot, J.F., Magne, R., Roland, A.,
+    Van Der Westhuysen, A., Queffeulou, P., Lefevre, J.M., Aouf, L. and Collard, F.,
+    2010. Semiempirical dissipation source functions for ocean waves. Part I:
+    Definition, calibration, and validation. Journal of Physical Oceanography, 40(9),
+    pp.1917-1941.
 
     """
 
@@ -271,7 +296,10 @@ class ARDHUIN(SSWELL):
         default="ardhuin", description="Model type discriminator"
     )
     cdsv: Optional[float] = Field(
-        description="Coefficient related to laminar atmospheric boundary layer (SWAN default: 1.2)"
+        description=(
+            "Coefficient related to laminar atmospheric boundary layer "
+            "(SWAN default: 1.2)"
+        )
     )
 
     def cmd(self) -> str:
@@ -288,11 +316,12 @@ class ZIEGER(SSWELL):
 
     References
     ----------
-    Zieger, S., A.V. Babanin, W. E. Rogers and I.R. Young, 2015: Observation-based
-    source terms in the third-generation wave model WAVEWATCH, Ocean Model., 96, 2-25.
+    Zieger, S., Babanin, A.V., Rogers, W.E. and Young, I.R., 2015. Observation-based
+    source terms in the third-generation wave model WAVEWATCH. Ocean Modelling, 96,
+    pp.2-25.
 
-    Young, I.R., A.V.Babanin and S. Zieger, 2013: The Decay Rate of Ocean Swell
-    Observed by Altimeter, J. Phys. Oceanogr., 43, 3233-3233.
+    Young, I.R., Babanin, A.V. and Zieger, S., 2013. The decay rate of ocean swell
+    observed by altimeter. Journal of physical oceanography, 43(11), pp.2322-2333.
 
     """
 
@@ -310,9 +339,9 @@ class ZIEGER(SSWELL):
         return repr
 
 
-#======================================================================================
+# =====================================================================================
 # WCAPPING
-#======================================================================================
+# =====================================================================================
 class WCAPKOMEN(BaseComponent):
     """Whitecapping according to Komen (1984).
 
@@ -327,27 +356,43 @@ class WCAPKOMEN(BaseComponent):
 
     References
     ----------
-    Komen, G.J., S. Hasselmann, and K. Hasselmann, 1984: On the existence of a fully
-    developed wind-sea spectrum, J. Phys. Oceanogr., 14, 1271-1285.
+    Komen, G.J., Hasselmann, S. and Hasselmann, K., 1984. On the existence of a fully
+    developed wind-sea spectrum. Journal of physical oceanography, 14(8), pp.1271-1285.
 
     """
+
     model_type: Literal["wcapkomen"] = Field(
         default="wcapkomen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
-        description="Coefficient for determining the rate of whitecapping dissipation ($Cds$) (SWAN default: 2.36e-5)"
+        description=(
+            "Coefficient for determining the rate of whitecapping dissipation ($Cds$) "
+            "(SWAN default: 2.36e-5)"
+        )
     )
     stpm: Optional[float] = Field(
-        description="Value of the wave steepness for a Pierson-Moskowitz spectrum ($s^2_{PM}$) (SWAN default: 3.02e-3)"
+        description=(
+            "Value of the wave steepness for a Pierson-Moskowitz spectrum "
+            "($s^2_{PM}$) (SWAN default: 3.02e-3)"
+        )
     )
     powst: Optional[float] = Field(
-        description="Power of steepness normalized with the wave steepness of a Pierson-Moskowitz spectrum (SWAN default: 2)"
+        description=(
+            "Power of steepness normalized with the wave steepness "
+            "of a Pierson-Moskowitz spectrum (SWAN default: 2)"
+        )
     )
     delta: Optional[float] = Field(
-        description="Coefficient which determines the dependency of the whitecapping on wave number (SWAN default: 1)"
+        description=(
+            "Coefficient which determines the dependency of the whitecapping "
+            "on wave number (SWAN default: 1)"
+        )
     )
     powk: Optional[float] = Field(
-        description="power of wave number normalized with the mean wave number (SWAN default: 1)",
+        description=(
+            "power of wave number normalized with the mean wave number "
+            "(SWAN default: 1)"
+        )
     )
 
     def cmd(self) -> str:
@@ -372,22 +417,30 @@ class WCAPAB(BaseComponent):
 
     References
     ----------
-    Alves, J.H.G.M. and M.L. Banner, 2003: A unified formulation of the wave-action
-    balance equation, J. Phys. Oceanogr., 33, 2343-2356.
+    Alves, J.H.G. and Banner, M.L., 2003. Performance of a saturation-based
+    dissipation-rate source term in modeling the fetch-limited evolution of wind waves.
+    Journal of Physical Oceanography, 33(6), pp.1274-1298.
 
     """
+
     model_type: Literal["wcapab"] = Field(
         default="wcapab", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
-        description="proportionality coefficient due to Alves and Banner (2003) (SWAN default: 5.0e-5)."
+        description=(
+            "proportionality coefficient due to Alves and Banner (2003) "
+            "(SWAN default: 5.0e-5)"
+        )
     )
     br: Optional[float] = Field(
         description="Threshold saturation level	(SWAN default: 1.75e-3)"
     )
     current: bool = Field(
         default=False,
-        description="Indicates that enhanced current-induced dissipation as proposed by Van der Westhuysen (2012) is to be added",
+        description=(
+            "Indicates that enhanced current-induced dissipation "
+            "as proposed by Van der Westhuysen (2012) is to be added"
+        ),
     )
     cds3: Optional[float] = Field(
         description="Proportionality coefficient (SWAN default: 0.8)"
@@ -406,9 +459,9 @@ class WCAPAB(BaseComponent):
         return repr
 
 
-#======================================================================================
+# =====================================================================================
 # QUADRUPL
-#======================================================================================
+# =====================================================================================
 class QUADRUPL(BaseComponent):
     """Nonlinear quadruplet wave interactions.
 
@@ -445,19 +498,33 @@ class QUADRUPL(BaseComponent):
         ),
     )
     lambd: Optional[float] = Field(
-        description="Coefficient for quadruplet configuration in case of DIA (SWAN default: 0.25)",
+        description=(
+            "Coefficient for quadruplet configuration in case of DIA "
+            "(SWAN default: 0.25)"
+        ),
     )
     cn14: Optional[float] = Field(
-        description="Proportionality coefficient for quadruplet interactions in case of DIA (SWAN default: 3.0e7",
+        description=(
+            "Proportionality coefficient for quadruplet interactions in case of DIA "
+            "(SWAN default: 3.0e7"
+        ),
     )
     csh1: Optional[float] = Field(
-        description="Coefficient for shallow water scaling in case of DIA (SWAN default: 5.5",
+        description=(
+            "Coefficient for shallow water scaling in case of DIA (SWAN default: 5.5)"
+        ),
     )
     csh2: Optional[float] = Field(
-        description="Coefficient for shallow water scaling in case of DIA (SWAN default: 0.833333",
+        description=(
+            "Coefficient for shallow water scaling in case of DIA "
+            "(SWAN default: 0.833333)"
+        ),
     )
     csh3: Optional[float] = Field(
-        description="Coefficient for shallow water scaling in case of DIA (SWAN default: -1.25",
+        description=(
+            "Coefficient for shallow water scaling in case of DIA "
+            "(SWAN default: -1.25)"
+        ),
     )
 
     def cmd(self) -> str:
@@ -477,9 +544,9 @@ class QUADRUPL(BaseComponent):
         return repr
 
 
-#======================================================================================
+# =====================================================================================
 # BREAKING
-#======================================================================================
+# =====================================================================================
 class BREAKCONSTANT(BaseComponent):
     """Constant wave breaking index.
 
@@ -488,14 +555,21 @@ class BREAKCONSTANT(BaseComponent):
     Indicates that a constant breaker index is to be used.
 
     """
+
     model_type: Literal["constant"] = Field(
         default="constant", description="Model type discriminator"
     )
     alpha: Optional[float] = Field(
-        description="Proportionality coefficient of the rate of dissipation (SWAN default: 1.0)"
+        description=(
+            "Proportionality coefficient of the rate of dissipation "
+            "(SWAN default: 1.0)"
+        )
     )
     gamma: Optional[float] = Field(
-        description="The breaker index, i.e. the ratio of maximum individual wave height over depth (SWAN default: 0.73)"
+        description=(
+            "The breaker index, i.e. the ratio of maximum individual wave height "
+            "over depth (SWAN default: 0.73)"
+        )
     )
 
     def cmd(self) -> str:
@@ -516,23 +590,33 @@ class BREAKBKD(BaseComponent):
     dimensionless depth (kd).
 
     """
+
     model_type: Literal["bkd"] = Field(
         default="bkd", description="Model type discriminator"
     )
     alpha: Optional[float] = Field(
-        description="Proportionality coefficient of the rate of dissipation (SWAN default: 1.0)"
+        description=(
+            "Proportionality coefficient of the rate of dissipation "
+            "(SWAN default: 1.0)"
+        )
     )
     gamma0: Optional[float] = Field(
-        description="The reference $gamma$ for horizontal slopes (SWAN default: 0.54)"
+        description=("The reference $gamma$ for horizontal slopes (SWAN default: 0.54)")
     )
     a1: Optional[float] = Field(
-        description="First tunable coefficient for the breaker index (SWAN default: 7.59)"
+        description=(
+            "First tunable coefficient for the breaker index (SWAN default: 7.59)"
+        )
     )
     a2: Optional[float] = Field(
-        description="Second tunable coefficient for the breaker index (SWAN default: -8.06)"
+        description=(
+            "Second tunable coefficient for the breaker index (SWAN default: -8.06)"
+        )
     )
     a3: Optional[float] = Field(
-        description="Third tunable coefficient for the breaker index (SWAN default: 8.09)"
+        description=(
+            "Third tunable coefficient for the breaker index (SWAN default: 8.09)"
+        )
     )
 
     def cmd(self) -> str:
@@ -550,9 +634,9 @@ class BREAKBKD(BaseComponent):
         return repr
 
 
-#======================================================================================
+# =====================================================================================
 # FRICTION
-#======================================================================================
+# =====================================================================================
 class JONSWAP(BaseComponent):
     """Hasselmann et al. (1973) Jonswap friction.
 
@@ -565,14 +649,15 @@ class JONSWAP(BaseComponent):
     References
     ----------
     Hasselmann, K., Barnett, T.P., Bouws, E., Carlson, H., Cartwright, D.E., Enke, K.,
-    Ewing, J.A., Gienapp, H., Hasselmann, D.E., Kruseman, P., Meerburg, A., Müller, P.,
-    Olbers, D.J., Richter, K., Sell, W., Walden, H., 1973. Measurements of wind-wave
-    growth and swell decay during the Joint North Sea Wave Project (JONSWAP). Deutches
-    Hydrographisches Institut, Hamburg, Germany, Rep. No. 12, 95 pp.
+    Ewing, J.A., Gienapp, A., Hasselmann, D.E., Kruseman, P. and Meerburg, A., 1973.
+    Measurements of wind-wave growth and swell decay during the Joint North Sea Wave
+    Project (JONSWAP). Deutches Hydrographisches Institut, Hamburg, Germany,
+    Rep. No. 12, 95 pp.
 
     TODO: Implement VARIABLE option?
 
     """
+
     model_type: Literal["jonswap"] = Field(
         default="jonswap", description="Model type discriminator"
     )
@@ -600,10 +685,11 @@ class COLLINS(BaseComponent):
 
     References
     ----------
-    Collins, M.B., 1972. The effect of bottom friction on the propagation of long
-    waves. Coastal Engineering, 1972, 1, 163-181.
+    Collins, J.I., 1972. Prediction of shallow-water spectra. Journal of Geophysical
+    Research, 77(15), pp.2693-2707.
 
     """
+
     model_type: Literal["collins"] = Field(
         default="collins", description="Model type discriminator"
     )
@@ -631,16 +717,22 @@ class MADSEN(BaseComponent):
 
     References
     ----------
-    Madsen, O.S., Sørensen, O.R., Schäffer, H.A., 1988. Surf zone dynamics simulated by
-    a Boussinesq type model. Part I. Model description and cross-shore motion of
-    regular waves. Coastal Engineering, 1988, 12, 115-145.
+    Madsen, O.S., Poon, Y.K. and Graber, H.C., 1988. Spectral wave attenuation by
+    bottom friction: Theory. In Coastal engineering 1988 (pp. 492-504).
+
+    Madsen, O.S. and Rosengaus, M.M., 1988. Spectral wave attenuation by bottom
+    friction: Experiments. In Coastal Engineering 1988 (pp. 849-857).
 
     """
+
     model_type: Literal["madsen"] = Field(
         default="madsen", description="Model type discriminator"
     )
     kn: Optional[float] = Field(
-        description="equivalent roughness length scale of the bottom (in m) (SWAN default: 0.05)"
+        description=(
+            "equivalent roughness length scale of the bottom (in m) "
+            "(SWAN default: 0.05)"
+        )
     )
 
     def cmd(self) -> str:
@@ -660,10 +752,13 @@ class RIPPLES(BaseComponent):
 
     References
     ----------
-    Smith, J.M., McCall, R.T., 2011. A model for wave dissipation in the surf zone
-    based on field observations. Coastal Engineering, 2011, 58, 917-928.
+    Smith, G.A., Babanin, A.V., Riedel, P., Young, I.R., Oliver, S. and Hubbert, G.,
+    2011. Introduction of a new friction routine into the SWAN model that evaluates
+    roughness due to bedform and sediment size changes. Coastal Engineering, 58(4),
+    pp.317-326.
 
     """
+
     model_type: Literal["ripples"] = Field(
         default="ripples", description="Model type discriminator"
     )
@@ -683,9 +778,9 @@ class RIPPLES(BaseComponent):
         return repr
 
 
-#======================================================================================
+# =====================================================================================
 # TRIAD
-#======================================================================================
+# =====================================================================================
 class TRIAD(BaseComponent):
     """Wave triad interactions.
 
@@ -695,20 +790,168 @@ class TRIAD(BaseComponent):
     command is not used, SWAN will not account for triads.
 
     """
+
     model_type: Literal["triad"] = Field(
         default="triad", description="Model type discriminator"
     )
+    biphase: Union[ELDEBERKY, DEWIT] = Field(
+        default_factory=ELDEBERKY,
+        description="Defines the parameterization of biphase (self-self interaction)",
+    )
+
     def cmd(self) -> str:
         return f"TRIAD"
 
 
-#======================================================================================
+class DCTA(TRIAD):
+    """Triad interactions with the DCTA method of Booij et al. (2009).
+
+    `TRIAD DCTA [trfac] [p] COLL|NONC BIPHHASE ELDEBERKY|DEWIT`
+
+    References
+    ----------
+    Booij, N., Holthuijsen, L.H. and Bénit, M.P., 2009. A distributed collinear triad
+    approximation in SWAN. In Proceedings Of Coastal Dynamics 2009: Impacts of Human
+    Activities on Dynamic Coastal Processes (With CD-ROM) (pp. 1-10).
+
+    """
+
+    model_type: Literal["dcta"] = Field(
+        default="dcta", description="Model type discriminator"
+    )
+    trfac: Optional[float] = Field(
+        description=(
+            "Scaling factor that controls the intensity of "
+            "the triad interaction due to DCTA (SWAN default: 4.4)"
+        ),
+    )
+    p: Optional[float] = Field(
+        description=(
+            "Shape coefficient to force the high-frequency tail" "(SWAN default: 4/3)"
+        ),
+    )
+    noncolinear: bool = Field(
+        default=False,
+        description=(
+            "If True, the noncolinear triad interactions "
+            "with the DCTA framework are accounted for"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} DCTA"
+        if self.trfac is not None:
+            repr += f" trfac={self.trfac}"
+        if self.p is not None:
+            repr += f" p={self.p}"
+        if self.noncolinear:
+            repr += " NONC"
+        else:
+            repr += " COLL"
+        repr += f" {self.biphase.render()}"
+        return repr
+
+
+class LTA(TRIAD):
+    """Triad interactions with the LTA method of Eldeberky (1996).
+
+    `TRIAD LTA [trfac] [cutfr] BIPHHASE ELDEBERKY|DEWIT`
+
+    References
+    ----------
+    Eldeberky, Y., Polnikov, V. and Battjes, J.A., 1996. A statistical approach for
+    modeling triad interactions in dispersive waves. In Coastal Engineering 1996
+    (pp. 1088-1101).
+
+    """
+
+    model_type: Literal["lta"] = Field(
+        default="lta", description="Model type discriminator"
+    )
+    trfac: Optional[float] = Field(
+        description=(
+            "Scaling factor that controls the intensity of "
+            "the triad interaction due to LTA (SWAN default: 0.8)"
+        ),
+    )
+    cutfr: Optional[float] = Field(
+        description=(
+            "Controls the maximum frequency that is considered in the LTA "
+            "computation. The value of `cutfr` is the ratio of this maximum "
+            "frequency over the mean frequency (SWAN default: 2.5)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} LTA"
+        if self.trfac is not None:
+            repr += f" trfac={self.trfac}"
+        if self.cutfr is not None:
+            repr += f" cutfr={self.cutfr}"
+        repr += f" {self.biphase.render()}"
+        return repr
+
+
+class SPB(TRIAD):
+    """Triad interactions according to the SPB method of Becq-Girard et al. (1999).
+
+    `TRIAD SPB [trfac] [a] [b] BIPHHASE ELDEBERKY|DEWIT`
+
+    References
+    ----------
+    Becq-Girard, F., Forget, P. and Benoit, M., 1999. Non-linear propagation of
+    unidirectional wave fields over varying topography. Coastal Engineering, 38(2),
+    pp.91-113.
+
+    """
+
+    model_type: Literal["spb"] = Field(
+        default="spb", description="Model type discriminator"
+    )
+    trfac: Optional[float] = Field(
+        description=(
+            "Scaling factor that controls the intensity of "
+            "the triad interaction due to SPB (SWAN default: 0.9)"
+        ),
+    )
+    a: Optional[float] = Field(
+        description=(
+            "First calibration parameter for tuning K in Eq. (5.1) of "
+            "Becq-Girard et al. (1999). This parameter is associated with broadening "
+            "of the resonance condition. The default value is 0.95 and is calibrated "
+            "by means of laboratory experiments (SWAN default: 0.95)"
+        ),
+    )
+    b: Optional[float] = Field(
+        description=(
+            "Second calibration parameter for tuning K in Eq. (5.1) of "
+            "Becq-Girard et al. (1999). This parameter is associated with broadening "
+            "of the resonance condition. The default value is -0.75 and is calibrated "
+            "by means of laboratory experiments. However, it may not be appropriate "
+            "for true 2D field cases as it does not scale with the wave field "
+            "characteristics. Hence, this parameter is set to zero (SWAN default: 0.0)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} SPB"
+        if self.trfac is not None:
+            repr += f" trfac={self.trfac}"
+        if self.a is not None:
+            repr += f" a={self.a}"
+        if self.b is not None:
+            repr += f" b={self.b}"
+        repr += f" {self.biphase.render()}"
+        return repr
+
+
+# =====================================================================================
 # VEGETATION
-#======================================================================================
-class VEGETATION(BaseComponent):
+# =====================================================================================
+class VEGETATION(BaseComponent): 
     """Vegetation dumping.
 
-    `VEGETATION`
+    `VEGETATION [iveg] < [height] [diamtr] [nstems] [drag] >`
 
     With this command the user can activate wave damping due to vegetation based on the
     Dalrymple's formula (1984) as implemented by Suzuki et al. (2011). This damping is
@@ -716,26 +959,100 @@ class VEGETATION(BaseComponent):
     (canopy) dissipation model of Jacobsen et al. (2019). If this command is not used,
     SWAN will not account for vegetation effects.
 
+    The vegetation (rigid plants) can be divided over a number of vertical segments and
+    so, the possibility to vary the vegetation vertically is included. Each vertical
+    layer represents some characteristics of the plants. These variables as indicated
+    below can be repeated as many vertical layers to be chosen.
+
     References
     ----------
-    Dalrymple, R.A., 1984. Water wave interactions with vegetation: Part 1. A fully
-    nonlinear theory. Journal of Fluid Mechanics, 1984, 140, 197-229.
+    Dalrymple, R.A., Kirby, J.T. and Hwang, P.A., 1984. Wave diffraction due to areas
+    of energy dissipation. Journal of waterway, port, coastal, and ocean engineering,
+    110(1), pp.67-79.
+
+    Jacobsen, N.G., Bakker, W., Uijttewaal, W.S. and Uittenbogaard, R., 2019.
+    Experimental investigation of the wave-induced motion of and force distribution
+    along a flexible stem. Journal of Fluid Mechanics, 880, pp.1036-1069.
+
+    Suzuki, T., Zijlema, M., Burger, B., Meijer, M.C. and Narayan, S., 2012. Wave
+    dissipation by vegetation with layer schematization in SWAN. Coastal Engineering,
+    59(1), pp.64-71.
+
+    Notes
+    -----
+    Vertical layering of the vegetation is not yet implemented for the
+    Jacobsen et al. (2019) method.
 
     """
+
     model_type: Literal["vegetation"] = Field(
         default="vegetation", description="Model type discriminator"
     )
+    iveg: Literal[1, 2] = Field(
+        default=1,
+        description=(
+            "Indicates the method for the vegetation computation (SWAN default: 1):\n"
+            "\n* 1: Suzuki et al. (2011)\n* 2: Jacobsen et al. (2019)\n"
+        ),
+    )
+    height: Union[float, list[float]] = Field(
+        description="The plant height per layer (in m)"
+    )
+    diamtr: Union[float, list[float]] = Field(
+        description="The diameter of each plant stand per layer (in m)"
+    )
+    drag: Union[float, list[float]] = Field(
+        description="The drag coefficient per layer"
+    )
+    nstems: Union[int, list[int]] = Field(
+        default=1,
+        description=(
+            "The number of plant stands per square meter for each layer. Note that "
+            "`nstems` is allowed to vary over the computational region to account for "
+            "the zonation of vegetation. In that case use the commands "
+            "`IMPGRID NPLANTS` and `READINP NPLANTS` to define and read the "
+            "vegetation density. The (vertically varying) value of `nstems` in this "
+            "command will be multiplied by this horizontally varying plant density "
+            "(SWAN default: 1)"
+        ),
+    )
+
+    @root_validator
+    def number_of_layers(cls, values):
+        """Assert that the number of layers is the same for all variables."""
+        sizes = {}
+        for key in ["height", "diamtr", "drag", "nstems"]:
+            if values.get(key) is None:
+                continue
+            elif not isinstance(values.get(key), list):
+                values[key] = [values[key]]
+            sizes.update({key: len(values[key])})
+        if len(set(sizes.values())) > 1:
+            raise ValueError(
+                "The number of layers must be the same for all variables. "
+                f"Got these number of layers: {sizes}"
+            )
+        if values.get("iveg", 1) == 2 and sizes.get("nstems", 1) > 1:
+            logger.warning(
+                "Vertical layering of the vegetation is not yet implemented for the "
+                "Jacobsen et al. (2019) method, please define single layer"
+            )
+        return values
+
     def cmd(self) -> str:
-        return f"VEGETATION"
+        repr = f"VEGETATION iveg={self.iveg}"
+        for h, d, dr, n in zip(self.height, self.diamtr, self.drag, self.nstems):
+            repr += f" height={h} diamtr={d} nstems={n} drag={dr}"
+        return repr
 
 
-#======================================================================================
+# =====================================================================================
 # MUD
-#======================================================================================
+# =====================================================================================
 class MUD(BaseComponent):
     """Mud dumping.
 
-    `MUD`
+    `MUD [layer] [rhom] [viscm]`
 
     With this command the user can activate wave damping due to mud based on Ng (2000).
     If this command or the commands INPGRID MUDLAY and READINP MUDLAY are not used,
@@ -743,20 +1060,48 @@ class MUD(BaseComponent):
 
     References
     ----------
-    Ng, C.O., 2000. Wave attenuation in mudflat and salt marsh vegetation. Journal of
-    Coastal Research, 2000, 16, 379-389.
+    Ng, C., 2000, Water waves over a muddy bed: A two layer Stokes' boundary layer
+    model, Coastal Eng., 40, 221-242.
+
+    TODO: Validate `layer` must be prescribed if `INPGRID MUDLAY` isn't used.
 
     """
+
     model_type: Literal["mud"] = Field(
         default="mud", description="Model type discriminator"
     )
+    layer: Optional[float] = Field(
+        description=(
+            "The thickness of the mud layer (in m). Note that `layer` is allowed to "
+            "vary over the computational region to account for the zonation of muddy "
+            "bottom. In that case use the commands `INPGRID MUDLAY` and `READINP "
+            "MUDLAY` to define and read the layer thickness of mud. The value of "
+            "`layer` in this command is then not required (it will be ignored)"
+        ),
+    )
+    rhom: Optional[float] = Field(
+        description="The density of the mud layer (in kg/m3) (SWAN default: 1300)"
+    )
+    viscm: Optional[float] = Field(
+        description=(
+            "The kinematic viscosity of the mud layer (in m2/s) (SWAN default: 0.0076)"
+        ),
+    )
+
     def cmd(self) -> str:
-        return f"MUD"
+        repr = "MUD"
+        if self.layer is not None:
+            repr += f" layer={self.layer}"
+        if self.rhom is not None:
+            repr += f" rhom={self.rhom}"
+        if self.viscm is not None:
+            repr += f" viscm={self.viscm}"
+        return repr
 
 
-#======================================================================================
+# =====================================================================================
 # SICE
-#======================================================================================
+# =====================================================================================
 class SICE(BaseComponent):
     """Sea ice dissipation.
 
@@ -784,16 +1129,18 @@ class SICE(BaseComponent):
     Geophysical Research: Oceans, 2019, 124, 1-15.
 
     """
+
     model_type: Literal["sice"] = Field(
         default="sice", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"SICE"
 
 
-#======================================================================================
+# =====================================================================================
 # TURBULENCE
-#======================================================================================
+# =====================================================================================
 class TURBULENCE(BaseComponent):
     """Turbulent viscosity.
 
@@ -806,16 +1153,18 @@ class TURBULENCE(BaseComponent):
     viscosity is assumed to vary over space.
 
     """
+
     model_type: Literal["turbulence"] = Field(
         default="turbulence", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"TURBULENCE"
 
 
-#======================================================================================
+# =====================================================================================
 # BRAGG
-#======================================================================================
+# =====================================================================================
 class BRAGG(BaseComponent):
     """Bragg scattering.
 
@@ -827,16 +1176,18 @@ class BRAGG(BaseComponent):
     account for Bragg scattering.
 
     """
+
     model_type: Literal["bragg"] = Field(
         default="bragg", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"BRAGG"
 
 
-#======================================================================================
+# =====================================================================================
 # LIMITER
-#======================================================================================
+# =====================================================================================
 class LIMITER(BaseComponent):
     """Physics limiter.
 
@@ -848,16 +1199,18 @@ class LIMITER(BaseComponent):
     used in case of decreasing action density.
 
     """
+
     model_type: Literal["limiter"] = Field(
         default="limiter", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"LIMITER"
 
 
-#======================================================================================
+# =====================================================================================
 # OBSTACLE
-#======================================================================================
+# =====================================================================================
 class OBSTACLE(BaseComponent):
     """Sub-grid obstacle.
 
@@ -870,16 +1223,18 @@ class OBSTACLE(BaseComponent):
     be at least one mesh length.
 
     """
+
     model_type: Literal["obstacle"] = Field(
         default="obstacle", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"OBSTACLE"
 
 
-#======================================================================================
+# =====================================================================================
 # OBSTACLE FIG
-#======================================================================================
+# =====================================================================================
 class OBSTACLE_FIG(BaseComponent):
     """Obstacle for free infragravity radiation.
 
@@ -898,123 +1253,151 @@ class OBSTACLE_FIG(BaseComponent):
     2352-2368, 2014.
 
     """
+
     model_type: Literal["obstacle_fig"] = Field(
         default="obstacle_fig", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"OBSTACLE FIG"
 
 
-#======================================================================================
+# =====================================================================================
 # SETUP
-#======================================================================================
+# =====================================================================================
 class SETUP(BaseComponent):
     """Wave setup.
 
     `SETUP`
 
     """
+
     model_type: Literal["setup"] = Field(
         default="setup", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"SETUP"
 
 
-#======================================================================================
+# =====================================================================================
 # DIFFRACTION
-#======================================================================================
+# =====================================================================================
 class DIFFRACTION(BaseComponent):
     """Wave diffraction.
 
     `DIFFRACTION`
 
     """
+
     model_type: Literal["diffraction"] = Field(
         default="diffraction", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"DIFFRACTION"
 
 
-#======================================================================================
+# =====================================================================================
 # SURFBEAT
-#======================================================================================
+# =====================================================================================
 class SURFBEAT(BaseComponent):
     """Surfbeat.
 
     `SURFBEAT`
 
     """
+
     model_type: Literal["surfbeat"] = Field(
         default="surfbeat", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"SURFBEAT"
 
 
-#======================================================================================
+# =====================================================================================
 # SCAT
-#======================================================================================
+# =====================================================================================
 class SCAT(BaseComponent):
     """Scattering.
 
     `SCAT`
 
     """
+
     model_type: Literal["scat"] = Field(
         default="scat", description="Model type discriminator"
     )
+
     def cmd(self) -> str:
         return f"SCAT"
 
 
-#======================================================================================
+# =====================================================================================
 # Physics group component
-#======================================================================================
+# =====================================================================================
+GEN_TYPE = Annotated[
+    Union[GEN1, GEN2, GEN3],
+    Field(description="Wave generation component", discriminator="model_type"),
+]
+SSWELL_TYPE = Annotated[
+    Union[ROGERS, ARDHUIN, ZIEGER],
+    Field(description="Swell dissipation component", discriminator="model_type"),
+]
+NEGATINP_TYPE = Annotated[
+    NEGATINP,
+    Field(description="Negative wind input component", discriminator="model_type"),
+]
+WCAPPING_TYPE = Annotated[
+    Union[WCAPKOMEN, WCAPAB],
+    Field(description="Whitecapping component", discriminator="model_type"),
+]
+QUADRUPL_TYPE = Annotated[
+    QUADRUPL,
+    Field(description="Quadruplet interactions component", discriminator="model_type"),
+]
+BREAKING_TYPE = Annotated[
+    Union[BREAKCONSTANT, BREAKBKD],
+    Field(description="Wave breaking component", discriminator="model_type"),
+]
+FRICTION_TYPE = Annotated[
+    Union[JONSWAP, COLLINS, MADSEN, RIPPLES],
+    Field(description="Bottom friction component", discriminator="model_type"),
+]
+TRIAD_TYPE = Annotated[
+    Union[DCTA, LTA, SPB],
+    Field(description="Triad interactions component", discriminator="model_type"),
+]
+VEGETATION_TYPE = Annotated[
+    VEGETATION, Field(description="Vegetation component", discriminator="model_type")
+]
+MUD_TYPE = Annotated[
+    MUD, Field(description="Mud component", discriminator="model_type")
+]
+
+
 class PHYSICS(BaseComponent):
     """Physics group component.
 
     The physics group component is a convenience to allow specifying several individual
     components in a single command and check for consistency between them.
 
-    TODO: Implement OFF command
-
     """
 
     model_type: Literal["physics"] = Field(
         default="physics", description="Model type discriminator"
     )
-    gen: GEN1 | GEN2 | GEN3 = Field(
-        default=GEN3(),
-        description="Wave generation specification",
-        discriminator="model_type",
-    )
-    sswell: ROGERS | ARDHUIN | ZIEGER | None = Field(
-        default=None,
-        description="Swell dissipation specification",
-        discriminator="model_type",
-    )
-    negatinp: Optional[NEGATINP] = Field(
-        default=None,
-        description="Negative wind input specification",
-    )
-    wcapping: WCAPKOMEN | WCAPAB | None = Field(
-        default=None,
-        description="Whitecapping specification",
-        discriminator="model_type",
-    )
-    quadrupl: Optional[QUADRUPL] = Field(
-        description="Quadruplet interactions specification",
-    )
-    breaking: BREAKCONSTANT | BREAKBKD | None = Field(
-        description="Wave breaking specification",
-        discriminator="model_type",
-    )
-    friction: JONSWAP | COLLINS | MADSEN | RIPPLES | None = Field(
-        default=None,
-        description="Bottom friction specification",
-    )
+    gen: Optional[GEN_TYPE]
+    sswell: Optional[SSWELL_TYPE]
+    negatinp: Optional[NEGATINP_TYPE]
+    wcapping: Optional[WCAPPING_TYPE]
+    quadrupl: Optional[QUADRUPL_TYPE]
+    breaking: Optional[BREAKING_TYPE]
+    friction: Optional[FRICTION_TYPE]
+    triad: Optional[TRIAD_TYPE]
+    vegetation: Optional[VEGETATION_TYPE]
+    mud: Optional[MUD_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -1050,4 +1433,10 @@ class PHYSICS(BaseComponent):
             repr += [self.breaking.render()]
         if self.friction is not None:
             repr += [self.friction.render()]
+        if self.triad is not None:
+            repr += [self.triad.render()]
+        if self.vegetation is not None:
+            repr += [self.vegetation.render()]
+        if self.mud is not None:
+            repr += [self.mud.render()]
         return repr

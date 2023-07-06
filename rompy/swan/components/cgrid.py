@@ -189,7 +189,7 @@ class CURVILINEAR(CGRID):
         if self.exception:
             repr += f" {self.exception}"
         repr += f" {self.spectrum.render()}"
-        repr += f"\n{self.readcoord.render()}"
+        repr = [repr] + [self.readcoord.render()]
         return repr
 
 
