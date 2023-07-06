@@ -138,4 +138,7 @@ physics:
     viscm: 0.0076
   sice:
     model_type: R19
-    
+  turbulence:
+    ctb: 0.01
+    current: True
+    tbcur: 0.004

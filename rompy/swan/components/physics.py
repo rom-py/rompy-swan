@@ -1355,12 +1355,48 @@ class TURBULENCE(BaseComponent):
 
     """
 
-    model_type: Literal["turbulence"] = Field(
+    model_type: Literal["turbulence", "TURBULENCE"] = Field(
         default="turbulence", description="Model type discriminator"
     )
+    ctb: Optional[float] = Field(
+        description=(
+            "The value of the proportionality coefficient appearing in the energy "
+            "dissipation term (SWAN default: 0.01)"
+        ),
+    )
+    current: Optional[bool] = Field(
+        default=True,
+        description=(
+            "If this keyword is present the turbulent viscosity will be derived from "
+            "the product of the depth and the absolute value of the current velocity. "
+            "If the command `READGRID TURB` is used, this option is ignored; "
+            "the values read from file will prevail"
+        ),
+    )
+    tbcur: Optional[float] = Field(
+        description=(
+            "The factor by which depth x current velocity is multiplied in order to "
+            "get the turbulent viscosity (SWAN default: 0.004)"
+        ),
+    )
+
+    @validator("tbcur", pre=False)
+    def tbcur_only_with_current(cls, value, values):
+        if values.get("current") == False and value is not None:
+            raise ValueError(
+                "`tbcur` keyword can only be defined if `current` is True"
+            )
+        return value
 
     def cmd(self) -> str:
-        return f"TURBULENCE"
+        repr = "TURBULENCE"
+        if self.ctb is not None:
+            repr += f" ctb={self.ctb}"
+        if self.current:
+            repr += " CURRENT"
+        if self.tbcur is not None:
+            repr += f" tbcur={self.tbcur}"
+        return repr
 
 
 # =====================================================================================
@@ -1580,6 +1616,10 @@ SICE_TYPE = Annotated[
     Union[SICE, R19, D15, M18, R21B],
     Field(description="Sea ice component", discriminator="model_type")
 ]
+TURBULENCE_TYPE = Annotated[
+    TURBULENCE,
+    Field(description="Turbulent dissipation component", discriminator="model_type"),
+]
 
 
 class PHYSICS(BaseComponent):
@@ -1604,6 +1644,7 @@ class PHYSICS(BaseComponent):
     vegetation: Optional[VEGETATION_TYPE]
     mud: Optional[MUD_TYPE]
     sice: Optional[SICE_TYPE]
+    turbulence: Optional[TURBULENCE_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -1647,4 +1688,6 @@ class PHYSICS(BaseComponent):
             repr += [self.mud.render()]
         if self.sice is not None:
             repr += [self.sice.render()]
+        if self.turbulence is not None:
+            repr += [self.turbulence.render()]
         return repr
