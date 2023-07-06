@@ -1103,39 +1103,232 @@ class MUD(BaseComponent):
 # SICE
 # =====================================================================================
 class SICE(BaseComponent):
-    """Sea ice dissipation.
+    """Sea ice dissipation default.
 
     `SICE`
 
     Using this command, the user activates a sink term to represent the dissipation of
-    wave energy by sea ice. The R19 method is empirical/parametric: a polynomial based
-    on wave frequency (Rogers, 2019). This polynomial (in 1/m) has seven dimensional
-    coefficients; see Scientific/Technical documentation for details. If this command
-    is not used, SWAN will not account for sea ice effects.
+    wave energy by sea ice. The default method is R19 empirical/parametric: a
+    polynomial based on wave frequency (Rogers, 2019). This polynomial (in 1/m) has
+    seven dimensional coefficients; see Scientific/Technical documentation for details.
+    If this command is not used, SWAN will not account for sea ice effects.
 
     References
     ----------
-    Doble, M.J., Bidlot, J.R., Wadhams, P., 2015. Sea ice and ocean wave modelling in
-    the Arctic: Interactions between waves and ice in a coupled atmosphere-wave-ice
-    model. Ocean Modelling, 2015, 96, 141-155.
+    Doble, M.J., De Carolis, G., Meylan, M.H., Bidlot, J.R. and Wadhams, P., 2015.
+    Relating wave attenuation to pancake ice thickness, using field measurements and
+    model results. Geophysical Research Letters, 42(11), pp.4473-4481.
 
-    Meylan, M.H., Bennetts, L.G., Thomas, T., 2014. Dissipation of ocean waves by sea
-    ice. Geophysical Research Letters, 2014, 41, 7561-7568.
+    Meylan, M.H., Bennetts, L.G. and Kohout, A.L., 2014. In situ measurements and
+    analysis of ocean waves in the Antarctic marginal ice zone. Geophysical Research
+    Letters, 41(14), pp.5046-5051.
 
-    Meylan, M.H., Bennetts, L.G., Williams, T.D., 2018. Wave attenuation by pancake
-    ice. Journal of Geophysical Research: Oceans, 2018, 123, 1-16.
+    Rogers, W.E., Meylan, M.H. and Kohout, A.L., 2018. Frequency distribution of
+    dissipation of energy of ocean waves by sea ice using data from Wave Array 3 of
+    the ONR “Sea State” field experiment. Nav. Res. Lab. Memo. Rep, pp.18-9801.
 
-    Rogers, W.E., 2019. Wave attenuation by sea ice: A new parametric model. Journal of
-    Geophysical Research: Oceans, 2019, 124, 1-15.
+    Rogers, W.E., Meylan, M.H. and Kohout, A.L., 2021. Estimates of spectral wave
+    attenuation in Antarctic sea ice, using model/data inversion. Cold Regions Science
+    and Technology, 182, p.103198.
+
+    Notes
+    -----
+    Iis also necessary to describe the ice, using the `ICE` command (for uniform and
+    stationary ice) or `INPGRID`/`READINP` commands (for variable ice).
+
+    TODO: Verify if the `aice` parameter should be used with SICE command, it is not
+    shown in the command tree but it is described as an option in the description.
 
     """
 
-    model_type: Literal["sice"] = Field(
+    model_type: Literal["sice", "SICE"] = Field(
         default="sice", description="Model type discriminator"
+    )
+    aice: Optional[float] = Field(
+        description=(
+            "Ice concentration as a fraction from 0 to 1. Note that `aice` is allowed "
+            "to vary over the computational region to account for the zonation of ice "
+            "concentration. In that case use the commands `INPGRID AICE` and `READINP "
+            "AICE` to define and read the sea concentration. The value of `aice` in "
+            "this command is then not required (it will be ignored)"
+        ),
+        ge=0.0,
+        le=1.0,
     )
 
     def cmd(self) -> str:
-        return f"SICE"
+        repr = "SICE"
+        if self.aice is not None:
+            repr += f" aice={self.aice}"
+        return repr
+
+
+class R19(SICE):
+    """Sea ice dissipation based on the empirical polynomial of Rogers et al (2019).
+
+    The default options recover the polynomial of Meylan et al. (2014), calibrated for
+    a case of ice floes, mostly 10 to 25 m in diameter, in the marginal ice zone near
+    Antarctica. Examples for other calibrations can be found in the
+    Scientific/Technical documentation.
+
+    References
+    ----------
+    Meylan, M.H., Bennetts, L.G. and Kohout, A.L., 2014. In situ measurements and
+    analysis of ocean waves in the Antarctic marginal ice zone. Geophysical Research
+    Letters, 41(14), pp.5046-5051.
+
+    Rogers, W.E., Meylan, M.H. and Kohout, A.L., 2018. Frequency distribution of
+    dissipation of energy of ocean waves by sea ice using data from Wave Array 3 of
+    the ONR “Sea State” field experiment. Nav. Res. Lab. Memo. Rep, pp.18-9801.
+
+    """
+
+    model_type: Literal["r19", "R19"] = Field(
+        default="r19", description="Model type discriminator"
+    )
+    c0: Optional[float] = Field(
+        description=(
+            "Polynomial coefficient (in 1/m) for determining the rate of sea ice "
+            "dissipation (SWAN default: 0.0)"
+        ),
+    )
+    c1: Optional[float] = Field(
+        description=(
+            "Polynomial coefficient (in s/m) for determining the rate of sea ice "
+            "dissipation (SWAN default: 0.0)"
+        ),
+    )
+    c2: Optional[float] = Field(
+        description=(
+            "Polynomial coefficient (in s2/m) for determining the rate of sea ice "
+            "dissipation (SWAN default: 1.06E-3)"
+        ),
+    )
+    c3: Optional[float] = Field(
+        description=(
+            "Polynomial coefficient (in s3/m) for determining the rate of sea ice "
+            "dissipation (SWAN default: 0.0)"
+        ),
+    )
+    c4: Optional[float] = Field(
+        description=(
+            "Polynomial coefficient (in s4/m) for determining the rate of sea ice "
+            "dissipation (SWAN default: 2.3E-2)"
+        ),
+    )
+    c5: Optional[float] = Field(
+        description=(
+            "Polynomial coefficient (in s5/m) for determining the rate of sea ice "
+            "dissipation (SWAN default: 0.0)"
+        ),
+    )
+    c6: Optional[float] = Field(
+        description=(
+            "Polynomial coefficient (in s6/m) for determining the rate of sea ice "
+            "dissipation (SWAN default: 0.0)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} {self.model_type.upper()}"
+        if self.c0 is not None:
+            repr += f" c0={self.c0}"
+        if self.c1 is not None:
+            repr += f" c1={self.c1}"
+        if self.c2 is not None:
+            repr += f" c2={self.c2}"
+        if self.c3 is not None:
+            repr += f" c3={self.c3}"
+        if self.c4 is not None:
+            repr += f" c4={self.c4}"
+        if self.c5 is not None:
+            repr += f" c5={self.c5}"
+        if self.c6 is not None:
+            repr += f" c6={self.c6}"
+        return repr
+
+
+class D15(SICE):
+    """Sea ice dissipation based on the method of Doble et al. (2015).
+
+    References
+    ----------
+    Doble, M.J., De Carolis, G., Meylan, M.H., Bidlot, J.R. and Wadhams, P., 2015.
+    Relating wave attenuation to pancake ice thickness, using field measurements and
+    model results. Geophysical Research Letters, 42(11), pp.4473-4481.
+
+    """
+
+    model_type: Literal["d15", "D15"] = Field(
+        default="d15", description="Model type discriminator"
+    )
+    chf: Optional[float] = Field(
+        description="A simple coefficient of proportionality (SWAN default: 0.1)",
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} {self.model_type.upper()}"
+        if self.chf is not None:
+            repr += f" chf={self.chf}"
+        return repr
+
+
+class M18(SICE):
+    """Sea ice dissipation based on the method of Meylan et al. (2018).
+
+    References
+    ----------
+    Meylan, M.H., Bennetts, L.G. and Kohout, A.L., 2014. In situ measurements and
+    analysis of ocean waves in the Antarctic marginal ice zone. Geophysical Research
+    Letters, 41(14), pp.5046-5051.
+
+    """
+
+    model_type: Literal["m18", "M18"] = Field(
+        default="m18", description="Model type discriminator"
+    )
+    chf: Optional[float] = Field(
+        description="A simple coefficient of proportionality (SWAN default: 0.059)",
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} {self.model_type.upper()}"
+        if self.chf is not None:
+            repr += f" chf={self.chf}"
+        return repr
+
+
+class R21B(SICE):
+    """Sea ice dissipation based on the method of Rogers et al. (2021).
+
+    References
+    ----------
+    Rogers, W.E., Meylan, M.H. and Kohout, A.L., 2021. Estimates of spectral wave
+    attenuation in Antarctic sea ice, using model/data inversion. Cold Regions Science
+    and Technology, 182, p.103198.
+
+    """
+
+    model_type: Literal["r21b", "R21B"] = Field(
+        default="r21b", description="Model type discriminator"
+    )
+    chf: Optional[float] = Field(
+        description="A simple coefficient of proportionality (SWAN default: 2.9)",
+    )
+    npf: Optional[float] = Field(
+        description=(
+            "Controls the degree of dependence on frequency and ice thickness "
+            "(SWAN default: 4.5)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        repr = f"{super().cmd()} {self.model_type.upper()}"
+        if self.chf is not None:
+            repr += f" chf={self.chf}"
+        if self.npf is not None:
+            repr += f" npf={self.npf}"
+        return repr
 
 
 # =====================================================================================
@@ -1375,6 +1568,10 @@ VEGETATION_TYPE = Annotated[
 MUD_TYPE = Annotated[
     MUD, Field(description="Mud component", discriminator="model_type")
 ]
+SICE_TYPE = Annotated[
+    Union[SICE, R19, D15, M18, R21B],
+    Field(description="Sea ice component", discriminator="model_type")
+]
 
 
 class PHYSICS(BaseComponent):
@@ -1398,6 +1595,7 @@ class PHYSICS(BaseComponent):
     triad: Optional[TRIAD_TYPE]
     vegetation: Optional[VEGETATION_TYPE]
     mud: Optional[MUD_TYPE]
+    sice: Optional[SICE_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -1439,4 +1637,6 @@ class PHYSICS(BaseComponent):
             repr += [self.vegetation.render()]
         if self.mud is not None:
             repr += [self.mud.render()]
+        if self.sice is not None:
+            repr += [self.sice.render()]
         return repr

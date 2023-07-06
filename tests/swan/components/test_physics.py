@@ -2,7 +2,21 @@
 import pytest
 from pydantic import ValidationError
 
-from rompy.swan.components.physics import GEN1, GEN2, GEN3, DCTA, LTA, SPB, VEGETATION, MUD
+from rompy.swan.components.physics import (
+    GEN1,
+    GEN2,
+    GEN3,
+    DCTA,
+    LTA,
+    SPB,
+    VEGETATION,
+    MUD,
+    SICE,
+    R19,
+    D15,
+    M18,
+    R21B,
+)
 
 
 # =====================================================================================
@@ -131,3 +145,54 @@ def test_mud_default():
 def test_mud_arguments():
     phys = MUD(layer=2.0, rhom=1300, viscm=0.0076)
     assert phys.render() == "MUD layer=2.0 rhom=1300.0 viscm=0.0076"
+
+
+# =====================================================================================
+# SICE
+# =====================================================================================
+def test_sice_default():
+    sice = SICE()
+    assert sice.render() == "SICE"
+    sice = SICE(aice=0.5)
+    assert sice.render() == "SICE aice=0.5"
+    with pytest.raises(ValidationError):
+        SICE(aice=1.1)
+
+
+def test_sice_r19():
+    sice = R19()
+    assert sice.render() == "SICE R19"
+    sice = R19(
+        aice=0.5,
+        c0=0.0,
+        c1=0.0,
+        c2=1.06e-3,
+        c3=0.0,
+        c4=2.3e-2,
+        c5=0.0,
+        c6=0.0,
+    )
+    assert sice.render() == (
+        "SICE aice=0.5 R19 c0=0.0 c1=0.0 c2=0.00106 c3=0.0 c4=0.023 c5=0.0 c6=0.0"
+    )
+
+
+def test_sice_d15():
+    sice = D15()
+    assert sice.render() == "SICE D15"
+    sice = D15(aice=0.5, chf=0.1)
+    assert sice.render() == "SICE aice=0.5 D15 chf=0.1"
+
+
+def test_sice_m18():
+    sice = M18()
+    assert sice.render() == "SICE M18"
+    sice = M18(aice=0.5, chf=0.059)
+    assert sice.render() == "SICE aice=0.5 M18 chf=0.059"
+
+
+def test_sice_r21b():
+    sice = R21B()
+    assert sice.render() == "SICE R21B"
+    sice = R21B(aice=0.5, chf=2.9, npf=4.5)
+    assert sice.render() == "SICE aice=0.5 R21B chf=2.9 npf=4.5"
