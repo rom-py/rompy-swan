@@ -136,3 +136,6 @@ physics:
     layer: 2.0
     rhom: 1300.0
     viscm: 0.0076
+  sice:
+    model_type: R19
+    
