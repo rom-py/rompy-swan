@@ -147,3 +147,7 @@ physics:
     ibrag: 1
     nreg: 200
     cutoff: 5.0
+  limiter:
+    model_type: limiter
+    ursell: 10.0
+    qb: 1.0
