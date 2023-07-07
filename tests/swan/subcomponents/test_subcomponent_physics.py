@@ -19,6 +19,10 @@ from rompy.swan.subcomponents.physics import (
     TRANS2D,
     GODA,
     DANGREMOND,
+    REFL,
+    RSPEC,
+    RDIFF,
+    FREEBOARD,
 )
 
 
@@ -114,7 +118,7 @@ def test_biphase_dewit():
 
 
 # =====================================================================================
-# Transmission
+# Transmission and reflection
 # =====================================================================================
 def test_transm():
     trans = TRANSM()
@@ -155,3 +159,49 @@ def test_dangremond():
     assert trans.render() == "DAM DANGREMOND hgt=3.0 slope=60.0 Bk=10.0"
     with pytest.raises(ValidationError):
         DANGREMOND(hgt=3.0, slope=120, Bk=1.0)
+
+
+def test_refl():
+    refl = REFL()
+    assert refl.render() == "REFL"
+    refl = REFL(reflc=0.5)
+    assert refl.render() == "REFL reflc=0.5"
+
+
+def test_rspec():
+    refl = RSPEC()
+    assert refl.render() == "RSPEC"
+
+
+def test_rdiff():
+    refl = RDIFF()
+    assert refl.render() == "RDIFF"
+    refl = RDIFF(pown=1.0)
+    assert refl.render() == "RDIFF pown=1.0"
+
+
+def test_freeboard():
+    free = FREEBOARD(
+        hgt=2.0,
+        gammat=0.5,
+        gammar=0.5,
+        quay=True,
+    )
+    assert free.render() == "FREEBOARD hgt=2.0 gammat=0.5 gammar=0.5 QUAY"
+
+
+def test_freeboard_no_quay():
+    free = FREEBOARD(
+        hgt=2.0,
+        gammat=0.5,
+        gammar=0.5,
+        quay=False,
+    )
+    assert free.render() == "FREEBOARD hgt=2.0 gammat=0.5 gammar=0.5"
+
+
+def test_freeboard_gamma_gt_0():
+    with pytest.raises(ValidationError):
+        FREEBOARD(hgt=2.0, gammat=0.0)
+    with pytest.raises(ValidationError):
+        FREEBOARD(hgt=2.0, gammar=0.0)
