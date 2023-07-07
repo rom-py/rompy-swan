@@ -413,6 +413,17 @@ class TRANSM(BaseSubComponent):
 
     `TRANSM [trcoef]`
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.physics import TRANSM
+        transm = TRANSM(trcoef=0.5)
+        print(transm.render())
+
     """
 
     model_type: Literal["transm", "TRANSM"] = Field(
@@ -441,6 +452,19 @@ class TRANS1D(BaseSubComponent):
 
     `TRANS1D < [trcoef] >`
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import TRANS1D
+
+        transm = TRANS1D(trcoef=[0.0, 0.0, 0.2, 0.5, 0.2, 0.0, 0.0])
+        print(transm.render())
+
     """
 
     model_type: Literal["trans1d", "TRANS1D"] = Field(
@@ -468,7 +492,13 @@ class TRANS2D(BaseSubComponent):
 
     Examples
     --------
-    .. code-block:: python
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import TRANS2D
 
         trcoef = np.array([[0.0, 0.0], [0.1, 0.1], [0.2, 0.2]])
         transm = TRANS2D(trcoef=trcoef)
@@ -491,7 +521,7 @@ class TRANS2D(BaseSubComponent):
         json_encoders = JSON_ENCODERS
 
     @validator("trcoef")
-    def same_sizes(cls, value):
+    def constrained_0_1(cls, value):
         """Ensure all directions have the same number of frequencies."""
         if value.min() < 0 or value.max() > 1:
             raise ValueError("Transmission coefficients must be between 0.0 and 1.0")
@@ -501,5 +531,5 @@ class TRANS2D(BaseSubComponent):
         """Command file string for this component."""
         repr = "TRANS2D"
         for coef in self.trcoef:
-            repr += f"\n{' '.join(str(v) for v in coef)}"
-        return f"{repr}\n"
+            repr += f" &\n\t{' '.join(str(v) for v in coef)}"
+        return f"{repr} &\n\t"
