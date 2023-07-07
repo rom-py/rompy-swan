@@ -28,6 +28,7 @@ class SPHERICAL(BaseSubComponent):
     Notes
     -----
     projection options:
+
     - CCM: central conformal Mercator. The horizontal and vertical scales are
       uniform in terms of cm/degree over the area shown. In the centre of the scale
       is identical to that of the conventional Mercator projection (but only at
