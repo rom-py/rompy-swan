@@ -1649,10 +1649,12 @@ REFLECTION_TYPE = Annotated[
 ]
 
 class OBSTACLE(BaseComponent):
-    """Sub-grid obstacle.
+    """Subgrid obstacle.
 
-    `OBSTACLE ->TRANSM|TRANS1D|TRANS2D|DAM GODA|DAM DANGREMOND REFL [reflc] &`
-    `   ->RSPEC|RDIFF (FREEBOARD [hgt] [gammat] [gammar] QUAY) LINE < [xp] [yp] >`
+    .. code-block:: text
+
+        OBSTACLE ->TRANSM|TRANS1D|TRANS2D|GODA|DANGREMOND REFL [reflc] ->RSPEC|RDIFF &
+            (FREEBOARD [hgt] [gammat] [gammar] QUAY) LINE < [xp] [yp] >
 
     With this optional command the user provides the characteristics of a (line
     of) sub-grid obstacle(s) through which waves are transmitted or against which
@@ -1670,9 +1672,26 @@ class OBSTACLE(BaseComponent):
 
     Notes
     -----
-    The advise is to define obstacles with the least amount of points possible.
 
-    SWAN checks if the criterion `reflc^2 + trcoef^2 LE 1` is fulfilled.
+    * The advise is to define obstacles with the least amount of points possible.
+    * SWAN checks if the criterion `reflc^2 + trcoef^2 LE 1` is fulfilled.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import OBSTACLE
+
+        obs = OBSTACLE(
+            transmission=dict(model_type="transm", trcoef=0.5),
+            reflection=dict(reflc=0.5),
+            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+        )
+        print(obs.render())
 
     """
 
