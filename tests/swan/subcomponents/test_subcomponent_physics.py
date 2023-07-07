@@ -14,9 +14,12 @@ from rompy.swan.subcomponents.physics import (
     ST6C5,
     ELDEBERKY,
     DEWIT,
+    TRANSM,
+    TRANS1D,
+    TRANS2D,
+    GODA,
+    DANGREMOND,
 )
-
-from rompy.swan.components.physics import TRANSM, TRANS1D, TRANS2D
 
 
 # =====================================================================================
@@ -138,3 +141,17 @@ def test_trans2d():
         TRANS2D(trcoef=[[0.0, 0.0, 0.0], [0.1, 0.1, 0.1, 0.1]])
     with pytest.raises(ValidationError):
         TRANS2D(trcoef=[[0.0, 0.0, 0.0], [0.1, 0.1, 1.1]])
+
+
+def test_goda():
+    trans = GODA(hgt=1.0)
+    assert trans.render() == "DAM GODA hgt=1.0"
+    trans = GODA(hgt=-1.0, alpha=2.6, beta=0.15)
+    assert trans.render() == "DAM GODA hgt=-1.0 alpha=2.6 beta=0.15"
+
+
+def test_dangremond():
+    trans = DANGREMOND(hgt=3.0, slope=60, Bk=10.0)
+    assert trans.render() == "DAM DANGREMOND hgt=3.0 slope=60.0 Bk=10.0"
+    with pytest.raises(ValidationError):
+        DANGREMOND(hgt=3.0, slope=120, Bk=1.0)
