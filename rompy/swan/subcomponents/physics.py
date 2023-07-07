@@ -854,3 +854,60 @@ class FREEBOARD(BaseSubComponent):
         if self.quay:
             repr += " QUAY"
         return repr
+
+
+class LINE(BaseSubComponent):
+    """Line of points to define obstacle location.
+
+    `LINE < [xp] [yp] >`
+
+    With this option the user indicates that the fixed transmission `trcoef` and
+    reflection `reflc` coefficients are freeboard dependent. The freeboard dependency
+    has no effect on the transmission coefficient as computed using the DAM option.
+
+    Notes
+    -----
+    Points coordinates should be provided in m If Cartesian coordinates are used or in
+    degrees if spherical coordinates are used (see command `COORD`). At least two
+    corner points must be provided.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import FREEBOARD
+
+        line = LINE(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1])
+        print(freeboard.render())
+
+    """
+
+    model_type: Literal["line", "LINE"] = Field(
+        default="line", description="Model type discriminator"
+    )
+    xp: list[float] = Field(
+        description="The x-coordinates of the points defining the line",
+        min_items=2
+    )
+    yp: list[float] = Field(
+        description="The y-coordinates of the points defining the line",
+        min_items=2
+    )
+
+    @root_validator
+    def check_length(cls, values):
+        """Check that the length of xp and yp are the same."""
+        if len(values["xp"]) != len(values["yp"]):
+            raise ValueError("xp and yp must be the same length")
+        return values
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        repr = "LINE"
+        for xp, yp in zip(self.xp, self.yp):
+            repr += f" {xp} {yp}"
+        return repr

@@ -266,11 +266,14 @@ def test_limiter():
 # =====================================================================================
 # OBSTACLE
 # =====================================================================================
-def test_obstacle():
+def test_obstacle_minimum():
     obs = OBSTACLE(
         # transmission={"model_type": "transm", "trcoef": 0.5},
         # refl=True,
         # reflc=0.5,
+        line=dict(
+            xp=[174.1, 174.2, 174.3],
+            yp=[-39.1, -39.1, -39.1],
+        ),
     )
-    import ipdb; ipdb.set_trace()
-    assert obs.render() == "OBSTACLE TRANSM trcoef=0.5 REFL 0.5"
+    assert obs.render() == "OBSTACLE LINE 174.1 -39.1 174.2 -39.1 174.3 -39.1"
