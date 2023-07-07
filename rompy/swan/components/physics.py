@@ -21,6 +21,12 @@ from rompy.swan.subcomponents.physics import (
     TRANSM,
     TRANS1D,
     TRANS2D,
+    GODA,
+    DANGREMOND,
+    REFL,
+    RSPEC,
+    RDIFF,
+    FREEBOARD,
 )
 
 
@@ -1633,14 +1639,18 @@ class LIMITER(BaseComponent):
 # OBSTACLE
 # =====================================================================================
 TRANSMISSION_TYPE = Annotated[
-    Union[TRANSM, TRANS1D, TRANS2D],
-    Field(description="Wave transmission subcomponent", discriminator="model_type"),
+    Union[TRANSM, TRANS1D, TRANS2D, GODA, DANGREMOND],
+    Field(description="Wave transmission", discriminator="model_type"),
+]
+REFLECTION_TYPE = Annotated[
+    Union[RSPEC, RDIFF],
+    Field(description="Wave reflection type", discriminator="model_type"),
 ]
 
 class OBSTACLE(BaseComponent):
     """Sub-grid obstacle.
 
-    `OBSTACLE`
+    `OBSTACLE TRANSM|TRANS1D|TRANS2D|DAM GODA|DAM DANGREMOND REFL [reflc]`
 
     With this optional command the user provides the characteristics of a (line
     of) sub-grid obstacle(s) through which waves are transmitted or against which
@@ -1660,16 +1670,40 @@ class OBSTACLE(BaseComponent):
     -----
     The advise is to define obstacles with the least amount of points possible.
 
+    SWAN checks if the criterion `reflc^2 + trcoef^2 LE 1` is fulfilled.
+
     """
 
     model_type: Literal["obstacle"] = Field(
         default="obstacle", description="Model type discriminator"
     )
-    transmission: TRANSMISSION_TYPE
+    transmission: Optional[TRANSMISSION_TYPE]
+    reflection: Optional[REFL] = Field(description="Wave reflection")
+    reflection_type: Optional[REFLECTION_TYPE]
+    freeboard: Optional[FREEBOARD] = Field(description="Freeboard")
+
+    @validator("freeboard")
+    def hgt_consistent(cls, value, values):
+        """Warns if `hgt` has different values in DAM and FREEBOARD specifications."""
+        transmission = values.get("transmission")
+        if transmission is not None and value is not None:
+            is_dam = transmission.model_type.upper() in ["GODA", "DANGREMOND"]
+            if is_dam and value.hgt != transmission.hgt:
+                logger.warning("hgt in FREEBOARD and DAM specifications are not equal")
+        return value
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        return f"OBSTACLE"
+        repr = f"OBSTACLE"
+        if self.transmission is not None:
+            repr += f" {self.transmission.render()}"
+        if self.reflection:
+            repr += f" {self.reflection.render()}"
+        if self.reflection_type is not None:
+            repr += f" {self.reflection_type.render()}"
+        if self.freeboard is not None:
+            repr += f" {self.freeboard.render()}"
+        return repr
 
 
 # =====================================================================================

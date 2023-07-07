@@ -21,6 +21,7 @@ from rompy.swan.components.physics import (
     BRAGGFT,
     BRAGGFILE,
     LIMITER,
+    OBSTACLE,
 )
 
 
@@ -260,3 +261,16 @@ def test_limiter():
     assert lim.render() == "LIMITER"
     lim = LIMITER(ursell=10.0, qb=1.0)
     assert lim.render() == "LIMITER ursell=10.0 qb=1.0"
+
+
+# =====================================================================================
+# OBSTACLE
+# =====================================================================================
+def test_obstacle():
+    obs = OBSTACLE(
+        # transmission={"model_type": "transm", "trcoef": 0.5},
+        # refl=True,
+        # reflc=0.5,
+    )
+    import ipdb; ipdb.set_trace()
+    assert obs.render() == "OBSTACLE TRANSM trcoef=0.5 REFL 0.5"

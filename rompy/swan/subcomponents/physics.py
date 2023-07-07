@@ -406,7 +406,7 @@ class DEWIT(BaseSubComponent):
 
 
 # =====================================================================================
-# Transmission
+# Transmission and reflection
 # =====================================================================================
 class TRANSM(BaseSubComponent):
     """Constant transmission coefficient.
@@ -420,7 +420,11 @@ class TRANSM(BaseSubComponent):
         :okwarning:
         :okexcept:
 
+        @suppress
         from rompy.swan.subcomponents.physics import TRANSM
+
+        transm = TRANSM()
+        print(transm.render())
         transm = TRANSM(trcoef=0.5)
         print(transm.render())
 
@@ -535,42 +539,13 @@ class TRANS2D(BaseSubComponent):
         return f"{repr} &\n\t"
 
 
-class DAM(BaseSubComponent):
-    """Dam transmission coefficients.
+class GODA(BaseSubComponent):
+    """DAM transmission based on Goda/Seelig (1979).
+
+    `DAM GODA [hgt] [alpha] [beta]`
 
     This option specified transmission coefficients dependent on the incident wave
     conditions at the obstacle and on the obstacle height (which may be submerged).
-
-    `DAM`
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-        :okexcept:
-
-        @suppress
-        from rompy.swan.subcomponents.physics import DAM
-
-        transm = DAM()
-        print(transm.render())
-
-    """
-
-    model_type: Literal["dam", "DAM"] = Field(
-        default="dam", description="Model type discriminator"
-    )
-
-    def cmd(self) -> str:
-        """Command file string for this subcomponent."""
-        return "DAM"
-
-
-class GODA(BaseSubComponent):
-    """DAM transmission coefficient from the Goda/Seelig (1979).
-
-    `DAM GODA [hgt] [alpha] [beta]`
 
     References
     ----------
@@ -591,6 +566,8 @@ class GODA(BaseSubComponent):
         @suppress
         from rompy.swan.subcomponents.physics import GODA
 
+        transm = GODA(hgt=3.0)
+        print(transm.render())
         transm = GODA(hgt=3.0, alpha=2.6, beta=0.15)
         print(transm.render())
 
@@ -630,9 +607,12 @@ class GODA(BaseSubComponent):
 
 
 class DANGREMOND(BaseSubComponent):
-    """DAM transmission coefficient from the d'Angremond/Van der Meer (1996).
+    """DAM transmission based on d'Angremond/Van der Meer (1996).
 
     `DAM DANGREMOND [hgt] [slope] [Bk]`
+
+    This option specified transmission coefficients dependent on the incident wave
+    conditions at the obstacle and on the obstacle height (which may be submerged).
 
     References
     ----------
@@ -647,9 +627,9 @@ class DANGREMOND(BaseSubComponent):
         :okexcept:
 
         @suppress
-        from rompy.swan.subcomponents.physics import GDANGREMONODA
+        from rompy.swan.subcomponents.physics import DANGREMOND
 
-        transm = GDANGREMONODA(hgt=3.0, slope=60, Bk=10.0)
+        transm = DANGREMOND(hgt=3.0, slope=60, Bk=10.0)
         print(transm.render())
 
     """
@@ -675,4 +655,202 @@ class DANGREMOND(BaseSubComponent):
         """Command file string for this subcomponent."""
         repr = f"DAM {self.model_type.upper()}"
         repr += f" hgt={self.hgt} slope={self.slope} Bk={self.Bk}"
+        return repr
+
+
+class REFL(BaseSubComponent):
+    """Obstacle reflections.
+
+    `REFL [reflc]`
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import REFL
+
+        refl = REFL()
+        print(refl.render())
+        refl = REFL(reflc=0.5)
+        print(refl.render())
+
+    """
+
+    model_type: Literal["refl", "REFL"] = Field(
+        default="refl", description="Model type discriminator"
+    )
+    reflc: Optional[float] = Field(
+        description=(
+            "Constant reflection coefficient (ratio of reflected over incoming "
+            "significant wave height) (SWAN default: 1.0)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        repr = "REFL"
+        if self.reflc is not None:
+            repr += f" reflc={self.reflc}"
+        return repr
+
+
+class RSPEC(BaseSubComponent):
+    """Specular reflection.
+
+    `RSPEC`
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import RSPEC
+
+        refl = RSPEC()
+        print(refl.render())
+
+    """
+
+    model_type: Literal["rspec", "RSPEC"] = Field(
+        default="rspec", description="Model type discriminator"
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        return "RSPEC"
+
+
+class RDIFF(BaseSubComponent):
+    """Diffuse reflection.
+
+    `RDIFF [pown]`
+
+    Specular reflection where incident waves are scattered over reflected direction.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import RDIFF
+
+        refl = RDIFF()
+        print(refl.render())
+        refl = RDIFF(pown=1.0)
+        print(refl.render())
+
+    """
+
+    model_type: Literal["rdiff", "RDIFF"] = Field(
+        default="rdiff", description="Model type discriminator"
+    )
+    pown: Optional[float] = Field(
+        description=(
+            "Each incoming direction θ is scattered over reflected direction θ_refl "
+            "according to cos^pown(θ-θ_refl). The parameter `pown` indicates the width"
+            "of the redistribution function (SWAN default: 1.0)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        repr = "RDIFF"
+        if self.pown is not None:
+            repr += f" pown={self.pown}"
+        return repr
+
+
+class FREEBOARD(BaseSubComponent):
+    """Freeboard dependent transmission and reflections.
+
+    `FREEBOARD [hgt] [gammat] [gammar] [gammas] [QUAY]`
+
+    With this option the user indicates that the fixed transmission `trcoef` and
+    reflection `reflc` coefficients are freeboard dependent. The freeboard dependency
+    has no effect on the transmission coefficient as computed using the DAM option.
+
+    Notes
+    -----
+    See the Scientific/Technical documentation for background information on the 
+    `gammat` and `gammar` shape parameters.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import FREEBOARD
+
+        freeboard = FREEBOARD(hgt=2.0)
+        print(freeboard.render())
+        freeboard = FREEBOARD(hgt=2.0, gammat=1.0, gammar=1.0, quay=True)
+        print(freeboard.render())
+
+    """
+
+    model_type: Literal["freeboard", "FREEBOARD"] = Field(
+        default="freeboard", description="Model type discriminator"
+    )
+    hgt: float = Field(
+        description=(
+            "The elevation of the top of the obstacle or height of the quay above the "
+            "reference level (same reference level as for the bottom). Use a negative "
+            "value if the top is below that reference level. In case `hgt` is also "
+            "specified in the DAM option, both values of `hgt` should be equal for "
+            "consistency"
+        ),
+    )
+    gammat: Optional[float] = Field(
+        description=(
+            "Shape parameter of relative freeboard dependency of transmission "
+            "coefficient. This parameter should be higher than zero (SWAN default 1.0)"
+        ),
+        gt=0.0,
+    )
+    gammar: Optional[float] = Field(
+        description=(
+            "Shape parameter of relative freeboard dependency of reflection "
+            "coefficient. This parameter should be higher than zero (SWAN default 1.0)"
+        ),
+        gt=0.0,
+    )
+    quay: bool = Field(
+        default=False,
+        description=(
+            "With this option the user indicates that the freeboard dependency of the "
+            "transmission and reflection coefficients also depends on the relative "
+            "position of an obstacle-linked grid point with respect to the position "
+            "of the obstacle line representing the edge of a quay. In case the active "
+            "grid point is on the deeper side of the obstacle, then the correction "
+            "factors are applied using the parameters `hgt`, `gammat` and `gammar`."
+            "In case the active grid point is on the shallower side of the obstacle, "
+            "the reflection coefficient is set to 0 and the transmission coefficient "
+            "to 1."
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        repr = "FREEBOARD"
+        if self.hgt is not None:
+            repr += f" hgt={self.hgt}"
+        if self.gammat is not None:
+            repr += f" gammat={self.gammat}"
+        if self.gammar is not None:
+            repr += f" gammar={self.gammar}"
+        if self.quay:
+            repr += " QUAY"
         return repr
