@@ -23,6 +23,7 @@ from rompy.swan.subcomponents.physics import (
     RSPEC,
     RDIFF,
     FREEBOARD,
+    LINE,
 )
 
 
@@ -118,7 +119,7 @@ def test_biphase_dewit():
 
 
 # =====================================================================================
-# Transmission and reflection
+# Obstacle
 # =====================================================================================
 def test_transm():
     trans = TRANSM()
@@ -205,3 +206,8 @@ def test_freeboard_gamma_gt_0():
         FREEBOARD(hgt=2.0, gammat=0.0)
     with pytest.raises(ValidationError):
         FREEBOARD(hgt=2.0, gammar=0.0)
+
+
+def test_line():
+    line = LINE(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1])
+    assert [f"{x} {y}" in line.render() for x, y in zip(line.xp, line.yp)]

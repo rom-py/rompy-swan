@@ -27,6 +27,7 @@ from rompy.swan.subcomponents.physics import (
     RSPEC,
     RDIFF,
     FREEBOARD,
+    LINE,
 )
 
 
@@ -1681,6 +1682,7 @@ class OBSTACLE(BaseComponent):
     reflection: Optional[REFL] = Field(description="Wave reflection")
     reflection_type: Optional[REFLECTION_TYPE]
     freeboard: Optional[FREEBOARD] = Field(description="Freeboard")
+    line: LINE = Field(description="Line of obstacle")
 
     @validator("freeboard")
     def hgt_consistent(cls, value, values):
@@ -1703,6 +1705,7 @@ class OBSTACLE(BaseComponent):
             repr += f" {self.reflection_type.render()}"
         if self.freeboard is not None:
             repr += f" {self.freeboard.render()}"
+        repr += f" {self.line.render()}"
         return repr
 
 
