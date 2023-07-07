@@ -440,7 +440,7 @@ class TRANSM(BaseSubComponent):
     )
 
     def cmd(self) -> str:
-        """Command file string for this component."""
+        """Command file string for this subcomponent."""
         repr = "TRANSM"
         if self.trcoef is not None:
             repr += f" trcoef={self.trcoef}"
@@ -481,7 +481,7 @@ class TRANS1D(BaseSubComponent):
     )
 
     def cmd(self) -> str:
-        """Command file string for this component."""
+        """Command file string for this subcomponent."""
         return f"TRANS1D {' '.join(str(v) for v in self.trcoef)}"
 
 
@@ -528,8 +528,151 @@ class TRANS2D(BaseSubComponent):
         return value
 
     def cmd(self) -> str:
-        """Command file string for this component."""
+        """Command file string for this subcomponent."""
         repr = "TRANS2D"
         for coef in self.trcoef:
             repr += f" &\n\t{' '.join(str(v) for v in coef)}"
         return f"{repr} &\n\t"
+
+
+class DAM(BaseSubComponent):
+    """Dam transmission coefficients.
+
+    This option specified transmission coefficients dependent on the incident wave
+    conditions at the obstacle and on the obstacle height (which may be submerged).
+
+    `DAM`
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import DAM
+
+        transm = DAM()
+        print(transm.render())
+
+    """
+
+    model_type: Literal["dam", "DAM"] = Field(
+        default="dam", description="Model type discriminator"
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        return "DAM"
+
+
+class GODA(BaseSubComponent):
+    """DAM transmission coefficient from the Goda/Seelig (1979).
+
+    `DAM GODA [hgt] [alpha] [beta]`
+
+    References
+    ----------
+    Goda, Y. and Suzuki, Y., 1976. Estimation of incident and reflected waves in random
+    wave experiments. In Coastal Engineering 1976 (pp. 828-845).
+
+    Seelig, W.N., 1979. Effects of breakwaters on waves: Laboratory test of wave
+    transmission by overtopping. In Proc. Conf. Coastal Structures, 1979
+    (Vol. 79, No. 2, pp. 941-961).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import GODA
+
+        transm = GODA(hgt=3.0, alpha=2.6, beta=0.15)
+        print(transm.render())
+
+    """
+
+    model_type: Literal["goda", "GODA"] = Field(
+        default="goda", description="Model type discriminator"
+    )
+    hgt: float = Field(
+        description=(
+            "The elevation of the top of the obstacle above reference level (same "
+            "reference level as for bottom etc.); use a negative value if the top is "
+            "below that reference level"
+        ),
+    )
+    alpha: Optional[float] = Field(
+        description=(
+            "coefficient determining the transmission coefficient for Goda's "
+            "transmission formula (SWAN default: 2.6)"
+        ),
+    )
+    beta: Optional[float] = Field(
+        description=(
+            "Another coefficient determining the transmission coefficient for Goda's "
+            "transmission formula (SWAN default: 0.15)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        repr = f"DAM {self.model_type.upper()} hgt={self.hgt}"
+        if self.alpha is not None:
+            repr += f" alpha={self.alpha}"
+        if self.beta is not None:
+            repr += f" beta={self.beta}"
+        return repr
+
+
+class DANGREMOND(BaseSubComponent):
+    """DAM transmission coefficient from the d'Angremond/Van der Meer (1996).
+
+    `DAM DANGREMOND [hgt] [slope] [Bk]`
+
+    References
+    ----------
+    d'Angremond, K., Van Der Meer, J.W. and De Jong, R.J., 1996. Wave transmission at
+    low-crested structures. In Coastal Engineering 1996 (pp. 2418-2427).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import GDANGREMONODA
+
+        transm = GDANGREMONODA(hgt=3.0, slope=60, Bk=10.0)
+        print(transm.render())
+
+    """
+
+    model_type: Literal["dangremond", "DANGREMOND"] = Field(
+        default="dangremond", description="Model type discriminator"
+    )
+    hgt: float = Field(
+        description=(
+            "The elevation of the top of the obstacle above reference level (same "
+            "reference level as for bottom etc.); use a negative value if the top is "
+            "below that reference level"
+        ),
+    )
+    slope: float = Field(
+        description="The slope of the obstacle (in degrees)",
+        ge=0.0,
+        le=90.0
+    )
+    Bk: float = Field(description="The crest width of the obstacle")
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        repr = f"DAM {self.model_type.upper()}"
+        repr += f" hgt={self.hgt} slope={self.slope} Bk={self.Bk}"
+        return repr
