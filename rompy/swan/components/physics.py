@@ -1651,7 +1651,8 @@ REFLECTION_TYPE = Annotated[
 class OBSTACLE(BaseComponent):
     """Sub-grid obstacle.
 
-    `OBSTACLE TRANSM|TRANS1D|TRANS2D|DAM GODA|DAM DANGREMOND REFL [reflc]`
+    `OBSTACLE ->TRANSM|TRANS1D|TRANS2D|DAM GODA|DAM DANGREMOND REFL [reflc] &`
+    `   ->RSPEC|RDIFF (FREEBOARD [hgt] [gammat] [gammar] QUAY) LINE < [xp] [yp] >`
 
     With this optional command the user provides the characteristics of a (line
     of) sub-grid obstacle(s) through which waves are transmitted or against which
@@ -1872,7 +1873,9 @@ BRAGG_TYPE = Annotated[
 LIMITER_TYPE = Annotated[
     LIMITER, Field(description="Limiter component", discriminator="model_type")
 ]
-
+OBSTACLE_TYPE = Annotated[
+    OBSTACLE, Field(description="Obstacle component", discriminator="model_type")
+]
 
 class PHYSICS(BaseComponent):
     """Physics group component.
@@ -1899,6 +1902,7 @@ class PHYSICS(BaseComponent):
     turbulence: Optional[TURBULENCE_TYPE]
     bragg: Optional[BRAGG_TYPE]
     limiter: Optional[LIMITER_TYPE]
+    obstacle: Optional[OBSTACLE_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -1948,4 +1952,6 @@ class PHYSICS(BaseComponent):
             repr += [self.bragg.render()]
         if self.limiter is not None:
             repr += [self.limiter.render()]
+        if self.obstacle is not None:
+            repr += [self.obstacle.render()]
         return repr

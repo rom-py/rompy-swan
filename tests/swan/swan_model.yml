@@ -151,3 +151,13 @@ physics:
     model_type: limiter
     ursell: 10.0
     qb: 1.0
+  obstacle:
+    model_type: obstacle
+    transmission:
+      model_type: transm
+      trcoef: 0.5
+    reflection:
+      reflc: 0.5
+    line:
+      xp: [174.1, 174.2, 174.3]
+      yp: [-39.1, -39.1, -39.1]
