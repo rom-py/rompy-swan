@@ -2,6 +2,7 @@
 import logging
 from typing import Literal, Optional, Union, Annotated
 from pydantic import validator, root_validator, Field, confloat
+import numpy as np
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.types import IDLA
@@ -17,6 +18,9 @@ from rompy.swan.subcomponents.physics import (
     ST6C5,
     ELDEBERKY,
     DEWIT,
+    TRANSM,
+    TRANS1D,
+    TRANS2D,
 )
 
 
@@ -1628,6 +1632,11 @@ class LIMITER(BaseComponent):
 # =====================================================================================
 # OBSTACLE
 # =====================================================================================
+TRANSMISSION_TYPE = Annotated[
+    Union[TRANSM, TRANS1D, TRANS2D],
+    Field(description="Wave transmission subcomponent", discriminator="model_type"),
+]
+
 class OBSTACLE(BaseComponent):
     """Sub-grid obstacle.
 
@@ -1639,11 +1648,24 @@ class OBSTACLE(BaseComponent):
     in the sense that it is narrow compared to the spatial meshes; its length should
     be at least one mesh length.
 
+    The location of the obstacle is defined by a sequence of corner points of a line.
+    The obstacles interrupt the propagation of the waves from one grid point to the
+    next wherever this obstacle line is located between two neighbouring grid points
+    (of the computational grid; the resolution of the obstacle is therefore equal to
+    the computational grid spacing). This implies that an obstacle to be effective must
+    be located such that it crosses at least one grid line. This is always the case
+    when an obstacle is larger than one mesh length.
+
+    Notes
+    -----
+    The advise is to define obstacles with the least amount of points possible.
+
     """
 
     model_type: Literal["obstacle"] = Field(
         default="obstacle", description="Model type discriminator"
     )
+    transmission: TRANSMISSION_TYPE
 
     def cmd(self) -> str:
         """Command file string for this component."""

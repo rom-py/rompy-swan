@@ -1,9 +1,14 @@
 """SWAN physics subcomponents."""
 from typing import Literal, Optional
-from pydantic import Field, root_validator, confloat
+from pydantic import Field, validator, root_validator, confloat
 from abc import ABC
+from pydantic_numpy import NDArray
+import numpy as np
 
 from rompy.swan.subcomponents.base import BaseSubComponent
+
+
+JSON_ENCODERS = {np.ndarray: lambda arr: arr.tolist()}
 
 
 # ======================================================================================
@@ -398,3 +403,103 @@ class DEWIT(BaseSubComponent):
         if self.lpar is not None:
             repr += f" lpar={self.lpar}"
         return repr
+
+
+# =====================================================================================
+# Transmission
+# =====================================================================================
+class TRANSM(BaseSubComponent):
+    """Constant transmission coefficient.
+
+    `TRANSM [trcoef]`
+
+    """
+
+    model_type: Literal["transm", "TRANSM"] = Field(
+        default="transm", description="Model type discriminator"
+    )
+    trcoef: Optional[float] = Field(
+        description=(
+            "Constant transmission coefficient (ratio of transmitted over incoming "
+            "significant wave height) (SWAN default: 0.0) (no transmission = complete "
+            "blockage)"
+        ),
+        ge=0.0,
+        le=1.0,
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "TRANSM"
+        if self.trcoef is not None:
+            repr += f" trcoef={self.trcoef}"
+        return repr
+
+
+class TRANS1D(BaseSubComponent):
+    """Frequency dependent transmission coefficient.
+
+    `TRANS1D < [trcoef] >`
+
+    """
+
+    model_type: Literal["trans1d", "TRANS1D"] = Field(
+        default="trans1d", description="Model type discriminator"
+    )
+    trcoef: list[float] = Field(
+        description=(
+            "Transmission coefficient (ratio of transmitted over incoming significant "
+            "wave height) per frequency. The number of these transmission values must "
+            "be equal to the number of frequencies, i.e. `msc` + 1"
+        ),
+        ge=0.0,
+        le=1.0,
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        return f"TRANS1D {' '.join(str(v) for v in self.trcoef)}"
+
+
+class TRANS2D(BaseSubComponent):
+    """Frequency-direction dependent transmission coefficient.
+
+    `TRANS2D < [trcoef] >`
+
+    Examples
+    --------
+    .. code-block:: python
+
+        trcoef = np.array([[0.0, 0.0], [0.1, 0.1], [0.2, 0.2]])
+        transm = TRANS2D(trcoef=trcoef)
+        print(transm.render())
+
+    """
+
+    model_type: Literal["trans2d", "TRANS2D"] = Field(
+        default="trans2d", description="Model type discriminator"
+    )
+    trcoef: NDArray = Field(
+        description=(
+            "Transmission coefficient (ratio of transmitted over incoming significant "
+            "wave height) per frequency and direction, rows represent directions and "
+            "columns represent frequencies"
+        ),
+    )
+
+    class Config:
+        json_encoders = JSON_ENCODERS
+
+    @validator("trcoef")
+    def same_sizes(cls, value):
+        """Ensure all directions have the same number of frequencies."""
+        if value.min() < 0 or value.max() > 1:
+            raise ValueError("Transmission coefficients must be between 0.0 and 1.0")
+        return value
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "TRANS2D"
+        for coef in self.trcoef:
+            repr += f"\n{' '.join(str(v) for v in coef)}"
+        return f"{repr}\n"

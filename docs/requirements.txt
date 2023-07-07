@@ -1,5 +1,5 @@
 rompy
-sphinx
+sphinx<7.0
 pydata_sphinx_theme
 autodoc_pydantic
 sphinx-collections
