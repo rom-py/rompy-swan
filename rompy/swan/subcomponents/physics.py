@@ -26,10 +26,9 @@ class SourceTerms(BaseSubComponent, ABC):
         description="Activate the Cavaleri and Malanotte (1981) wave growth term",
     )
     a: Optional[float] = Field(
-        default=0.0015,
         description=(
             "Proportionality coefficient when activating the Cavaleri and Malanotte "
-            "(1981) wave growth term"
+            "(1981) wave growth term (SWAN default: 0.0015)"
         ),
     )
 
@@ -53,7 +52,7 @@ class JANSSEN(SourceTerms):
 
     """
 
-    model_type: Literal["janssen"] = Field(
+    model_type: Literal["janssen", "JANSSEN"] = Field(
         default="janssen", description="Model type discriminator"
     )
     cds1: Optional[float] = Field(
@@ -93,7 +92,7 @@ class KOMEN(SourceTerms):
 
     """
 
-    model_type: Literal["komen"] = Field(
+    model_type: Literal["komen", "KOMEN"] = Field(
         default="komen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
@@ -142,7 +141,7 @@ class WESTHUYSEN(SourceTerms):
 
     """
 
-    model_type: Literal["westhuysen"] = Field(
+    model_type: Literal["westhuysen", "WESTHUYSEN"] = Field(
         default="westhuysen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
