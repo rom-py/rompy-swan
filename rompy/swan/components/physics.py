@@ -53,11 +53,38 @@ SOURCE_TERMS = Union[
 class GEN1(BaseComponent):
     """First generation source terms GEN1.
 
-    `GEN1 [cf10] [cf20] [cf30] [cf40] [edmlpm] [cdrag] [umin] [cfpm]`
+    .. code-block:: text
+
+        GEN1 [cf10] [cf20] [cf30] [cf40] [edmlpm] [cdrag] [umin] [cfpm]
 
     With this command the user indicates that SWAN should run in first-generation mode
     (see Scientific/Technical documentation).
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import GEN1
+
+        gen = GEN1()
+        print(gen.render())
+        kwargs = dict(
+            cf10=188.0,
+            cf20=0.59,
+            cf30=0.12,
+            cf40=250.0,
+            edmlpm=0.0036,
+            cdrag=0.0012,
+            umin=1.0,
+            cfpm=0.13
+        )
+        gen = GEN1(**kwargs)
+        print(gen.render())
+    
     """
 
     model_type: Literal["gen1"] = Field(
@@ -125,10 +152,39 @@ class GEN1(BaseComponent):
 class GEN2(GEN1):
     """Second generation source terms GEN2.
 
-    `GEN2 [cf10] [cf20] [cf30] [cf40] [cf50] [cf60] [edmlpm] [cdrag] [umin] [cfpm]`
+    .. code-block:: text
+
+        GEN2 [cf10] [cf20] [cf30] [cf40] [cf50] [cf60] [edmlpm] [cdrag] [umin] [cfpm]
 
     With this command the user indicates that SWAN should run in second-generation mode
     (see Scientific/Technical documentation).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import GEN2
+
+        gen = GEN2()
+        print(gen.render())
+        kwargs = dict(
+            cf10=188.0,
+            cf20=0.59,
+            cf30=0.12,
+            cf40=250.0,
+            cf50=0.0023,
+            cf60=-0.223,
+            edmlpm=0.0036,
+            cdrag=0.0012,
+            umin=1.0,
+            cfpm=0.13
+        )
+        gen = GEN2(**kwargs)
+        print(gen.render())
 
     """
 
@@ -177,14 +233,38 @@ class GEN2(GEN1):
 class GEN3(BaseComponent):
     """Third generation source terms GEN3.
 
-    `GEN3 JANSSEN|KOMEN|WESTHUYSEN|ST6 (...) AGROW [a]`
+    .. code-block:: text
+
+        GEN3 JANSSEN|KOMEN|->WESTHUYSEN|ST6 AGROW [a]
 
     With this command the user indicates that SWAN should run in third-generation mode
     for wind input, quadruplet interactions and whitecapping.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import GEN3
+        from rompy.swan.subcomponents.physics import ST6C1
+
+        gen = GEN3(
+            source_terms=dict(
+                model_type="westhuysen",
+                wind_drag="wu",
+                agrow=True,
+            ),
+        )
+        print(gen.render())
+        gen = GEN3(source_terms=ST6C1())
+        print(gen.render())
+
     """
 
-    model_type: Literal["gen3"] = Field(
+    model_type: Literal["gen3", "GEN3"] = Field(
         default="gen3", description="Model type discriminator"
     )
     source_terms: SOURCE_TERMS = Field(
