@@ -249,7 +249,6 @@ class GEN3(BaseComponent):
 
         @suppress
         from rompy.swan.components.physics import GEN3
-        from rompy.swan.subcomponents.physics import ST6C1
 
         gen = GEN3(
             source_terms=dict(
@@ -259,6 +258,7 @@ class GEN3(BaseComponent):
             ),
         )
         print(gen.render())
+        from rompy.swan.subcomponents.physics import ST6C1
         gen = GEN3(source_terms=ST6C1())
         print(gen.render())
 
