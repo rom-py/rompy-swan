@@ -87,7 +87,7 @@ class GEN1(BaseComponent):
     
     """
 
-    model_type: Literal["gen1"] = Field(
+    model_type: Literal["gen1", "GEN1"] = Field(
         default="gen1", description="Model type discriminator"
     )
     cf10: Optional[float] = Field(
@@ -188,7 +188,7 @@ class GEN2(GEN1):
 
     """
 
-    model_type: Literal["gen2"] = Field(
+    model_type: Literal["gen2", "GEN2"] = Field(
         default="gen2", description="Model type discriminator"
     )
     cf50: Optional[float] = Field(
@@ -308,7 +308,7 @@ class NEGATINP(BaseComponent):
 
     """
 
-    model_type: Literal["negatinp"] = Field(
+    model_type: Literal["negatinp", "NEGATINP"] = Field(
         default="negatinp", description="Model type discriminator"
     )
     rdcoef: confloat(ge=0.0, le=1.0) = Field(
@@ -335,7 +335,7 @@ class SSWELL(BaseComponent):
 
     """
 
-    model_type: Literal["sswell"] = Field(
+    model_type: Literal["sswell", "SSWELL"] = Field(
         default="sswell", description="Model type discriminator"
     )
 
@@ -356,7 +356,7 @@ class ROGERS(SSWELL):
 
     """
 
-    model_type: Literal["rogers"] = Field(
+    model_type: Literal["rogers", "ROGERS"] = Field(
         default="rogers", description="Model type discriminator"
     )
     cdsv: Optional[float] = Field(
@@ -390,7 +390,7 @@ class ARDHUIN(SSWELL):
 
     """
 
-    model_type: Literal["ardhuin"] = Field(
+    model_type: Literal["ardhuin", "ARDHUIN"] = Field(
         default="ardhuin", description="Model type discriminator"
     )
     cdsv: Optional[float] = Field(
@@ -424,7 +424,7 @@ class ZIEGER(SSWELL):
 
     """
 
-    model_type: Literal["zieger"] = Field(
+    model_type: Literal["zieger", "ZIEGER"] = Field(
         default="zieger", description="Model type discriminator"
     )
     b1: Optional[float] = Field(
@@ -461,7 +461,7 @@ class WCAPKOMEN(BaseComponent):
 
     """
 
-    model_type: Literal["wcapkomen"] = Field(
+    model_type: Literal["wcapkomen", "WCAPKOMEN"] = Field(
         default="wcapkomen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
@@ -524,7 +524,7 @@ class WCAPAB(BaseComponent):
 
     """
 
-    model_type: Literal["wcapab"] = Field(
+    model_type: Literal["wcapab", "WCAPAB"] = Field(
         default="wcapab", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
@@ -585,7 +585,7 @@ class QUADRUPL(BaseComponent):
 
     """
 
-    model_type: Literal["quadrupl"] = Field(
+    model_type: Literal["quadrupl", "QUADRUPL"] = Field(
         default="quadrupl", description="Model type discriminator"
     )
     iquad: Literal[1, 2, 3, 8, 4, 51, 52, 53] = Field(
@@ -659,7 +659,7 @@ class BREAKCONSTANT(BaseComponent):
 
     """
 
-    model_type: Literal["constant"] = Field(
+    model_type: Literal["constant", "BREAKCONSTANT"] = Field(
         default="constant", description="Model type discriminator"
     )
     alpha: Optional[float] = Field(
@@ -695,7 +695,7 @@ class BREAKBKD(BaseComponent):
 
     """
 
-    model_type: Literal["bkd"] = Field(
+    model_type: Literal["bkd", "BREAKBKD"] = Field(
         default="bkd", description="Model type discriminator"
     )
     alpha: Optional[float] = Field(
@@ -763,7 +763,7 @@ class JONSWAP(BaseComponent):
 
     """
 
-    model_type: Literal["jonswap"] = Field(
+    model_type: Literal["jonswap", "JONSWAP"] = Field(
         default="jonswap", description="Model type discriminator"
     )
     cfjon: Optional[float] = Field(
@@ -796,7 +796,7 @@ class COLLINS(BaseComponent):
 
     """
 
-    model_type: Literal["collins"] = Field(
+    model_type: Literal["collins", "COLLINS"] = Field(
         default="collins", description="Model type discriminator"
     )
     cfw: Optional[float] = Field(
@@ -832,7 +832,7 @@ class MADSEN(BaseComponent):
 
     """
 
-    model_type: Literal["madsen"] = Field(
+    model_type: Literal["madsen", "MADSEN"] = Field(
         default="madsen", description="Model type discriminator"
     )
     kn: Optional[float] = Field(
@@ -867,7 +867,7 @@ class RIPPLES(BaseComponent):
 
     """
 
-    model_type: Literal["ripples"] = Field(
+    model_type: Literal["ripples", "RIPPLES"] = Field(
         default="ripples", description="Model type discriminator"
     )
     s: Optional[float] = Field(
@@ -900,7 +900,7 @@ class TRIAD(BaseComponent):
 
     """
 
-    model_type: Literal["triad"] = Field(
+    model_type: Literal["triad", "TRIAD"] = Field(
         default="triad", description="Model type discriminator"
     )
     biphase: Union[ELDEBERKY, DEWIT] = Field(
@@ -926,7 +926,7 @@ class DCTA(TRIAD):
 
     """
 
-    model_type: Literal["dcta"] = Field(
+    model_type: Literal["dcta", "DCTA"] = Field(
         default="dcta", description="Model type discriminator"
     )
     trfac: Optional[float] = Field(
@@ -976,7 +976,7 @@ class LTA(TRIAD):
 
     """
 
-    model_type: Literal["lta"] = Field(
+    model_type: Literal["lta", "LTA"] = Field(
         default="lta", description="Model type discriminator"
     )
     trfac: Optional[float] = Field(
@@ -1017,7 +1017,7 @@ class SPB(TRIAD):
 
     """
 
-    model_type: Literal["spb"] = Field(
+    model_type: Literal["spb", "SPB"] = Field(
         default="spb", description="Model type discriminator"
     )
     trfac: Optional[float] = Field(
@@ -1098,7 +1098,7 @@ class VEGETATION(BaseComponent):
 
     """
 
-    model_type: Literal["vegetation"] = Field(
+    model_type: Literal["vegetation", "VEGETATION"] = Field(
         default="vegetation", description="Model type discriminator"
     )
     iveg: Literal[1, 2] = Field(
@@ -1181,7 +1181,7 @@ class MUD(BaseComponent):
 
     """
 
-    model_type: Literal["mud"] = Field(
+    model_type: Literal["mud", "MUD"] = Field(
         default="mud", description="Model type discriminator"
     )
     layer: Optional[float] = Field(
@@ -1694,7 +1694,7 @@ class LIMITER(BaseComponent):
 
     """
 
-    model_type: Literal["limiter"] = Field(
+    model_type: Literal["limiter", "LIMITER"] = Field(
         default="limiter", description="Model type discriminator"
     )
     ursell: Optional[float] = Field(
@@ -1775,7 +1775,7 @@ class OBSTACLE(BaseComponent):
 
     """
 
-    model_type: Literal["obstacle"] = Field(
+    model_type: Literal["obstacle", "OBSTACLE"] = Field(
         default="obstacle", description="Model type discriminator"
     )
     transmission: Optional[TRANSMISSION_TYPE]
@@ -1831,7 +1831,7 @@ class OBSTACLE_FIG(BaseComponent):
 
     """
 
-    model_type: Literal["obstacle_fig"] = Field(
+    model_type: Literal["obstacle_fig", "OBSTACLE_FIG"] = Field(
         default="obstacle_fig", description="Model type discriminator"
     )
 
@@ -1850,7 +1850,7 @@ class SETUP(BaseComponent):
 
     """
 
-    model_type: Literal["setup"] = Field(
+    model_type: Literal["setup", "SETUP"] = Field(
         default="setup", description="Model type discriminator"
     )
 
@@ -1869,7 +1869,7 @@ class DIFFRACTION(BaseComponent):
 
     """
 
-    model_type: Literal["diffraction"] = Field(
+    model_type: Literal["diffraction", "DIFFRACTION"] = Field(
         default="diffraction", description="Model type discriminator"
     )
 
@@ -1888,7 +1888,7 @@ class SURFBEAT(BaseComponent):
 
     """
 
-    model_type: Literal["surfbeat"] = Field(
+    model_type: Literal["surfbeat", "SURFBEAT"] = Field(
         default="surfbeat", description="Model type discriminator"
     )
 
@@ -1907,7 +1907,7 @@ class SCAT(BaseComponent):
 
     """
 
-    model_type: Literal["scat"] = Field(
+    model_type: Literal["scat", "SCAT"] = Field(
         default="scat", description="Model type discriminator"
     )
 
@@ -1984,7 +1984,7 @@ class PHYSICS(BaseComponent):
 
     """
 
-    model_type: Literal["physics"] = Field(
+    model_type: Literal["physics", "PHYSICS"] = Field(
         default="physics", description="Model type discriminator"
     )
     gen: Optional[GEN_TYPE]
