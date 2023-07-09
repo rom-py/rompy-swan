@@ -289,6 +289,10 @@ class GEN3(BaseComponent):
 class NEGATINP(BaseComponent):
     """Negative wind input.
 
+    .. code-block:: text
+
+        NEGATINP [rdcoef]
+
     With this optional command the user activates negative wind input. **This is
     intended only for use with non-breaking swell dissipation SSWELL ZIEGER**.
     Parameter `rdcoef` is a fraction between 0 and 1, representing the strength of
@@ -306,46 +310,46 @@ class NEGATINP(BaseComponent):
     source terms in the third-generation wave model WAVEWATCH. Ocean Modelling, 96,
     pp.2-25.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import NEGATINP
+
+        negatinp = NEGATINP()
+        print(negatinp.render())
+        negatinp = NEGATINP(rdcoef=0.04)
+        print(negatinp.render())
+
     """
 
     model_type: Literal["negatinp", "NEGATINP"] = Field(
         default="negatinp", description="Model type discriminator"
     )
-    rdcoef: confloat(ge=0.0, le=1.0) = Field(
-        default=0.0,
+    rdcoef: Optional[float] = Field(
         description="Coefficient representing the strength of negative wind input",
+        ge=0.0,
+        le=1.0,
     )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        return f"NEGATINP rdcoef={self.rdcoef}"
+        repr = "NEGATINP"
+        if self.rdcoef is not None:
+            repr += f" rdcoef={self.rdcoef}"
+        return repr
 
 
-class SSWELL(BaseComponent):
-    """Swell dissipation sub-component.
-
-    `SSWELL base component.`
-
-    With this command the user can influence the type of swell dissipation included in
-    the computations. The Zieger option is intended for use with negative wind input
-    via the NEGATINP command. Zieger non-breaking dissipation follows the method used
-    in WAVEWATCH III version 4 and does not include the steepness-dependent swell
-    coefficient introduced in WAVEWATCH III version 5. As noted already, if
-    `GEN3 ST6...` command is used, this SSWELL command should be provided.
-
-    """
-
-    model_type: Literal["sswell", "SSWELL"] = Field(
-        default="sswell", description="Model type discriminator"
-    )
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        return "SSWELL"
-
-
-class ROGERS(SSWELL):
+class ROGERS(BaseComponent):
     """Nonbreaking dissipation of Rogers et al. (2012).
+
+    .. code-block:: text
+
+        SSWELL ROGERS [cdsv] [feswell]
 
     References
     ----------
@@ -353,6 +357,21 @@ class ROGERS(SSWELL):
     whitecapping dissipation in a model for wind-generated surface waves: Description
     and simple calculations. Journal of Atmospheric and Oceanic Technology, 29(9),
     pp.1329-1346.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import ROGERS
+
+        sswell = ROGERS()
+        print(sswell.render())
+        sswell = ROGERS(cdsv=1.2, feswell=0.5)
+        print(sswell.render())
 
     """
 
@@ -369,7 +388,7 @@ class ROGERS(SSWELL):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"{super().cmd()} ROGERS"
+        repr = "SSWELL ROGERS"
         if self.cdsv is not None:
             repr += f" cdsv={self.cdsv}"
         if self.feswell is not None:
@@ -377,8 +396,12 @@ class ROGERS(SSWELL):
         return repr
 
 
-class ARDHUIN(SSWELL):
+class ARDHUIN(BaseComponent):
     """Nonbreaking dissipation of Ardhuin et al. (2010).
+
+    .. code-block:: text
+
+        SSWELL ARDHUIN [cdsv]
 
     References
     ----------
@@ -387,6 +410,21 @@ class ARDHUIN(SSWELL):
     2010. Semiempirical dissipation source functions for ocean waves. Part I:
     Definition, calibration, and validation. Journal of Physical Oceanography, 40(9),
     pp.1917-1941.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import ARDHUIN
+
+        sswell = ARDHUIN()
+        print(sswell.render())
+        sswell = ARDHUIN(cdsv=1.2)
+        print(sswell.render())
 
     """
 
@@ -402,16 +440,24 @@ class ARDHUIN(SSWELL):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"{super().cmd()} ARDHUIN"
+        repr = "SSWELL ARDHUIN"
         if self.cdsv is not None:
             repr += f" cdsv={self.cdsv}"
         return repr
 
 
-class ZIEGER(SSWELL):
+class ZIEGER(BaseComponent):
     """Nonbreaking dissipation of Zieger et al. (2015).
 
-    Swell dissipation of Young et al. (2013) updated by Zieger et al. (2015).
+    .. code-block:: text
+
+        SSWELL ZIEGER [b1]
+
+    Swell dissipation of Young et al. (2013) updated by Zieger et al. (2015). The
+    Zieger option is intended for use with negative wind input via the NEGATINP
+    command. Zieger non-breaking dissipation follows the method used in WAVEWATCH III
+    version 4 and does not include the steepness-dependent swell coefficient introduced
+    in WAVEWATCH III version 5.
 
     References
     ----------
@@ -422,18 +468,34 @@ class ZIEGER(SSWELL):
     Young, I.R., Babanin, A.V. and Zieger, S., 2013. The decay rate of ocean swell
     observed by altimeter. Journal of physical oceanography, 43(11), pp.2322-2333.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import ZIEGER
+
+        sswell = ZIEGER()
+        print(sswell.render())
+        sswell = ZIEGER(b1=0.00025)
+        print(sswell.render())
+
     """
 
     model_type: Literal["zieger", "ZIEGER"] = Field(
         default="zieger", description="Model type discriminator"
     )
     b1: Optional[float] = Field(
-        description="Non-dimensional proportionality coefficient"
+        description="Non-dimensional proportionality coefficient "
+        "(SWAN default: 0.00025)"
     )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"{super().cmd()} ZIEGER"
+        repr = "SSWELL ZIEGER"
         if self.b1 is not None:
             repr += f" b1={self.b1}"
         return repr
