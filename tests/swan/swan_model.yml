@@ -174,3 +174,5 @@ physics:
           yp: [-39.1, -39.1, -39.1]
   setup:
     supcor: 0.0
+  diffraction:
+    idiffr: 1
