@@ -2478,7 +2478,6 @@ OBSTACLES_TYPE = Annotated[
     list[OBSTACLES_TYPES], Field(description="Obstacle component")
 ]
 
-
 class OBSTACLES(BaseComponent):
     """List of swan obstacles.
 
@@ -2548,17 +2547,62 @@ class OBSTACLES(BaseComponent):
 class SETUP(BaseComponent):
     """Wave setup.
 
-    `SETUP`
+    .. code-block:: text
+
+        SETUP [supcor]
+
+    If this command is given, the wave-induced set-up is computed and accounted for in
+    the wave computations (during the computation it is added to the depth that is
+    obtained from the `READ BOTTOM` and `READ WLEVEL` commands). This approximation in
+    SWAN can only be applied to open coast (unlimited supply of water from outside the
+    domain, e.g. nearshore coasts) in contrast to closed basin, e.g. lakes and
+    estuaries, where this option should not be used. Note that set-up is not computed
+    correctly with spherical coordinates.
+
+    Notes
+    -----
+
+    * The SETUP command cannot be used in case of unstructured grids.
+    * Set-up is not supported in case of parallel runs using either MPI or OpenMP.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import SETUP
+
+        setup = SETUP()
+        print(setup.render())
+        setup = SETUP(supcor=0.5)
+        print(setup.render())
 
     """
 
     model_type: Literal["setup", "SETUP"] = Field(
         default="setup", description="Model type discriminator"
     )
+    supcor: Optional[float] = Field(
+        description=(
+            "By default the wave-induced set-up is computed with a constant added "
+            "such that the set-up is zero in the deepest point in the computational "
+            "grid. The user can modify this constant by the value of `supcor`. The "
+            "user can thus impose a set-up in any one point (and only one) in the "
+            "computational grid by first running SWAN, then reading the set-up in "
+            "that point and adding or subtracting the required value of `supcor` "
+            "(in m; positive if the set-up has to rise) (SWAN default: 0.0)"
+        ),
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        return f"SETUP"
+        repr = "SETUP"
+        if self.supcor is not None:
+            repr += f" supcor={self.supcor}"
+        return repr
 
 
 # =====================================================================================
@@ -2678,6 +2722,9 @@ OBSTACLE_TYPE = Annotated[
     Union[OBSTACLE, OBSTACLE_FIG, OBSTACLES],
     Field(description="Obstacle component", discriminator="model_type")
 ]
+SETUP_TYPE = Annotated[
+    SETUP, Field(description="Setup component", discriminator="model_type")
+]
 
 class PHYSICS(BaseComponent):
     """Physics group component.
@@ -2705,6 +2752,7 @@ class PHYSICS(BaseComponent):
     bragg: Optional[BRAGG_TYPE]
     limiter: Optional[LIMITER_TYPE]
     obstacle: Optional[OBSTACLE_TYPE]
+    setup: Optional[SETUP_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -2757,6 +2805,7 @@ class PHYSICS(BaseComponent):
         if self.obstacle.model_type == "obstacle":
             repr += [self.obstacle.render()]
         elif self.obstacle.model_type == "obstacles":
-            # Obstacles already return a list of components
-            repr += self.obstacle.render()
+            repr += self.obstacle.render() # Obstacles returns a list of components
+        if self.setup is not None:
+            repr += [self.setup.render()]
         return repr
