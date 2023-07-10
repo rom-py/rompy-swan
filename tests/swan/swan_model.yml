@@ -176,3 +176,7 @@ physics:
     supcor: 0.0
   diffraction:
     idiffr: 1
+  surfbeat:
+    spacing: uniform
+  scat:
+    model_type: scat
