@@ -149,3 +149,34 @@ class SideOptions(str, Enum):
     SE = "se"
     EAST = "east"
     NE = "ne"
+
+
+class PhysicsOff(str, Enum):
+    """Physics commands to be switched off.
+
+    Attributes
+    ----------
+    WINDGROWTH : str = "windgrowth"
+        Switches off wind growth (in commands GEN1, GEN2, GEN3).
+    QUADRUPL : str = "quadrupl"
+        Switches off quadruplet wave interactions (in command GEN3).
+    WCAPPING : str = "wcapping"
+        Switches off whitecapping (in command GEN3).
+    BREAKING : str = "breaking"
+        Switches off wave breaking dissipation.
+    REFRAC : str = "refrac"
+        Switches off wave refraction (action transport in theta space).
+    FSHIFT : str = "fshift"
+        Switches off frequency shifting (action transport in sigma space).
+    BNDCHK : str = "bndchk"
+        Switches off the checking of the delta imposed and computed Hs at the boundary.
+
+    """
+
+    WINDGROWTH = "windgrowth"
+    QUADRUPL = "quadrupl"
+    WCAPPING = "wcapping"
+    BREAKING = "breaking"
+    REFRAC = "refrac"
+    FSHIFT = "fshift"
+    BNDCHK = "bndchk"

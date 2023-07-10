@@ -1,11 +1,11 @@
 """Model physics components."""
 import logging
 from typing import Literal, Optional, Union, Annotated
-from pydantic import validator, root_validator, Field, confloat
-import numpy as np
+from enum import Enum
+from pydantic import validator, root_validator, Field
 
 from rompy.swan.components.base import BaseComponent
-from rompy.swan.types import IDLA
+from rompy.swan.types import IDLA, PhysicsOff
 from rompy.swan.subcomponents.physics import (
     JANSSEN,
     KOMEN,
@@ -2888,6 +2888,97 @@ class SCAT(BaseComponent):
 
 
 # =====================================================================================
+# OFF
+# =====================================================================================
+class DEACTIVATE(BaseComponent):
+    """Deactivate physics commands.
+
+    .. code-block:: text
+
+        OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
+
+    This command deactivates physics commands. The command can be used to switch off
+    the computation of a certain physics component without having to remove the command
+    from the input file. This is useful for testing purposes.
+
+    Examples:
+    ---------
+
+    .. ipython:: python
+
+        @suppress
+        from rompy.swan.components.physics import DEACTIVATE
+
+        deactivate = DEACTIVATE(physics="windgrowth")
+        print(deactivate.render())
+
+    """
+
+    model_type: Literal["deactivate", "DEACTIVATE"] = Field(
+        default="deactivate", description="Model type discriminator"
+    )
+    physics: PhysicsOff = Field(
+        description="Physics command to be switched off"
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        return f"OFF {self.physics.value.upper()}"
+
+
+DEACTIVATE_TYPE = Annotated[
+    list[DEACTIVATE], Field(description="Deactivate physics")
+]
+
+class DEACTIVATES(BaseComponent):
+    """Deactivate multiple physics commands.
+
+    .. code-block:: text
+
+        OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
+        OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
+        .
+
+    This group component is a convenience to allow defining and rendering
+    a list of `OFF` components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import DEACTIVATES
+        deactivate1 = dict(physics="windgrowth")
+        deactivate2 = dict(physics="wcapping")
+        deactivates = DEACTIVATES(physics=[deactivate1, deactivate2])
+        for deactivate in deactivates.render():
+            print(deactivate)
+
+    """
+    model_type: Literal["deactivates", "DEACTIVATES"] = Field(
+        default="deactivates", description="Model type discriminator"
+    )
+    physics: DEACTIVATE_TYPE
+
+    def cmd(self) -> list:
+        """Command file strings for this component."""
+        repr = []
+        for physics in self.physics:
+            repr += [physics.cmd()]
+        return repr
+
+    def render(self) -> str:
+        """Override base class to allow rendering list of components."""
+        cmds = []
+        for cmd in self.cmd():
+            cmds.append(super().render(cmd))
+        return cmds
+
+
+# =====================================================================================
 # Physics group component
 # =====================================================================================
 GEN_TYPE = Annotated[
@@ -2945,7 +3036,7 @@ LIMITER_TYPE = Annotated[
 ]
 OBSTACLE_TYPE = Annotated[
     Union[OBSTACLE, OBSTACLE_FIG, OBSTACLES],
-    Field(description="Obstacle component", discriminator="model_type")
+    Field(description="Obstacle group component", discriminator="model_type")
 ]
 SETUP_TYPE = Annotated[
     SETUP, Field(description="Setup component", discriminator="model_type")
@@ -2958,6 +3049,10 @@ SURFBEAT_TYPE = Annotated[
 ]
 SCAT_TYPE = Annotated[
     SCAT, Field(description="Scattering component", discriminator="model_type")
+]
+DEACTIVATE_TYPE = Annotated[
+    Union[DEACTIVATE, DEACTIVATES],
+    Field(description="Off group component", discriminator="model_type")
 ]
 
 class PHYSICS(BaseComponent):
@@ -2990,10 +3085,19 @@ class PHYSICS(BaseComponent):
     diffraction: Optional[DIFFRACTION_TYPE]
     surfbeat: Optional[SURFBEAT_TYPE]
     scat: Optional[SCAT_TYPE]
+    deactivate: Optional[DEACTIVATE_TYPE]
 
-    @root_validator
-    def deactivate_physics(cls, values):
-        return values
+    # @validator("off")
+    # def deactivate_physics(cls, value, values):
+    #     if "windgrowth" in value:
+    #         logger.info("Switching off WINDGROWTH")
+    #     if "quadrupl" in value and values.get("quadrupl") is not None:
+    #         logger.warning("Switching off QUADRUPL")
+    #     if "wcapping" in value:
+    #         logger.info("Switching off WCAPPING")
+    #     if "breaking" in value:
+    #         logger.info("Switching off BREAKING")
+    #     return values
 
     @validator("negatinp", pre=False)
     def negatinp_only_with_zieger(cls, value, values):
@@ -3039,10 +3143,11 @@ class PHYSICS(BaseComponent):
             repr += [self.bragg.render()]
         if self.limiter is not None:
             repr += [self.limiter.render()]
-        if self.obstacle.model_type == "obstacle":
-            repr += [self.obstacle.render()]
-        elif self.obstacle.model_type == "obstacles":
-            repr += self.obstacle.render() # Obstacles returns a list of components
+        if self.obstacle is not None:
+            if self.obstacle.model_type.lower() == "obstacle":
+                repr += [self.obstacle.render()]
+            elif self.obstacle.model_type.lower() == "obstacles":
+                repr += self.obstacle.render() # Object returns a list of components
         if self.setup is not None:
             repr += [self.setup.render()]
         if self.diffraction is not None:
@@ -3051,4 +3156,9 @@ class PHYSICS(BaseComponent):
             repr += [self.surfbeat.render()]
         if self.scat is not None:
             repr += [self.scat.render()]
+        if self.deactivate is not None:
+            if self.deactivate.model_type.lower() == "deactivate":
+                repr += [self.deactivate.render()]
+            elif self.deactivate.model_type == "deactivates":
+                repr += self.deactivate.render() # Object returns a list of components
         return repr
