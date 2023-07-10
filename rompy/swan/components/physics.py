@@ -269,7 +269,7 @@ class GEN3(BaseComponent):
     )
     source_terms: SOURCE_TERMS = Field(
         default_factory=WESTHUYSEN,
-        description="SWAN source terms to be used",
+        description="SWAN source terms to be used (SWAN default: WESTHUYSEN)",
         discriminator="model_type",
     )
 
@@ -344,7 +344,7 @@ class NEGATINP(BaseComponent):
         return repr
 
 
-class ROGERS(BaseComponent):
+class SSWELL_ROGERS(BaseComponent):
     """Nonbreaking dissipation of Rogers et al. (2012).
 
     .. code-block:: text
@@ -366,11 +366,11 @@ class ROGERS(BaseComponent):
         :okexcept:
 
         @suppress
-        from rompy.swan.components.physics import ROGERS
+        from rompy.swan.components.physics import SSWELL_ROGERS
 
-        sswell = ROGERS()
+        sswell = SSWELL_ROGERS()
         print(sswell.render())
-        sswell = ROGERS(cdsv=1.2, feswell=0.5)
+        sswell = SSWELL_ROGERS(cdsv=1.2, feswell=0.5)
         print(sswell.render())
 
     """
@@ -396,7 +396,7 @@ class ROGERS(BaseComponent):
         return repr
 
 
-class ARDHUIN(BaseComponent):
+class SSWELL_ARDHUIN(BaseComponent):
     """Nonbreaking dissipation of Ardhuin et al. (2010).
 
     .. code-block:: text
@@ -419,11 +419,11 @@ class ARDHUIN(BaseComponent):
         :okexcept:
 
         @suppress
-        from rompy.swan.components.physics import ARDHUIN
+        from rompy.swan.components.physics import SSWELL_ARDHUIN
 
-        sswell = ARDHUIN()
+        sswell = SSWELL_ARDHUIN()
         print(sswell.render())
-        sswell = ARDHUIN(cdsv=1.2)
+        sswell = SSWELL_ARDHUIN(cdsv=1.2)
         print(sswell.render())
 
     """
@@ -446,7 +446,7 @@ class ARDHUIN(BaseComponent):
         return repr
 
 
-class ZIEGER(BaseComponent):
+class SSWELL_ZIEGER(BaseComponent):
     """Nonbreaking dissipation of Zieger et al. (2015).
 
     .. code-block:: text
@@ -476,11 +476,11 @@ class ZIEGER(BaseComponent):
         :okexcept:
 
         @suppress
-        from rompy.swan.components.physics import ZIEGER
+        from rompy.swan.components.physics import SSWELL_ZIEGER
 
-        sswell = ZIEGER()
+        sswell = SSWELL_ZIEGER()
         print(sswell.render())
-        sswell = ZIEGER(b1=0.00025)
+        sswell = SSWELL_ZIEGER(b1=0.00025)
         print(sswell.render())
 
     """
@@ -504,10 +504,12 @@ class ZIEGER(BaseComponent):
 # =====================================================================================
 # WCAPPING
 # =====================================================================================
-class WCAPKOMEN(BaseComponent):
+class WCAPPING_KOMEN(BaseComponent):
     """Whitecapping according to Komen (1984).
 
-    `WCAPPING KOMEN [cds2] [stpm] [powst] [delta] [powk]`
+    .. code-block:: text
+
+        WCAPPING KOMEN [cds2] [stpm] [powst] [delta] [powk]
 
     Notes
     -----
@@ -521,10 +523,25 @@ class WCAPKOMEN(BaseComponent):
     Komen, G.J., Hasselmann, S. and Hasselmann, K., 1984. On the existence of a fully
     developed wind-sea spectrum. Journal of physical oceanography, 14(8), pp.1271-1285.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import WCAPPING_KOMEN
+
+        wcapping = WCAPPING_KOMEN()
+        print(wcapping.render())
+        wcapping = WCAPPING_KOMEN(cds2=2.36e-5, stpm=3.02e-3, powst=2, delta=1, powk=2)
+        print(wcapping.render())
+
     """
 
-    model_type: Literal["wcapkomen", "WCAPKOMEN"] = Field(
-        default="wcapkomen", description="Model type discriminator"
+    model_type: Literal["komen", "KOMEN"] = Field(
+        default="komen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
         description=(
@@ -573,10 +590,12 @@ class WCAPKOMEN(BaseComponent):
         return repr
 
 
-class WCAPAB(BaseComponent):
+class WCAPPING_AB(BaseComponent):
     """Whitecapping according to Alves and Banner (2003).
 
-    `WCAPPING AB [cds2] [br] CURRENT [cds3]`
+    .. code-block:: text
+
+        WCAPPING AB [cds2] [br] CURRENT [cds3]
 
     References
     ----------
@@ -584,10 +603,25 @@ class WCAPAB(BaseComponent):
     dissipation-rate source term in modeling the fetch-limited evolution of wind waves.
     Journal of Physical Oceanography, 33(6), pp.1274-1298.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import WCAPPING_AB
+
+        wcapping = WCAPPING_AB()
+        print(wcapping.render())
+        wcapping = WCAPPING_AB(cds2=5.0e-5, br=1.75e-3, current=True, cds3=0.8)
+        print(wcapping.render())
+
     """
 
-    model_type: Literal["wcapab", "WCAPAB"] = Field(
-        default="wcapab", description="Model type discriminator"
+    model_type: Literal["ab", "AB"] = Field(
+        default="ab", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
         description=(
@@ -629,7 +663,9 @@ class WCAPAB(BaseComponent):
 class QUADRUPL(BaseComponent):
     """Nonlinear quadruplet wave interactions.
 
-    `QUADRUPL [iquad] [lambda] [Cnl4] [Csh1] [Csh2] [Csh3]`
+    .. code-block:: text
+
+        QUADRUPL [iquad] [lambda] [Cnl4] [Csh1] [Csh2] [Csh3]
 
     With this option the user can influence the computation of nonlinear quadruplet
     wave interactions which are usually included in the computations. Can be
@@ -645,13 +681,30 @@ class QUADRUPL(BaseComponent):
     per iteration instead of per sweep, i.e. `iquad = 3`. If you want to speed up your
     computation a bit more, than the choice `iquad = 8` is a good choice.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import QUADRUPL
+
+        quadrupl = QUADRUPL()
+        print(quadrupl.render())
+        kwargs = dict(
+            iquad=3, lambd=0.25, cn14=3.0e7, csh1=5.5, csh2=0.833333, csh3=-1.25
+        )
+        quadrupl = QUADRUPL(**kwargs)
+        print(quadrupl.render())
+
     """
 
     model_type: Literal["quadrupl", "QUADRUPL"] = Field(
         default="quadrupl", description="Model type discriminator"
     )
-    iquad: Literal[1, 2, 3, 8, 4, 51, 52, 53] = Field(
-        default=None,
+    iquad: Optional[Literal[1, 2, 3, 8, 4, 51, 52, 53]] = Field(
         description=(
             "Numerical procedures for integrating the quadruplets: 1 = semi-implicit "
             "per sweep, 2 = explicit per sweep, 3 = explicit per iteration, "
@@ -712,16 +765,33 @@ class QUADRUPL(BaseComponent):
 # =====================================================================================
 # BREAKING
 # =====================================================================================
-class BREAKCONSTANT(BaseComponent):
+class BREAKING_CONSTANT(BaseComponent):
     """Constant wave breaking index.
 
-    `BREAKING CONSTANT [alpha] [gamma]`
+    .. code-block:: text
+
+        BREAKING CONSTANT [alpha] [gamma]
 
     Indicates that a constant breaker index is to be used.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import BREAKING_CONSTANT
+
+        breaking = BREAKING_CONSTANT()
+        print(breaking.render())
+        breaking = BREAKING_CONSTANT(alpha=1.0, gamma=0.73)
+        print(breaking.render())
+
     """
 
-    model_type: Literal["constant", "BREAKCONSTANT"] = Field(
+    model_type: Literal["constant", "CONSTANT"] = Field(
         default="constant", description="Model type discriminator"
     )
     alpha: Optional[float] = Field(
@@ -747,17 +817,34 @@ class BREAKCONSTANT(BaseComponent):
         return repr
 
 
-class BREAKBKD(BaseComponent):
+class BREAKING_BKD(BaseComponent):
     """Variable wave breaking index.
 
-    `BREAKING BKD [alpha] [gamma0] [a1] [a2] [a3]`
+    .. code-block:: text
 
-    Indicates that the breaker index scales with both the bottom slope ($beta$) and the
-    dimensionless depth (kd).
+        BREAKING BKD [alpha] [gamma0] [a1] [a2] [a3]
+
+    Indicates that the breaker index scales with both the bottom slope (`beta`)
+    and the dimensionless depth (kd).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import BREAKING_BKD
+
+        breaking = BREAKING_BKD()
+        print(breaking.render())
+        breaking = BREAKING_BKD(alpha=1.0, gamma0=0.54, a1=7.59, a2=-8.06, a3=8.09)
+        print(breaking.render())
 
     """
 
-    model_type: Literal["bkd", "BREAKBKD"] = Field(
+    model_type: Literal["bkd", "BKD"] = Field(
         default="bkd", description="Model type discriminator"
     )
     alpha: Optional[float] = Field(
@@ -804,10 +891,12 @@ class BREAKBKD(BaseComponent):
 # =====================================================================================
 # FRICTION
 # =====================================================================================
-class JONSWAP(BaseComponent):
+class FRICTION_JONSWAP(BaseComponent):
     """Hasselmann et al. (1973) Jonswap friction.
 
-    `FRICTION JONSWAP CONSTANT [cfjon]`
+    .. code-block:: text
+
+        FRICTION JONSWAP CONSTANT [cfjon]
 
     Indicates that the semi-empirical expression derived from the JONSWAP results for
     bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
@@ -820,6 +909,21 @@ class JONSWAP(BaseComponent):
     Measurements of wind-wave growth and swell decay during the Joint North Sea Wave
     Project (JONSWAP). Deutches Hydrographisches Institut, Hamburg, Germany,
     Rep. No. 12, 95 pp.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import FRICTION_JONSWAP
+
+        friction = FRICTION_JONSWAP()
+        print(friction.render())
+        friction = FRICTION_JONSWAP(cfjon=0.038)
+        print(friction.render())
 
     TODO: Implement VARIABLE option?
 
@@ -840,10 +944,12 @@ class JONSWAP(BaseComponent):
         return repr
 
 
-class COLLINS(BaseComponent):
+class FRICTION_COLLINS(BaseComponent):
     """Collins (1972) friction.
 
-    `FRICTION COLLINS [cfw]`
+    .. code-block:: text
+
+        FRICTION COLLINS [cfw]
 
     Note that `cfw` is allowed to vary over the computational region; in that case use
     the commands INPGRID FRICTION and READINP FRICTION to define and read the friction
@@ -855,6 +961,21 @@ class COLLINS(BaseComponent):
     ----------
     Collins, J.I., 1972. Prediction of shallow-water spectra. Journal of Geophysical
     Research, 77(15), pp.2693-2707.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import FRICTION_COLLINS
+
+        friction = FRICTION_COLLINS()
+        print(friction.render())
+        friction = FRICTION_COLLINS(cfw=0.038)
+        print(friction.render())
 
     """
 
@@ -873,10 +994,12 @@ class COLLINS(BaseComponent):
         return repr
 
 
-class MADSEN(BaseComponent):
+class FRICTION_MADSEN(BaseComponent):
     """Madsen et al (1988) friction.
 
-    `FRICTION MADSEN [kn]`
+    .. code-block:: text
+
+        FRICTION MADSEN [kn]
 
     Note that `kn` is allowed to vary over the computational region; in that case use
     the commands INPGRID FRICTION and READINP FRICTION to define and read the friction
@@ -891,6 +1014,21 @@ class MADSEN(BaseComponent):
 
     Madsen, O.S. and Rosengaus, M.M., 1988. Spectral wave attenuation by bottom
     friction: Experiments. In Coastal Engineering 1988 (pp. 849-857).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import FRICTION_MADSEN
+
+        friction = FRICTION_MADSEN()
+        print(friction.render())
+        friction = FRICTION_MADSEN(kn=0.038)
+        print(friction.render())
 
     """
 
@@ -912,10 +1050,12 @@ class MADSEN(BaseComponent):
         return repr
 
 
-class RIPPLES(BaseComponent):
+class FRICTION_RIPPLES(BaseComponent):
     """Smith et al. (2011) Ripples friction.
 
-    `FRICTION RIPPLES [S] [D]`
+    .. code-block:: text
+
+        FRICTION RIPPLES [S] [D]
 
     Indicates that the expression of Smith et al. (2011) should be activated. Here
     friction depends on the formation of bottom ripples and sediment size.
@@ -926,6 +1066,21 @@ class RIPPLES(BaseComponent):
     2011. Introduction of a new friction routine into the SWAN model that evaluates
     roughness due to bedform and sediment size changes. Coastal Engineering, 58(4),
     pp.317-326.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import FRICTION_RIPPLES
+
+        friction = FRICTION_RIPPLES()
+        print(friction.render())
+        friction = FRICTION_RIPPLES(s=2.65, d=0.0001)
+        print(friction.render())
 
     """
 
@@ -955,36 +1110,80 @@ class RIPPLES(BaseComponent):
 class TRIAD(BaseComponent):
     """Wave triad interactions.
 
-    `TRIAD`
+    .. code-block:: text
+
+        TRIAD
 
     With this command the user can activate the triad wave-wave interactions. If this
     command is not used, SWAN will not account for triads.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import TRIAD
+
+        triad = TRIAD()
+        print(triad.render())
+        triad = TRIAD(biphase=dict(model_type="eldeberky", urcrit=0.63))
+        print(triad.render())
 
     """
 
     model_type: Literal["triad", "TRIAD"] = Field(
         default="triad", description="Model type discriminator"
     )
-    biphase: Union[ELDEBERKY, DEWIT] = Field(
-        default_factory=ELDEBERKY,
-        description="Defines the parameterization of biphase (self-self interaction)",
+    biphase: Optional[Union[ELDEBERKY, DEWIT]] = Field(
+        description=(
+            "Defines the parameterization of biphase (self-self interaction) "
+            "(SWAN default: ELDEBERKY)"
+        ),
     )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        return f"TRIAD"
+        repr = "TRIAD"
+        if self.biphase is not None:
+            repr += f" {self.biphase.render()}"
+        return repr
 
 
-class DCTA(TRIAD):
+class TRIAD_DCTA(TRIAD):
     """Triad interactions with the DCTA method of Booij et al. (2009).
 
-    `TRIAD DCTA [trfac] [p] COLL|NONC BIPHHASE ELDEBERKY|DEWIT`
+    .. code-block:: text
+
+        TRIAD DCTA [trfac] [p] COLL|NONC BIPHHASE ELDEBERKY|DEWIT
 
     References
     ----------
     Booij, N., Holthuijsen, L.H. and Bénit, M.P., 2009. A distributed collinear triad
     approximation in SWAN. In Proceedings Of Coastal Dynamics 2009: Impacts of Human
     Activities on Dynamic Coastal Processes (With CD-ROM) (pp. 1-10).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import TRIAD_DCTA
+
+        triad = TRIAD_DCTA()
+        print(triad.render())
+        triad = TRIAD_DCTA(
+            trfac=4.4,
+            p=1.3,
+            noncolinear=True,
+            biphase={"model_type": "dewit", "lpar": 0.0},
+        )
+        print(triad.render())
 
     """
 
@@ -1012,7 +1211,7 @@ class DCTA(TRIAD):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"{super().cmd()} DCTA"
+        repr = "TRIAD DCTA"
         if self.trfac is not None:
             repr += f" trfac={self.trfac}"
         if self.p is not None:
@@ -1021,20 +1220,42 @@ class DCTA(TRIAD):
             repr += " NONC"
         else:
             repr += " COLL"
-        repr += f" {self.biphase.render()}"
+        if self.biphase is not None:
+            repr += f" {self.biphase.render()}"
         return repr
 
 
-class LTA(TRIAD):
+class TRIAD_LTA(TRIAD):
     """Triad interactions with the LTA method of Eldeberky (1996).
 
-    `TRIAD LTA [trfac] [cutfr] BIPHHASE ELDEBERKY|DEWIT`
+    .. code-block:: text
+
+        TRIAD LTA [trfac] [cutfr] BIPHHASE ELDEBERKY|DEWIT
 
     References
     ----------
     Eldeberky, Y., Polnikov, V. and Battjes, J.A., 1996. A statistical approach for
     modeling triad interactions in dispersive waves. In Coastal Engineering 1996
     (pp. 1088-1101).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import TRIAD_LTA
+
+        triad = TRIAD_LTA()
+        print(triad.render())
+        triad = TRIAD_LTA(
+            trfac=0.8,
+            cutfr=2.5,
+            biphase={"model_type": "eldeberky", "urcrit": 0.63},
+        )
+        print(triad.render())
 
     """
 
@@ -1057,25 +1278,48 @@ class LTA(TRIAD):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"{super().cmd()} LTA"
+        repr = "TRIAD LTA"
         if self.trfac is not None:
             repr += f" trfac={self.trfac}"
         if self.cutfr is not None:
             repr += f" cutfr={self.cutfr}"
-        repr += f" {self.biphase.render()}"
+        if self.biphase is not None:
+            repr += f" {self.biphase.render()}"
         return repr
 
 
-class SPB(TRIAD):
-    """Triad interactions according to the SPB method of Becq-Girard et al. (1999).
+class TRIAD_SPB(TRIAD):
+    """Triad interactions with the SPB method of Becq-Girard et al. (1999).
 
-    `TRIAD SPB [trfac] [a] [b] BIPHHASE ELDEBERKY|DEWIT`
+    .. code-block:: text
+
+        TRIAD SPB [trfac] [a] [b] BIPHHASE ELDEBERKY|DEWIT
 
     References
     ----------
     Becq-Girard, F., Forget, P. and Benoit, M., 1999. Non-linear propagation of
     unidirectional wave fields over varying topography. Coastal Engineering, 38(2),
     pp.91-113.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import TRIAD_SPB
+
+        triad = TRIAD_SPB()
+        print(triad.render())
+        triad = TRIAD_SPB(
+            trfac=0.9,
+            a=0.95,
+            b=0.0,
+            biphase={"model_type": "eldeberky", "urcrit": 0.63},
+        )
+        print(triad.render())
 
     """
 
@@ -1109,14 +1353,15 @@ class SPB(TRIAD):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"{super().cmd()} SPB"
+        repr = "TRIAD SPB"
         if self.trfac is not None:
             repr += f" trfac={self.trfac}"
         if self.a is not None:
             repr += f" a={self.a}"
         if self.b is not None:
             repr += f" b={self.b}"
-        repr += f" {self.biphase.render()}"
+        if self.biphase is not None:
+            repr += f" {self.biphase.render()}"
         return repr
 
 
@@ -1126,7 +1371,9 @@ class SPB(TRIAD):
 class VEGETATION(BaseComponent): 
     """Vegetation dumping.
 
-    `VEGETATION [iveg] < [height] [diamtr] [nstems] [drag] >`
+    .. code-block:: text
+
+        VEGETATION [iveg] < [height] [diamtr] [nstems] [drag] >
 
     With this command the user can activate wave damping due to vegetation based on the
     Dalrymple's formula (1984) as implemented by Suzuki et al. (2011). This damping is
@@ -1157,6 +1404,34 @@ class VEGETATION(BaseComponent):
     -----
     Vertical layering of the vegetation is not yet implemented for the
     Jacobsen et al. (2019) method.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import VEGETATION
+
+        # Single layer
+        vegetation = VEGETATION(
+            height=1.2,
+            diamtr=0.1,
+            drag=0.5,
+            nstems=10,
+        )
+        print(vegetation.render())
+        # 2 vertical layers
+        vegetation = VEGETATION(
+            iveg=2,
+            height=[1.2, 0.8],
+            diamtr=[0.1, 0.1],
+            drag=[0.5, 0.5],
+            nstems=[10, 5],
+        )
+        print(vegetation.render())
 
     """
 
@@ -1228,7 +1503,9 @@ class VEGETATION(BaseComponent):
 class MUD(BaseComponent):
     """Mud dumping.
 
-    `MUD [layer] [rhom] [viscm]`
+    .. code-block:: text
+
+        MUD [layer] [rhom] [viscm]
 
     With this command the user can activate wave damping due to mud based on Ng (2000).
     If this command or the commands INPGRID MUDLAY and READINP MUDLAY are not used,
@@ -1238,6 +1515,25 @@ class MUD(BaseComponent):
     ----------
     Ng, C., 2000, Water waves over a muddy bed: A two layer Stokes' boundary layer
     model, Coastal Eng., 40, 221-242.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import MUD
+
+        mud = MUD()
+        print(mud.render())
+        mud = MUD(
+            layer=2.0,
+            rhom=1300,
+            viscm=0.0076,
+        )
+        print(mud.render())
 
     TODO: Validate `layer` must be prescribed if `INPGRID MUDLAY` isn't used.
 
@@ -1280,9 +1576,11 @@ class MUD(BaseComponent):
 # SICE
 # =====================================================================================
 class SICE(BaseComponent):
-    """Sea ice dissipation default.
+    """Sea ice dissipation.
 
-    `SICE [aice]`
+    .. code-block:: text
+
+        SICE [aice]
 
     Using this command, the user activates a sink term to represent the dissipation of
     wave energy by sea ice. The default method is R19 empirical/parametric: a
@@ -1313,6 +1611,21 @@ class SICE(BaseComponent):
     Iis also necessary to describe the ice, using the `ICE` command (for uniform and
     stationary ice) or `INPGRID`/`READINP` commands (for variable ice).
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import SICE
+
+        sice = SICE()
+        print(sice.render())
+        sice = SICE(aice=0.5)
+        print(sice.render())
+
     TODO: Verify if the `aice` parameter should be used with SICE command, it is not
     shown in the command tree but it is described as an option in the description.
 
@@ -1341,10 +1654,12 @@ class SICE(BaseComponent):
         return repr
 
 
-class R19(SICE):
-    """Sea ice dissipation based on the empirical polynomial of Rogers et al (2019).
+class SICE_R19(SICE):
+    """Sea ice dissipation based on the method of Rogers et al (2019).
 
-    `SICE [aice] R19 [c0] [c1] [c2] [c3] [c4] [c5] [c6]`
+    .. code-block:: text
+
+        SICE [aice] R19 [c0] [c1] [c2] [c3] [c4] [c5] [c6]
 
     The default options recover the polynomial of Meylan et al. (2014), calibrated for
     a case of ice floes, mostly 10 to 25 m in diameter, in the marginal ice zone near
@@ -1360,6 +1675,31 @@ class R19(SICE):
     Rogers, W.E., Meylan, M.H. and Kohout, A.L., 2018. Frequency distribution of
     dissipation of energy of ocean waves by sea ice using data from Wave Array 3 of
     the ONR “Sea State” field experiment. Nav. Res. Lab. Memo. Rep, pp.18-9801.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import SICE_R19
+
+        sice = SICE_R19()
+        print(sice.render())
+        kwargs = dict(
+            aice=0.5,
+            c0=0.0,
+            c1=0.0,
+            c2=1.06e-3,
+            c3=0.0,
+            c4=0.0,
+            c5=0.0,
+            c6=0.0,
+        )
+        sice = SICE_R19(**kwargs)
+        print(sice.render())
 
     """
 
@@ -1429,16 +1769,33 @@ class R19(SICE):
         return repr
 
 
-class D15(SICE):
+class SICE_D15(SICE):
     """Sea ice dissipation based on the method of Doble et al. (2015).
 
-    `SICE [aice] D15 [chf]`
+    .. code-block:: text
+
+        SICE [aice] D15 [chf]
 
     References
     ----------
     Doble, M.J., De Carolis, G., Meylan, M.H., Bidlot, J.R. and Wadhams, P., 2015.
     Relating wave attenuation to pancake ice thickness, using field measurements and
     model results. Geophysical Research Letters, 42(11), pp.4473-4481.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import SICE_D15
+
+        sice = SICE_D15()
+        print(sice.render())
+        sice = SICE_D15(aice=0.2, chf=0.1)
+        print(sice.render())
 
     """
 
@@ -1457,16 +1814,33 @@ class D15(SICE):
         return repr
 
 
-class M18(SICE):
+class SICE_M18(SICE):
     """Sea ice dissipation based on the method of Meylan et al. (2018).
 
-    `SICE [aice] M18 [chf]`
+    .. code-block:: text
+
+        SICE [aice] M18 [chf]
 
     References
     ----------
     Meylan, M.H., Bennetts, L.G. and Kohout, A.L., 2014. In situ measurements and
     analysis of ocean waves in the Antarctic marginal ice zone. Geophysical Research
     Letters, 41(14), pp.5046-5051.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import SICE_M18
+
+        sice = SICE_M18()
+        print(sice.render())
+        sice = SICE_M18(aice=0.8, chf=0.059)
+        print(sice.render())
 
     """
 
@@ -1485,16 +1859,33 @@ class M18(SICE):
         return repr
 
 
-class R21B(SICE):
+class SICE_R21B(SICE):
     """Sea ice dissipation based on the method of Rogers et al. (2021).
 
-    `SICE [aice] R21B [chf] [npf]`
+    .. code-block:: text
+
+        SICE [aice] R21B [chf] [npf]
 
     References
     ----------
     Rogers, W.E., Meylan, M.H. and Kohout, A.L., 2021. Estimates of spectral wave
     attenuation in Antarctic sea ice, using model/data inversion. Cold Regions Science
     and Technology, 182, p.103198.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import SICE_R21B
+
+        sice = SICE_R21B()
+        print(sice.render())
+        sice = SICE_R21B(aice=0.8, chf=2.9, npf=4.5)
+        print(sice.render())
 
     """
 
@@ -1527,13 +1918,30 @@ class R21B(SICE):
 class TURBULENCE(BaseComponent):
     """Turbulent viscosity.
 
-    `TURBULENCE`
+    .. code-block:: text
+
+        TURBULENCE [ctb] (CURRENT [tbcur])
 
     With this optional command the user can activate turbulent viscosity. This physical
     effect is also activated by reading values of the turbulent viscosity using the
     `READGRID TURB` command, but then with the default value of `ctb`. The command
     `READGRID TURB` is necessary if this command `TURB` is used since the value of the
     viscosity is assumed to vary over space.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import TURBULENCE
+
+        turbulence = TURBULENCE(current=False)
+        print(turbulence.render())
+        turbulence = TURBULENCE(ctb=0.01, current=True, tbcur=0.004)
+        print(turbulence.render())
 
     """
 
@@ -1588,7 +1996,9 @@ class TURBULENCE(BaseComponent):
 class BRAGG(BaseComponent):
     """Bragg scattering.
 
-    `BRAGG [ibrag] [nreg] [cutoff]`
+    .. code-block:: text
+
+        BRAGG [ibrag] [nreg] [cutoff]
 
     Using this optional command, the user activates a source term to represent the
     scattering of waves due to changes in the small-scale bathymetry based on the
@@ -1623,6 +2033,21 @@ class BRAGG(BaseComponent):
     with a relatively small time step or in the stationary mode with some under
     relaxation (see command `NUM STAT [alfa]`).
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import BRAGG
+
+        bragg = BRAGG(nreg=200)
+        print(bragg.render())
+        bragg = BRAGG(ibrag=1, nreg=200, cutoff=5.0)
+        print(bragg.render())
+
     """
 
     model_type: Literal["bragg", "BRAGG"] = Field(
@@ -1639,7 +2064,7 @@ class BRAGG(BaseComponent):
             "difference wave number per iteration (no storage)\n(SWAN default: 1)"
         ),
     )
-    nreg: Optional[int] = Field(
+    nreg: int = Field(
         description=(
             "Size of square region around computational grid point (centered) for "
             "computing the mean depth and, if desired, the bed elevation spectrum. It "
@@ -1666,15 +2091,40 @@ class BRAGG(BaseComponent):
         return repr
 
 
-class BRAGGFT(BRAGG):
+class BRAGG_FT(BRAGG):
     """Bragg scattering with bottom spectrum computed from FFT.
 
-    `BRAGG [ibrag] [nreg] [cutoff] FT`
+    .. code-block:: text
+
+        BRAGG [ibrag] [nreg] [cutoff] FT
+
+    If this keyword is present the bottom spectrum will be computed in each active
+    grid point using a Fast Fourier Transform (FFT).
+
+    Notes
+    -----
+    The depth in each computational grid point is computed as the average of the
+    inputted (high-resolution) bed levels within the square region.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import BRAGG_FT
+
+        bragg = BRAGG_FT(nreg=350)
+        print(bragg.render())
+        bragg = BRAGG_FT(ibrag=2, nreg=350, cutoff=5.0)
+        print(bragg.render())
 
     """
 
-    model_type: Literal["braggft", "BRAGGFT"] = Field(
-        default="braggft", description="Model type discriminator"
+    model_type: Literal["ft", "FT"] = Field(
+        default="ft", description="Model type discriminator"
     )
 
     def cmd(self) -> str:
@@ -1682,15 +2132,48 @@ class BRAGGFT(BRAGG):
         return f"{super().cmd()} FT"
 
 
-class BRAGGFILE(BRAGG):
+class BRAGG_FILE(BRAGG):
     """Bragg scattering with bottom spectrum from file.
 
-    `BRAGG [ibrag] [nreg] [cutoff] FILE 'fname' [idla] [mkx] [mky] [dkx] [dky]`
+    .. code-block:: text
+
+        BRAGG [ibrag] [nreg] [cutoff] FILE 'fname' [idla] [mkx] [mky] [dkx] [dky]
+
+    The bed elevation spectrum `FB(kx, ky)` is read from a file.
+
+    Notes
+    -----
+    This spectrum is taken to be uniform over the entire computational domain.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import BRAGG_FILE
+
+        bragg = BRAGG_FILE(fname="bottom_spectrum.txt", nreg=500, mkx=99, dkx=0.1)
+        print(bragg.render())
+        kwargs = dict(
+            ibrag=3,
+            nreg=500,
+            cutoff=5.0,
+            fname="bottom_spectrum.txt",
+            mkx=99,
+            mky=149,
+            dkx=0.1,
+            dky=0.1,
+        )
+        bragg = BRAGG_FILE(**kwargs)
+        print(bragg.render())
 
     """
 
-    model_type: Literal["braggfile", "BRAGGFILE"] = Field(
-        default="braggfile", description="Model type discriminator"
+    model_type: Literal["file", "FILE"] = Field(
+        default="file", description="Model type discriminator"
     )
     fname: str = Field(
         description="Name of file containing the bottom spectrum",
@@ -1747,12 +2230,29 @@ class BRAGGFILE(BRAGG):
 class LIMITER(BaseComponent):
     """Physics limiter.
 
-    `LIMITER`
+    .. code-block:: text
+
+        LIMITER [ursell] [qb]
 
     With this command the user can de-activate permanently the quadruplets when
     the actual Ursell number exceeds `ursell`. Moreover, as soon as the actual
     fraction of breaking waves exceeds `qb` then the action limiter will not be
     used in case of decreasing action density.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import LIMITER
+
+        limiter = LIMITER()
+        print(limiter.render())
+        limiter = LIMITER(ursell=10.0, qb=1.0)
+        print(limiter.render())
 
     """
 
@@ -1986,7 +2486,7 @@ GEN_TYPE = Annotated[
     Field(description="Wave generation component", discriminator="model_type"),
 ]
 SSWELL_TYPE = Annotated[
-    Union[ROGERS, ARDHUIN, ZIEGER],
+    Union[SSWELL_ROGERS, SSWELL_ARDHUIN, SSWELL_ZIEGER],
     Field(description="Swell dissipation component", discriminator="model_type"),
 ]
 NEGATINP_TYPE = Annotated[
@@ -1994,7 +2494,7 @@ NEGATINP_TYPE = Annotated[
     Field(description="Negative wind input component", discriminator="model_type"),
 ]
 WCAPPING_TYPE = Annotated[
-    Union[WCAPKOMEN, WCAPAB],
+    Union[WCAPPING_KOMEN, WCAPPING_AB],
     Field(description="Whitecapping component", discriminator="model_type"),
 ]
 QUADRUPL_TYPE = Annotated[
@@ -2002,15 +2502,15 @@ QUADRUPL_TYPE = Annotated[
     Field(description="Quadruplet interactions component", discriminator="model_type"),
 ]
 BREAKING_TYPE = Annotated[
-    Union[BREAKCONSTANT, BREAKBKD],
+    Union[BREAKING_CONSTANT, BREAKING_BKD],
     Field(description="Wave breaking component", discriminator="model_type"),
 ]
 FRICTION_TYPE = Annotated[
-    Union[JONSWAP, COLLINS, MADSEN, RIPPLES],
+    Union[FRICTION_JONSWAP, FRICTION_COLLINS, FRICTION_MADSEN, FRICTION_RIPPLES],
     Field(description="Bottom friction component", discriminator="model_type"),
 ]
 TRIAD_TYPE = Annotated[
-    Union[DCTA, LTA, SPB],
+    Union[TRIAD, TRIAD_DCTA, TRIAD_LTA, TRIAD_SPB],
     Field(description="Triad interactions component", discriminator="model_type"),
 ]
 VEGETATION_TYPE = Annotated[
@@ -2020,7 +2520,7 @@ MUD_TYPE = Annotated[
     MUD, Field(description="Mud component", discriminator="model_type")
 ]
 SICE_TYPE = Annotated[
-    Union[SICE, R19, D15, M18, R21B],
+    Union[SICE, SICE_R19, SICE_D15, SICE_M18, SICE_R21B],
     Field(description="Sea ice component", discriminator="model_type")
 ]
 TURBULENCE_TYPE = Annotated[
@@ -2028,7 +2528,7 @@ TURBULENCE_TYPE = Annotated[
     Field(description="Turbulent dissipation component", discriminator="model_type"),
 ]
 BRAGG_TYPE = Annotated[
-    Union[BRAGG, BRAGGFT, BRAGGFILE],
+    Union[BRAGG, BRAGG_FT, BRAGG_FILE],
     Field(description="Bragg scattering component", discriminator="model_type")
 ]
 LIMITER_TYPE = Annotated[
