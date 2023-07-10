@@ -2371,8 +2371,111 @@ class OBSTACLE(BaseComponent):
         return repr
 
 
+class OBSTACLE_FIG(BaseComponent):
+    """Obstacle for free infragravity radiation.
+
+    .. code-block:: text
+
+        OBSTACLE FIG [alpha1] [hss] [tss] (REFL [reflc]) LINE <[xp] [yp]>
+
+    With this optional command the user specifies the obstacles along which the
+    free infra-gravity (FIG) energy is radiated. By placing the obstacles close to
+    the shorelines SWAN will include the FIG source term along the coastlines
+    according to the parametrization of Ardhuin et al. (2014).
+
+    The location of the obstacle is defined by a sequence of corner points of a line.
+    For an obstacle line to be effective its length is at least one mesh size large. It
+    is recommended to place the obstacles at the inner area of the computational grid,
+    not at or through the boundaries. In particular, each obstacle line must be
+    bordered by wet points on both sides.
+
+    In addition, the orientation of the obstacle line determines from which side of the
+    obstacle the FIG wave energy is radiated away. If the begin point of the line is
+    below or left of the end point, that is, pointing upwards/to the right, then FIG
+    energy is radiated from the west/north side of the line. If the begin point is
+    above or right of the end point (pointing downwards/to the left), then FIG energy
+    is radiated away from the east/south side of the obstacle line.
+
+    References
+    ----------
+    Ardhuin, F., Rawat, A. and Aucan, J., 2014. A numerical model for free
+    infragravity waves: Definition and validation at regional and global scales.
+    Ocean Modelling, 77, pp.20-32.
+
+    Notes
+    -----
+    Either `hss` or `tss` or both are allowed to vary over the computational domain.
+    In that case use the commands `INPGRID HSS` and `READINP HSS` and/or the commands
+    `INPGRID TSS` and `READINP TSS` to define and read the sea-swell wave height/period
+    It is permissible to have constant sea-swell height and non-constant sea-swell
+    period, or vice versa. The command `OBST FIG` is still required to define the
+    obstacles. The values of `hss` and/or `tss` in this command are then not required
+    (they will be ignored).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import OBSTACLE_FIG
+
+        obs = OBSTACLE_FIG(
+            alpha1=5e-4,
+            hss=2.5,
+            tss=10.3,
+            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+        )
+        print(obs.render())
+        obs = OBSTACLE_FIG(
+            alpha1=5e-4,
+            hss=2.5,
+            tss=10.3,
+            reflection=dict(reflc=0.5),
+            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+        )
+        print(obs.render())
+
+    """
+
+    model_type: Literal["fig", "FIG"] = Field(
+        default="fig", description="Model type discriminator"
+    )
+    alpha1: float = Field(
+        description=(
+            "Calibration parameter (in 1/s) for determining the rate of radiating FIG "
+            "energy from the shorelines, values in Table 1 of Ardhuin et al. (2014) "
+            "are between 4e-4 and 8.1e-4"
+        ),
+    )
+    hss: float = Field(
+        description="The sea-swell significant wave height (in m)",
+        ge=0.0,
+    )
+    tss: float = Field(
+        description="The sea-swell mean wave period (in s)",
+        ge=0.0,
+    )
+    reflection: Optional[REFL] = Field(description="Wave reflection")
+    line: LINE = Field(description="Line of obstacle")
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = f"OBSTACLE FIG alpha1={self.alpha1} hss={self.hss} tss={self.tss}"
+        if self.reflection:
+            repr += f" {self.reflection.render()}"
+        repr += f" {self.line.render()}"
+        return repr
+
+
+OBSTACLES_TYPES = Annotated[
+    Union[OBSTACLE, OBSTACLE_FIG], Field(discriminator="model_type"),
+]
+
 OBSTACLES_TYPE = Annotated[
-    list[OBSTACLE], Field(description="Obstacle component")
+    list[OBSTACLES_TYPES], Field(description="Obstacle component")
 ]
 
 
@@ -2383,7 +2486,7 @@ class OBSTACLES(BaseComponent):
 
         OBSTACLE ... LINE < [xp] [yp] >
         OBSTACLE ... LINE < [xp] [yp] >
-        ...
+        .
 
     This group component is a convenience to allow defining and rendering
     a list of obstacle components.
@@ -2397,17 +2500,25 @@ class OBSTACLES(BaseComponent):
 
         @suppress
         from rompy.swan.components.physics import OBSTACLES
-
-        obs1 = dict(
+        from rompy.swan.components.physics import OBSTACLE, OBSTACLE_FIG
+        obst1 = dict(
+            model_type="obstacle",
             reflection=dict(reflc=1.0),
             line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
         )
-        obs2 = dict(
+        obst2 = OBSTACLE(
             transmission=dict(model_type="transm"),
             line=dict(xp=[174.3, 174.3], yp=[-39.1, -39.2]),
         )
-        obs = OBSTACLES(obstacles=[obs1, obs2])
-        print(obs.render())
+        obst3 = OBSTACLE_FIG(
+            alpha1=5e-4,
+            hss=2.5,
+            tss=10.3,
+            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+        )
+        obstacles = OBSTACLES(obstacles=[obst1, obst2, obst3])
+        for obst in obstacles.render():
+            print(obst)
 
     """
 
@@ -2429,37 +2540,6 @@ class OBSTACLES(BaseComponent):
         for cmd in self.cmd():
             cmds.append(super().render(cmd))
         return cmds
-
-
-# =====================================================================================
-# OBSTACLE FIG
-# =====================================================================================
-class OBSTACLE_FIG(BaseComponent):
-    """Obstacle for free infragravity radiation.
-
-    `OBSTACLE FIG`
-
-    With this optional command the user specifies the obstacles along which the
-    free infra-gravity (FIG) energy is radiated. By placing the obstacles close to
-    the shorelines SWAN will include the FIG source term along the coastlines
-    according to the parametrization of Ardhuin et al. (2014).
-
-    References
-    ----------
-    Ardhuin, F., A. Rogers, A. Babanin, L. Filipot, A. Magne, A. Roland, and P.
-    van der Westhuysen, Semiempirical Dissipation Source Functions for Ocean Waves.
-    Part I: Definition, Calibration, and Validation, J. Phys. Oceanogr., 44(9),
-    2352-2368, 2014.
-
-    """
-
-    model_type: Literal["obstacle_fig", "OBSTACLE_FIG"] = Field(
-        default="obstacle_fig", description="Model type discriminator"
-    )
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        return f"OBSTACLE FIG"
 
 
 # =====================================================================================
@@ -2595,7 +2675,7 @@ LIMITER_TYPE = Annotated[
     LIMITER, Field(description="Limiter component", discriminator="model_type")
 ]
 OBSTACLE_TYPE = Annotated[
-    Union[OBSTACLE, OBSTACLES],
+    Union[OBSTACLE, OBSTACLE_FIG, OBSTACLES],
     Field(description="Obstacle component", discriminator="model_type")
 ]
 
