@@ -2371,6 +2371,66 @@ class OBSTACLE(BaseComponent):
         return repr
 
 
+OBSTACLES_TYPE = Annotated[
+    list[OBSTACLE], Field(description="Obstacle component")
+]
+
+
+class OBSTACLES(BaseComponent):
+    """List of swan obstacles.
+
+    .. code-block:: text
+
+        OBSTACLE ... LINE < [xp] [yp] >
+        OBSTACLE ... LINE < [xp] [yp] >
+        ...
+
+    This group component is a convenience to allow defining and rendering
+    a list of obstacle components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import OBSTACLES
+
+        obs1 = dict(
+            reflection=dict(reflc=1.0),
+            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+        )
+        obs2 = dict(
+            transmission=dict(model_type="transm"),
+            line=dict(xp=[174.3, 174.3], yp=[-39.1, -39.2]),
+        )
+        obs = OBSTACLES(obstacles=[obs1, obs2])
+        print(obs.render())
+
+    """
+
+    model_type: Literal["obstacles", "OBSTACLES"] = Field(
+        default="obstacles", description="Model type discriminator"
+    )
+    obstacles: OBSTACLES_TYPE
+
+    def cmd(self) -> list:
+        """Command file strings for this component."""
+        repr = []
+        for obstacle in self.obstacles:
+            repr += [obstacle.cmd()]
+        return repr
+
+    def render(self) -> str:
+        """Override base class to allow rendering list of components."""
+        cmds = []
+        for cmd in self.cmd():
+            cmds.append(super().render(cmd))
+        return cmds
+
+
 # =====================================================================================
 # OBSTACLE FIG
 # =====================================================================================
@@ -2535,7 +2595,8 @@ LIMITER_TYPE = Annotated[
     LIMITER, Field(description="Limiter component", discriminator="model_type")
 ]
 OBSTACLE_TYPE = Annotated[
-    OBSTACLE, Field(description="Obstacle component", discriminator="model_type")
+    Union[OBSTACLE, OBSTACLES],
+    Field(description="Obstacle component", discriminator="model_type")
 ]
 
 class PHYSICS(BaseComponent):
@@ -2613,6 +2674,9 @@ class PHYSICS(BaseComponent):
             repr += [self.bragg.render()]
         if self.limiter is not None:
             repr += [self.limiter.render()]
-        if self.obstacle is not None:
+        if self.obstacle.model_type == "obstacle":
             repr += [self.obstacle.render()]
+        elif self.obstacle.model_type == "obstacles":
+            # Obstacles already return a list of components
+            repr += self.obstacle.render()
         return repr
