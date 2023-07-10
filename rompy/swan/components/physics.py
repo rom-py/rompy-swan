@@ -2890,7 +2890,7 @@ class SCAT(BaseComponent):
 # =====================================================================================
 # OFF
 # =====================================================================================
-class DEACTIVATE(BaseComponent):
+class OFF(BaseComponent):
     """Deactivate physics commands.
 
     .. code-block:: text
@@ -2907,15 +2907,15 @@ class DEACTIVATE(BaseComponent):
     .. ipython:: python
 
         @suppress
-        from rompy.swan.components.physics import DEACTIVATE
+        from rompy.swan.components.physics import OFF
 
-        deactivate = DEACTIVATE(physics="windgrowth")
-        print(deactivate.render())
+        off = OFF(physics="windgrowth")
+        print(off.render())
 
     """
 
-    model_type: Literal["deactivate", "DEACTIVATE"] = Field(
-        default="deactivate", description="Model type discriminator"
+    model_type: Literal["off", "OFF"] = Field(
+        default="off", description="Model type discriminator"
     )
     physics: PhysicsOff = Field(
         description="Physics command to be switched off"
@@ -2926,11 +2926,11 @@ class DEACTIVATE(BaseComponent):
         return f"OFF {self.physics.value.upper()}"
 
 
-DEACTIVATE_TYPE = Annotated[
-    list[DEACTIVATE], Field(description="Deactivate physics")
+OFF_TYPES = Annotated[
+    list[OFF], Field(description="Deactivate physics")
 ]
 
-class DEACTIVATES(BaseComponent):
+class DEACTIVATE(BaseComponent):
     """Deactivate multiple physics commands.
 
     .. code-block:: text
@@ -2950,18 +2950,18 @@ class DEACTIVATES(BaseComponent):
         :okexcept:
 
         @suppress
-        from rompy.swan.components.physics import DEACTIVATES
-        deactivate1 = dict(physics="windgrowth")
-        deactivate2 = dict(physics="wcapping")
-        deactivates = DEACTIVATES(physics=[deactivate1, deactivate2])
-        for deactivate in deactivates.render():
-            print(deactivate)
+        from rompy.swan.components.physics import DEACTIVATE
+        off1 = dict(physics="windgrowth")
+        off2 = dict(physics="wcapping")
+        deactivate = DEACTIVATE(physics=[off1, off2])
+        for off in deactivate.render():
+            print(off)
 
     """
-    model_type: Literal["deactivates", "DEACTIVATES"] = Field(
-        default="deactivates", description="Model type discriminator"
+    model_type: Literal["deactivate", "DEACTIVATE"] = Field(
+        default="deactivate", description="Model type discriminator"
     )
-    physics: DEACTIVATE_TYPE
+    physics: OFF_TYPES
 
     def cmd(self) -> list:
         """Command file strings for this component."""
@@ -3035,7 +3035,7 @@ LIMITER_TYPE = Annotated[
     LIMITER, Field(description="Limiter component", discriminator="model_type")
 ]
 OBSTACLE_TYPE = Annotated[
-    Union[OBSTACLE, OBSTACLE_FIG, OBSTACLES],
+    OBSTACLES,
     Field(description="Obstacle group component", discriminator="model_type")
 ]
 SETUP_TYPE = Annotated[
@@ -3051,8 +3051,8 @@ SCAT_TYPE = Annotated[
     SCAT, Field(description="Scattering component", discriminator="model_type")
 ]
 DEACTIVATE_TYPE = Annotated[
-    Union[DEACTIVATE, DEACTIVATES],
-    Field(description="Off group component", discriminator="model_type")
+    DEACTIVATE,
+    Field(description="Deactivate group component", discriminator="model_type")
 ]
 
 class PHYSICS(BaseComponent):
@@ -3144,10 +3144,7 @@ class PHYSICS(BaseComponent):
         if self.limiter is not None:
             repr += [self.limiter.render()]
         if self.obstacle is not None:
-            if self.obstacle.model_type.lower() == "obstacle":
-                repr += [self.obstacle.render()]
-            elif self.obstacle.model_type.lower() == "obstacles":
-                repr += self.obstacle.render() # Object returns a list of components
+            repr += self.obstacle.render() # Object returns a list of components
         if self.setup is not None:
             repr += [self.setup.render()]
         if self.diffraction is not None:
@@ -3157,8 +3154,5 @@ class PHYSICS(BaseComponent):
         if self.scat is not None:
             repr += [self.scat.render()]
         if self.deactivate is not None:
-            if self.deactivate.model_type.lower() == "deactivate":
-                repr += [self.deactivate.render()]
-            elif self.deactivate.model_type == "deactivates":
-                repr += self.deactivate.render() # Object returns a list of components
+            repr += self.deactivate.render() # Object returns a list of components
         return repr

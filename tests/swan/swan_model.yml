@@ -181,7 +181,6 @@ physics:
   scat:
     model_type: scat
   deactivate:
-    model_type: deactivates
     physics:
-        - physics: wcapping
-        - physics: breaking
+      - physics: wcapping
+      - physics: breaking
