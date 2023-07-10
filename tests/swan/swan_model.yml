@@ -150,7 +150,8 @@ physics:
   obstacle:
     model_type: obstacles
     obstacles:
-      - transmission:
+      - model_type: obstacle
+        transmission:
           model_type: transm
           trcoef: 0.5
         reflection:
@@ -158,8 +159,16 @@ physics:
         line:
           xp: [174.1, 174.2, 174.3]
           yp: [-39.1, -39.1, -39.1]
-      - reflection:
+      - model_type: obstacle
+        reflection:
           reflc: 1.0
         line:
           xp: [174.3, 174.3]
           yp: [-39.1, -39.3]
+      - model_type: fig
+        alpha1: 5e-4
+        hss: 2.1
+        tss: 12.0
+        line:
+          xp: [174.1, 174.2, 174.3]
+          yp: [-39.1, -39.1, -39.1]
