@@ -97,17 +97,13 @@ physics:
     model_type: gen3
     source_terms:
       model_type: st6c1
-  # gen:
-  #   model_type: gen3
-  #   source_terms:
-  #     model_type: westhuysen
   sswell:
     model_type: zieger
   negatinp:
     model_type: negatinp
     rdcoef: 0.1
   wcapping:
-    model_type: wcapab
+    model_type: ab
     cds2: 5.0e-5
     br: 1.75e-3
     current: True
@@ -143,7 +139,7 @@ physics:
     current: True
     tbcur: 0.004
   bragg:
-    model_type: braggft
+    model_type: ft
     ibrag: 1
     nreg: 200
     cutoff: 5.0
@@ -152,12 +148,18 @@ physics:
     ursell: 10.0
     qb: 1.0
   obstacle:
-    model_type: obstacle
-    transmission:
-      model_type: transm
-      trcoef: 0.5
-    reflection:
-      reflc: 0.5
-    line:
-      xp: [174.1, 174.2, 174.3]
-      yp: [-39.1, -39.1, -39.1]
+    model_type: obstacles
+    obstacles:
+      - transmission:
+          model_type: transm
+          trcoef: 0.5
+        reflection:
+          reflc: 0.5
+        line:
+          xp: [174.1, 174.2, 174.3]
+          yp: [-39.1, -39.1, -39.1]
+      - reflection:
+          reflc: 1.0
+        line:
+          xp: [174.3, 174.3]
+          yp: [-39.1, -39.3]
