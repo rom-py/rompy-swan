@@ -2698,17 +2698,83 @@ class DIFFRACTION(BaseComponent):
 class SURFBEAT(BaseComponent):
     """Surfbeat.
 
-    `SURFBEAT`
+    .. code-block:: text
+
+        SURFBEAT [df] [nmax] [emin] UNIFORM/LOGARITHMIC
+
+    Using this optional command, the user activates the Infragravity Energy Module
+    (IEM) of Reniers and Zijlema (2022). Besides the energy balance equation for a
+    sea-swell wave field, another energy balance is included to account for the
+    transfer of sea-swell energy to the bound infragravity (BIG) wave. This
+    infragravity energy balance also involves a nonlinear transfer, expressed by the
+    biphase, through the phase coupling between the radiation stress forcing and the
+    BIG wave. For the prediction of the biphase for obliquely incident waves, an
+    evolution equation is provided under the assumption that the bottom slopes are mild
+    and alongshore uniform.
+
+    References
+    ----------
+    Reniers, A. and Zijlema, M., 2022. Swan surfbeat-1d. Coastal Engineering, 172,
+    p.104068.
+
+    Examples:
+    ---------
+
+    .. ipython:: python
+
+        @suppress
+        from rompy.swan.components.physics import SURFBEAT
+
+        surfbeat = SURFBEAT()
+        print(surfbeat.render())
+        surfbeat = SURFBEAT(df=0.01, nmax=50000, emin=0.05, spacing="logarithmic")
+        print(surfbeat.render())
 
     """
 
     model_type: Literal["surfbeat", "SURFBEAT"] = Field(
         default="surfbeat", description="Model type discriminator"
     )
+    df: Optional[float] = Field(
+        description=(
+            "The constant size of BIG frequency bin (in Hz) (SWAN default: 0.01)"
+        ),
+        ge=0.0,
+    )
+    nmax: Optional[int] = Field(
+        description=(
+            "The maximum number of short-wave pairs for creating bichromatic wave "
+            "groups (SWAN default: 50000)"
+        ),
+        ge=0,
+    )
+    emin: Optional[float] = Field(
+        description=(
+            "The energy threshold in fraction of energy spectrum peak. With this "
+            "threshold one takes into account those short wave components to create "
+            "bichromatic wave groups while their energy levels are larger than "
+            "`emin x E_max` with `E_max` the peak of the spectrum (SWAN default: 0.05)"
+        ),
+    )
+    spacing: Optional[Literal["uniform", "logarithmic"]] = Field(
+        description=(
+            "Define if frequencies for reflected ig waves are uniformly or "
+            "logarithmically distributed"
+        ),
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        return f"SURFBEAT"
+        repr = "SURFBEAT"
+        if self.df is not None:
+            repr += f" df={self.df}"
+        if self.nmax is not None:
+            repr += f" nmax={self.nmax}"
+        if self.emin is not None:
+            repr += f" emin={self.emin}"
+        if self.spacing is not None:
+            repr += f" {self.spacing.upper()}"
+        return repr
 
 
 # =====================================================================================
@@ -2717,17 +2783,108 @@ class SURFBEAT(BaseComponent):
 class SCAT(BaseComponent):
     """Scattering.
 
-    `SCAT`
+    .. code-block:: text
+
+        SCAT [iqcm] (GRID [rfac]) (TRUNC [alpha] [qmax])
+
+    Using this optional command, the user activates a source term that allows for the
+    generation and propagation of cross correlations between scattered waves due to
+    variations in the bathymetry and mean currents. Such variations are rapid compared
+    to the distancebetween the crossing waves (at the scale of 100-1000 m) and is
+    particularly relevant for cases involving narrowband waves (swells) in coastal
+    regions with shallow water and ambient currents. In turn, the immediate spatial
+    effects of coherent scattering, interference, refraction and diffraction can cause
+    large-scale changes in the wave parameters.
+
+    References
+    ----------
+    Smit, P.B. and Janssen, T.T., 2013. The evolution of inhomogeneous wave statistics
+    through a variable medium. Journal of Physical Oceanography, 43(8), pp.1741-1758.
+
+    Smit, P.B., Janssen, T.T. and Herbers, T.H.C., 2015. Stochastic modeling of
+    inhomogeneous ocean waves. Ocean Modelling, 96, pp.26-35.
+
+    Smit, P.B., Janssen, T.T. and Herbers, T.H.C., 2015. Stochastic modeling of
+    coherent wave fields over variable depth. Journal of Physical Oceanography, 45(4),
+    pp.1139-1154.
+
+    Akrish, G., Smit, P., Zijlema, M. and Reniers, A., 2020. Modelling statistical wave
+    interferences over shear currents. Journal of Fluid Mechanics, 891, p.A2.
+
+    Notes
+    -----
+    Implemented in SWAN 41.41.
+
+    If both `alpha` and `qmax` options are provided to truncate the infinite
+    convolution sum their mimimum is considered as the final limit on the sum.
+
+    Examples:
+    ---------
+
+    .. ipython:: python
+
+        @suppress
+        from rompy.swan.components.physics import SCAT
+
+        scat = SCAT()
+        print(scat.render())
+        scat = SCAT(iqcm=2, rfac=1.0, alpha=1.0)
+        print(scat.render())
 
     """
 
     model_type: Literal["scat", "SCAT"] = Field(
         default="scat", description="Model type discriminator"
     )
+    iqcm: Optional[Literal[0, 1, 2]] = Field(
+        description=(
+            "Indicates the modelling and computation of QC scattering:\n\n*0: no "
+            "scattering\n*1: scattering due to non-uniform bathymetry and currents "
+            "(the latter only if applicable; see command `INPGRID CURRENT`)\*2: "
+            "wave-current interaction under the assumption of a slowly varying "
+            "bathymetry\n(SWAN default: 1)"
+        ),
+    )
+    rfac: Optional[float] = Field(
+        description=(
+            "The resolution factor through which the incident spectral width is"
+            "multiplied (SWAN default: 1.0)"
+        ),
+        ge=1.0,
+    )
+    alpha: Optional[float] = Field(
+        description=(
+            "The coefficient by which the mean wave number is multiplied to set the"
+            "limit on the convolution sum (SWAN default: 1.0)"
+        ),
+    )
+    qmax: Optional[float] = Field(
+        description="The maximum scattering wave number (in 1/m)"
+    )
+
+    @validator("qmax")
+    def warn_if_qmax_and_alpha(cls, v, values):
+        if v is not None and values.get("alpha") is not None:
+            logger.warning(
+                "Both `alpha` and `qmax` options are provided to truncate the "
+                "infinite convolution sum. Their mimimum is considered in SWAN as the "
+                "final limit on the sum"
+            )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        return f"SCAT"
+        repr = "SCAT"
+        if self.iqcm is not None:
+            repr += f" iqcm={self.iqcm}"
+        if self.rfac is not None:
+            repr += f" GRID rfac={self.rfac}"
+        if self.alpha is not None or self.qmax is not None:
+            repr += " TRUNC"
+            if self.alpha is not None:
+                repr += f" alpha={self.alpha}"
+            if self.qmax is not None:
+                repr += f" qmax={self.qmax}"
+        return repr
 
 
 # =====================================================================================
@@ -2796,6 +2953,12 @@ SETUP_TYPE = Annotated[
 DIFFRACTION_TYPE = Annotated[
     DIFFRACTION, Field(description="Diffraction component", discriminator="model_type")
 ]
+SURFBEAT_TYPE = Annotated[
+    SURFBEAT, Field(description="Surfbeat component", discriminator="model_type")
+]
+SCAT_TYPE = Annotated[
+    SCAT, Field(description="Scattering component", discriminator="model_type")
+]
 
 class PHYSICS(BaseComponent):
     """Physics group component.
@@ -2825,6 +2988,8 @@ class PHYSICS(BaseComponent):
     obstacle: Optional[OBSTACLE_TYPE]
     setup: Optional[SETUP_TYPE]
     diffraction: Optional[DIFFRACTION_TYPE]
+    surfbeat: Optional[SURFBEAT_TYPE]
+    scat: Optional[SCAT_TYPE]
 
     @root_validator
     def deactivate_physics(cls, values):
@@ -2882,4 +3047,8 @@ class PHYSICS(BaseComponent):
             repr += [self.setup.render()]
         if self.diffraction is not None:
             repr += [self.diffraction.render()]
+        if self.surfbeat is not None:
+            repr += [self.surfbeat.render()]
+        if self.scat is not None:
+            repr += [self.scat.render()]
         return repr
