@@ -6,20 +6,20 @@ from rompy.swan.components.physics import (
     GEN1,
     GEN2,
     GEN3,
-    DCTA,
-    LTA,
-    SPB,
+    TRIAD_DCTA,
+    TRIAD_LTA,
+    TRIAD_SPB,
     VEGETATION,
     MUD,
     SICE,
-    R19,
-    D15,
-    M18,
-    R21B,
+    SICE_R19,
+    SICE_D15,
+    SICE_M18,
+    SICE_R21B,
     TURBULENCE,
     BRAGG,
-    BRAGGFT,
-    BRAGGFILE,
+    BRAGG_FT,
+    BRAGG_FILE,
     LIMITER,
     OBSTACLE,
 )
@@ -83,25 +83,25 @@ def test_gen3_default():
 # TRIADS
 # =====================================================================================
 def test_triad_dcta():
-    phys = DCTA()
-    assert phys.render() == "TRIAD DCTA COLL BIPHASE ELDEBERKY"
-    phys = DCTA(
+    phys = TRIAD_DCTA()
+    assert phys.render() == "TRIAD DCTA COLL"
+    phys = TRIAD_DCTA(
         biphase=dict(model_type="dewit", lpar=0.0), trfac=4.4, p=1.3, noncolinear=True
     )
     assert phys.render() == "TRIAD DCTA trfac=4.4 p=1.3 NONC BIPHASE DEWIT lpar=0.0"
 
 
 def test_triad_lta():
-    phys = LTA()
-    assert phys.render() == "TRIAD LTA BIPHASE ELDEBERKY"
-    phys = LTA(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.8, cutfr=2.5)
+    phys = TRIAD_LTA()
+    assert phys.render() == "TRIAD LTA"
+    phys = TRIAD_LTA(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.8, cutfr=2.5)
     assert phys.render() == "TRIAD LTA trfac=0.8 cutfr=2.5 BIPHASE DEWIT lpar=0.0"
 
 
 def test_triad_spb():
-    phys = SPB()
-    assert phys.render() == "TRIAD SPB BIPHASE ELDEBERKY"
-    phys = SPB(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.9, a=0.95, b=0.0)
+    phys = TRIAD_SPB()
+    assert phys.render() == "TRIAD SPB"
+    phys = TRIAD_SPB(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.9, a=0.95, b=0.0)
     assert phys.render() == "TRIAD SPB trfac=0.9 a=0.95 b=0.0 BIPHASE DEWIT lpar=0.0"
 
 
@@ -166,9 +166,9 @@ def test_sice_default():
 
 
 def test_sice_r19():
-    sice = R19()
+    sice = SICE_R19()
     assert sice.render() == "SICE R19"
-    sice = R19(
+    sice = SICE_R19(
         aice=0.5,
         c0=0.0,
         c1=0.0,
@@ -184,23 +184,23 @@ def test_sice_r19():
 
 
 def test_sice_d15():
-    sice = D15()
+    sice = SICE_D15()
     assert sice.render() == "SICE D15"
-    sice = D15(aice=0.5, chf=0.1)
+    sice = SICE_D15(aice=0.5, chf=0.1)
     assert sice.render() == "SICE aice=0.5 D15 chf=0.1"
 
 
 def test_sice_m18():
-    sice = M18()
+    sice = SICE_M18()
     assert sice.render() == "SICE M18"
-    sice = M18(aice=0.5, chf=0.059)
+    sice = SICE_M18(aice=0.5, chf=0.059)
     assert sice.render() == "SICE aice=0.5 M18 chf=0.059"
 
 
 def test_sice_r21b():
-    sice = R21B()
+    sice = SICE_R21B()
     assert sice.render() == "SICE R21B"
-    sice = R21B(aice=0.5, chf=2.9, npf=4.5)
+    sice = SICE_R21B(aice=0.5, chf=2.9, npf=4.5)
     assert sice.render() == "SICE aice=0.5 R21B chf=2.9 npf=4.5"
 
 
@@ -226,31 +226,35 @@ def test_turbulence_tbcur_only_with_current():
 # BRAGG
 # =====================================================================================
 def test_bragg_default():
-    bragg = BRAGG()
-    assert bragg.render() == "BRAGG"
+    bragg = BRAGG(nreg=200)
+    assert bragg.render() == "BRAGG nreg=200"
     bragg = BRAGG(ibrag=1, nreg=200, cutoff=5.0)
     assert bragg.render() == "BRAGG ibrag=1 nreg=200 cutoff=5.0"
 
 
 def test_bragg_ft():
-    bragg = BRAGGFT()
-    assert bragg.render() == "BRAGG FT"
-    bragg = BRAGGFT(ibrag=1, nreg=200, cutoff=5.0)
+    bragg = BRAGG_FT(nreg=200)
+    assert bragg.render() == "BRAGG nreg=200 FT"
+    bragg = BRAGG_FT(ibrag=1, nreg=200, cutoff=5.0)
     assert bragg.render() == "BRAGG ibrag=1 nreg=200 cutoff=5.0 FT"
 
 
 def test_bragg_file():
-    bragg = BRAGGFILE(fname="bragg.txt", mkx=200, dkx=0.1)
-    assert bragg.render() == "BRAGG FILE fname='bragg.txt' mkx=200 dkx=0.1"
-    bragg = BRAGGFILE(fname="bragg.txt", idla=1, mkx=200, mky=200, dkx=0.1, dky=0.1)
+    bragg = BRAGG_FILE(fname="bragg.txt", mkx=200, dkx=0.1, nreg=200)
+    assert bragg.render() == "BRAGG nreg=200 FILE fname='bragg.txt' mkx=200 dkx=0.1"
+    bragg = BRAGG_FILE(
+        fname="bragg.txt", nreg=200, idla=1, mkx=200, mky=200, dkx=0.1, dky=0.1
+    )
     assert bragg.render() == (
-        "BRAGG FILE fname='bragg.txt' idla=1 mkx=200 mky=200 dkx=0.1 dky=0.1"
+        "BRAGG nreg=200 FILE fname='bragg.txt' idla=1 mkx=200 mky=200 dkx=0.1 dky=0.1"
     )
 
 
 def test_bragg_file_idla():
     with pytest.raises(ValidationError):
-        BRAGGFILE(fname="bragg.txt", idla=7, mkx=200, mky=200, dkx=0.1, dky=0.1)
+        BRAGG_FILE(
+            fname="bragg.txt", nreg=200, idla=7, mkx=200, mky=200, dkx=0.1, dky=0.1
+        )
 
 
 # =====================================================================================
