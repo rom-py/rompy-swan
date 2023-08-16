@@ -6,7 +6,7 @@ from pydantic import Field
 import pytest
 import yaml
 
-from rompy import ModelRun
+from rompy.model import ModelRun
 from rompy.swan.config import SwanConfigComponents as SwanConfig
 from rompy.swan.subcomponents.physics import SourceTerms
 
@@ -39,5 +39,4 @@ def test_swan_model(tmpdir, config_dict):
         output_dir=str(tmpdir),
         config=config,
     )
-    # import ipdb; ipdb.set_trace()
     model.generate()
