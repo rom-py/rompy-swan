@@ -47,7 +47,7 @@ def test_komen():
 def test_westhuysen():
     west = WESTHUYSEN()
     assert west.render() == "WESTHUYSEN DRAG WU"
-    west = WESTHUYSEN(cds2=5.0e-5, br=1.7e-3, wind_drag="fit", agrow=True)
+    west = WESTHUYSEN(cds2=5.0e-5, br=1.7e-3, wind_drag="fit", agrow=True, a=0.0015)
     assert west.render() == "WESTHUYSEN cds2=5e-05 br=0.0017 DRAG FIT AGROW a=0.0015"
 
 
