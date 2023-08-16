@@ -162,7 +162,9 @@ class WESTHUYSEN(SourceTerms):
             repr += f" br={self.br}"
         repr += f" DRAG {self.wind_drag.upper()}"
         if self.agrow:
-            repr += f" AGROW a={self.a}"
+            repr += f" AGROW"
+        if self.a is not None and self.agrow:
+            repr += f" a={self.a}"
         return repr
 
 
@@ -281,7 +283,9 @@ class ST6(SourceTerms):
         if self.cdfac is not None:
             repr += f" DEBIAS cdfac={self.cdfac}"
         if self.agrow:
-            repr += f" AGROW a={self.a}"
+            repr += f" AGROW"
+        if self.a is not None and self.agrow:
+            repr += f" a={self.a}"
         return repr
 
 
@@ -295,6 +299,7 @@ class ST6C1(ST6):
     p2sds: Literal[4.0] = Field(default=4.0)
     windscaling: Literal[28.0] = Field(default=28.0)
     agrow: Literal[True] = Field(default=True)
+    a: Literal[0.0015] = Field(default=0.0015)
 
 
 class ST6C2(ST6C1):
