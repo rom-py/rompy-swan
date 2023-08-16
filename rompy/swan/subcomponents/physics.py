@@ -36,7 +36,9 @@ class SourceTerms(BaseSubComponent, ABC):
 class JANSSEN(SourceTerms):
     """Janssen source terms subcomponent.
 
-    `JANSSEN [cds1] [delta]`
+    .. code-block:: text
+
+        JANSSEN [cds1] [delta] (AGROW [a])
 
     References
     ----------
@@ -49,6 +51,21 @@ class JANSSEN(SourceTerms):
 
     Janssen, P.A., 1991. Quasi-linear theory of wind-wave generation applied to wave
     forecasting. Journal of physical oceanography, 21(11), pp.1631-1642.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import JANSSEN
+
+        janssen = JANSSEN()
+        print(janssen.render())
+        janssen = JANSSEN(cds1=4.5, delta=0.5, agrow=True)
+        print(janssen.render())
 
     """
 
@@ -76,19 +93,38 @@ class JANSSEN(SourceTerms):
             repr += f" delta={self.delta}"
         repr += f" DRAG {self.wind_drag.upper()}"
         if self.agrow:
-            repr += f" AGROW a={self.a}"
+            repr += f" AGROW"
+        if self.a is not None and self.agrow:
+            repr += f" a={self.a}"
         return repr
 
 
 class KOMEN(SourceTerms):
     """Komen source terms subcomponent.
 
-    `KOMEN [cds2] [stpm]`
+    .. code-block:: text
+
+        KOMEN [cds2] [stpm] (AGROW [a])
 
     References
     ----------
     Komen, G.J., Hasselmann, S. and Hasselmann, K., 1984. On the existence of a fully
     developed wind-sea spectrum. Journal of physical oceanography, 14(8), pp.1271-1285.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import KOMEN
+
+        komen = KOMEN()
+        print(komen.render())
+        komen = KOMEN(cds2=2.36e-5, stpm=3.02e-3, agrow=True, a=0.0015)
+        print(komen.render())
 
     """
 
@@ -116,14 +152,18 @@ class KOMEN(SourceTerms):
             repr += f" stpm={self.stpm}"
         repr += f" DRAG {self.wind_drag.upper()}"
         if self.agrow:
-            repr += f" AGROW a={self.a}"
+            repr += f" AGROW"
+        if self.a is not None and self.agrow:
+            repr += f" a={self.a}"
         return repr
 
 
 class WESTHUYSEN(SourceTerms):
     """Westhuysen source terms subcomponent.
 
-    `WESTHUYSEN [cds2] [br]`
+    .. code-block:: text
+
+        WESTHUYSEN [cds2] [br] (AGROW [a])
 
     Nonlinear saturation-based whitecapping combined with wind input of Yan (1987).
 
@@ -138,6 +178,21 @@ class WESTHUYSEN(SourceTerms):
     van der Westhuysen, A.J., Zijlema, M. and Battjes, J.A., 2007. Nonlinear
     saturation-based whitecapping dissipation in SWAN for deep and shallow water.
     Coastal Engineering, 54(2), pp.151-170.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import WESTHUYSEN
+
+        westhuysen = WESTHUYSEN()
+        print(westhuysen.render())
+        westhuysen = WESTHUYSEN(cds2=5.0e-5, br=1.75e-3)
+        print(westhuysen.render())
 
     """
 
@@ -171,8 +226,10 @@ class WESTHUYSEN(SourceTerms):
 class ST6(SourceTerms):
     """St6 source terms subcomponent.
 
-    `ST6 [a1sds] [a2sds] [p1sds] [p2sds] UP|DOWN HWANG|FAN|ECMWF VECTAU|SCATAU `
-    `    TRUE10|U10PROXY [windscaling] DEBIAS [cdfac]`
+    .. code-block:: text
+
+        ST6 [a1sds] [a2sds] [p1sds] [p2sds] UP|DOWN HWANG|FAN|ECMWF VECTAU|SCATAU &
+            TRUE10|U10PROXY [windscaling] DEBIAS [cdfac] (AGROW [a])
 
     wind input and whitecapping from Rogers et al. (2012) (RBW12).
 
@@ -192,6 +249,33 @@ class ST6(SourceTerms):
     whitecapping dissipation in a model for wind-generated surface waves: Description
     and simple calculations. Journal of Atmospheric and Oceanic Technology, 29(9),
     pp.1329-1346.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import ST6
+
+        st6 = ST6(a1sds=4.7e-7, a2sds=6.6e-6)
+        print(st6.render())
+        kwargs = dict(
+            a1sds=2.8e-6,
+            a2sds=3.5e-5,
+            normalization="up",
+            wind_drag="hwang",
+            tau="vectau",
+            u10="u10proxy",
+            windscaling=32.0,
+            cdfac=0.89,
+            agrow=True,
+            a=0.0015,
+        )
+        st6 = ST6(**kwargs)
+        print(st6.render())
 
     """
 
@@ -290,7 +374,26 @@ class ST6(SourceTerms):
 
 
 class ST6C1(ST6):
-    """First ST6 calibration settings defined in the SWAN user manual."""
+    """First ST6 calibration in the SWAN user manual.
+
+    .. code-block:: text
+
+        ST6 4.7e-7 6.6e-6 4.0 4.0 UP HWANG VECTAU U10PROXY 28.0 AGROW
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import ST6C1
+
+        st6 = ST6C1()
+        print(st6.render())
+
+    """
 
     model_type: Literal["st6c1"] = Field(default="st6c1")
     a1sds: Literal[4.7e-7] = Field(default=4.7e-7)
@@ -299,18 +402,57 @@ class ST6C1(ST6):
     p2sds: Literal[4.0] = Field(default=4.0)
     windscaling: Literal[28.0] = Field(default=28.0)
     agrow: Literal[True] = Field(default=True)
-    a: Literal[0.0015] = Field(default=0.0015)
 
 
 class ST6C2(ST6C1):
-    """Second ST6 calibration settings defined in the SWAN user manual."""
+    """Second ST6 calibration in the SWAN user manual.
+
+    .. code-block:: text
+
+        ST6 4.7e-7 6.6e-6 4.0 4.0 UP FAN VECTAU U10PROXY 28.0 AGROW
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import ST6C2
+
+        st6 = ST6C2()
+        print(st6.render())
+
+    TODO: Ensure validator is reused here so fan and debias are not used together.
+
+    """
 
     model_type: Literal["st6c2"] = Field(default="st6c2")
     wind_drag: Literal["fan"] = Field(default="fan")
 
 
 class ST6C3(ST6C1):
-    """Third ST6 calibration settings defined in the SWAN user manual."""
+    """Third ST6 calibration in the SWAN user manual.
+
+    .. code-block:: text
+
+        ST6 2.8e-6 3.5e-5 4.0 4.0 UP HWANG VECTAU U10PROXY 32.0 AGROW
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import ST6C3
+
+        st6 = ST6C3()
+        print(st6.render())
+
+    """
 
     model_type: Literal["st6c3"] = Field(default="st6c3")
     a1sds: Literal[2.8e-6] = Field(default=2.8e-6)
@@ -319,14 +461,51 @@ class ST6C3(ST6C1):
 
 
 class ST6C4(ST6C3):
-    """Fourth ST6 calibration settings defined in the SWAN user manual."""
+    """Fourth ST6 calibration in the SWAN user manual.
+
+    .. code-block:: text
+
+        ST6 2.8e-6 3.5e-5 4.0 4.0 UP HWANG VECTAU U10PROXY 32.0 DEBIAS 0.89 AGROW
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import ST6C4
+
+        st6 = ST6C4()
+        print(st6.render())
+
+    """
 
     model_type: Literal["st6c4"] = Field(default="st6c4")
     cdfac: Literal[0.89] = Field(default=0.89)
 
 
 class ST6C5(ST6C1):
-    """Fifth ST6 calibration settings defined in the SWAN user manual."""
+    """Fifth ST6 calibration in the SWAN user manual.
+
+    .. code-block:: text
+        ST6 4.7e-7 6.6e-6 4.0 4.0 UP HWANG VECTAU U10PROXY 28.0 AGROW
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import ST6C5
+
+        st6 = ST6C5()
+        print(st6.render())
+
+    """
 
     model_type: Literal["st6c5"] = Field(default="st6c5")
     cdfac: Literal[0.89] = Field(default=0.89)
@@ -336,12 +515,16 @@ class ST6C5(ST6C1):
 
 
 # =====================================================================================
-# Triads
+# Biphase
 # =====================================================================================
 class ELDEBERKY(BaseSubComponent):
-    """Biphase parameterization as a funtion of the Ursell number of Eldeberky (1999).
+    """Biphase of Eldeberky (1999).
 
-    `BIPHASE ELDEBERKY [urcrit]`
+    .. code-block:: text
+
+        BIPHASE ELDEBERKY [urcrit]
+
+    Biphase parameterisation as a funtion of the Ursell number of Eldeberky (1999).
 
     References
     ----------
@@ -356,6 +539,21 @@ class ELDEBERKY(BaseSubComponent):
     Doering, J.C. and Bowen, A.J., 1995. Parametrization of orbital velocity
     asymmetries of shoaling and breaking waves using bispectral analysis. Coastal
     engineering, 26(1-2), pp.15-33.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import ELDEBERKY
+
+        biphase = ELDEBERKY()
+        print(biphase.render())
+        biphase = ELDEBERKY(urcrit=0.63)
+        print(biphase.render())
 
     """
 
@@ -379,15 +577,34 @@ class ELDEBERKY(BaseSubComponent):
 
 
 class DEWIT(BaseSubComponent):
-    """Biphase parameterization based on bed slope and peak period of De Wit (2022).
+    """Biphase of De Wit (2022).
 
-    `BIPHASE DEWIT [lpar]`
+    .. code-block:: text
+
+        BIPHASE DEWIT [lpar]
+
+    Biphase parameterization based on bed slope and peak period of De Wit (2022).
 
     References
     ----------
     De Wit, F.P., 2022. Wave shape prediction in complex coastal systems (Doctoral
     dissertation, PhD. thesis. Delft University of Technology. https://repository.
     tudelft. nl/islandora/object/uuid% 3A0fb850a4-4294-4181-9d74-857de21265c2).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.physics import DEWIT
+
+        biphase = DEWIT()
+        print(biphase.render())
+        biphase = DEWIT(lpar=0.0)
+        print(biphase.render())
 
     """
 
@@ -415,7 +632,9 @@ class DEWIT(BaseSubComponent):
 class TRANSM(BaseSubComponent):
     """Constant transmission coefficient.
 
-    `TRANSM [trcoef]`
+    .. code-block:: text
+
+        TRANSM [trcoef]
 
     Examples
     --------
@@ -456,9 +675,11 @@ class TRANSM(BaseSubComponent):
 
 
 class TRANS1D(BaseSubComponent):
-    """Frequency dependent transmission coefficient.
+    """Frequency dependent transmission.
 
-    `TRANS1D < [trcoef] >`
+    .. code-block:: text
+
+        TRANS1D < [trcoef] >
 
     Examples
     --------
@@ -494,9 +715,11 @@ class TRANS1D(BaseSubComponent):
 
 
 class TRANS2D(BaseSubComponent):
-    """Frequency-direction dependent transmission coefficient.
+    """Frequency-direction dependent transmission.
 
-    `TRANS2D < [trcoef] >`
+    .. code-block:: text
+
+        TRANS2D < [trcoef] >
 
     Examples
     --------
@@ -544,9 +767,11 @@ class TRANS2D(BaseSubComponent):
 
 
 class GODA(BaseSubComponent):
-    """DAM transmission based on Goda/Seelig (1979).
+    """DAM transmission of Goda/Seelig (1979).
 
-    `DAM GODA [hgt] [alpha] [beta]`
+    .. code-block:: text
+
+        DAM GODA [hgt] [alpha] [beta]
 
     This option specified transmission coefficients dependent on the incident wave
     conditions at the obstacle and on the obstacle height (which may be submerged).
@@ -611,11 +836,13 @@ class GODA(BaseSubComponent):
 
 
 class DANGREMOND(BaseSubComponent):
-    """DAM transmission based on d'Angremond/Van der Meer (1996).
+    """DAM transmission of d'Angremond et al. (1996).
 
-    `DAM DANGREMOND [hgt] [slope] [Bk]`
+    .. code-block:: text
 
-    This option specified transmission coefficients dependent on the incident wave
+        DAM DANGREMOND [hgt] [slope] [Bk]
+
+    This option specifies transmission coefficients dependent on the incident wave
     conditions at the obstacle and on the obstacle height (which may be submerged).
 
     References
@@ -665,7 +892,9 @@ class DANGREMOND(BaseSubComponent):
 class REFL(BaseSubComponent):
     """Obstacle reflections.
 
-    `REFL [reflc]`
+    .. code-block:: text
+
+        REFL [reflc]
 
     Examples
     --------
@@ -705,7 +934,9 @@ class REFL(BaseSubComponent):
 class RSPEC(BaseSubComponent):
     """Specular reflection.
 
-    `RSPEC`
+    .. code-block:: text
+
+        RSPEC
 
     Examples
     --------
@@ -734,7 +965,9 @@ class RSPEC(BaseSubComponent):
 class RDIFF(BaseSubComponent):
     """Diffuse reflection.
 
-    `RDIFF [pown]`
+    .. code-block:: text
+
+        RDIFF [pown]
 
     Specular reflection where incident waves are scattered over reflected direction.
 
@@ -775,9 +1008,11 @@ class RDIFF(BaseSubComponent):
 
 
 class FREEBOARD(BaseSubComponent):
-    """Freeboard dependent transmission and reflections.
+    """Freeboard dependent transmission and reflection.
 
-    `FREEBOARD [hgt] [gammat] [gammar] [gammas] [QUAY]`
+    .. code-block:: text
+
+        FREEBOARD [hgt] [gammat] [gammar] [QUAY]
 
     With this option the user indicates that the fixed transmission `trcoef` and
     reflection `reflc` coefficients are freeboard dependent. The freeboard dependency
@@ -863,7 +1098,9 @@ class FREEBOARD(BaseSubComponent):
 class LINE(BaseSubComponent):
     """Line of points to define obstacle location.
 
-    `LINE < [xp] [yp] >`
+    .. code-block:: text
+
+        LINE < [xp] [yp] >
 
     With this option the user indicates that the fixed transmission `trcoef` and
     reflection `reflc` coefficients are freeboard dependent. The freeboard dependency
@@ -883,10 +1120,10 @@ class LINE(BaseSubComponent):
         :okexcept:
 
         @suppress
-        from rompy.swan.subcomponents.physics import FREEBOARD
+        from rompy.swan.subcomponents.physics import LINE
 
         line = LINE(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1])
-        print(freeboard.render())
+        print(line.render())
 
     """
 
