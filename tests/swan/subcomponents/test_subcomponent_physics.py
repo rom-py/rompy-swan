@@ -1,5 +1,6 @@
 """Test physics sub-components."""
 import pytest
+from pydantic import ValidationError
 
 from rompy.swan.subcomponents.physics import (
     JANSSEN,
@@ -13,6 +14,16 @@ from rompy.swan.subcomponents.physics import (
     ST6C5,
     ELDEBERKY,
     DEWIT,
+    TRANSM,
+    TRANS1D,
+    TRANS2D,
+    GODA,
+    DANGREMOND,
+    REFL,
+    RSPEC,
+    RDIFF,
+    FREEBOARD,
+    LINE,
 )
 
 
@@ -36,7 +47,7 @@ def test_komen():
 def test_westhuysen():
     west = WESTHUYSEN()
     assert west.render() == "WESTHUYSEN DRAG WU"
-    west = WESTHUYSEN(cds2=5.0e-5, br=1.7e-3, wind_drag="fit", agrow=True)
+    west = WESTHUYSEN(cds2=5.0e-5, br=1.7e-3, wind_drag="fit", agrow=True, a=0.0015)
     assert west.render() == "WESTHUYSEN cds2=5e-05 br=0.0017 DRAG FIT AGROW a=0.0015"
 
 
@@ -105,3 +116,98 @@ def test_biphase_dewit():
     assert biphase.render() == "BIPHASE DEWIT"
     biphase = DEWIT(lpar=0)
     assert biphase.render() == "BIPHASE DEWIT lpar=0.0"
+
+
+# =====================================================================================
+# Obstacle
+# =====================================================================================
+def test_transm():
+    trans = TRANSM()
+    assert trans.render() == "TRANSM"
+    trans = TRANSM(trcoef=0.0)
+    assert trans.render() == "TRANSM trcoef=0.0"
+    with pytest.raises(ValidationError):
+        TRANSM(trcoef=1.1)
+
+
+def test_trans1d():
+    trans = TRANS1D(trcoef=[0.0, 0.0, 0.3, 0.2])
+    assert trans.render() == "TRANS1D 0.0 0.0 0.3 0.2"
+    with pytest.raises(ValidationError):
+        TRANS1D(trcoef=[1.1, 0.0, 0.3, 0.2, 0.1])
+
+
+def test_trans2d():
+    trans = TRANS2D(trcoef=[[0.0, 0.0, 0.0], [0.1, 0.1, 0.1]])
+    assert "TRANS2D" in trans.render()
+    "0.0 0.0 0.0" in trans.render()
+    "0.1 0.1 0.1" in trans.render()
+    with pytest.raises(ValidationError):
+        TRANS2D(trcoef=[[0.0, 0.0, 0.0], [0.1, 0.1, 0.1, 0.1]])
+    with pytest.raises(ValidationError):
+        TRANS2D(trcoef=[[0.0, 0.0, 0.0], [0.1, 0.1, 1.1]])
+
+
+def test_goda():
+    trans = GODA(hgt=1.0)
+    assert trans.render() == "DAM GODA hgt=1.0"
+    trans = GODA(hgt=-1.0, alpha=2.6, beta=0.15)
+    assert trans.render() == "DAM GODA hgt=-1.0 alpha=2.6 beta=0.15"
+
+
+def test_dangremond():
+    trans = DANGREMOND(hgt=3.0, slope=60, Bk=10.0)
+    assert trans.render() == "DAM DANGREMOND hgt=3.0 slope=60.0 Bk=10.0"
+    with pytest.raises(ValidationError):
+        DANGREMOND(hgt=3.0, slope=120, Bk=1.0)
+
+
+def test_refl():
+    refl = REFL()
+    assert refl.render() == "REFL"
+    refl = REFL(reflc=0.5)
+    assert refl.render() == "REFL reflc=0.5"
+
+
+def test_rspec():
+    refl = RSPEC()
+    assert refl.render() == "RSPEC"
+
+
+def test_rdiff():
+    refl = RDIFF()
+    assert refl.render() == "RDIFF"
+    refl = RDIFF(pown=1.0)
+    assert refl.render() == "RDIFF pown=1.0"
+
+
+def test_freeboard():
+    free = FREEBOARD(
+        hgt=2.0,
+        gammat=0.5,
+        gammar=0.5,
+        quay=True,
+    )
+    assert free.render() == "FREEBOARD hgt=2.0 gammat=0.5 gammar=0.5 QUAY"
+
+
+def test_freeboard_no_quay():
+    free = FREEBOARD(
+        hgt=2.0,
+        gammat=0.5,
+        gammar=0.5,
+        quay=False,
+    )
+    assert free.render() == "FREEBOARD hgt=2.0 gammat=0.5 gammar=0.5"
+
+
+def test_freeboard_gamma_gt_0():
+    with pytest.raises(ValidationError):
+        FREEBOARD(hgt=2.0, gammat=0.0)
+    with pytest.raises(ValidationError):
+        FREEBOARD(hgt=2.0, gammar=0.0)
+
+
+def test_line():
+    line = LINE(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1])
+    assert [f"{x} {y}" in line.render() for x, y in zip(line.xp, line.yp)]

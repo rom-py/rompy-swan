@@ -97,17 +97,13 @@ physics:
     model_type: gen3
     source_terms:
       model_type: st6c1
-  # gen:
-  #   model_type: gen3
-  #   source_terms:
-  #     model_type: westhuysen
   sswell:
     model_type: zieger
   negatinp:
     model_type: negatinp
     rdcoef: 0.1
   wcapping:
-    model_type: wcapab
+    model_type: ab
     cds2: 5.0e-5
     br: 1.75e-3
     current: True
@@ -136,3 +132,55 @@ physics:
     layer: 2.0
     rhom: 1300.0
     viscm: 0.0076
+  sice:
+    model_type: R19
+  turbulence:
+    ctb: 0.01
+    current: True
+    tbcur: 0.004
+  bragg:
+    model_type: ft
+    ibrag: 1
+    nreg: 200
+    cutoff: 5.0
+  limiter:
+    model_type: limiter
+    ursell: 10.0
+    qb: 1.0
+  obstacle:
+    model_type: obstacles
+    obstacles:
+      - model_type: obstacle
+        transmission:
+          model_type: transm
+          trcoef: 0.5
+        reflection:
+          reflc: 0.5
+        line:
+          xp: [174.1, 174.2, 174.3]
+          yp: [-39.1, -39.1, -39.1]
+      - model_type: obstacle
+        reflection:
+          reflc: 1.0
+        line:
+          xp: [174.3, 174.3]
+          yp: [-39.1, -39.3]
+      - model_type: fig
+        alpha1: 5e-4
+        hss: 2.1
+        tss: 12.0
+        line:
+          xp: [174.1, 174.2, 174.3]
+          yp: [-39.1, -39.1, -39.1]
+  setup:
+    supcor: 0.0
+  diffraction:
+    idiffr: 1
+  surfbeat:
+    spacing: uniform
+  scat:
+    model_type: scat
+  deactivate:
+    physics:
+      - physics: wcapping
+      - physics: breaking

@@ -55,7 +55,7 @@ def test_inpgrid_nonstationary(nonstat, readinp):
 
 def test_inpgrid_regular(nonstat, readinp):
     inpgrid = REGULAR(
-        grid_type=GridOptions.wind,
+        grid_type=GridOptions.WIND,
         xpinp=0.0,
         ypinp=0.0,
         alpinp=0.0,
@@ -72,7 +72,7 @@ def test_inpgrid_regular(nonstat, readinp):
 
 def test_inpgrid_curvilinear(nonstat, readinp):
     inpgrid = CURVILINEAR(
-        grid_type=GridOptions.wind,
+        grid_type=GridOptions.WIND,
         mxinp=10,
         myinp=10,
         excval=-999.0,
@@ -84,7 +84,7 @@ def test_inpgrid_curvilinear(nonstat, readinp):
 
 def test_inpgrid_curvilinear_render(nonstat, readinp):
     inpgrid = UNSTRUCTURED(
-        grid_type=GridOptions.wind,
+        grid_type=GridOptions.WIND,
         excval=-999.0,
         nonstationary=nonstat,
         readinp=readinp,
@@ -94,7 +94,7 @@ def test_inpgrid_curvilinear_render(nonstat, readinp):
 
 def test_inpgrids(nonstat, readinp):
     bottom = REGULAR(
-        grid_type=GridOptions.bottom,
+        grid_type=GridOptions.BOTTOM,
         xpinp=0.0,
         ypinp=0.0,
         alpinp=0.0,
@@ -106,7 +106,7 @@ def test_inpgrids(nonstat, readinp):
         readinp=readinp,
     )
     wind = REGULAR(
-        grid_type=GridOptions.wind,
+        grid_type=GridOptions.WIND,
         xpinp=0.0,
         ypinp=0.0,
         alpinp=0.0,

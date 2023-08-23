@@ -1,6 +1,7 @@
-rompy
-sphinx
-pydata_sphinx_theme
 autodoc_pydantic
-sphinx-collections
+ipython
 nbsphinx
+pydata_sphinx_theme
+sphinx
+sphinx-collections
+rompy
