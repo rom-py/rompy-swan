@@ -339,3 +339,13 @@ class SwanConfigComponents(BaseConfig):
     def cgrid_contain_inpgrids(cls, values):
         """Ensure all inpgrids are inside the cgrid area."""
         return values
+
+    @root_validator
+    def layer_defined_if_no_mud_inpgrid(cls, values):
+        """Ensure layer is set in MUD command if not defined with INPGRID MUD."""
+        return values
+
+    root_validator
+    def transm_msc_mdc (cls, values):
+        """Ensure the number of transmission coefficients match msc and mdc."""
+        return values

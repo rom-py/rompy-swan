@@ -225,6 +225,7 @@ class CONSTANTFILE(BaseSubComponent):
     Note
     ----
     There are three types of files:
+
     - TPAR files containing nonstationary wave parameters.
     - files containing stationary or nonstationary 1D spectra
       (usually from measurements).
@@ -280,6 +281,7 @@ class VARIABLEFILE(BaseSubComponent):
     Note
     ----
     There are three types of files:
+
     - TPAR files containing nonstationary wave parameters.
     - files containing stationary or nonstationary 1D spectra
       (usually from measurements).
