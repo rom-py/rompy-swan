@@ -1,6 +1,6 @@
 """Computational grid for SWAN."""
 import logging
-from pydantic import StringConstraints, Field, root_validator
+from pydantic import StringConstraints, Field, model_validator
 from typing import Literal, Optional
 from abc import ABC, abstractmethod
 
@@ -137,34 +137,27 @@ class CURVILINEAR(CGRID):
         description="Grid coordinates reader.",
     )
 
-    @root_validator
-    def check_exception_definition(cls, values: dict) -> dict:
-        """Check exception values are prescribed correctly."""
-        xexc = values.get("xexc")
-        yexc = values.get("yexc")
-        if (xexc is None and yexc is not None) or (yexc is None and xexc is not None):
+    @model_validator(mode="after")
+    def xexc_and_yexc_or_neither(self) -> 'CURVILINEAR':
+        if [self.xexc, self.yexc].count(None) == 1:
             raise ValueError("xexc and yexc must be specified together")
-        return values
+        return self
 
-    @root_validator
-    def check_format_definition(cls, values: dict) -> dict:
-        """Check the arguments specifying the file format are specified correctly."""
-        format = values.get("format")
-        form = values.get("form")
-        idfm = values.get("idfm")
-        if format == "free" and any([form, idfm]):
-            logger.warn(f"FREE format specified, ignoring form={form} idfm={idfm}")
-        elif format == "unformatted" and any([form, idfm]):
+    @model_validator(mode="after")
+    def check_format_definition(self) -> 'CURVILINEAR':
+        if self.format == "free" and any([self.form, self.idfm]):
+            logger.warn(f"FREE format, ignoring form={self.form} idfm={self.idfm}")
+        elif format == "unformatted" and any([self.form, self.idfm]):
             logger.warn(
-                f"UNFORMATTED format specified, ignoring form={form} idfm={idfm}"
+                f"UNFORMATTED format, ignoring form={self.form} idfm={self.idfm}"
             )
-        elif format == "fixed" and not any([form, idfm]):
+        elif format == "fixed" and not any([self.form, self.idfm]):
             raise ValueError(
                 "FIXED format requires one of form or idfm to be specified"
             )
-        elif format == "fixed" and all([form, idfm]):
+        elif format == "fixed" and all([self.form, self.idfm]):
             raise ValueError("FIXED format accepts only one of form or idfm")
-        return values
+        return self
 
     @property
     def exception(self):
@@ -213,16 +206,14 @@ class UNSTRUCTURED(CGRID):
         description="Name of the file containing the unstructured grid",
     )
 
-    @root_validator
-    def check_fname_required(cls, values: dict) -> dict:
+    @model_validator(mode="after")
+    def check_fname_required(self) -> 'UNSTRUCTURED':
         """Check that fname needs to be provided."""
-        grid_type = values.get("grid_type")
-        fname = values.get("fname")
-        if grid_type == "adcirc" and fname is not None:
+        if self.grid_type == "adcirc" and self.fname is not None:
             raise ValueError("fname must not be specified for ADCIRC grid")
-        elif grid_type != "adcirc" and fname is None:
-            raise ValueError(f"fname must be specified for {grid_type} grid")
-        return values
+        elif self.grid_type != "adcirc" and self.fname is None:
+            raise ValueError(f"fname must be specified for {self.grid_type} grid")
+        return self
 
     def cmd(self) -> str:
         repr = f"CGRID UNSTRUCTURED {self.spectrum.cmd()}"
