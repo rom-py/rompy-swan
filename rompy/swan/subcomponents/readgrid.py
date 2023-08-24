@@ -3,7 +3,7 @@ import logging
 from typing import Literal, Optional
 from abc import ABC
 
-from pydantic import Field, root_validator
+from pydantic import Field, model_validator, field_validator
 
 from rompy.swan.types import GridOptions, IDLA
 from rompy.swan.subcomponents.base import BaseSubComponent
@@ -86,25 +86,22 @@ class READGRID(BaseSubComponent, ABC):
         ),
     )
 
-    @root_validator
-    def check_format_definition(cls, values: dict) -> dict:
+    @model_validator(mode="after")
+    def check_format_definition(self) -> 'READGRID':
         """Check the arguments specifying the file format are specified correctly."""
-        format = values.get("format")
-        form = values.get("form")
-        idfm = values.get("idfm")
-        if format == "free" and any([form, idfm]):
-            logger.warn(f"FREE format specified, ignoring form={form} idfm={idfm}")
-        elif format == "unformatted" and any([form, idfm]):
+        if self.format == "free" and any([self.form, self.idfm]):
+            logger.warn(f"FREE format, ignoring form={self.form} idfm={self.idfm}")
+        elif format == "unformatted" and any([self.form, self.idfm]):
             logger.warn(
-                f"UNFORMATTED format specified, ignoring form={form} idfm={idfm}"
+                f"UNFORMATTED format, ignoring form={self.form} idfm={self.idfm}"
             )
-        elif format == "fixed" and not any([form, idfm]):
+        elif format == "fixed" and not any([self.form, self.idfm]):
             raise ValueError(
                 "FIXED format requires one of form or idfm to be specified"
             )
-        elif format == "fixed" and all([form, idfm]):
+        elif format == "fixed" and all([self.form, self.idfm]):
             raise ValueError("FIXED format accepts only one of form or idfm")
-        return values
+        return self
 
     @property
     def format_repr(self):
@@ -136,18 +133,18 @@ class READCOORD(READGRID):
         desctiprion="Name of the SWAN coordinates file",
     )
 
-    @root_validator
-    def check_arguments(cls, values: dict) -> dict:
+    @model_validator(mode="after")
+    def check_arguments(self) -> 'READCOORD':
         """A few checks to restrict input types from parent class."""
-        for key in ["nhedt"]:
-            if values.get(key):
-                raise ValueError(f"{key} is not allowed for READCOORD")
-        return values
+        if self.nhedt is not None:
+            raise ValueError("nhedt specified but it is not allowed for READCOORD")
+        return self
 
     def cmd(self) -> str:
         repr = (
             f"READGRID COORDINATES fac={self.fac} fname='{self.fname}' "
-            f"idla={self.idla} nhedf={self.nhedf} nhedvec={self.nhedvec} {self.format_repr}"
+            f"idla={self.idla} nhedf={self.nhedf} nhedvec={self.nhedvec} "
+            f"{self.format_repr}"
         )
         return repr
 
@@ -188,12 +185,13 @@ class READINP(READGRID):
         ),
     )
 
-    @root_validator
-    def check_arguments(cls, values: dict) -> dict:
+    @field_validator("grid_type")
+    @classmethod
+    def set_undefined(cls, v: str | None) -> str:
         """Allow for undefined value so it can be redefined in INPGRID components."""
-        if values.get("grid_type") is None:
-            values["grid_type"] = "undefined"
-        return values
+        if v is None:
+            return "undefined"
+        return v
 
     def cmd(self) -> str:
         repr = f"READINP {self.grid_type.upper()} fac={self.fac} fname1='{self.fname1}'"
