@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import xarray as xr
-from pydantic import Field, root_validator, validator
+from pydantic import field_validator, Field, root_validator
 
 from rompy.core import DataGrid
 
@@ -48,7 +48,8 @@ class SwanDataGrid(DataGrid):
         values["variables"] = data_vars
         return values
 
-    @validator("var")
+    @field_validator("var")
+    @classmethod
     def var_must_be_one_of_wind_bathy_current(cls, v):
         if v not in ["WIND", "BOTTOM", "CURRENT"]:  # Raf to add any others here
             raise ValueError(f"var must be one of WIND, BOTTOM, CURRENT")

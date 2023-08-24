@@ -1970,6 +1970,8 @@ class TURBULENCE(BaseComponent):
         ),
     )
 
+    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @validator("tbcur", pre=False)
     def tbcur_only_with_current(cls, value, values):
         if values.get("current") == False and value is not None:
@@ -2346,6 +2348,8 @@ class OBSTACLE(BaseComponent):
     freeboard: Optional[FREEBOARD] = Field(description="Freeboard")
     line: LINE = Field(description="Line of obstacle")
 
+    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @validator("freeboard")
     def hgt_consistent(cls, value, values):
         """Warns if `hgt` has different values in DAM and FREEBOARD specifications."""
@@ -2862,6 +2866,8 @@ class SCAT(BaseComponent):
         description="The maximum scattering wave number (in 1/m)"
     )
 
+    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @validator("qmax")
     def warn_if_qmax_and_alpha(cls, v, values):
         if v is not None and values.get("alpha") is not None:
@@ -3121,6 +3127,8 @@ class PHYSICS(BaseComponent):
     #         logger.info("Switching off BREAKING")
     #     return values
 
+    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
     @validator("negatinp", pre=False)
     def negatinp_only_with_zieger(cls, value, values):
         """Log a warning if NEGATINP is used with a non-ZIEGER SSWELL."""

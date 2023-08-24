@@ -1,7 +1,7 @@
 from typing import Literal, Optional
 
 import numpy as np
-from pydantic import Field, root_validator, validator
+from pydantic import field_validator, Field, root_validator
 
 from rompy.core.grid import RegularGrid
 
@@ -20,7 +20,8 @@ class SwanGrid(RegularGrid):
         None, description="Name of grid file to load", max_length=100
     )
 
-    @validator("grid_type")
+    @field_validator("grid_type")
+    @classmethod
     def validate_grid_type(cls, v):
         if v not in ["REG", "CURV"]:
             raise ValueError("grid_type must be one of REG or CURV")

@@ -1,11 +1,12 @@
 """SWAN physics subcomponents."""
 from typing import Literal, Optional
-from pydantic import Field, validator, root_validator, confloat
+from pydantic import field_validator, ConfigDict, Field, root_validator
 from abc import ABC
 from pydantic_numpy import NDArray
 import numpy as np
 
 from rompy.swan.subcomponents.base import BaseSubComponent
+from typing_extensions import Annotated
 
 
 JSON_ENCODERS = {np.ndarray: lambda arr: arr.tolist()}
@@ -330,7 +331,7 @@ class ST6(SourceTerms):
         default=32.0,
         description="Factor to scale U10 with U* when using U10PROXY",
     )
-    cdfac: Optional[confloat(gt=0.0)] = Field(
+    cdfac: Optional[Annotated[float, Field(gt=0.0)]] = Field(
         description=(
             "Counter bias in the input wind fields by providing a multiplier "
             "on the drag coefficient"
@@ -747,11 +748,12 @@ class TRANS2D(BaseSubComponent):
             "columns represent frequencies"
         ),
     )
+    # TODO[pydantic]: The following keys were removed: `json_encoders`.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+    model_config = ConfigDict(json_encoders=JSON_ENCODERS)
 
-    class Config:
-        json_encoders = JSON_ENCODERS
-
-    @validator("trcoef")
+    @field_validator("trcoef")
+    @classmethod
     def constrained_0_1(cls, value):
         """Ensure all directions have the same number of frequencies."""
         if value.min() < 0 or value.max() > 1:
@@ -1132,11 +1134,11 @@ class LINE(BaseSubComponent):
     )
     xp: list[float] = Field(
         description="The x-coordinates of the points defining the line",
-        min_items=2
+        min_length=2
     )
     yp: list[float] = Field(
         description="The y-coordinates of the points defining the line",
-        min_items=2
+        min_length=2
     )
 
     @root_validator

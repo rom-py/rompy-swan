@@ -1,7 +1,7 @@
 """Boundary for SWAN."""
 from typing import Literal, Optional, Any
 from pathlib import Path
-from pydantic import Field, constr
+from pydantic import StringConstraints, Field
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.spectrum import SHAPESPEC
@@ -19,6 +19,7 @@ from rompy.swan.subcomponents.boundary import (
     CONSTANTFILE,
     VARIABLEFILE,
 )
+from typing_extensions import Annotated
 
 
 HERE = Path(__file__).parent
@@ -112,7 +113,7 @@ class BOUNDNEST1(BaseComponent):
         default="boundnest1",
         description="Model type discriminator",
     )
-    fname: constr(min_length=1, max_length=98) = Field(
+    fname: Annotated[str, StringConstraints(min_length=1, max_length=98)] = Field(
         description=(
             "Name of the file containing the boundary conditions for the present run, "
             "created by the previous SWAN coarse grid run. This file is structured "
@@ -171,7 +172,7 @@ class BOUNDNEST2(BaseComponent):
         default="boundnest2",
         description="Model type discriminator",
     )
-    fname: constr(min_length=1, max_length=48) = Field(
+    fname: Annotated[str, StringConstraints(min_length=1, max_length=48)] = Field(
         description=(
             "A file name that contains all the names of WAM files containing the "
             "nested boundary conditions in time-sequence (usually one file per day)."
@@ -267,7 +268,7 @@ class BOUNDNEST3(BaseComponent):
         default="boundnest3",
         description="Model type discriminator",
     )
-    fname: constr(min_length=1, max_length=62) = Field(
+    fname: Annotated[str, StringConstraints(min_length=1, max_length=62)] = Field(
         description=(
             "The name of the file that contains the spectra computed by WAVEWATCH III."
         ),

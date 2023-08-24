@@ -3,10 +3,11 @@ import logging
 from typing import Literal, Optional
 from abc import ABC
 
-from pydantic import Field, root_validator, conint, confloat
+from pydantic import Field, root_validator
 
 from rompy.swan.types import GridOptions, IDLA
 from rompy.swan.subcomponents.base import BaseSubComponent
+from typing_extensions import Annotated
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +32,7 @@ class READGRID(BaseSubComponent, ABC):
     grid_type: GridOptions | Literal["coordinates"] = Field(
         description="Type of the SWAN grid file",
     )
-    fac: confloat(gt=0.0) = Field(
+    fac: Annotated[float, Field(gt=0.0)] = Field(
         default=1.0,
         description=(
             "SWAN multiplies all values that are read from file by `fac`. For instance "
@@ -46,7 +47,7 @@ class READGRID(BaseSubComponent, ABC):
             "and other fields should be given in the file."
         ),
     )
-    nhedf: conint(ge=0) = Field(
+    nhedf: Annotated[int, Field(ge=0)] = Field(
         default=0,
         description=(
             "The number of header lines at the start of the file. The text in the "
@@ -56,7 +57,7 @@ class READGRID(BaseSubComponent, ABC):
             "vector variable (each having header lines, see `nhedt` and `nhedvec`)."
         ),
     )
-    nhedvec: conint(ge=0) = Field(
+    nhedvec: Annotated[int, Field(ge=0)] = Field(
         default=0,
         description=(
             "For each vector variable: number of header lines in the file "
@@ -177,7 +178,7 @@ class READINP(READGRID):
             "should start with the start of an input time step)."
         ),
     )
-    nhedt: conint(ge=0) = Field(
+    nhedt: Annotated[int, Field(ge=0)] = Field(
         default=0,
         description=(
             "Only if variable is time dependent: number of header lines in the file "

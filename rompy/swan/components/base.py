@@ -11,7 +11,7 @@ How to subclass
 import logging
 from typing import Literal, Optional
 from abc import abstractmethod
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from rompy.core import RompyBaseModel
 
@@ -67,11 +67,7 @@ class BaseComponent(RompyBaseModel):
     """
 
     model_type: Literal["component"] = Field(description="Model type discriminator")
-
-    class Config:
-        """Configure the model."""
-
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
     def _render_split_cmd(self, cmd_line: str) -> str:
         """Split cmd_line if longer than MAX_LENGTH.
