@@ -2,7 +2,7 @@ import logging
 from pathlib import Path
 from typing import Literal, Optional, Union
 
-from pydantic import Field, root_validator, validator
+from pydantic import field_validator, Field, root_validator
 
 from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
                         TimeRange)
@@ -106,7 +106,8 @@ class SwanPhysics(RompyBaseModel):
         description="The coefficient of friction for the given surface and object.",
     )
 
-    @validator("friction")
+    @field_validator("friction")
+    @classmethod
     def validate_friction(cls, v):
         if v not in ["JON", "COLL", "MAD", "RIP"]:
             raise ValueError(
@@ -114,7 +115,8 @@ class SwanPhysics(RompyBaseModel):
             )  # TODO Raf to add actual friction options
         return v
 
-    @validator("friction_coeff")
+    @field_validator("friction_coeff")
+    @classmethod
     def validate_friction_coeff(cls, v):
         # TODO Raf to add sensible friction coeff range
         if float(v) > 1:

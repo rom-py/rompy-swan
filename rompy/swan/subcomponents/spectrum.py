@@ -1,9 +1,10 @@
 """Spectrum subcomponents."""
 import logging
 from typing import Literal, Optional
-from pydantic import Field, root_validator, conint, confloat
+from pydantic import Field, root_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent
+from typing_extensions import Annotated
 
 logger = logging.getLogger(__name__)
 
@@ -47,7 +48,7 @@ class SPECTRUM(BaseSubComponent):
             "Highest discrete frequency that is used in the calculation (in Hz)."
         ),
     )
-    msc: Optional[conint(ge=3)] = Field(
+    msc: Optional[Annotated[int, Field(ge=3)]] = Field(
         description=(
             "One less than the number of frequencies. This defines the grid "
             "resolution in frequency-space between the lowest discrete frequency "
@@ -121,7 +122,7 @@ class JONSWAP(BaseSubComponent):
     model_type: Literal["jonswap"] = Field(
         default="jonswap", description="Model type discriminator"
     )
-    gamma: confloat(gt=0.0) = Field(
+    gamma: Annotated[float, Field(gt=0.0)] = Field(
         default=3.3,
         description="Peak enhancement parameter of the JONSWAP spectrum.",
     )
@@ -140,7 +141,7 @@ class TMA(JONSWAP):
     model_type: Literal["tma"] = Field(
         default="tma", description="Model type discriminator"
     )
-    d: confloat(gt=0.0) = Field(
+    d: Annotated[float, Field(gt=0.0)] = Field(
         description="The reference depth at the wave maker in meters.",
     )
 
@@ -158,7 +159,7 @@ class GAUSS(BaseSubComponent):
     model_type: Literal["gauss"] = Field(
         default="gauss", description="Model type discriminator"
     )
-    sigfr: confloat(gt=0.0) = Field(
+    sigfr: Annotated[float, Field(gt=0.0)] = Field(
         description=(
             "Width of the Gaussian frequency spectrum expressed "
             "as a standard deviation in Hz."

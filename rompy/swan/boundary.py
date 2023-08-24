@@ -6,7 +6,7 @@ from typing import Literal, Optional, Union
 import numpy as np
 import wavespectra
 import xarray as xr
-from pydantic import Field, confloat, root_validator
+from pydantic import Field, root_validator
 
 from rompy.core.filters import Filter
 from rompy.core.data import (
@@ -19,6 +19,7 @@ from rompy.core.data import (
 )
 from rompy.core.types import RompyBaseModel
 from rompy.swan.grid import SwanGrid
+from typing_extensions import Annotated
 
 logger = logging.getLogger(__name__)
 
@@ -152,7 +153,7 @@ class DataBoundary(DataGrid):
             "Wavespectra method to use for selecting boundary points from the dataset"
         ),
     )
-    tolerance: confloat(ge=0) = Field(
+    tolerance: Annotated[float, Field(ge=0)] = Field(
         default=1.0,
         description=(
         "Wavespectra tolerance for selecting boundary points from the dataset"

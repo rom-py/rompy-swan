@@ -1,10 +1,11 @@
 """Model start up components."""
 import logging
 from typing import Literal, Optional
-from pydantic import Field, validator, constr, confloat, conint
+from pydantic import field_validator, StringConstraints, Field
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.startup import CARTESIAN, SPHERICAL
+from typing_extensions import Annotated
 
 logger = logging.getLogger(__name__)
 
@@ -22,10 +23,10 @@ class PROJECT(BaseComponent):
     model_type: Literal["project"] = Field(
         default="project", description="Model type discriminator",
     )
-    name: Optional[constr(max_length=16)] = Field(
+    name: Optional[Annotated[str, StringConstraints(max_length=16)]] = Field(
         description="Is the name of the project, at most 16 characters long",
     )
-    nr: constr(max_length=4) = Field(
+    nr: Annotated[str, StringConstraints(max_length=4)] = Field(
         (
             "Is the run identification (to be provided as a character string; e.g. the "
             "run number) to distinguish this run among other runs for the same project; "
@@ -33,14 +34,14 @@ class PROJECT(BaseComponent):
             "this command."
         ),
     )
-    title1: Optional[constr(max_length=72)] = Field(
+    title1: Optional[Annotated[str, StringConstraints(max_length=72)]] = Field(
         description=(
             "Is a string of at most 72 characters provided by the user to appear in "
             "the output of the program for the user's convenience. Default: blanks."
         ),
     )
-    title2: Optional[constr(max_length=72)] = Field(description="Same as 'title1'")
-    title3: Optional[constr(max_length=72)] = Field(description="Same as 'title1'")
+    title2: Optional[Annotated[str, StringConstraints(max_length=72)]] = Field(description="Same as 'title1'")
+    title3: Optional[Annotated[str, StringConstraints(max_length=72)]] = Field(description="Same as 'title1'")
 
     def cmd(self) -> str:
         repr = "PROJECT"
@@ -85,7 +86,7 @@ class SET(BaseComponent):
     model_type: Literal["set"] = Field(
         default="set", description="Model type discriminator"
     )
-    level: Optional[confloat(ge=0.0)] = Field(
+    level: Optional[Annotated[float, Field(ge=0.0)]] = Field(
         description=(
             "Increase in water level that is constant in space and time can be given "
             "with this option, `level` is the value of this increase (in m). For a "
@@ -93,7 +94,7 @@ class SET(BaseComponent):
             "INPGRID and READINP (SWAN default: `level = 0`)"
         ),
     )
-    nor: Optional[confloat(ge=-360.0, le=360.0)] = Field(
+    nor: Optional[Annotated[float, Field(ge=-360.0, le=360.0)]] = Field(
         description=(
             "Direction of North with respect to the x-axis (measured "
             "counterclockwise); default `nor = 90`, i.e. x-axis of the problem "
@@ -101,13 +102,13 @@ class SET(BaseComponent):
             "(see command COORD) the value of `nor` may not be modified."
         ),
     )
-    depmin: Optional[confloat(ge=0.0)] = Field(
+    depmin: Optional[Annotated[float, Field(ge=0.0)]] = Field(
         description=(
             "Threshold depth (in m). In the computation any positive depth smaller "
             "than `depmin` is made equal to `depmin` (SWAN default: `depmin = 0.05`)."
         ),
     )
-    maxmes: Optional[conint(ge=0)] = Field(
+    maxmes: Optional[Annotated[int, Field(ge=0)]] = Field(
         description=(
             "Maximum number of error messages during the computation at which the "
             "computation is terminated. During the computational process messages are "
@@ -123,15 +124,15 @@ class SET(BaseComponent):
             "computations will continue). (SWAN default: `maxerr = 1`)."
         ),
     )
-    grav: Optional[confloat(ge=0.0)] = Field(
+    grav: Optional[Annotated[float, Field(ge=0.0)]] = Field(
         description=(
             "The gravitational acceleration (in m/s2) (SWAN default: 9.81) "
         ),
     )
-    rho: Optional[confloat(ge=0.0)] = Field(
+    rho: Optional[Annotated[float, Field(ge=0.0)]] = Field(
         description="The water density (in kg/m3) *=(SWAN default: `rho = 1025`).",
     )
-    cdcap: Optional[confloat(ge=0.0)] = Field(
+    cdcap: Optional[Annotated[float, Field(ge=0.0)]] = Field(
         description=(
             "The maximum value for the wind drag coefficient. A value of "
             "`cdcap = 99999` means no cutting off the drag coefficient. A suggestion "
@@ -145,7 +146,7 @@ class SET(BaseComponent):
             "`inrhog` = 1: output based on true energy (SWAN default: `inrhog=0`). "
         ),
     )
-    hsrerr: Optional[confloat(ge=0.0)] = Field(
+    hsrerr: Optional[Annotated[float, Field(ge=0.0)]] = Field(
         description=(
             "The relative difference between the user imposed significant wave height "
             "and the significant wave height computed by SWAN (anywhere along the "
@@ -169,7 +170,7 @@ class SET(BaseComponent):
             "SWAN default: `cartesian`."
         ),
     )
-    pwtail: Optional[conint(ge=0)] = Field(
+    pwtail: Optional[Annotated[int, Field(ge=0)]] = Field(
         description=(
             "Power of high frequency tail; defines the shape of the spectral tail "
             "above the highest prognostic frequency `fhigh` (see command CGRID). "
@@ -179,7 +180,7 @@ class SET(BaseComponent):
             "GEN3 command (these will override the SET command with respect to `pwtail`)."
         ),
     )
-    froudmax: Optional[confloat(ge=0.0)] = Field(
+    froudmax: Optional[Annotated[float, Field(ge=0.0)]] = Field(
         description=(
             "Is the maximum Froude number (`U/√gd` with `U` the current and `d` the "
             "water depth). The currents taken from a circulation model may mismatch "
@@ -198,7 +199,8 @@ class SET(BaseComponent):
         ),
     )
 
-    @validator("pwtail")
+    @field_validator("pwtail")
+    @classmethod
     def pwtail_after_gen(cls, v):
         if v is not None:
             logger.warning("pwtail only has effect if set after GEN command")

@@ -1,9 +1,10 @@
 """Subcomponents to be rendered inside of components."""
 import logging
 from typing import Optional, Literal
-from pydantic import Field, root_validator, confloat, constr, conint
+from pydantic import StringConstraints, Field, root_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent
+from typing_extensions import Annotated
 
 
 logger = logging.getLogger(__name__)
@@ -103,10 +104,10 @@ class PAR(BaseSubComponent):
     model_type: Literal["par"] = Field(
         default="par", description="Model type discriminator",
     )
-    hs: confloat(gt=0.0) = Field(
+    hs: Annotated[float, Field(gt=0.0)] = Field(
         description="The significant wave height (m)",
     )
-    per: confloat(gt=0.0) = Field(
+    per: Annotated[float, Field(gt=0.0)] = Field(
         description=(
             "The characteristic period (s) of the energy spectrum (relative "
             "frequency; which is equal to absolute frequency in the absence of "
@@ -115,12 +116,12 @@ class PAR(BaseSubComponent):
             "if option MEAN was chosen in command BOUND SHAPE."
         ),
     )
-    dir: confloat(ge=-360.0, le=360.0) = Field(
+    dir: Annotated[float, Field(ge=-360.0, le=360.0)] = Field(
         description=(
             "The peak wave direction θpeak (degrees), constant over frequencies"
         ),
     )
-    dd: confloat(ge=0.0, le=360.0) = Field(
+    dd: Annotated[float, Field(ge=0.0, le=360.0)] = Field(
         description=(
             "Coefficient of directional spreading; a $cos^m(θ)$ distribution is "
             "assumed. `dd` is interpreted as the directional standard deviation in "
@@ -161,10 +162,10 @@ class VARIABLEPAR(BaseSubComponent):
     model_type: Literal["variablepar"] = Field(
         default="variablepar", description="Model type discriminator",
     )
-    hs: list[confloat(ge=0.0)] = Field(
+    hs: list[Annotated[float, Field(ge=0.0)]] = Field(
         description="The significant wave height (m)",
     )
-    per: list[confloat(ge=0.0)] = Field(
+    per: list[Annotated[float, Field(ge=0.0)]] = Field(
         description=(
             "The characteristic period (s) of the energy spectrum (relative "
             "frequency; which is equal to absolute frequency in the absence of "
@@ -173,10 +174,10 @@ class VARIABLEPAR(BaseSubComponent):
             "if option MEAN was chosen in command BOUND SHAPE."
         ),
     )
-    dir: list[confloat(ge=-360.0, le=360.0)] = Field(
+    dir: list[Annotated[float, Field(ge=-360.0, le=360.0)]] = Field(
         description="The peak wave direction θpeak (degrees), constant over frequencies"
     )
-    dd: list[confloat(ge=0.0, le=360.0)] = Field(
+    dd: list[Annotated[float, Field(ge=0.0, le=360.0)]] = Field(
         description=(
             "Coefficient of directional spreading; a $cos^m(θ)$ distribution is "
             "assumed. `dd` is interpreted as the directional standard deviation in "
@@ -185,7 +186,7 @@ class VARIABLEPAR(BaseSubComponent):
             "POWER is chosen in the command BOUND SHAPE (SWAN default: `dd=2`)."
         ),
     )
-    dist: list[confloat(ge=0)] = Field(
+    dist: list[Annotated[float, Field(ge=0)]] = Field(
         alias="len",
         description=(
             "Is the distance from the first point of the side or segment to the point "
@@ -253,10 +254,10 @@ class CONSTANTFILE(BaseSubComponent):
     model_type: Literal["constantfile"] = Field(
         default="constantfile", description="Model type discriminator",
     )
-    fname: constr(max_length=40) = Field(
+    fname: Annotated[str, StringConstraints(max_length=40)] = Field(
         description="Name of the file containing the boundary condition.",
     )
-    seq: Optional[conint(ge=1)] = Field(
+    seq: Optional[Annotated[int, Field(ge=1)]] = Field(
         description=(
             "sequence number of geographic location in the file (see Appendix D); "
             "useful for files which contain spectra for more than one location. "
@@ -309,10 +310,10 @@ class VARIABLEFILE(BaseSubComponent):
     model_type: Literal["variablefile"] = Field(
         default="variablefile", description="Model type discriminator",
     )
-    fname: list[constr(max_length=40)] = Field(
+    fname: list[Annotated[str, StringConstraints(max_length=40)]] = Field(
         description="Names of the file containing the boundary condition",
     )
-    seq: Optional[list[conint(ge=1)]] = Field(
+    seq: Optional[list[Annotated[int, Field(ge=1)]]] = Field(
         description=(
             "sequence number of geographic location in the file (see Appendix D); "
             "useful for files which contain spectra for more than one location. "
@@ -320,7 +321,7 @@ class VARIABLEFILE(BaseSubComponent):
             "[seq] must always be 1."
         ),
     )
-    dist: list[confloat(ge=0)] = Field(
+    dist: list[Annotated[float, Field(ge=0)]] = Field(
         alias="len",
         description=(
             "Is the distance from the first point of the side or segment to the point "
@@ -409,7 +410,7 @@ class HOTSINGLE(BaseSubComponent):
     model_type: Literal["hotsingle"] = Field(
         default="hotsingle", description="Model type discriminator",
     )
-    fname: constr(max_length=85) = Field(
+    fname: Annotated[str, StringConstraints(max_length=85)] = Field(
         description="Name of the file containing the initial wave field",
     )
     format: Literal["free", "unformatted"] = Field(
@@ -444,7 +445,7 @@ class HOTMULTIPLE(BaseSubComponent):
     model_type: Literal["hotmultiple"] = Field(
         default="hotmultiple", description="Model type discriminator",
     )
-    fname: constr(max_length=85) = Field(
+    fname: Annotated[str, StringConstraints(max_length=85)] = Field(
         description="Name of the file containing the initial wave field",
     )
     format: Literal["free", "unformatted"] = Field(

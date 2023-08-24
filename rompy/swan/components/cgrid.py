@@ -1,12 +1,13 @@
 """Computational grid for SWAN."""
 import logging
-from pydantic import Field, root_validator, constr
+from pydantic import StringConstraints, Field, root_validator
 from typing import Literal, Optional
 from abc import ABC, abstractmethod
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.spectrum import SPECTRUM
 from rompy.swan.subcomponents.readgrid import READCOORD
+from typing_extensions import Annotated
 
 
 logger = logging.getLogger(__name__)
@@ -208,7 +209,7 @@ class UNSTRUCTURED(CGRID):
         default="adcirc",
         description="Unstructured grid type",
     )
-    fname: Optional[constr(max_length=80)] = Field(
+    fname: Optional[Annotated[str, StringConstraints(max_length=80)]] = Field(
         description="Name of the file containing the unstructured grid",
     )
 
