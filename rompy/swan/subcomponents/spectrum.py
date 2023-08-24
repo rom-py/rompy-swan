@@ -1,7 +1,7 @@
 """Spectrum subcomponents."""
 import logging
-from typing import Literal, Optional
-from pydantic import Field, root_validator
+from typing import Any, Literal, Optional
+from pydantic import Field, model_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent
 from typing_extensions import Annotated
@@ -70,29 +70,27 @@ class SPECTRUM(BaseSubComponent):
         ),
     )
 
-    @root_validator
-    def check_direction_definition(cls, values: dict) -> dict:
+    @model_validator(mode="before")
+    @classmethod
+    def check_direction_definition(cls, data: Any) -> Any:
         """Check that dir1 and dir2 are specified together."""
-        dir1 = values.get("dir1")
-        dir2 = values.get("dir2")
+        dir1 = data.get("dir1")
+        dir2 = data.get("dir2")
         if None in [dir1, dir2] and dir1 != dir2:
             raise ValueError("dir1 and dir2 must be specified together")
-        return values
+        return data
 
-    @root_validator
-    def check_frequency_definition(cls, values: dict) -> dict:
+    @model_validator(mode="after")
+    def check_frequency_definition(self) -> 'SPECTRUM':
         """Check spectral frequencies are prescribed correctly."""
-        flow = values.get("flow")
-        fhigh = values.get("fhigh")
-        msc = values.get("msc")
-        args = [flow, fhigh, msc]
+        args = [self.flow, self.fhigh, self.msc]
         if None in args:
             args = [arg for arg in args if arg is not None]
             if len(args) != 2:
                 raise ValueError("You must specify at least 2 of [flow, fhigh, msc]")
-        if flow is not None and fhigh is not None and flow >= fhigh:
+        if self.flow is not None and self.fhigh is not None and self.flow >= self.fhigh:
             raise ValueError("flow must be less than fhigh")
-        return values
+        return self
 
     @property
     def dir_sector(self):
