@@ -1,8 +1,8 @@
 """Model physics components."""
 import logging
-from typing import Literal, Optional, Union, Annotated
+from typing import Any, Literal, Optional, Union, Annotated
 from enum import Enum
-from pydantic import validator, root_validator, Field
+from pydantic import validator, field_validator, model_validator, Field, FieldValidationInfo
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.types import IDLA, PhysicsOff
@@ -272,10 +272,6 @@ class GEN3(BaseComponent):
         description="SWAN source terms to be used (SWAN default: WESTHUYSEN)",
         discriminator="model_type",
     )
-
-    @root_validator
-    def check_source_terms(cls, values):
-        return values
 
     def cmd(self):
         """Command line string for this component."""
@@ -1467,27 +1463,29 @@ class VEGETATION(BaseComponent):
         ),
     )
 
-    @root_validator
-    def number_of_layers(cls, values):
-        """Assert that the number of layers is the same for all variables."""
-        sizes = {}
-        for key in ["height", "diamtr", "drag", "nstems"]:
-            if values.get(key) is None:
-                continue
-            elif not isinstance(values.get(key), list):
-                values[key] = [values[key]]
-            sizes.update({key: len(values[key])})
+    @field_validator("height", "diamtr", "drag", "nstems")
+    @classmethod
+    def number_of_layers(cls, v: Any, info: FieldValidationInfo) -> Any:
+        if v is None:
+            return v
+        elif not isinstance(v, list):
+            v = [v]
+        sizes = {k: len(v) for k, v in info.data.items() if isinstance(v, list)}
         if len(set(sizes.values())) > 1:
             raise ValueError(
                 "The number of layers must be the same for all variables. "
                 f"Got these number of layers: {sizes}"
             )
-        if values.get("iveg", 1) == 2 and sizes.get("nstems", 1) > 1:
-            logger.warning(
+        return v
+
+    @model_validator(mode="after")
+    def jacomsen_layering_not_implemented(self) -> 'VEGETATION':
+        if self.iveg == 2 and len(self.nstems) > 1:
+            raise NotImplementedError(
                 "Vertical layering of the vegetation is not yet implemented for the "
                 "Jacobsen et al. (2019) method, please define single layer"
             )
-        return values
+        return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -1970,15 +1968,11 @@ class TURBULENCE(BaseComponent):
         ),
     )
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator("tbcur", pre=False)
-    def tbcur_only_with_current(cls, value, values):
-        if values.get("current") == False and value is not None:
-            raise ValueError(
-                "`tbcur` keyword can only be defined if `current` is True"
-            )
-        return value
+    @model_validator(mode="after")
+    def tbcur_only_with_current(self) -> 'TURBULENCE':
+        if self.current == False and self.tbcur is not None:
+            raise ValueError("`tbcur` can only be defined if `current` is True")
+        return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -2348,17 +2342,14 @@ class OBSTACLE(BaseComponent):
     freeboard: Optional[FREEBOARD] = Field(description="Freeboard")
     line: LINE = Field(description="Line of obstacle")
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator("freeboard")
-    def hgt_consistent(cls, value, values):
+    @model_validator(mode="after")
+    def hgt_consistent(self) -> 'OBSTACLE':
         """Warns if `hgt` has different values in DAM and FREEBOARD specifications."""
-        transmission = values.get("transmission")
-        if transmission is not None and value is not None:
-            is_dam = transmission.model_type.upper() in ["GODA", "DANGREMOND"]
-            if is_dam and value.hgt != transmission.hgt:
+        if self.transmission is not None and self.freeboard is not None:
+            is_dam = self.transmission.model_type.upper() in ["GODA", "DANGREMOND"]
+            if is_dam and self.freeboard.hgt != self.transmission.hgt:
                 logger.warning("hgt in FREEBOARD and DAM specifications are not equal")
-        return value
+        return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -2866,16 +2857,15 @@ class SCAT(BaseComponent):
         description="The maximum scattering wave number (in 1/m)"
     )
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator("qmax")
-    def warn_if_qmax_and_alpha(cls, v, values):
-        if v is not None and values.get("alpha") is not None:
+    @model_validator(mode="after")
+    def warn_if_qmax_and_alpha(self) -> 'SCAT':
+        if self.qmax is not None and self.alpha is not None:
             logger.warning(
                 "Both `alpha` and `qmax` options are provided to truncate the "
                 "infinite convolution sum. Their mimimum is considered in SWAN as the "
                 "final limit on the sum"
             )
+        return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -3127,23 +3117,23 @@ class PHYSICS(BaseComponent):
     #         logger.info("Switching off BREAKING")
     #     return values
 
-    # TODO[pydantic]: We couldn't refactor the `validator`, please replace it by `field_validator` manually.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-validators for more information.
-    @validator("negatinp", pre=False)
-    def negatinp_only_with_zieger(cls, value, values):
+    @model_validator(mode="after")
+    def negatinp_only_with_zieger(self) -> 'PHYSICS':
         """Log a warning if NEGATINP is used with a non-ZIEGER SSWELL."""
-        if values["sswell"] is None:
+        if self.negatinp is None:
+            return self
+        elif self.sswell is None:
             logger.warning(
                 "The negative wind input NEGATINP is only intended to use with the "
                 "swell dissipation SSWELL ZIEGER but no SSWELL has been specified."
             )
-        elif values["sswell"].model_type != "zieger":
+        elif self.sswell.model_type != "zieger":
             logger.warning(
                 "The negative wind input NEGATINP is only intended to use with the "
-                "swell dissipation SSWELL ZIEGER but "
-                f"SSWELL {values['sswell'].model_type.upper()} has been specified."
+                "swell dissipation SSWELL ZIEGER but the SSWELL "
+                f"{self.sswell.model_type.upper()} has been specified."
             )
-        return value
+        return self
 
     def cmd(self):
         repr = [self.gen.render()]
