@@ -3061,6 +3061,28 @@ class PHYSICS(BaseComponent):
     The physics group component is a convenience to allow specifying several individual
     components in a single command and check for consistency between them.
 
+    Exemples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.physics import PHYSICS
+
+        gen = {"model_type": "gen3", "source_terms": {"model_type": "komen"}}
+        phys = PHYSICS(gen=gen)
+        print(phys.render())
+        phys = PHYSICS(
+            gen=dict(model_type="gen3", source_terms={"model_type": "st6c1"}),
+            negatinp={"model_type": "negatinp", "rdcoef": 0.04},
+            sswell={"model_type": "zieger"},
+            breaking={"model_type": "constant", "alpha": 1.0, "gamma": 0.73},
+            friction={"model_type": "jonswap", "cfjon": 0.038},
+        )
+        print(phys.render())
+
     """
 
     model_type: Literal["physics", "PHYSICS"] = Field(
