@@ -5,8 +5,7 @@ from typing import Literal, Optional, Union
 
 import numpy as np
 import wavespectra
-import xarray as xr
-from pydantic import Field, root_validator
+from pydantic import Field, model_validator
 
 from rompy.core.filters import Filter
 from rompy.core.data import (
@@ -17,7 +16,6 @@ from rompy.core.data import (
     SourceIntake,
     SourceDatamesh,
 )
-from rompy.core.types import RompyBaseModel
 from rompy.swan.grid import SwanGrid
 from typing_extensions import Annotated
 
@@ -170,14 +168,12 @@ class DataBoundary(DataGrid):
         description="Optional filter specification to apply to the dataset",
     )
 
-    @root_validator
-    def assert_has_wavespectra_accessor(cls, values):
-        source = values.get("source")
-        if source is not None:
-            dset = source.open()
-            if not hasattr(dset, "spec"):
-                raise ValueError(f"Wavespectra compatible source is required")
-        return values
+    @model_validator(mode="after")
+    def assert_has_wavespectra_accessor(self) -> 'DataBoundary':
+        dset = self.source.open()
+        if not hasattr(dset, "spec"):
+            raise ValueError(f"Wavespectra compatible source is required")
+        return self
 
     @property
     def ds(self):
