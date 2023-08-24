@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Literal, Optional, Union
+from typing import Annotated, Literal, Optional, Union
 
 from pydantic import field_validator, Field, root_validator
 
@@ -239,8 +239,7 @@ class SwanConfig(BaseConfig):
         "boundary.spec", description="The spectra file for SWAN.")
     template: str = Field(
         DEFAULT_TEMPLATE, description="The template for SWAN.")
-    _datefmt: str = Field(
-        "%Y%m%d.%H%M%S", description="The date format for SWAN.")
+    _datefmt: Annotated[str, Field(description="The date format for SWAN.")] = "%Y%m%d.%H%M%S"
     # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
 
     @property
