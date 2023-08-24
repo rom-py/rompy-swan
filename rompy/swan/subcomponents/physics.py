@@ -1,8 +1,8 @@
 """SWAN physics subcomponents."""
-from typing import Literal, Optional
-from pydantic import field_validator, ConfigDict, Field, root_validator
+from typing import Annotated, Literal, Optional
+from pydantic import field_validator, Field, model_validator
 from abc import ABC
-from pydantic_numpy import NDArray
+from pydantic_numpy.typing import Np2DArray
 import numpy as np
 
 from rompy.swan.subcomponents.base import BaseSubComponent
@@ -338,15 +338,13 @@ class ST6(SourceTerms):
         ),
     )
 
-    @root_validator
-    def debias_only_with_hwang(cls, values):
-        debias = values.get("debias")
-        wind_drag = values.get("wind_drag", "hwang")
-        if debias is not None and wind_drag != "hwang":
+    @model_validator(mode="after")
+    def debias_only_with_hwang(self) -> 'ST6':
+        if self.debias is not None and self.wind_drag != "hwang":
             raise ValueError(
-                f"Debias is only supported with hwang wind drag, not {wind_drag}"
+                f"Debias is only supported with hwang wind drag, not {self.wind_drag}"
             )
-        return values
+        return self
 
     @property
     def u10_cmd(self) -> str:
@@ -700,14 +698,12 @@ class TRANS1D(BaseSubComponent):
     model_type: Literal["trans1d", "TRANS1D"] = Field(
         default="trans1d", description="Model type discriminator"
     )
-    trcoef: list[float] = Field(
+    trcoef: list[Annotated[float, Field(ge=0.0, le=1.0)]] = Field(
         description=(
             "Transmission coefficient (ratio of transmitted over incoming significant "
             "wave height) per frequency. The number of these transmission values must "
             "be equal to the number of frequencies, i.e. `msc` + 1"
         ),
-        ge=0.0,
-        le=1.0,
     )
 
     def cmd(self) -> str:
@@ -741,20 +737,17 @@ class TRANS2D(BaseSubComponent):
     model_type: Literal["trans2d", "TRANS2D"] = Field(
         default="trans2d", description="Model type discriminator"
     )
-    trcoef: NDArray = Field(
+    trcoef: Np2DArray = Field(
         description=(
             "Transmission coefficient (ratio of transmitted over incoming significant "
             "wave height) per frequency and direction, rows represent directions and "
             "columns represent frequencies"
         ),
     )
-    # TODO[pydantic]: The following keys were removed: `json_encoders`.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
-    model_config = ConfigDict(json_encoders=JSON_ENCODERS)
 
     @field_validator("trcoef")
     @classmethod
-    def constrained_0_1(cls, value):
+    def constrained_0_1(cls, value: float) -> float:
         """Ensure all directions have the same number of frequencies."""
         if value.min() < 0 or value.max() > 1:
             raise ValueError("Transmission coefficients must be between 0.0 and 1.0")
@@ -1141,12 +1134,12 @@ class LINE(BaseSubComponent):
         min_length=2
     )
 
-    @root_validator
-    def check_length(cls, values):
+    @model_validator(mode="after")
+    def check_length(self) -> 'LINE':
         """Check that the length of xp and yp are the same."""
-        if len(values["xp"]) != len(values["yp"]):
+        if len(self.xp) != len(self.yp):
             raise ValueError("xp and yp must be the same length")
-        return values
+        return self
 
     def cmd(self) -> str:
         """Command file string for this subcomponent."""
