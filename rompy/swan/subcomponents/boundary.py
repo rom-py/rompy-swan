@@ -1,7 +1,7 @@
 """Subcomponents to be rendered inside of components."""
 import logging
 from typing import Optional, Literal
-from pydantic import StringConstraints, Field, root_validator
+from pydantic import StringConstraints, Field, model_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent
 from typing_extensions import Annotated
@@ -201,12 +201,12 @@ class VARIABLEPAR(BaseSubComponent):
         ),
     )
 
-    @root_validator
-    def ensure_equal_size(cls, values):
+    @model_validator(mode="after")
+    def ensure_equal_size(self) -> 'VARIABLEPAR':
         for key in ["hs", "per", "dir", "dd"]:
-            if len(values[key]) != len(values["dist"]):
-                raise ValueError(f"Sizes of dist and {key} must be the size")
-        return values
+            if len(getattr(self, key)) != len(self.dist):
+                raise ValueError(f"Size of dist and {key} must be the same")
+        return self
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
@@ -337,14 +337,15 @@ class VARIABLEFILE(BaseSubComponent):
         ),
     )
 
-    @root_validator
-    def ensure_equal_size(cls, values):
+    @model_validator(mode="after")
+    def ensure_equal_size(self) -> 'VARIABLEFILE':
         for key in ["fname", "seq"]:
-            if values.get(key) is not None and len(values[key]) != len(values["dist"]):
-                raise ValueError(f"Sizes of dist and {key} must be the size")
-        if values.get("seq") is None:
-            values["seq"] = [1] * len(values["dist"])
-        return values
+            attr = getattr(self, key)
+            if attr is not None and len(attr) != len(self.dist):
+                raise ValueError(f"Size of dist and {key} must be the same")
+        if self.seq is None:
+            self.seq = [1] * len(self.dist)
+        return self
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
