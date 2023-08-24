@@ -65,7 +65,7 @@ def test_st6_c1():
     st6 = ST6C1()
     assert st6.render() == (
         "ST6 a1sds=4.7e-07 a2sds=6.6e-06 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY "
-        "windscaling=28.0 AGROW a=0.0015"
+        "windscaling=28.0 AGROW"
     )
 
 
@@ -73,7 +73,7 @@ def test_st6_c2():
     st6 = ST6C2()
     assert st6.render() == (
         "ST6 a1sds=4.7e-07 a2sds=6.6e-06 p1sds=4.0 p2sds=4.0 UP FAN VECTAU U10PROXY "
-        "windscaling=28.0 AGROW a=0.0015"
+        "windscaling=28.0 AGROW"
     )
 
 
@@ -81,7 +81,7 @@ def test_st6_c3():
     st6 = ST6C3()
     assert st6.render() == (
         "ST6 a1sds=2.8e-06 a2sds=3.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY "
-        "windscaling=32.0 AGROW a=0.0015"
+        "windscaling=32.0 AGROW"
     )
 
 
@@ -89,7 +89,7 @@ def test_st6_c4():
     st6 = ST6C4()
     assert st6.render() == (
         "ST6 a1sds=2.8e-06 a2sds=3.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY "
-        "windscaling=32.0 DEBIAS cdfac=0.89 AGROW a=0.0015"
+        "windscaling=32.0 DEBIAS cdfac=0.89 AGROW"
     )
 
 
@@ -97,7 +97,7 @@ def test_st6_c5():
     st6 = ST6C5()
     assert st6.render() == (
         "ST6 a1sds=6.5e-06 a2sds=8.5e-05 p1sds=4.0 p2sds=4.0 UP HWANG VECTAU U10PROXY "
-        "windscaling=35.0 DEBIAS cdfac=0.89 AGROW a=0.0015"
+        "windscaling=35.0 DEBIAS cdfac=0.89 AGROW"
     )
 
 
