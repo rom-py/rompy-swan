@@ -1,8 +1,7 @@
 """Model physics components."""
 import logging
 from typing import Any, Literal, Optional, Union, Annotated
-from enum import Enum
-from pydantic import validator, field_validator, model_validator, Field, FieldValidationInfo
+from pydantic import field_validator, model_validator, Field, FieldValidationInfo
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.types import IDLA, PhysicsOff
