@@ -1,7 +1,7 @@
 """Input grid for SWAN."""
 from typing import Literal, Union, Annotated, Optional
 from pathlib import Path
-from pydantic import Field, root_validator
+from pydantic import Field, model_validator
 from abc import ABC
 
 from rompy.swan.components.base import BaseComponent
@@ -41,14 +41,14 @@ class INPGRID(BaseComponent, ABC):
         description="SWAN input grid file reader specification",
     )
 
-    @root_validator
-    def set_nonstat_suffix(cls, values):
+    @model_validator(mode="after")
+    def set_nonstat_suffix(self) -> 'INPGRID':
         """Set the nonstationary suffix."""
-        if values.get("nonstationary") is not None:
-            values["nonstationary"].suffix = "inp"
-        if values.get("grid_type") is not None and "grid_type" in values:
-            values["readinp"].grid_type = values["grid_type"]
-        return values
+        if self.nonstationary is not None:
+            self.nonstationary.suffix = "inp"
+        if self.grid_type is not None:
+            self.readinp.grid_type = self.grid_type
+        return self
 
     def cmd(self) -> str:
         return f"INPGRID {self.grid_type.upper()}"
