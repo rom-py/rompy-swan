@@ -2,13 +2,11 @@ import logging
 from pathlib import Path
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import field_validator, Field, root_validator
+from pydantic import field_validator, Field, model_validator
 
-from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
-                        TimeRange)
+from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 from rompy.swan.boundary import DataBoundary
-from rompy.swan.components import (base, boundary, cgrid, inpgrid, physics,
-                                   startup)
+from rompy.swan.components import boundary, cgrid, inpgrid, physics, startup
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -321,32 +319,32 @@ class SwanConfigComponents(BaseConfig):
         description="SWAN PHYSICS component",
     )
 
-    @root_validator
-    def no_nor_if_spherical(cls, values):
+    @model_validator(mode="after")
+    def no_nor_if_spherical(self) -> 'SwanConfigComponents':
         """Ensure SET nor is not prescribed when using spherical coordinates."""
-        return values
+        return self
 
-    @root_validator
-    def no_repeating_if_setup(cls, values):
+    @model_validator(mode="after")
+    def no_repeating_if_setup(self) -> 'SwanConfigComponents':
         """Ensure COORD repeating not set when using set-up."""
-        return values
+        return self
 
-    @root_validator
-    def alp_is_zero_if_spherical(cls, values):
+    @model_validator(mode="after")
+    def alp_is_zero_if_spherical(self) -> 'SwanConfigComponents':
         """Ensure alp is zero when using spherical coordinates."""
-        return values
+        return self
 
-    @root_validator
-    def cgrid_contain_inpgrids(cls, values):
+    @model_validator(mode="after")
+    def cgrid_contain_inpgrids(self) -> 'SwanConfigComponents':
         """Ensure all inpgrids are inside the cgrid area."""
-        return values
+        return self
 
-    @root_validator
-    def layer_defined_if_no_mud_inpgrid(cls, values):
+    @model_validator(mode="after")
+    def layer_defined_if_no_mud_inpgrid(self) -> 'SwanConfigComponents':
         """Ensure layer is set in MUD command if not defined with INPGRID MUD."""
-        return values
+        return self
 
-    root_validator
-    def transm_msc_mdc (cls, values):
+    model_validator(mode="after")
+    def transm_msc_mdc (self) -> 'SwanConfigComponents':
         """Ensure the number of transmission coefficients match msc and mdc."""
-        return values
+        return self
