@@ -4,7 +4,7 @@ from typing import Any, Literal, Optional
 from pydantic import Field, model_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent
-from typing_extensions import Annotated
+
 
 logger = logging.getLogger(__name__)
 
@@ -126,9 +126,10 @@ class JONSWAP(BaseSubComponent):
     model_type: Literal["jonswap"] = Field(
         default="jonswap", description="Model type discriminator"
     )
-    gamma: Annotated[float, Field(gt=0.0)] = Field(
+    gamma: float = Field(
         default=3.3,
         description="Peak enhancement parameter of the JONSWAP spectrum.",
+        gt=0.0,
     )
 
     def cmd(self) -> str:
@@ -145,8 +146,9 @@ class TMA(JONSWAP):
     model_type: Literal["tma"] = Field(
         default="tma", description="Model type discriminator"
     )
-    d: Annotated[float, Field(gt=0.0)] = Field(
+    d: float = Field(
         description="The reference depth at the wave maker in meters.",
+        gt=0.0,
     )
 
     def cmd(self) -> str:
@@ -163,11 +165,12 @@ class GAUSS(BaseSubComponent):
     model_type: Literal["gauss"] = Field(
         default="gauss", description="Model type discriminator"
     )
-    sigfr: Annotated[float, Field(gt=0.0)] = Field(
+    sigfr: float = Field(
         description=(
             "Width of the Gaussian frequency spectrum expressed "
             "as a standard deviation in Hz."
         ),
+        gt=0.0,
     )
 
     def cmd(self) -> str:

@@ -6,7 +6,6 @@ from pydantic_numpy.typing import Np2DArray
 import numpy as np
 
 from rompy.swan.subcomponents.base import BaseSubComponent
-from typing_extensions import Annotated
 
 
 JSON_ENCODERS = {np.ndarray: lambda arr: arr.tolist()}
