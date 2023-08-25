@@ -338,12 +338,13 @@ class ST6(SourceTerms):
         default=32.0,
         description="Factor to scale U10 with U* when using U10PROXY",
     )
-    cdfac: Optional[Annotated[float, Field(gt=0.0)]] = Field(
+    cdfac: Optional[float] = Field(
         default=None,
         description=(
             "Counter bias in the input wind fields by providing a multiplier "
             "on the drag coefficient"
         ),
+        gt=0.0,
     )
 
     @model_validator(mode="after")
