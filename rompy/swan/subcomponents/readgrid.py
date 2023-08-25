@@ -134,9 +134,7 @@ class READCOORD(READGRID):
     grid_type: Literal["coordinates"] = Field(
         default="coordinates", description="Type of the SWAN grid file"
     )
-    fname: str = Field(
-        desctiprion="Name of the SWAN coordinates file",
-    )
+    fname: str = Field(description="Name of the SWAN coordinates file")
 
     def cmd(self) -> str:
         repr = (
