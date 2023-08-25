@@ -282,39 +282,40 @@ class SwanConfigComponents(BaseConfig):
         default=str(Path(__file__).parent.parent / "templates" / "swancomp"),
         description="The template for SWAN.",
     )
-    project: PROJECT_TYPES = Field(
+    project: Optional[PROJECT_TYPES] = Field(
         default=None,
         description="SWAN PROJECT component",
     )
-    set: SET_TYPES = Field(
+    set: Optional[SET_TYPES] = Field(
         default=None,
         description="SWAN SET component",
     )
-    mode: MODE_TYPES = Field(
+    mode: Optional[MODE_TYPES] = Field(
         default=None,
         description="SWAN MODE component",
     )
-    coordinates: COORDINATES_TYPES = Field(
+    coordinates: Optional[COORDINATES_TYPES] = Field(
         default=None,
         description="SWAN COORDINATES component",
     )
-    cgrid: CGRID_TYPES = Field(
+    cgrid: Optional[CGRID_TYPES] = Field(
         default=None,
         description="SWAN CGRID component",
         discriminator="model_type",
     )
-    inpgrid: INPGRID_TYPES = Field(
-        default=None, description="SWAN INPGRID components")
-    boundary: BOUNDARY_TYPES = Field(
+    inpgrid: Optional[INPGRID_TYPES] = Field(
+        default=None, description="SWAN INPGRID components"
+    )
+    boundary: Optional[BOUNDARY_TYPES] = Field(
         default=None,
         description="SWAN BOUNDARY component",
         discriminator="model_type",
     )
-    initial: INITIAL_TYPES = Field(
+    initial: Optional[INITIAL_TYPES] = Field(
         default=None,
         description="SWAN INITIAL component",
     )
-    physics: PHYSICS_TYPES = Field(
+    physics: Optional[PHYSICS_TYPES] = Field(
         default=None,
         description="SWAN PHYSICS component",
     )

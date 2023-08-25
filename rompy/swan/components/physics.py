@@ -3072,17 +3072,13 @@ SSWELL_TYPE = Annotated[
     Union[SSWELL_ROGERS, SSWELL_ARDHUIN, SSWELL_ZIEGER],
     Field(description="Swell dissipation component", discriminator="model_type"),
 ]
-NEGATINP_TYPE = Annotated[
-    NEGATINP,
-    Field(description="Negative wind input component", discriminator="model_type"),
-]
+NEGATINP_TYPE = Annotated[NEGATINP, Field(description="Negative wind input component")]
 WCAPPING_TYPE = Annotated[
     Union[WCAPPING_KOMEN, WCAPPING_AB],
     Field(description="Whitecapping component", discriminator="model_type"),
 ]
 QUADRUPL_TYPE = Annotated[
-    QUADRUPL,
-    Field(description="Quadruplet interactions component", discriminator="model_type"),
+    QUADRUPL, Field(description="Quadruplet interactions component"),
 ]
 BREAKING_TYPE = Annotated[
     Union[BREAKING_CONSTANT, BREAKING_BKD],
@@ -3096,47 +3092,26 @@ TRIAD_TYPE = Annotated[
     Union[TRIAD, TRIAD_DCTA, TRIAD_LTA, TRIAD_SPB],
     Field(description="Triad interactions component", discriminator="model_type"),
 ]
-VEGETATION_TYPE = Annotated[
-    VEGETATION, Field(description="Vegetation component", discriminator="model_type")
-]
-MUD_TYPE = Annotated[
-    MUD, Field(description="Mud component", discriminator="model_type")
-]
+VEGETATION_TYPE = Annotated[VEGETATION, Field(description="Vegetation component")]
+MUD_TYPE = Annotated[MUD, Field(description="Mud component")]
 SICE_TYPE = Annotated[
     Union[SICE, SICE_R19, SICE_D15, SICE_M18, SICE_R21B],
     Field(description="Sea ice component", discriminator="model_type")
 ]
 TURBULENCE_TYPE = Annotated[
-    TURBULENCE,
-    Field(description="Turbulent dissipation component", discriminator="model_type"),
+    TURBULENCE, Field(description="Turbulent dissipation component"),
 ]
 BRAGG_TYPE = Annotated[
     Union[BRAGG, BRAGG_FT, BRAGG_FILE],
     Field(description="Bragg scattering component", discriminator="model_type")
 ]
-LIMITER_TYPE = Annotated[
-    LIMITER, Field(description="Limiter component", discriminator="model_type")
-]
-OBSTACLE_TYPE = Annotated[
-    OBSTACLES,
-    Field(description="Obstacle group component", discriminator="model_type")
-]
-SETUP_TYPE = Annotated[
-    SETUP, Field(description="Setup component", discriminator="model_type")
-]
-DIFFRACTION_TYPE = Annotated[
-    DIFFRACTION, Field(description="Diffraction component", discriminator="model_type")
-]
-SURFBEAT_TYPE = Annotated[
-    SURFBEAT, Field(description="Surfbeat component", discriminator="model_type")
-]
-SCAT_TYPE = Annotated[
-    SCAT, Field(description="Scattering component", discriminator="model_type")
-]
-DEACTIVATE_TYPE = Annotated[
-    DEACTIVATE,
-    Field(description="Deactivate group component", discriminator="model_type")
-]
+LIMITER_TYPE = Annotated[LIMITER, Field(description="Limiter component")]
+OBSTACLE_TYPE = Annotated[OBSTACLES, Field(description="Obstacle group component")]
+SETUP_TYPE = Annotated[SETUP, Field(description="Setup component")]
+DIFFRACTION_TYPE = Annotated[DIFFRACTION, Field(description="Diffraction component")]
+SURFBEAT_TYPE = Annotated[SURFBEAT, Field(description="Surfbeat component")]
+SCAT_TYPE = Annotated[SCAT, Field(description="Scattering component")]
+DEACTIVATE_TYPE = Annotated[DEACTIVATE, Field(description="Deactivate group component")]
 
 class PHYSICS(BaseComponent):
     """Physics group component.
