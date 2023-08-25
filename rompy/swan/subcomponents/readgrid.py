@@ -32,13 +32,14 @@ class READGRID(BaseSubComponent, ABC):
     grid_type: GridOptions | Literal["coordinates"] = Field(
         description="Type of the SWAN grid file",
     )
-    fac: Annotated[float, Field(gt=0.0)] = Field(
+    fac: float = Field(
         default=1.0,
         description=(
             "SWAN multiplies all values that are read from file by `fac`. For instance "
             "if the values are given in unit decimeter, one should make `fac=0.1` to "
             "obtain values in m. To change sign use a negative `fac`."
-        )
+        ),
+        gt=0.0,
     )
     idla: IDLA = Field(
         default=1,
@@ -47,7 +48,7 @@ class READGRID(BaseSubComponent, ABC):
             "and other fields should be given in the file."
         ),
     )
-    nhedf: Annotated[int, Field(ge=0)] = Field(
+    nhedf: int = Field(
         default=0,
         description=(
             "The number of header lines at the start of the file. The text in the "
@@ -56,13 +57,15 @@ class READGRID(BaseSubComponent, ABC):
             "file is often also the start of a time step and possibly also of a "
             "vector variable (each having header lines, see `nhedt` and `nhedvec`)."
         ),
+        ge=0,
     )
-    nhedvec: Annotated[int, Field(ge=0)] = Field(
+    nhedvec: int = Field(
         default=0,
         description=(
             "For each vector variable: number of header lines in the file "
             "at the start of each component (e.g., x- or y-component)."
         ),
+        ge=0,
     )
     format: Literal["free", "fixed", "unformatted"] = Field(
         default="free",
@@ -75,12 +78,14 @@ class READGRID(BaseSubComponent, ABC):
         ),
     )
     form: Optional[str] = Field(
+        default=None,
         description=(
             "A user-specified format string in Fortran convention, e.g., '(10X,12F5.0)'."
             "Only used if `format='fixed'`, do not use it if `idfm` is specified."
         ),
     )
     idfm: Optional[Literal[1, 5, 6, 8]] = Field(
+        default=None,
         description=(
             "File format identifier, only used if `format='fixed'`"
         ),
@@ -133,13 +138,6 @@ class READCOORD(READGRID):
         desctiprion="Name of the SWAN coordinates file",
     )
 
-    @model_validator(mode="after")
-    def check_arguments(self) -> 'READCOORD':
-        """A few checks to restrict input types from parent class."""
-        if self.nhedt is not None:
-            raise ValueError("nhedt specified but it is not allowed for READCOORD")
-        return self
-
     def cmd(self) -> str:
         repr = (
             f"READGRID COORDINATES fac={self.fac} fname='{self.fname}' "
@@ -160,12 +158,14 @@ class READINP(READGRID):
         default="readinp", description="Model type discriminator"
     )
     grid_type: Optional[GridOptions] = Field(
+        default=None,
         description="Type of the SWAN grid file"
     )
     fname1: str = Field(
         description="Name of the file with the values of the variable.",
     )
     fname2: Optional[str] = Field(
+        default=None,
         description=(
             "Name of file that contains the names of the files where the variables "
             "are given when the SERIES option is used. These names are to be given in "
@@ -175,7 +175,7 @@ class READINP(READGRID):
             "should start with the start of an input time step)."
         ),
     )
-    nhedt: Annotated[int, Field(ge=0)] = Field(
+    nhedt: int = Field(
         default=0,
         description=(
             "Only if variable is time dependent: number of header lines in the file "
@@ -183,6 +183,7 @@ class READINP(READGRID):
             "lines than `nhedt` because the variable may be a vector variable which "
             "has its own header lines (see `nhedvec`)."
         ),
+        ge=0,
     )
 
     @field_validator("grid_type")
