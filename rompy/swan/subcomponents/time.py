@@ -76,6 +76,7 @@ class NONSTATIONARY(BaseSubComponent):
         description="Format to render time interval specification",
     )
     suffix: Optional[str] = Field(
+        default=None,
         description="Suffix to append to the variable name when rendering"
     )
 

@@ -28,6 +28,7 @@ class INPGRID(BaseComponent, ABC):
         description="Type of the swan input grid, e.g, 'bottom', 'wind', etc",
     )
     excval: Optional[float] = Field(
+        default=None,
         description=(
             "Exception value to allow identifying and ignoring certain point inside "
             "the given grid during the computation. If `fac` != 1, `excval` must be "
@@ -35,6 +36,7 @@ class INPGRID(BaseComponent, ABC):
         ),
     )
     nonstationary: Optional[NONSTATIONARY] = Field(
+        default=None,
         description="Nonstationary time specification",
     )
     readinp: READINP = Field(
