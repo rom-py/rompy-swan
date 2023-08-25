@@ -28,7 +28,7 @@ class SwanGrid(RegularGrid):
         return v
 
     @model_validator(mode="after")
-    def validate_curvilinear_grid(self) -> 'SwanGrid':
+    def validate_curvilinear_grid(self) -> "SwanGrid":
         if self.grid_type == "CURV" and self.gridfile is None:
             raise ValueError("gridfile must be provided for CURV grid")
         return self
@@ -197,8 +197,7 @@ class SwanGrid(RegularGrid):
                         color="r",
                         lw=2,
                     )
-                    ax.scatter(specPoint.lon, specPoint.lat,
-                               marker="o", color="b")
+                    ax.scatter(specPoint.lon, specPoint.lat, marker="o", color="b")
                     ax.scatter(segLon, segLat, marker="x", color="g")
 
                 specPoint["lon"] = segLon

@@ -29,6 +29,7 @@ class IDLA(IntEnum):
     upwards.
 
     """
+
     ONE = 1
     TWO = 2
     THREE = 3
@@ -76,6 +77,7 @@ class GridOptions(str, Enum):
         Sea-swell mean wave period.
 
     """
+
     BOTTOM = "bottom"
     WLEVEL = "wlevel"
     CURRENT = "current"
@@ -111,6 +113,7 @@ class BoundShapeOptions(str, Enum):
         TMA spectrum.
 
     """
+
     JONSWAP = "jonswap"
     PM = "pm"
     GAUSS = "gauss"
@@ -141,6 +144,7 @@ class SideOptions(str, Enum):
         North-east side.
 
     """
+
     NORTH = "north"
     NW = "nw"
     WEST = "west"

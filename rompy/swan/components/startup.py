@@ -21,7 +21,8 @@ class PROJECT(BaseComponent):
     """
 
     model_type: Literal["project"] = Field(
-        default="project", description="Model type discriminator",
+        default="project",
+        description="Model type discriminator",
     )
     name: Optional[str] = Field(
         default=None,
@@ -81,7 +82,7 @@ class SET(BaseComponent):
     1: warnings.
     2: errors (possibly automatically repaired or repairable by SWAN).
     3: severe errors.
-    
+
     Default values for `pwtail` depend on formulations of physics:
 
     - command GEN1: `pwtail = 5`.
@@ -314,7 +315,8 @@ class COORDINATES(BaseComponent):
     """
 
     model_type: Literal["coordinates"] = Field(
-        default="coordinates", description="Model type discriminator",
+        default="coordinates",
+        description="Model type discriminator",
     )
     kind: CARTESIAN | SPHERICAL = Field(
         default_factory=CARTESIAN,

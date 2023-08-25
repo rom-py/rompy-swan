@@ -7,7 +7,7 @@ import pytest
 import yaml
 
 from rompy.model import ModelRun
-from rompy.swan.config import SwanConfigComponents as SwanConfig
+from rompy.swan.config import SwanConfigComponents
 from rompy.swan.subcomponents.physics import SourceTerms
 
 
@@ -22,7 +22,7 @@ def config_dict():
 
 
 def test_swan_model(tmpdir, config_dict):
-    config = SwanConfig(
+    config = SwanConfigComponents(
         template=str(HERE / "../../rompy/templates/swancomp"),
         project=config_dict["project"],
         set=config_dict["set"],

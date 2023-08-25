@@ -87,7 +87,7 @@ class SPECTRUM(BaseSubComponent):
         return data
 
     @model_validator(mode="after")
-    def check_frequency_definition(self) -> 'SPECTRUM':
+    def check_frequency_definition(self) -> "SPECTRUM":
         """Check spectral frequencies are prescribed correctly."""
         args = [self.flow, self.fhigh, self.msc]
         if None in args:

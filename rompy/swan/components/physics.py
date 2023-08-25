@@ -83,7 +83,7 @@ class GEN1(BaseComponent):
         )
         gen = GEN1(**kwargs)
         print(gen.render())
-    
+
     """
 
     model_type: Literal["gen1", "GEN1"] = Field(
@@ -91,47 +91,46 @@ class GEN1(BaseComponent):
     )
     cf10: Optional[float] = Field(
         default=None,
-        description="Controls the linear wave growth (SWAN default: 188.0)"
+        description="Controls the linear wave growth (SWAN default: 188.0)",
     )
     cf20: Optional[float] = Field(
         default=None,
-        description="Controls the exponential wave growth (SWAN default: 0.59)"
+        description="Controls the exponential wave growth (SWAN default: 0.59)",
     )
     cf30: Optional[float] = Field(
         default=None,
-        description="Controls the exponential wave growth (SWAN default: 0.12)"
+        description="Controls the exponential wave growth (SWAN default: 0.12)",
     )
     cf40: Optional[float] = Field(
         default=None,
         description=(
             "Controls the dissipation rate, i.e., the time decay scale "
             "(SWAN default: 250.0)"
-        )
+        ),
     )
     edmlpm: Optional[float] = Field(
         default=None,
         description=(
             "Maximum non-dimensionless energy density of the wind sea part of the "
             "spectrum according to Pierson Moskowitz (SWAN default: 0.0036)"
-        )
+        ),
     )
     cdrag: Optional[float] = Field(
-        default=None,
-        description="Drag coefficient (SWAN default: 0.0012)"
+        default=None, description="Drag coefficient (SWAN default: 0.0012)"
     )
     umin: Optional[float] = Field(
         default=None,
         description=(
             "Minimum wind velocity (relative to current; all wind speeds "
             "are taken at 10 m above sea level) (SWAN default: 1)"
-        )
+        ),
     )
     cfpm: Optional[float] = Field(
         default=None,
         description=(
             "Coefficient which determines the Pierson Moskowitz frequency: "
             "`delta_PM = 2pi g / U_10` (SWAN default: 0.13)"
-        )
+        ),
     )
 
     def cmd(self):
@@ -203,14 +202,14 @@ class GEN2(GEN1):
         description=(
             "Controls the spectral energy scale of the limit spectrum "
             "(SWAN default: 0.0023)"
-        )
+        ),
     )
     cf60: Optional[float] = Field(
         default=None,
         description=(
             "Ccontrols the spectral energy scale of the limit spectrum "
             "(SWAN default: -0.223"
-        )
+        ),
     )
 
     def cmd(self):
@@ -389,7 +388,7 @@ class SSWELL_ROGERS(BaseComponent):
         description=(
             "Coefficient related to laminar atmospheric boundary layer "
             "(SWAN default: 1.2)"
-        )
+        ),
     )
     feswell: Optional[float] = Field(
         default=None, description="Swell dissipation factor"
@@ -445,7 +444,7 @@ class SSWELL_ARDHUIN(BaseComponent):
         description=(
             "Coefficient related to laminar atmospheric boundary layer "
             "(SWAN default: 1.2)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -501,7 +500,7 @@ class SSWELL_ZIEGER(BaseComponent):
     b1: Optional[float] = Field(
         default=None,
         description="Non-dimensional proportionality coefficient "
-        "(SWAN default: 0.00025)"
+        "(SWAN default: 0.00025)",
     )
 
     def cmd(self) -> str:
@@ -559,35 +558,35 @@ class WCAPPING_KOMEN(BaseComponent):
         description=(
             "Coefficient for determining the rate of whitecapping dissipation ($Cds$) "
             "(SWAN default: 2.36e-5)"
-        )
+        ),
     )
     stpm: Optional[float] = Field(
         default=None,
         description=(
             "Value of the wave steepness for a Pierson-Moskowitz spectrum "
             "($s^2_{PM}$) (SWAN default: 3.02e-3)"
-        )
+        ),
     )
     powst: Optional[float] = Field(
         default=None,
         description=(
             "Power of steepness normalized with the wave steepness "
             "of a Pierson-Moskowitz spectrum (SWAN default: 2)"
-        )
+        ),
     )
     delta: Optional[float] = Field(
         default=None,
         description=(
             "Coefficient which determines the dependency of the whitecapping "
             "on wave number (SWAN default: 1)"
-        )
+        ),
     )
     powk: Optional[float] = Field(
         default=None,
         description=(
             "power of wave number normalized with the mean wave number "
             "(SWAN default: 1)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -644,11 +643,10 @@ class WCAPPING_AB(BaseComponent):
         description=(
             "proportionality coefficient due to Alves and Banner (2003) "
             "(SWAN default: 5.0e-5)"
-        )
+        ),
     )
     br: Optional[float] = Field(
-        default=None,
-        description="Threshold saturation level	(SWAN default: 1.75e-3)"
+        default=None, description="Threshold saturation level	(SWAN default: 1.75e-3)"
     )
     current: bool = Field(
         default=False,
@@ -658,8 +656,7 @@ class WCAPPING_AB(BaseComponent):
         ),
     )
     cds3: Optional[float] = Field(
-        default=None,
-        description="Proportionality coefficient (SWAN default: 0.8)"
+        default=None, description="Proportionality coefficient (SWAN default: 0.8)"
     )
 
     def cmd(self) -> str:
@@ -824,14 +821,14 @@ class BREAKING_CONSTANT(BaseComponent):
         description=(
             "Proportionality coefficient of the rate of dissipation "
             "(SWAN default: 1.0)"
-        )
+        ),
     )
     gamma: Optional[float] = Field(
         default=None,
         description=(
             "The breaker index, i.e. the ratio of maximum individual wave height "
             "over depth (SWAN default: 0.73)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -879,7 +876,7 @@ class BREAKING_BKD(BaseComponent):
         description=(
             "Proportionality coefficient of the rate of dissipation "
             "(SWAN default: 1.0)"
-        )
+        ),
     )
     gamma0: Optional[float] = Field(
         default=None,
@@ -889,19 +886,19 @@ class BREAKING_BKD(BaseComponent):
         default=None,
         description=(
             "First tunable coefficient for the breaker index (SWAN default: 7.59)"
-        )
+        ),
     )
     a2: Optional[float] = Field(
         default=None,
         description=(
             "Second tunable coefficient for the breaker index (SWAN default: -8.06)"
-        )
+        ),
     )
     a3: Optional[float] = Field(
         default=None,
         description=(
             "Third tunable coefficient for the breaker index (SWAN default: 8.09)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -966,7 +963,7 @@ class FRICTION_JONSWAP(BaseComponent):
     )
     cfjon: Optional[float] = Field(
         default=None,
-        description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)"
+        description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)",
     )
 
     def cmd(self) -> str:
@@ -1017,7 +1014,7 @@ class FRICTION_COLLINS(BaseComponent):
     )
     cfw: Optional[float] = Field(
         default=None,
-        description="Collins bottom friction coefficient (SWAN default: 0.015)"
+        description="Collins bottom friction coefficient (SWAN default: 0.015)",
     )
 
     def cmd(self) -> str:
@@ -1074,7 +1071,7 @@ class FRICTION_MADSEN(BaseComponent):
         description=(
             "equivalent roughness length scale of the bottom (in m) "
             "(SWAN default: 0.05)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -1124,11 +1121,10 @@ class FRICTION_RIPPLES(BaseComponent):
     )
     s: Optional[float] = Field(
         default=None,
-        description="The specific gravity of the sediment (SWAN default: 2.65)"
+        description="The specific gravity of the sediment (SWAN default: 2.65)",
     )
     d: Optional[float] = Field(
-        default=None,
-        description="The sediment diameter (in m) (SWAN default: 0.0001)"
+        default=None, description="The sediment diameter (in m) (SWAN default: 0.0001)"
     )
 
     def cmd(self) -> str:
@@ -1413,7 +1409,7 @@ class TRIAD_SPB(TRIAD):
 # =====================================================================================
 # VEGETATION
 # =====================================================================================
-class VEGETATION(BaseComponent): 
+class VEGETATION(BaseComponent):
     """Vegetation dumping.
 
     .. code-block:: text
@@ -1529,7 +1525,7 @@ class VEGETATION(BaseComponent):
         return v
 
     @model_validator(mode="after")
-    def jacomsen_layering_not_implemented(self) -> 'VEGETATION':
+    def jacomsen_layering_not_implemented(self) -> "VEGETATION":
         if self.iveg == 2 and len(self.nstems) > 1:
             raise NotImplementedError(
                 "Vertical layering of the vegetation is not yet implemented for the "
@@ -1602,7 +1598,7 @@ class MUD(BaseComponent):
     )
     rhom: Optional[float] = Field(
         default=None,
-        description="The density of the mud layer (in kg/m3) (SWAN default: 1300)"
+        description="The density of the mud layer (in kg/m3) (SWAN default: 1300)",
     )
     viscm: Optional[float] = Field(
         default=None,
@@ -2036,7 +2032,7 @@ class TURBULENCE(BaseComponent):
     )
 
     @model_validator(mode="after")
-    def tbcur_only_with_current(self) -> 'TURBULENCE':
+    def tbcur_only_with_current(self) -> "TURBULENCE":
         if self.current == False and self.tbcur is not None:
             raise ValueError("`tbcur` can only be defined if `current` is True")
         return self
@@ -2246,9 +2242,7 @@ class BRAGG_FILE(BRAGG):
     )
     idla: Optional[IDLA] = Field(
         default=None,
-        description=(
-            "Order in which the values should be given in the input files"
-        ),
+        description=("Order in which the values should be given in the input files"),
     )
     mkx: int = Field(
         description=(
@@ -2329,13 +2323,11 @@ class LIMITER(BaseComponent):
     )
     ursell: Optional[float] = Field(
         default=None,
-        description=(
-            "The upper threshold for Ursell number (SWAN default: 10.0)"
-        ),
+        description=("The upper threshold for Ursell number (SWAN default: 10.0)"),
     )
     qb: Optional[float] = Field(
         default=None,
-        description="The threshold for fraction of breaking waves (SWAN default: 1.0)"
+        description="The threshold for fraction of breaking waves (SWAN default: 1.0)",
     )
 
     def cmd(self) -> str:
@@ -2359,6 +2351,7 @@ REFLECTION_TYPE = Annotated[
     Union[RSPEC, RDIFF],
     Field(description="Wave reflection type", discriminator="model_type"),
 ]
+
 
 class OBSTACLE(BaseComponent):
     """Subgrid obstacle.
@@ -2417,7 +2410,7 @@ class OBSTACLE(BaseComponent):
     line: LINE = Field(default=None, description="Line of obstacle")
 
     @model_validator(mode="after")
-    def hgt_consistent(self) -> 'OBSTACLE':
+    def hgt_consistent(self) -> "OBSTACLE":
         """Warns if `hgt` has different values in DAM and FREEBOARD specifications."""
         if self.transmission is not None and self.freeboard is not None:
             is_dam = self.transmission.model_type.upper() in ["GODA", "DANGREMOND"]
@@ -2540,12 +2533,14 @@ class OBSTACLE_FIG(BaseComponent):
 
 
 OBSTACLES_TYPES = Annotated[
-    Union[OBSTACLE, OBSTACLE_FIG], Field(discriminator="model_type"),
+    Union[OBSTACLE, OBSTACLE_FIG],
+    Field(discriminator="model_type"),
 ]
 
 OBSTACLES_TYPE = Annotated[
     list[OBSTACLES_TYPES], Field(description="Obstacle component")
 ]
+
 
 class OBSTACLES(BaseComponent):
     """List of swan obstacles.
@@ -2741,7 +2736,7 @@ class DIFFRACTION(BaseComponent):
     )
     smnum: Optional[int] = Field(
         default=None,
-        description="Number of smoothing steps relative to `smpar` (SWAN default: 0)"
+        description="Number of smoothing steps relative to `smpar` (SWAN default: 0)",
     )
     cgmod: Optional[float] = Field(
         default=None,
@@ -2750,7 +2745,6 @@ class DIFFRACTION(BaseComponent):
             "diffraction. If `cgmod=0` then no adaption (SWAN default: 1.0)"
         ),
     )
-
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -2940,12 +2934,11 @@ class SCAT(BaseComponent):
         ),
     )
     qmax: Optional[float] = Field(
-        default=None,
-        description="The maximum scattering wave number (in 1/m)"
+        default=None, description="The maximum scattering wave number (in 1/m)"
     )
 
     @model_validator(mode="after")
-    def warn_if_qmax_and_alpha(self) -> 'SCAT':
+    def warn_if_qmax_and_alpha(self) -> "SCAT":
         if self.qmax is not None and self.alpha is not None:
             logger.warning(
                 "Both `alpha` and `qmax` options are provided to truncate the "
@@ -3000,18 +2993,15 @@ class OFF(BaseComponent):
     model_type: Literal["off", "OFF"] = Field(
         default="off", description="Model type discriminator"
     )
-    physics: PhysicsOff = Field(
-        description="Physics command to be switched off"
-    )
+    physics: PhysicsOff = Field(description="Physics command to be switched off")
 
     def cmd(self) -> str:
         """Command file string for this component."""
         return f"OFF {self.physics.value.upper()}"
 
 
-OFF_TYPES = Annotated[
-    list[OFF], Field(description="Deactivate physics")
-]
+OFF_TYPES = Annotated[list[OFF], Field(description="Deactivate physics")]
+
 
 class DEACTIVATE(BaseComponent):
     """Deactivate multiple physics commands.
@@ -3041,6 +3031,7 @@ class DEACTIVATE(BaseComponent):
             print(off)
 
     """
+
     model_type: Literal["deactivate", "DEACTIVATE"] = Field(
         default="deactivate", description="Model type discriminator"
     )
@@ -3078,7 +3069,8 @@ WCAPPING_TYPE = Annotated[
     Field(description="Whitecapping component", discriminator="model_type"),
 ]
 QUADRUPL_TYPE = Annotated[
-    QUADRUPL, Field(description="Quadruplet interactions component"),
+    QUADRUPL,
+    Field(description="Quadruplet interactions component"),
 ]
 BREAKING_TYPE = Annotated[
     Union[BREAKING_CONSTANT, BREAKING_BKD],
@@ -3096,14 +3088,15 @@ VEGETATION_TYPE = Annotated[VEGETATION, Field(description="Vegetation component"
 MUD_TYPE = Annotated[MUD, Field(description="Mud component")]
 SICE_TYPE = Annotated[
     Union[SICE, SICE_R19, SICE_D15, SICE_M18, SICE_R21B],
-    Field(description="Sea ice component", discriminator="model_type")
+    Field(description="Sea ice component", discriminator="model_type"),
 ]
 TURBULENCE_TYPE = Annotated[
-    TURBULENCE, Field(description="Turbulent dissipation component"),
+    TURBULENCE,
+    Field(description="Turbulent dissipation component"),
 ]
 BRAGG_TYPE = Annotated[
     Union[BRAGG, BRAGG_FT, BRAGG_FILE],
-    Field(description="Bragg scattering component", discriminator="model_type")
+    Field(description="Bragg scattering component", discriminator="model_type"),
 ]
 LIMITER_TYPE = Annotated[LIMITER, Field(description="Limiter component")]
 OBSTACLE_TYPE = Annotated[OBSTACLES, Field(description="Obstacle group component")]
@@ -3112,6 +3105,7 @@ DIFFRACTION_TYPE = Annotated[DIFFRACTION, Field(description="Diffraction compone
 SURFBEAT_TYPE = Annotated[SURFBEAT, Field(description="Surfbeat component")]
 SCAT_TYPE = Annotated[SCAT, Field(description="Scattering component")]
 DEACTIVATE_TYPE = Annotated[DEACTIVATE, Field(description="Deactivate group component")]
+
 
 class PHYSICS(BaseComponent):
     """Physics group component.
@@ -3180,7 +3174,7 @@ class PHYSICS(BaseComponent):
     #     return values
 
     @model_validator(mode="after")
-    def negatinp_only_with_zieger(self) -> 'PHYSICS':
+    def negatinp_only_with_zieger(self) -> "PHYSICS":
         """Log a warning if NEGATINP is used with a non-ZIEGER SSWELL."""
         if self.negatinp is None:
             return self
@@ -3226,7 +3220,7 @@ class PHYSICS(BaseComponent):
         if self.limiter is not None:
             repr += [self.limiter.render()]
         if self.obstacle is not None:
-            repr += self.obstacle.render() # Object returns a list of components
+            repr += self.obstacle.render()  # Object returns a list of components
         if self.setup is not None:
             repr += [self.setup.render()]
         if self.diffraction is not None:
@@ -3236,5 +3230,5 @@ class PHYSICS(BaseComponent):
         if self.scat is not None:
             repr += [self.scat.render()]
         if self.deactivate is not None:
-            repr += self.deactivate.render() # Object returns a list of components
+            repr += self.deactivate.render()  # Object returns a list of components
         return repr

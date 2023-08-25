@@ -213,8 +213,7 @@ class WESTHUYSEN(SourceTerms):
         ),
     )
     br: Optional[float] = Field(
-        default=None,
-        description="Threshold saturation level	(SWAN default: 1.75e-3)"
+        default=None, description="Threshold saturation level	(SWAN default: 1.75e-3)"
     )
 
     def cmd(self) -> str:
@@ -349,7 +348,7 @@ class ST6(SourceTerms):
     )
 
     @model_validator(mode="after")
-    def debias_only_with_hwang(self) -> 'ST6':
+    def debias_only_with_hwang(self) -> "ST6":
         if self.cdfac is not None and self.wind_drag != "hwang":
             raise ValueError(
                 f"Debias is only supported with hwang wind drag, not {self.wind_drag}"
@@ -576,7 +575,7 @@ class ELDEBERKY(BaseSubComponent):
             "value of `urcrit` is setted by Eldeberky (1996) at 0.2 based on a "
             "laboratory experiment, whereas Doering and Bowen (1995) employed the "
             "value of 0.63 based on the field experiment data (SWAN default: 0.63)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -627,7 +626,7 @@ class DEWIT(BaseSubComponent):
             "Scales spatial averaging of the De Wit's biphase in terms of a multiple "
             "of peak wave length of the incident wave field. Note: `lpar` = 0` means "
             "no averaging (SWAN default: 0)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -886,9 +885,7 @@ class DANGREMOND(BaseSubComponent):
         ),
     )
     slope: float = Field(
-        description="The slope of the obstacle (in degrees)",
-        ge=0.0,
-        le=90.0
+        description="The slope of the obstacle (in degrees)", ge=0.0, le=90.0
     )
     Bk: float = Field(description="The crest width of the obstacle")
 
@@ -1032,7 +1029,7 @@ class FREEBOARD(BaseSubComponent):
 
     Notes
     -----
-    See the Scientific/Technical documentation for background information on the 
+    See the Scientific/Technical documentation for background information on the
     `gammat` and `gammar` shape parameters.
 
     Examples
@@ -1145,16 +1142,14 @@ class LINE(BaseSubComponent):
         default="line", description="Model type discriminator"
     )
     xp: list[float] = Field(
-        description="The x-coordinates of the points defining the line",
-        min_length=2
+        description="The x-coordinates of the points defining the line", min_length=2
     )
     yp: list[float] = Field(
-        description="The y-coordinates of the points defining the line",
-        min_length=2
+        description="The y-coordinates of the points defining the line", min_length=2
     )
 
     @model_validator(mode="after")
-    def check_length(self) -> 'LINE':
+    def check_length(self) -> "LINE":
         """Check that the length of xp and yp are the same."""
         if len(self.xp) != len(self.yp):
             raise ValueError("xp and yp must be the same length")

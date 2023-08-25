@@ -21,7 +21,8 @@ class SIDE(BaseSubComponent):
     """
 
     model_type: Literal["side"] = Field(
-        default="side", description="Model type discriminator",
+        default="side",
+        description="Model type discriminator",
     )
     side: Literal["north", "nw", "west", "sw", "south", "se", "east", "ne"] = Field(
         description="The side of the grid to apply the boundary to",
@@ -49,7 +50,8 @@ class SEGMENTXY(BaseSubComponent):
     """
 
     model_type: Literal["segmentxy"] = Field(
-        default="segmentxy", description="Model type discriminator",
+        default="segmentxy",
+        description="Model type discriminator",
     )
     points: list[tuple[float, float]] = Field(
         description="Pairs of (x, y) values to define the segment",
@@ -81,7 +83,8 @@ class SEGMENTIJ(BaseSubComponent):
     """
 
     model_type: Literal["segmentij"] = Field(
-        default="segmentij", description="Model type discriminator",
+        default="segmentij",
+        description="Model type discriminator",
     )
     points: list[tuple[int, int]] = Field(
         description="Pairs of (i, j) values to define the segment",
@@ -102,7 +105,8 @@ class PAR(BaseSubComponent):
     """
 
     model_type: Literal["par"] = Field(
-        default="par", description="Model type discriminator",
+        default="par",
+        description="Model type discriminator",
     )
     hs: float = Field(
         description="The significant wave height (m)",
@@ -148,7 +152,8 @@ class CONSTANTPAR(PAR):
     """
 
     model_type: Literal["constantpar"] = Field(
-        default="constantpar", description="Model type discriminator",
+        default="constantpar",
+        description="Model type discriminator",
     )
 
     def cmd(self) -> str:
@@ -164,7 +169,8 @@ class VARIABLEPAR(BaseSubComponent):
     """
 
     model_type: Literal["variablepar"] = Field(
-        default="variablepar", description="Model type discriminator",
+        default="variablepar",
+        description="Model type discriminator",
     )
     hs: list[Annotated[float, Field(ge=0.0)]] = Field(
         description="The significant wave height (m)",
@@ -206,7 +212,7 @@ class VARIABLEPAR(BaseSubComponent):
     )
 
     @model_validator(mode="after")
-    def ensure_equal_size(self) -> 'VARIABLEPAR':
+    def ensure_equal_size(self) -> "VARIABLEPAR":
         for key in ["hs", "per", "dir", "dd"]:
             if len(getattr(self, key)) != len(self.dist):
                 raise ValueError(f"Size of dist and {key} must be the same")
@@ -256,7 +262,8 @@ class CONSTANTFILE(BaseSubComponent):
     """
 
     model_type: Literal["constantfile"] = Field(
-        default="constantfile", description="Model type discriminator",
+        default="constantfile",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description="Name of the file containing the boundary condition.",
@@ -315,7 +322,8 @@ class VARIABLEFILE(BaseSubComponent):
     """
 
     model_type: Literal["variablefile"] = Field(
-        default="variablefile", description="Model type discriminator",
+        default="variablefile",
+        description="Model type discriminator",
     )
     fname: list[Annotated[str, Field(max_length=40)]] = Field(
         description="Names of the file containing the boundary condition",
@@ -346,7 +354,7 @@ class VARIABLEFILE(BaseSubComponent):
     )
 
     @model_validator(mode="after")
-    def ensure_equal_size(self) -> 'VARIABLEFILE':
+    def ensure_equal_size(self) -> "VARIABLEFILE":
         for key in ["fname", "seq"]:
             attr = getattr(self, key)
             if attr is not None and len(attr) != len(self.dist):
@@ -378,7 +386,8 @@ class DEFAULT(BaseSubComponent):
     """
 
     model_type: Literal["default"] = Field(
-        default="default", description="Model type discriminator",
+        default="default",
+        description="Model type discriminator",
     )
 
 
@@ -394,7 +403,8 @@ class ZERO(BaseSubComponent):
     """
 
     model_type: Literal["zero"] = Field(
-        default="zero", description="Model type discriminator",
+        default="zero",
+        description="Model type discriminator",
     )
 
 
@@ -417,7 +427,8 @@ class HOTSINGLE(BaseSubComponent):
     """
 
     model_type: Literal["hotsingle"] = Field(
-        default="hotsingle", description="Model type discriminator",
+        default="hotsingle",
+        description="Model type discriminator",
     )
     fname: Annotated[str, StringConstraints(max_length=85)] = Field(
         description="Name of the file containing the initial wave field",
@@ -452,7 +463,8 @@ class HOTMULTIPLE(BaseSubComponent):
     """
 
     model_type: Literal["hotmultiple"] = Field(
-        default="hotmultiple", description="Model type discriminator",
+        default="hotmultiple",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",

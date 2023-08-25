@@ -38,7 +38,8 @@ class INITIAL(BaseComponent):
     """
 
     model_type: Literal["initial"] = Field(
-        default="initial", description="Model type discriminator",
+        default="initial",
+        description="Model type discriminator",
     )
     kind: DEFAULT | ZERO | PAR | HOTSINGLE | HOTMULTIPLE = Field(
         default=DEFAULT(),
