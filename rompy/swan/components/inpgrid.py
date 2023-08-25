@@ -44,7 +44,7 @@ class INPGRID(BaseComponent, ABC):
     )
 
     @model_validator(mode="after")
-    def set_nonstat_suffix(self) -> 'INPGRID':
+    def set_nonstat_suffix(self) -> "INPGRID":
         """Set the nonstationary suffix."""
         if self.nonstationary is not None:
             self.nonstationary.suffix = "inp"

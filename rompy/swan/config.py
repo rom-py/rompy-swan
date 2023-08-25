@@ -52,12 +52,9 @@ class OutputLocs(RompyBaseModel):
 
 
 class ForcingData(RompyBaseModel):
-    bottom: SwanDataGrid | None = Field(
-        None, description="Bathymetry data for SWAN")
-    wind: SwanDataGrid | None = Field(
-        None, description="The wind data for SWAN.")
-    current: SwanDataGrid | None = Field(
-        None, description="The current data for SWAN.")
+    bottom: SwanDataGrid | None = Field(None, description="Bathymetry data for SWAN")
+    wind: SwanDataGrid | None = Field(None, description="The wind data for SWAN.")
+    current: SwanDataGrid | None = Field(None, description="The current data for SWAN.")
     boundary: DataBoundary | None = Field(
         None, description="The boundary data for SWAN."
     )
@@ -221,8 +218,7 @@ class SwanConfig(BaseConfig):
     """SWAN configuration"""
 
     grid: SwanGrid = Field(description="The model grid for the SWAN run")
-    model_type: Literal["swan"] = Field(
-        "swan", description="The model type for SWAN.")
+    model_type: Literal["swan"] = Field("swan", description="The model type for SWAN.")
     spectral_resolution: SwanSpectrum = Field(
         SwanSpectrum(), description="The spectral resolution for SWAN."
     )
@@ -233,11 +229,11 @@ class SwanConfig(BaseConfig):
         SwanPhysics(), description="The physics options for SWAN."
     )
     outputs: Outputs = Field(Outputs(), description="The outputs for SWAN.")
-    spectra_file: str = Field(
-        "boundary.spec", description="The spectra file for SWAN.")
-    template: str = Field(
-        DEFAULT_TEMPLATE, description="The template for SWAN.")
-    _datefmt: Annotated[str, Field(description="The date format for SWAN.")] = "%Y%m%d.%H%M%S"
+    spectra_file: str = Field("boundary.spec", description="The spectra file for SWAN.")
+    template: str = Field(DEFAULT_TEMPLATE, description="The template for SWAN.")
+    _datefmt: Annotated[
+        str, Field(description="The date format for SWAN.")
+    ] = "%Y%m%d.%H%M%S"
     # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
 
     @property
@@ -321,31 +317,32 @@ class SwanConfigComponents(BaseConfig):
     )
 
     @model_validator(mode="after")
-    def no_nor_if_spherical(self) -> 'SwanConfigComponents':
+    def no_nor_if_spherical(self) -> "SwanConfigComponents":
         """Ensure SET nor is not prescribed when using spherical coordinates."""
         return self
 
     @model_validator(mode="after")
-    def no_repeating_if_setup(self) -> 'SwanConfigComponents':
+    def no_repeating_if_setup(self) -> "SwanConfigComponents":
         """Ensure COORD repeating not set when using set-up."""
         return self
 
     @model_validator(mode="after")
-    def alp_is_zero_if_spherical(self) -> 'SwanConfigComponents':
+    def alp_is_zero_if_spherical(self) -> "SwanConfigComponents":
         """Ensure alp is zero when using spherical coordinates."""
         return self
 
     @model_validator(mode="after")
-    def cgrid_contain_inpgrids(self) -> 'SwanConfigComponents':
+    def cgrid_contain_inpgrids(self) -> "SwanConfigComponents":
         """Ensure all inpgrids are inside the cgrid area."""
         return self
 
     @model_validator(mode="after")
-    def layer_defined_if_no_mud_inpgrid(self) -> 'SwanConfigComponents':
+    def layer_defined_if_no_mud_inpgrid(self) -> "SwanConfigComponents":
         """Ensure layer is set in MUD command if not defined with INPGRID MUD."""
         return self
 
     model_validator(mode="after")
-    def transm_msc_mdc (self) -> 'SwanConfigComponents':
+
+    def transm_msc_mdc(self) -> "SwanConfigComponents":
         """Ensure the number of transmission coefficients match msc and mdc."""
         return self

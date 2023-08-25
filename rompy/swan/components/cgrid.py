@@ -140,7 +140,7 @@ class CURVILINEAR(CGRID):
     )
 
     @model_validator(mode="after")
-    def xexc_and_yexc_or_neither(self) -> 'CURVILINEAR':
+    def xexc_and_yexc_or_neither(self) -> "CURVILINEAR":
         if [self.xexc, self.yexc].count(None) == 1:
             raise ValueError("xexc and yexc must be specified together")
         return self
@@ -194,7 +194,7 @@ class UNSTRUCTURED(CGRID):
     )
 
     @model_validator(mode="after")
-    def check_fname_required(self) -> 'UNSTRUCTURED':
+    def check_fname_required(self) -> "UNSTRUCTURED":
         """Check that fname needs to be provided."""
         if self.grid_type == "adcirc" and self.fname is not None:
             raise ValueError("fname must not be specified for ADCIRC grid")

@@ -57,15 +57,9 @@ class NONSTATIONARY(BaseSubComponent):
     model_type: Literal["nonstationary"] = Field(
         default="nonstationary", description="Model type discriminator"
     )
-    tbeg: datetime = Field(
-        description="Begin time of the first field of the variable"
-    )
-    delt: timedelta = Field(
-        description="Time interval between fields"
-    )
-    tend: datetime = Field(
-        description="End time of the last field of the variable"
-    )
+    tbeg: datetime = Field(description="Begin time of the first field of the variable")
+    delt: timedelta = Field(description="Time interval between fields")
+    tend: datetime = Field(description="End time of the last field of the variable")
     tfmt: Literal[1, 2, 3, 4, 5, 6] = Field(
         default=1,
         description="Format to render time specification",
@@ -76,8 +70,7 @@ class NONSTATIONARY(BaseSubComponent):
         description="Format to render time interval specification",
     )
     suffix: Optional[str] = Field(
-        default=None,
-        description="Suffix to append to the variable name when rendering"
+        default=None, description="Suffix to append to the variable name when rendering"
     )
 
     @field_validator("tfmt")

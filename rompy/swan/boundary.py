@@ -155,7 +155,7 @@ class DataBoundary(DataGrid):
     tolerance: Annotated[float, Field(ge=0)] = Field(
         default=1.0,
         description=(
-        "Wavespectra tolerance for selecting boundary points from the dataset"
+            "Wavespectra tolerance for selecting boundary points from the dataset"
         ),
     )
     rectangle: Literal["closed", "open"] = Field(
@@ -170,7 +170,7 @@ class DataBoundary(DataGrid):
     )
 
     @model_validator(mode="after")
-    def assert_has_wavespectra_accessor(self) -> 'DataBoundary':
+    def assert_has_wavespectra_accessor(self) -> "DataBoundary":
         dset = self.source.open()
         if not hasattr(dset, "spec"):
             raise ValueError(f"Wavespectra compatible source is required")
@@ -181,8 +181,7 @@ class DataBoundary(DataGrid):
         """Return the filtered xarray dataset instance."""
         dset = super().ds
         if dset.efth.size == 0:
-            raise ValueError(
-                f"Empty dataset after applying filter {self.filter}")
+            raise ValueError(f"Empty dataset after applying filter {self.filter}")
         return dset
 
     def _boundary_resolutions(self, grid):

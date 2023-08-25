@@ -86,13 +86,11 @@ class READGRID(BaseSubComponent, ABC):
     )
     idfm: Optional[Literal[1, 5, 6, 8]] = Field(
         default=None,
-        description=(
-            "File format identifier, only used if `format='fixed'`"
-        ),
+        description=("File format identifier, only used if `format='fixed'`"),
     )
 
     @model_validator(mode="after")
-    def check_format_definition(self) -> 'READGRID':
+    def check_format_definition(self) -> "READGRID":
         """Check the arguments specifying the file format are specified correctly."""
         if self.format == "free" and any([self.form, self.idfm]):
             logger.warn(f"FREE format, ignoring form={self.form} idfm={self.idfm}")
@@ -156,8 +154,7 @@ class READINP(READGRID):
         default="readinp", description="Model type discriminator"
     )
     grid_type: Optional[GridOptions] = Field(
-        default=None,
-        description="Type of the SWAN grid file"
+        default=None, description="Type of the SWAN grid file"
     )
     fname1: str = Field(
         description="Name of the file with the values of the variable.",

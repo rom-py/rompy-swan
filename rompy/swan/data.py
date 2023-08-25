@@ -20,7 +20,8 @@ class SwanDataGrid(DataGrid):
     """This class is used to write SWAN data from a dataset."""
 
     z1: str = Field(
-        description="Scaler paramater or u componet of vector field", default=None,
+        description="Scaler paramater or u componet of vector field",
+        default=None,
     )
     z2: str = Field(description="v componet of vector field", default=None)
     var: str = Field(
@@ -38,7 +39,7 @@ class SwanDataGrid(DataGrid):
 
     # root validator
     @model_validator(mode="after")
-    def ensure_z1_in_data_vars(self) -> 'SwanDataGrid':
+    def ensure_z1_in_data_vars(self) -> "SwanDataGrid":
         data_vars = self.variables
         for z in [self.z1, self.z2]:
             if z and z not in data_vars:
@@ -168,12 +169,12 @@ class Swan_accessor(object):
         self._obj = xarray_obj
 
     def grid(
-            self,
-            x: str = "lon",
-            y: str = "lat",
-            rot: float = 0.0,
-            exc: float = FILL_VALUE,
-        ):
+        self,
+        x: str = "lon",
+        y: str = "lat",
+        rot: float = 0.0,
+        exc: float = FILL_VALUE,
+    ):
         """SWAN Grid object for this dataset.
 
         Parameters
@@ -270,7 +271,7 @@ class Swan_accessor(object):
         x: str = "lon",
         y: str = "lat",
         z1: str = "u10",
-        z2: str | None =None,
+        z2: str | None = None,
         fac: float = 1.0,
         rot: float = 0.0,
         time: str = "time",
@@ -343,7 +344,7 @@ class Swan_accessor(object):
         grid = self.grid(x=x, y=y, rot=rot)
 
         inpgrid = f"INPGRID {var} {grid.inpgrid} NONSTATION {inptimes[0]} {dt} HR"
-        readinp =f"READINP {var} {fac} '{os.path.basename(output_file)}' 3 0 1 0 FREE"
+        readinp = f"READINP {var} {fac} '{os.path.basename(output_file)}' 3 0 1 0 FREE"
 
         return inpgrid, readinp
 
