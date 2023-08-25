@@ -104,10 +104,11 @@ class PAR(BaseSubComponent):
     model_type: Literal["par"] = Field(
         default="par", description="Model type discriminator",
     )
-    hs: Annotated[float, Field(gt=0.0)] = Field(
+    hs: float = Field(
         description="The significant wave height (m)",
+        gt=0.0,
     )
-    per: Annotated[float, Field(gt=0.0)] = Field(
+    per: float = Field(
         description=(
             "The characteristic period (s) of the energy spectrum (relative "
             "frequency; which is equal to absolute frequency in the absence of "
@@ -115,13 +116,14 @@ class PAR(BaseSubComponent):
             "chosen in command BOUND SHAPE or `per` is the value of the mean period, "
             "if option MEAN was chosen in command BOUND SHAPE."
         ),
+        gt=0.0,
     )
-    dir: Annotated[float, Field(ge=-360.0, le=360.0)] = Field(
-        description=(
-            "The peak wave direction θpeak (degrees), constant over frequencies"
-        ),
+    dir: float = Field(
+        description="The peak wave direction θpeak (degree), constant over frequencies",
+        ge=-360.0,
+        le=360.0,
     )
-    dd: Annotated[float, Field(ge=0.0, le=360.0)] = Field(
+    dd: float = Field(
         description=(
             "Coefficient of directional spreading; a $cos^m(θ)$ distribution is "
             "assumed. `dd` is interpreted as the directional standard deviation in "
@@ -129,6 +131,8 @@ class PAR(BaseSubComponent):
             "Default: `dd=30`. `dd` is interpreted as the power `m`, if the option "
             "POWER is chosen in the command BOUND SHAPE. Default: `dd=2`."
         ),
+        ge=0.0,
+        le=360.0,
     )
 
     def cmd(self) -> str:
@@ -254,16 +258,19 @@ class CONSTANTFILE(BaseSubComponent):
     model_type: Literal["constantfile"] = Field(
         default="constantfile", description="Model type discriminator",
     )
-    fname: Annotated[str, StringConstraints(max_length=40)] = Field(
+    fname: str = Field(
         description="Name of the file containing the boundary condition.",
+        max_length=40,
     )
-    seq: Optional[Annotated[int, Field(ge=1)]] = Field(
+    seq: Optional[int] = Field(
+        default=None,
         description=(
             "sequence number of geographic location in the file (see Appendix D); "
             "useful for files which contain spectra for more than one location. "
             "Note: a TPAR file always contains only one location so in this case "
             "[seq] must always be 1."
         ),
+        ge=1,
     )
 
     def cmd(self) -> str:
@@ -310,10 +317,11 @@ class VARIABLEFILE(BaseSubComponent):
     model_type: Literal["variablefile"] = Field(
         default="variablefile", description="Model type discriminator",
     )
-    fname: list[Annotated[str, StringConstraints(max_length=40)]] = Field(
+    fname: list[Annotated[str, Field(max_length=40)]] = Field(
         description="Names of the file containing the boundary condition",
     )
     seq: Optional[list[Annotated[int, Field(ge=1)]]] = Field(
+        default=None,
         description=(
             "sequence number of geographic location in the file (see Appendix D); "
             "useful for files which contain spectra for more than one location. "
@@ -446,8 +454,9 @@ class HOTMULTIPLE(BaseSubComponent):
     model_type: Literal["hotmultiple"] = Field(
         default="hotmultiple", description="Model type discriminator",
     )
-    fname: Annotated[str, StringConstraints(max_length=85)] = Field(
+    fname: str = Field(
         description="Name of the file containing the initial wave field",
+        max_length=85,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",
