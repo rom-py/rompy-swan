@@ -186,6 +186,7 @@ class BOUNDNEST2(BaseComponent):
         ),
     )
     xgc: Optional[float] = Field(
+        default=None,
         description=(
             "If SWAN is used with Cartesian coordinates: longitude of south-west "
             "corner of SWAN computational grid (in degrees); if the south-west "
@@ -196,6 +197,7 @@ class BOUNDNEST2(BaseComponent):
         ),
     )
     ygc: Optional[float] = Field(
+        default=None,
         description=(
             "If SWAN is used with Cartesian coordinates: latitude of south-west "
             "corner of SWAN computational grid (in degrees); if the south-west "
@@ -287,6 +289,7 @@ class BOUNDNEST3(BaseComponent):
         ),
     )
     xgc: Optional[float] = Field(
+        default=None,
         description=(
             "If SWAN is used with Cartesian coordinates: longitude of south-west "
             "corner of SWAN computational grid (in degrees); if the south-west "
@@ -297,6 +300,7 @@ class BOUNDNEST3(BaseComponent):
         ),
     )
     ygc: Optional[float] = Field(
+        default=None,
         description=(
             "If SWAN is used with Cartesian coordinates: latitude of south-west "
             "corner of SWAN computational grid (in degrees); if the south-west "

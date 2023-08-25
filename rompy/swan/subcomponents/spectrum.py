@@ -39,16 +39,19 @@ class SPECTRUM(BaseSubComponent):
         )
     )
     flow: Optional[float] = Field(
+        default=None,
         description=(
             "Lowest discrete frequency that is used in the calculation (in Hz)."
         ),
     )
     fhigh: Optional[float] = Field(
+        default=None,
         description=(
             "Highest discrete frequency that is used in the calculation (in Hz)."
         ),
     )
-    msc: Optional[Annotated[int, Field(ge=3)]] = Field(
+    msc: Optional[int] = Field(
+        default=None,
         description=(
             "One less than the number of frequencies. This defines the grid "
             "resolution in frequency-space between the lowest discrete frequency "
@@ -56,14 +59,17 @@ class SPECTRUM(BaseSubComponent):
             "not constant, since the frequencies are distributed logarithmical: "
             "fi+1 = yfi with y is a constant. The minimum number of frequencies is 4."
         ),
+        ge=3,
     )
     dir1: Optional[float] = Field(
+        default=None,
         description=(
             "The direction of the right-hand boundary of the sector when looking "
             "outward from the sector (required for option SECTOR) in degrees."
         ),
     )
     dir2: Optional[float] = Field(
+        default=None,
         description=(
             "The direction of the left-hand boundary of the sector when looking "
             "outward from the sector (required for option SECTOR) in degrees."

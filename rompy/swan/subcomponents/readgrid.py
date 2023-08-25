@@ -96,15 +96,15 @@ class READGRID(BaseSubComponent, ABC):
         """Check the arguments specifying the file format are specified correctly."""
         if self.format == "free" and any([self.form, self.idfm]):
             logger.warn(f"FREE format, ignoring form={self.form} idfm={self.idfm}")
-        elif format == "unformatted" and any([self.form, self.idfm]):
+        elif self.format == "unformatted" and any([self.form, self.idfm]):
             logger.warn(
                 f"UNFORMATTED format, ignoring form={self.form} idfm={self.idfm}"
             )
-        elif format == "fixed" and not any([self.form, self.idfm]):
+        elif self.format == "fixed" and not any([self.form, self.idfm]):
             raise ValueError(
                 "FIXED format requires one of form or idfm to be specified"
             )
-        elif format == "fixed" and all([self.form, self.idfm]):
+        elif self.format == "fixed" and all([self.form, self.idfm]):
             raise ValueError("FIXED format accepts only one of form or idfm")
         return self
 

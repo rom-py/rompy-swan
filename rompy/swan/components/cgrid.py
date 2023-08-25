@@ -118,6 +118,7 @@ class CURVILINEAR(CGRID):
         ),
     )
     xexc: Optional[float] = Field(
+        default=None,
         description=(
             "the value which the user uses to indicate that a grid point is to be "
             "ignored in the computations (this value is provided by the user at the "
@@ -126,6 +127,7 @@ class CURVILINEAR(CGRID):
         ),
     )
     yexc: Optional[float] = Field(
+        default=None,
         description=(
             "the value which the user uses to indicate that a grid point is to be "
             "ignored in the computations (this value is provided by the user at the "
@@ -141,22 +143,6 @@ class CURVILINEAR(CGRID):
     def xexc_and_yexc_or_neither(self) -> 'CURVILINEAR':
         if [self.xexc, self.yexc].count(None) == 1:
             raise ValueError("xexc and yexc must be specified together")
-        return self
-
-    @model_validator(mode="after")
-    def check_format_definition(self) -> 'CURVILINEAR':
-        if self.format == "free" and any([self.form, self.idfm]):
-            logger.warn(f"FREE format, ignoring form={self.form} idfm={self.idfm}")
-        elif format == "unformatted" and any([self.form, self.idfm]):
-            logger.warn(
-                f"UNFORMATTED format, ignoring form={self.form} idfm={self.idfm}"
-            )
-        elif format == "fixed" and not any([self.form, self.idfm]):
-            raise ValueError(
-                "FIXED format requires one of form or idfm to be specified"
-            )
-        elif format == "fixed" and all([self.form, self.idfm]):
-            raise ValueError("FIXED format accepts only one of form or idfm")
         return self
 
     @property
@@ -203,6 +189,7 @@ class UNSTRUCTURED(CGRID):
         description="Unstructured grid type",
     )
     fname: Optional[Annotated[str, StringConstraints(max_length=80)]] = Field(
+        default=None,
         description="Name of the file containing the unstructured grid",
     )
 
