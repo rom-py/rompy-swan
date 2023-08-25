@@ -140,6 +140,7 @@ class DataBoundary(DataGrid):
         discriminator="model_type",
     )
     spacing: Optional[float] = Field(
+        default=None,
         description=(
             "Spacing between boundary points, by default defined as the minimum "
             "distance between points in the dataset"
@@ -164,7 +165,7 @@ class DataBoundary(DataGrid):
         ),
     )
     filter: Optional[Filter] = Field(
-        default=Filter(),
+        default_factory=Filter,
         description="Optional filter specification to apply to the dataset",
     )
 
