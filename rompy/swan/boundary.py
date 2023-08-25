@@ -17,7 +17,7 @@ from rompy.core.data import (
     SourceDatamesh,
 )
 from rompy.swan.grid import SwanGrid
-from typing_extensions import Annotated
+
 
 logger = logging.getLogger(__name__)
 
@@ -152,11 +152,12 @@ class DataBoundary(DataGrid):
             "Wavespectra method to use for selecting boundary points from the dataset"
         ),
     )
-    tolerance: Annotated[float, Field(ge=0)] = Field(
+    tolerance: float = Field(
         default=1.0,
         description=(
             "Wavespectra tolerance for selecting boundary points from the dataset"
         ),
+        ge=0,
     )
     rectangle: Literal["closed", "open"] = Field(
         default="closed",

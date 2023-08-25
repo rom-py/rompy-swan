@@ -1,10 +1,9 @@
 """Subcomponents to be rendered inside of components."""
 import logging
-from typing import Optional, Literal
-from pydantic import StringConstraints, Field, model_validator
+from typing import Annotated, Optional, Literal
+from pydantic import Field, model_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent
-from typing_extensions import Annotated
 
 
 logger = logging.getLogger(__name__)
@@ -430,8 +429,9 @@ class HOTSINGLE(BaseSubComponent):
         default="hotsingle",
         description="Model type discriminator",
     )
-    fname: Annotated[str, StringConstraints(max_length=85)] = Field(
+    fname: str = Field(
         description="Name of the file containing the initial wave field",
+        max_length=85,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",

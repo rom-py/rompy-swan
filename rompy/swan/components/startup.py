@@ -1,11 +1,11 @@
 """Model start up components."""
 import logging
 from typing import Literal, Optional
-from pydantic import field_validator, StringConstraints, Field
+from pydantic import field_validator, Field
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.startup import CARTESIAN, SPHERICAL
-from typing_extensions import Annotated
+
 
 logger = logging.getLogger(__name__)
 

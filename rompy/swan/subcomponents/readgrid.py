@@ -7,7 +7,7 @@ from pydantic import Field, model_validator, field_validator
 
 from rompy.swan.types import GridOptions, IDLA
 from rompy.swan.subcomponents.base import BaseSubComponent
-from typing_extensions import Annotated
+
 
 logger = logging.getLogger(__name__)
 
