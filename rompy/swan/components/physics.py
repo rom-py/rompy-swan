@@ -90,36 +90,44 @@ class GEN1(BaseComponent):
         default="gen1", description="Model type discriminator"
     )
     cf10: Optional[float] = Field(
+        default=None,
         description="Controls the linear wave growth (SWAN default: 188.0)"
     )
     cf20: Optional[float] = Field(
+        default=None,
         description="Controls the exponential wave growth (SWAN default: 0.59)"
     )
     cf30: Optional[float] = Field(
+        default=None,
         description="Controls the exponential wave growth (SWAN default: 0.12)"
     )
     cf40: Optional[float] = Field(
+        default=None,
         description=(
             "Controls the dissipation rate, i.e., the time decay scale "
             "(SWAN default: 250.0)"
         )
     )
     edmlpm: Optional[float] = Field(
+        default=None,
         description=(
             "Maximum non-dimensionless energy density of the wind sea part of the "
             "spectrum according to Pierson Moskowitz (SWAN default: 0.0036)"
         )
     )
     cdrag: Optional[float] = Field(
+        default=None,
         description="Drag coefficient (SWAN default: 0.0012)"
     )
     umin: Optional[float] = Field(
+        default=None,
         description=(
             "Minimum wind velocity (relative to current; all wind speeds "
             "are taken at 10 m above sea level) (SWAN default: 1)"
         )
     )
     cfpm: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient which determines the Pierson Moskowitz frequency: "
             "`delta_PM = 2pi g / U_10` (SWAN default: 0.13)"
@@ -191,12 +199,14 @@ class GEN2(GEN1):
         default="gen2", description="Model type discriminator"
     )
     cf50: Optional[float] = Field(
+        default=None,
         description=(
             "Controls the spectral energy scale of the limit spectrum "
             "(SWAN default: 0.0023)"
         )
     )
     cf60: Optional[float] = Field(
+        default=None,
         description=(
             "Ccontrols the spectral energy scale of the limit spectrum "
             "(SWAN default: -0.223"
@@ -326,6 +336,7 @@ class NEGATINP(BaseComponent):
         default="negatinp", description="Model type discriminator"
     )
     rdcoef: Optional[float] = Field(
+        default=None,
         description="Coefficient representing the strength of negative wind input",
         ge=0.0,
         le=1.0,
@@ -374,12 +385,15 @@ class SSWELL_ROGERS(BaseComponent):
         default="rogers", description="Model type discriminator"
     )
     cdsv: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient related to laminar atmospheric boundary layer "
             "(SWAN default: 1.2)"
         )
     )
-    feswell: Optional[float] = Field(description="Swell dissipation factor")
+    feswell: Optional[float] = Field(
+        default=None, description="Swell dissipation factor"
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -427,6 +441,7 @@ class SSWELL_ARDHUIN(BaseComponent):
         default="ardhuin", description="Model type discriminator"
     )
     cdsv: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient related to laminar atmospheric boundary layer "
             "(SWAN default: 1.2)"
@@ -484,6 +499,7 @@ class SSWELL_ZIEGER(BaseComponent):
         default="zieger", description="Model type discriminator"
     )
     b1: Optional[float] = Field(
+        default=None,
         description="Non-dimensional proportionality coefficient "
         "(SWAN default: 0.00025)"
     )
@@ -539,30 +555,35 @@ class WCAPPING_KOMEN(BaseComponent):
         default="komen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for determining the rate of whitecapping dissipation ($Cds$) "
             "(SWAN default: 2.36e-5)"
         )
     )
     stpm: Optional[float] = Field(
+        default=None,
         description=(
             "Value of the wave steepness for a Pierson-Moskowitz spectrum "
             "($s^2_{PM}$) (SWAN default: 3.02e-3)"
         )
     )
     powst: Optional[float] = Field(
+        default=None,
         description=(
             "Power of steepness normalized with the wave steepness "
             "of a Pierson-Moskowitz spectrum (SWAN default: 2)"
         )
     )
     delta: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient which determines the dependency of the whitecapping "
             "on wave number (SWAN default: 1)"
         )
     )
     powk: Optional[float] = Field(
+        default=None,
         description=(
             "power of wave number normalized with the mean wave number "
             "(SWAN default: 1)"
@@ -619,12 +640,14 @@ class WCAPPING_AB(BaseComponent):
         default="ab", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
+        default=None,
         description=(
             "proportionality coefficient due to Alves and Banner (2003) "
             "(SWAN default: 5.0e-5)"
         )
     )
     br: Optional[float] = Field(
+        default=None,
         description="Threshold saturation level	(SWAN default: 1.75e-3)"
     )
     current: bool = Field(
@@ -635,6 +658,7 @@ class WCAPPING_AB(BaseComponent):
         ),
     )
     cds3: Optional[float] = Field(
+        default=None,
         description="Proportionality coefficient (SWAN default: 0.8)"
     )
 
@@ -700,6 +724,7 @@ class QUADRUPL(BaseComponent):
         default="quadrupl", description="Model type discriminator"
     )
     iquad: Optional[Literal[1, 2, 3, 8, 4, 51, 52, 53]] = Field(
+        default=None,
         description=(
             "Numerical procedures for integrating the quadruplets: 1 = semi-implicit "
             "per sweep, 2 = explicit per sweep, 3 = explicit per iteration, "
@@ -710,29 +735,34 @@ class QUADRUPL(BaseComponent):
         ),
     )
     lambd: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for quadruplet configuration in case of DIA "
             "(SWAN default: 0.25)"
         ),
     )
     cn14: Optional[float] = Field(
+        default=None,
         description=(
             "Proportionality coefficient for quadruplet interactions in case of DIA "
             "(SWAN default: 3.0e7"
         ),
     )
     csh1: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for shallow water scaling in case of DIA (SWAN default: 5.5)"
         ),
     )
     csh2: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for shallow water scaling in case of DIA "
             "(SWAN default: 0.833333)"
         ),
     )
     csh3: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for shallow water scaling in case of DIA "
             "(SWAN default: -1.25)"
@@ -790,12 +820,14 @@ class BREAKING_CONSTANT(BaseComponent):
         default="constant", description="Model type discriminator"
     )
     alpha: Optional[float] = Field(
+        default=None,
         description=(
             "Proportionality coefficient of the rate of dissipation "
             "(SWAN default: 1.0)"
         )
     )
     gamma: Optional[float] = Field(
+        default=None,
         description=(
             "The breaker index, i.e. the ratio of maximum individual wave height "
             "over depth (SWAN default: 0.73)"
@@ -843,25 +875,30 @@ class BREAKING_BKD(BaseComponent):
         default="bkd", description="Model type discriminator"
     )
     alpha: Optional[float] = Field(
+        default=None,
         description=(
             "Proportionality coefficient of the rate of dissipation "
             "(SWAN default: 1.0)"
         )
     )
     gamma0: Optional[float] = Field(
-        description=("The reference $gamma$ for horizontal slopes (SWAN default: 0.54)")
+        default=None,
+        description="The reference $gamma$ for horizontal slopes (SWAN default: 0.54)",
     )
     a1: Optional[float] = Field(
+        default=None,
         description=(
             "First tunable coefficient for the breaker index (SWAN default: 7.59)"
         )
     )
     a2: Optional[float] = Field(
+        default=None,
         description=(
             "Second tunable coefficient for the breaker index (SWAN default: -8.06)"
         )
     )
     a3: Optional[float] = Field(
+        default=None,
         description=(
             "Third tunable coefficient for the breaker index (SWAN default: 8.09)"
         )
@@ -928,6 +965,7 @@ class FRICTION_JONSWAP(BaseComponent):
         default="jonswap", description="Model type discriminator"
     )
     cfjon: Optional[float] = Field(
+        default=None,
         description="Coefficient of the JONSWAP formulation (SWAN default: 0.038)"
     )
 
@@ -978,6 +1016,7 @@ class FRICTION_COLLINS(BaseComponent):
         default="collins", description="Model type discriminator"
     )
     cfw: Optional[float] = Field(
+        default=None,
         description="Collins bottom friction coefficient (SWAN default: 0.015)"
     )
 
@@ -1031,6 +1070,7 @@ class FRICTION_MADSEN(BaseComponent):
         default="madsen", description="Model type discriminator"
     )
     kn: Optional[float] = Field(
+        default=None,
         description=(
             "equivalent roughness length scale of the bottom (in m) "
             "(SWAN default: 0.05)"
@@ -1083,9 +1123,11 @@ class FRICTION_RIPPLES(BaseComponent):
         default="ripples", description="Model type discriminator"
     )
     s: Optional[float] = Field(
+        default=None,
         description="The specific gravity of the sediment (SWAN default: 2.65)"
     )
     d: Optional[float] = Field(
+        default=None,
         description="The sediment diameter (in m) (SWAN default: 0.0001)"
     )
 
@@ -1133,6 +1175,7 @@ class TRIAD(BaseComponent):
         default="triad", description="Model type discriminator"
     )
     biphase: Optional[Union[ELDEBERKY, DEWIT]] = Field(
+        default=None,
         description=(
             "Defines the parameterization of biphase (self-self interaction) "
             "(SWAN default: ELDEBERKY)"
@@ -1186,12 +1229,14 @@ class TRIAD_DCTA(TRIAD):
         default="dcta", description="Model type discriminator"
     )
     trfac: Optional[float] = Field(
+        default=None,
         description=(
             "Scaling factor that controls the intensity of "
             "the triad interaction due to DCTA (SWAN default: 4.4)"
         ),
     )
     p: Optional[float] = Field(
+        default=None,
         description=(
             "Shape coefficient to force the high-frequency tail" "(SWAN default: 4/3)"
         ),
@@ -1258,12 +1303,14 @@ class TRIAD_LTA(TRIAD):
         default="lta", description="Model type discriminator"
     )
     trfac: Optional[float] = Field(
+        default=None,
         description=(
             "Scaling factor that controls the intensity of "
             "the triad interaction due to LTA (SWAN default: 0.8)"
         ),
     )
     cutfr: Optional[float] = Field(
+        default=None,
         description=(
             "Controls the maximum frequency that is considered in the LTA "
             "computation. The value of `cutfr` is the ratio of this maximum "
@@ -1322,12 +1369,14 @@ class TRIAD_SPB(TRIAD):
         default="spb", description="Model type discriminator"
     )
     trfac: Optional[float] = Field(
+        default=None,
         description=(
             "Scaling factor that controls the intensity of "
             "the triad interaction due to SPB (SWAN default: 0.9)"
         ),
     )
     a: Optional[float] = Field(
+        default=None,
         description=(
             "First calibration parameter for tuning K in Eq. (5.1) of "
             "Becq-Girard et al. (1999). This parameter is associated with broadening "
@@ -1336,6 +1385,7 @@ class TRIAD_SPB(TRIAD):
         ),
     )
     b: Optional[float] = Field(
+        default=None,
         description=(
             "Second calibration parameter for tuning K in Eq. (5.1) of "
             "Becq-Girard et al. (1999). This parameter is associated with broadening "
@@ -1460,6 +1510,7 @@ class VEGETATION(BaseComponent):
             "command will be multiplied by this horizontally varying plant density "
             "(SWAN default: 1)"
         ),
+        validate_default=True,
     )
 
     @field_validator("height", "diamtr", "drag", "nstems")
@@ -1540,6 +1591,7 @@ class MUD(BaseComponent):
         default="mud", description="Model type discriminator"
     )
     layer: Optional[float] = Field(
+        default=None,
         description=(
             "The thickness of the mud layer (in m). Note that `layer` is allowed to "
             "vary over the computational region to account for the zonation of muddy "
@@ -1549,9 +1601,11 @@ class MUD(BaseComponent):
         ),
     )
     rhom: Optional[float] = Field(
+        default=None,
         description="The density of the mud layer (in kg/m3) (SWAN default: 1300)"
     )
     viscm: Optional[float] = Field(
+        default=None,
         description=(
             "The kinematic viscosity of the mud layer (in m2/s) (SWAN default: 0.0076)"
         ),
@@ -1632,6 +1686,7 @@ class SICE(BaseComponent):
         default="sice", description="Model type discriminator"
     )
     aice: Optional[float] = Field(
+        default=None,
         description=(
             "Ice concentration as a fraction from 0 to 1. Note that `aice` is allowed "
             "to vary over the computational region to account for the zonation of ice "
@@ -1704,42 +1759,49 @@ class SICE_R19(SICE):
         default="r19", description="Model type discriminator"
     )
     c0: Optional[float] = Field(
+        default=None,
         description=(
             "Polynomial coefficient (in 1/m) for determining the rate of sea ice "
             "dissipation (SWAN default: 0.0)"
         ),
     )
     c1: Optional[float] = Field(
+        default=None,
         description=(
             "Polynomial coefficient (in s/m) for determining the rate of sea ice "
             "dissipation (SWAN default: 0.0)"
         ),
     )
     c2: Optional[float] = Field(
+        default=None,
         description=(
             "Polynomial coefficient (in s2/m) for determining the rate of sea ice "
             "dissipation (SWAN default: 1.06E-3)"
         ),
     )
     c3: Optional[float] = Field(
+        default=None,
         description=(
             "Polynomial coefficient (in s3/m) for determining the rate of sea ice "
             "dissipation (SWAN default: 0.0)"
         ),
     )
     c4: Optional[float] = Field(
+        default=None,
         description=(
             "Polynomial coefficient (in s4/m) for determining the rate of sea ice "
             "dissipation (SWAN default: 2.3E-2)"
         ),
     )
     c5: Optional[float] = Field(
+        default=None,
         description=(
             "Polynomial coefficient (in s5/m) for determining the rate of sea ice "
             "dissipation (SWAN default: 0.0)"
         ),
     )
     c6: Optional[float] = Field(
+        default=None,
         description=(
             "Polynomial coefficient (in s6/m) for determining the rate of sea ice "
             "dissipation (SWAN default: 0.0)"
@@ -1800,6 +1862,7 @@ class SICE_D15(SICE):
         default="d15", description="Model type discriminator"
     )
     chf: Optional[float] = Field(
+        default=None,
         description="A simple coefficient of proportionality (SWAN default: 0.1)",
     )
 
@@ -1845,6 +1908,7 @@ class SICE_M18(SICE):
         default="m18", description="Model type discriminator"
     )
     chf: Optional[float] = Field(
+        default=None,
         description="A simple coefficient of proportionality (SWAN default: 0.059)",
     )
 
@@ -1890,9 +1954,11 @@ class SICE_R21B(SICE):
         default="r21b", description="Model type discriminator"
     )
     chf: Optional[float] = Field(
+        default=None,
         description="A simple coefficient of proportionality (SWAN default: 2.9)",
     )
     npf: Optional[float] = Field(
+        default=None,
         description=(
             "Controls the degree of dependence on frequency and ice thickness "
             "(SWAN default: 4.5)"
@@ -1946,6 +2012,7 @@ class TURBULENCE(BaseComponent):
         default="turbulence", description="Model type discriminator"
     )
     ctb: Optional[float] = Field(
+        default=None,
         description=(
             "The value of the proportionality coefficient appearing in the energy "
             "dissipation term (SWAN default: 0.01)"
@@ -1961,6 +2028,7 @@ class TURBULENCE(BaseComponent):
         ),
     )
     tbcur: Optional[float] = Field(
+        default=None,
         description=(
             "The factor by which depth x current velocity is multiplied in order to "
             "get the turbulent viscosity (SWAN default: 0.004)"
@@ -2049,6 +2117,7 @@ class BRAGG(BaseComponent):
         default="bragg", description="Model type discriminator"
     )
     ibrag: Optional[Literal[1, 2, 3]] = Field(
+        default=None,
         description=(
             "Indicates the computation of Bragg scattering term:\n\n* 1: source term "
             "is calculated per sweep and bottom spectrum is interpolated at the "
@@ -2068,6 +2137,7 @@ class BRAGG(BaseComponent):
         ),
     )
     cutoff: Optional[float] = Field(
+        default=None,
         description=(
             "Cutoff to the ratio between surface and bottom wave numbers. Note: see"
             "the Scientific/Technical documentation for details (SWAN default: 5.0)"
@@ -2175,6 +2245,7 @@ class BRAGG_FILE(BRAGG):
         max_length=40,
     )
     idla: Optional[IDLA] = Field(
+        default=None,
         description=(
             "Order in which the values should be given in the input files"
         ),
@@ -2186,6 +2257,7 @@ class BRAGG_FILE(BRAGG):
         ),
     )
     mky: Optional[int] = Field(
+        default=None,
         description=(
             "Number of cells in y-direction of the wave number grid related to bottom "
             "spectrum (this is one less than the number of points in this direction)"
@@ -2199,6 +2271,7 @@ class BRAGG_FILE(BRAGG):
         ),
     )
     dky: Optional[float] = Field(
+        default=None,
         description=(
             "Mesh size in y-direction of the wave number grid related to bottom "
             "spectrum (1/m) (SWAN default: `dky = dkx`)"
@@ -2255,11 +2328,13 @@ class LIMITER(BaseComponent):
         default="limiter", description="Model type discriminator"
     )
     ursell: Optional[float] = Field(
+        default=None,
         description=(
             "The upper threshold for Ursell number (SWAN default: 10.0)"
         ),
     )
     qb: Optional[float] = Field(
+        default=None,
         description="The threshold for fraction of breaking waves (SWAN default: 1.0)"
     )
 
@@ -2335,11 +2410,11 @@ class OBSTACLE(BaseComponent):
     model_type: Literal["obstacle", "OBSTACLE"] = Field(
         default="obstacle", description="Model type discriminator"
     )
-    transmission: Optional[TRANSMISSION_TYPE]
-    reflection: Optional[REFL] = Field(description="Wave reflection")
-    reflection_type: Optional[REFLECTION_TYPE]
-    freeboard: Optional[FREEBOARD] = Field(description="Freeboard")
-    line: LINE = Field(description="Line of obstacle")
+    transmission: Optional[TRANSMISSION_TYPE] = Field(default=None)
+    reflection: Optional[REFL] = Field(default=None, description="Wave reflection")
+    reflection_type: Optional[REFLECTION_TYPE] = Field(default=None)
+    freeboard: Optional[FREEBOARD] = Field(default=None, description="Freeboard")
+    line: LINE = Field(default=None, description="Line of obstacle")
 
     @model_validator(mode="after")
     def hgt_consistent(self) -> 'OBSTACLE':
@@ -2452,7 +2527,7 @@ class OBSTACLE_FIG(BaseComponent):
         description="The sea-swell mean wave period (in s)",
         ge=0.0,
     )
-    reflection: Optional[REFL] = Field(description="Wave reflection")
+    reflection: Optional[REFL] = Field(default=None, description="Wave reflection")
     line: LINE = Field(description="Line of obstacle")
 
     def cmd(self) -> str:
@@ -2580,6 +2655,7 @@ class SETUP(BaseComponent):
         default="setup", description="Model type discriminator"
     )
     supcor: Optional[float] = Field(
+        default=None,
         description=(
             "By default the wave-induced set-up is computed with a constant added "
             "such that the set-up is zero in the deepest point in the computational "
@@ -2648,12 +2724,14 @@ class DIFFRACTION(BaseComponent):
         default="diffraction", description="Model type discriminator"
     )
     idiffr: Optional[bool] = Field(
+        default=None,
         description=(
             "Indicates the use of diffraction. If `idiffr=0` then no diffraction is "
             "taken into account (SWAN default: 1)"
         ),
     )
     smpar: Optional[float] = Field(
+        default=None,
         description=(
             "Smoothing parameter for the calculation of ∇ · √Etot. During every "
             "smoothing step all grid points exchange `smpar` times the energy with "
@@ -2662,9 +2740,11 @@ class DIFFRACTION(BaseComponent):
         ),
     )
     smnum: Optional[int] = Field(
+        default=None,
         description="Number of smoothing steps relative to `smpar` (SWAN default: 0)"
     )
     cgmod: Optional[float] = Field(
+        default=None,
         description=(
             "Adaption of propagation velocities in geographic space due to "
             "diffraction. If `cgmod=0` then no adaption (SWAN default: 1.0)"
@@ -2730,12 +2810,14 @@ class SURFBEAT(BaseComponent):
         default="surfbeat", description="Model type discriminator"
     )
     df: Optional[float] = Field(
+        default=None,
         description=(
             "The constant size of BIG frequency bin (in Hz) (SWAN default: 0.01)"
         ),
         ge=0.0,
     )
     nmax: Optional[int] = Field(
+        default=None,
         description=(
             "The maximum number of short-wave pairs for creating bichromatic wave "
             "groups (SWAN default: 50000)"
@@ -2743,6 +2825,7 @@ class SURFBEAT(BaseComponent):
         ge=0,
     )
     emin: Optional[float] = Field(
+        default=None,
         description=(
             "The energy threshold in fraction of energy spectrum peak. With this "
             "threshold one takes into account those short wave components to create "
@@ -2751,6 +2834,7 @@ class SURFBEAT(BaseComponent):
         ),
     )
     spacing: Optional[Literal["uniform", "logarithmic"]] = Field(
+        default=None,
         description=(
             "Define if frequencies for reflected ig waves are uniformly or "
             "logarithmically distributed"
@@ -2831,6 +2915,7 @@ class SCAT(BaseComponent):
         default="scat", description="Model type discriminator"
     )
     iqcm: Optional[Literal[0, 1, 2]] = Field(
+        default=None,
         description=(
             "Indicates the modelling and computation of QC scattering:\n\n*0: no "
             "scattering\n*1: scattering due to non-uniform bathymetry and currents "
@@ -2840,6 +2925,7 @@ class SCAT(BaseComponent):
         ),
     )
     rfac: Optional[float] = Field(
+        default=None,
         description=(
             "The resolution factor through which the incident spectral width is"
             "multiplied (SWAN default: 1.0)"
@@ -2847,12 +2933,14 @@ class SCAT(BaseComponent):
         ge=1.0,
     )
     alpha: Optional[float] = Field(
+        default=None,
         description=(
             "The coefficient by which the mean wave number is multiplied to set the"
             "limit on the convolution sum (SWAN default: 1.0)"
         ),
     )
     qmax: Optional[float] = Field(
+        default=None,
         description="The maximum scattering wave number (in 1/m)"
     )
 
@@ -3083,26 +3171,26 @@ class PHYSICS(BaseComponent):
     model_type: Literal["physics", "PHYSICS"] = Field(
         default="physics", description="Model type discriminator"
     )
-    gen: Optional[GEN_TYPE]
-    sswell: Optional[SSWELL_TYPE]
-    negatinp: Optional[NEGATINP_TYPE]
-    wcapping: Optional[WCAPPING_TYPE]
-    quadrupl: Optional[QUADRUPL_TYPE]
-    breaking: Optional[BREAKING_TYPE]
-    friction: Optional[FRICTION_TYPE]
-    triad: Optional[TRIAD_TYPE]
-    vegetation: Optional[VEGETATION_TYPE]
-    mud: Optional[MUD_TYPE]
-    sice: Optional[SICE_TYPE]
-    turbulence: Optional[TURBULENCE_TYPE]
-    bragg: Optional[BRAGG_TYPE]
-    limiter: Optional[LIMITER_TYPE]
-    obstacle: Optional[OBSTACLE_TYPE]
-    setup: Optional[SETUP_TYPE]
-    diffraction: Optional[DIFFRACTION_TYPE]
-    surfbeat: Optional[SURFBEAT_TYPE]
-    scat: Optional[SCAT_TYPE]
-    deactivate: Optional[DEACTIVATE_TYPE]
+    gen: Optional[GEN_TYPE] = Field(default=None)
+    sswell: Optional[SSWELL_TYPE] = Field(default=None)
+    negatinp: Optional[NEGATINP_TYPE] = Field(default=None)
+    wcapping: Optional[WCAPPING_TYPE] = Field(default=None)
+    quadrupl: Optional[QUADRUPL_TYPE] = Field(default=None)
+    breaking: Optional[BREAKING_TYPE] = Field(default=None)
+    friction: Optional[FRICTION_TYPE] = Field(default=None)
+    triad: Optional[TRIAD_TYPE] = Field(default=None)
+    vegetation: Optional[VEGETATION_TYPE] = Field(default=None)
+    mud: Optional[MUD_TYPE] = Field(default=None)
+    sice: Optional[SICE_TYPE] = Field(default=None)
+    turbulence: Optional[TURBULENCE_TYPE] = Field(default=None)
+    bragg: Optional[BRAGG_TYPE] = Field(default=None)
+    limiter: Optional[LIMITER_TYPE] = Field(default=None)
+    obstacle: Optional[OBSTACLE_TYPE] = Field(default=None)
+    setup: Optional[SETUP_TYPE] = Field(default=None)
+    diffraction: Optional[DIFFRACTION_TYPE] = Field(default=None)
+    surfbeat: Optional[SURFBEAT_TYPE] = Field(default=None)
+    scat: Optional[SCAT_TYPE] = Field(default=None)
+    deactivate: Optional[DEACTIVATE_TYPE] = Field(default=None)
 
     # @validator("off")
     # def deactivate_physics(cls, value, values):
