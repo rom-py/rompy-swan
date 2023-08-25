@@ -27,6 +27,7 @@ class SourceTerms(BaseSubComponent, ABC):
         description="Activate the Cavaleri and Malanotte (1981) wave growth term",
     )
     a: Optional[float] = Field(
+        default=None,
         description=(
             "Proportionality coefficient when activating the Cavaleri and Malanotte "
             "(1981) wave growth term (SWAN default: 0.0015)"
@@ -74,12 +75,14 @@ class JANSSEN(SourceTerms):
         default="janssen", description="Model type discriminator"
     )
     cds1: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for determining the rate of whitecapping dissipation "
             "($Cds / s^4_{PM}$) (SWAN default: 4.5)"
         ),
     )
     delta: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient which determines the dependency of the whitecapping on wave "
             "number (mix with Komen et al. formulation) (SWAN default: 0.5)"
@@ -133,12 +136,14 @@ class KOMEN(SourceTerms):
         default="komen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for determining the rate of whitecapping dissipation "
             "(`Cds`) (SWAN default: 2.36e-5)"
         ),
     )
     stpm: Optional[float] = Field(
+        default=None,
         description=(
             "Value of the wave steepness for a Pierson-Moskowitz spectrum "
             "(`s^2_PM`) (SWAN default: 3.02e-3)"
@@ -201,12 +206,14 @@ class WESTHUYSEN(SourceTerms):
         default="westhuysen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
+        default=None,
         description=(
             "proportionality coefficient due to Alves and Banner (2003) "
             "(SWAN default: 5.0e-5)."
         ),
     )
     br: Optional[float] = Field(
+        default=None,
         description="Threshold saturation level	(SWAN default: 1.75e-3)"
     )
 
@@ -290,12 +297,14 @@ class ST6(SourceTerms):
         description="Coefficient related to local dissipation term T2 (a2 in RBW12)"
     )
     p1sds: Optional[float] = Field(
+        default=None,
         description=(
             "Power coefficient controlling strength of dissipation term T1 "
             "(L in RBW12, SWAN default: 4)"
         ),
     )
     p2sds: Optional[float] = Field(
+        default=None,
         description=(
             "Power coefficient controlling strength of dissipation term T2 "
             "(M in RBW12, SWAN default: 4)"
@@ -332,6 +341,7 @@ class ST6(SourceTerms):
         description="Factor to scale U10 with U* when using U10PROXY",
     )
     cdfac: Optional[Annotated[float, Field(gt=0.0)]] = Field(
+        default=None,
         description=(
             "Counter bias in the input wind fields by providing a multiplier "
             "on the drag coefficient"
@@ -340,7 +350,7 @@ class ST6(SourceTerms):
 
     @model_validator(mode="after")
     def debias_only_with_hwang(self) -> 'ST6':
-        if self.debias is not None and self.wind_drag != "hwang":
+        if self.cdfac is not None and self.wind_drag != "hwang":
             raise ValueError(
                 f"Debias is only supported with hwang wind drag, not {self.wind_drag}"
             )
@@ -560,6 +570,7 @@ class ELDEBERKY(BaseSubComponent):
         default="eldeberky", description="Model type discriminator"
     )
     urcrit: Optional[float] = Field(
+        default=None,
         description=(
             "The critical Ursell number appearing in the parametrization. Note: the "
             "value of `urcrit` is setted by Eldeberky (1996) at 0.2 based on a "
@@ -611,6 +622,7 @@ class DEWIT(BaseSubComponent):
         default="dewit", description="Model type discriminator"
     )
     lpar: Optional[float] = Field(
+        default=None,
         description=(
             "Scales spatial averaging of the De Wit's biphase in terms of a multiple "
             "of peak wave length of the incident wave field. Note: `lpar` = 0` means "
@@ -656,6 +668,7 @@ class TRANSM(BaseSubComponent):
         default="transm", description="Model type discriminator"
     )
     trcoef: Optional[float] = Field(
+        default=None,
         description=(
             "Constant transmission coefficient (ratio of transmitted over incoming "
             "significant wave height) (SWAN default: 0.0) (no transmission = complete "
@@ -808,12 +821,14 @@ class GODA(BaseSubComponent):
         ),
     )
     alpha: Optional[float] = Field(
+        default=None,
         description=(
             "coefficient determining the transmission coefficient for Goda's "
             "transmission formula (SWAN default: 2.6)"
         ),
     )
     beta: Optional[float] = Field(
+        default=None,
         description=(
             "Another coefficient determining the transmission coefficient for Goda's "
             "transmission formula (SWAN default: 0.15)"
@@ -912,6 +927,7 @@ class REFL(BaseSubComponent):
         default="refl", description="Model type discriminator"
     )
     reflc: Optional[float] = Field(
+        default=None,
         description=(
             "Constant reflection coefficient (ratio of reflected over incoming "
             "significant wave height) (SWAN default: 1.0)"
@@ -987,6 +1003,7 @@ class RDIFF(BaseSubComponent):
         default="rdiff", description="Model type discriminator"
     )
     pown: Optional[float] = Field(
+        default=None,
         description=(
             "Each incoming direction θ is scattered over reflected direction θ_refl "
             "according to cos^pown(θ-θ_refl). The parameter `pown` indicates the width"
@@ -1048,6 +1065,7 @@ class FREEBOARD(BaseSubComponent):
         ),
     )
     gammat: Optional[float] = Field(
+        default=None,
         description=(
             "Shape parameter of relative freeboard dependency of transmission "
             "coefficient. This parameter should be higher than zero (SWAN default 1.0)"
@@ -1055,6 +1073,7 @@ class FREEBOARD(BaseSubComponent):
         gt=0.0,
     )
     gammar: Optional[float] = Field(
+        default=None,
         description=(
             "Shape parameter of relative freeboard dependency of reflection "
             "coefficient. This parameter should be higher than zero (SWAN default 1.0)"
