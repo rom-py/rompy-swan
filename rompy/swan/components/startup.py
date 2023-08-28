@@ -1,10 +1,11 @@
 """Model start up components."""
 import logging
 from typing import Literal, Optional
-from pydantic import Field, validator, constr, confloat, conint
+from pydantic import field_validator, Field
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.startup import CARTESIAN, SPHERICAL
+
 
 logger = logging.getLogger(__name__)
 
@@ -20,27 +21,37 @@ class PROJECT(BaseComponent):
     """
 
     model_type: Literal["project"] = Field(
-        default="project", description="Model type discriminator",
+        default="project",
+        description="Model type discriminator",
     )
-    name: Optional[constr(max_length=16)] = Field(
+    name: Optional[str] = Field(
+        default=None,
         description="Is the name of the project, at most 16 characters long",
+        max_length=16,
     )
-    nr: constr(max_length=4) = Field(
-        (
-            "Is the run identification (to be provided as a character string; e.g. the "
-            "run number) to distinguish this run among other runs for the same project; "
-            "it is at most 4 characters long. It is the only required information in "
-            "this command."
+    nr: str = Field(
+        description=(
+            "Is the run identification (to be provided as a character string; e.g. "
+            "the run number) to distinguish this run among other runs for the same "
+            "project; it is at most 4 characters long. It is the only required "
+            "information in this command."
         ),
+        max_length=4,
     )
-    title1: Optional[constr(max_length=72)] = Field(
+    title1: Optional[str] = Field(
+        default=None,
         description=(
             "Is a string of at most 72 characters provided by the user to appear in "
             "the output of the program for the user's convenience. Default: blanks."
         ),
+        max_length=72,
     )
-    title2: Optional[constr(max_length=72)] = Field(description="Same as 'title1'")
-    title3: Optional[constr(max_length=72)] = Field(description="Same as 'title1'")
+    title2: Optional[str] = Field(
+        default=None, description="Same as 'title1'", max_length=72
+    )
+    title3: Optional[str] = Field(
+        default=None, description="Same as 'title1'", max_length=72
+    )
 
     def cmd(self) -> str:
         repr = "PROJECT"
@@ -71,7 +82,7 @@ class SET(BaseComponent):
     1: warnings.
     2: errors (possibly automatically repaired or repairable by SWAN).
     3: severe errors.
-    
+
     Default values for `pwtail` depend on formulations of physics:
 
     - command GEN1: `pwtail = 5`.
@@ -85,36 +96,46 @@ class SET(BaseComponent):
     model_type: Literal["set"] = Field(
         default="set", description="Model type discriminator"
     )
-    level: Optional[confloat(ge=0.0)] = Field(
+    level: Optional[float] = Field(
+        default=None,
         description=(
             "Increase in water level that is constant in space and time can be given "
             "with this option, `level` is the value of this increase (in m). For a "
             "variable water level reference is made to the commands "
             "INPGRID and READINP (SWAN default: `level = 0`)"
         ),
+        ge=0.0,
     )
-    nor: Optional[confloat(ge=-360.0, le=360.0)] = Field(
+    nor: Optional[float] = Field(
+        default=None,
         description=(
             "Direction of North with respect to the x-axis (measured "
             "counterclockwise); default `nor = 90`, i.e. x-axis of the problem "
             "coordinate system points East. When spherical coordinates are used "
             "(see command COORD) the value of `nor` may not be modified."
         ),
+        ge=-360.0,
+        le=360.0,
     )
-    depmin: Optional[confloat(ge=0.0)] = Field(
+    depmin: Optional[float] = Field(
+        default=None,
         description=(
             "Threshold depth (in m). In the computation any positive depth smaller "
             "than `depmin` is made equal to `depmin` (SWAN default: `depmin = 0.05`)."
         ),
+        ge=0.0,
     )
-    maxmes: Optional[conint(ge=0)] = Field(
+    maxmes: Optional[int] = Field(
+        default=None,
         description=(
             "Maximum number of error messages during the computation at which the "
             "computation is terminated. During the computational process messages are "
             "written to the print file (SWAN default: `maxmes = 200`)."
         ),
+        ge=0,
     )
     maxerr: Optional[Literal[1, 2, 3]] = Field(
+        default=None,
         description=(
             "During pre-processing SWAN checks input data. Depending on the severity "
             "of the errors encountered during this pre-processing, SWAN does not "
@@ -123,29 +144,35 @@ class SET(BaseComponent):
             "computations will continue). (SWAN default: `maxerr = 1`)."
         ),
     )
-    grav: Optional[confloat(ge=0.0)] = Field(
-        description=(
-            "The gravitational acceleration (in m/s2) (SWAN default: 9.81) "
-        ),
+    grav: Optional[float] = Field(
+        default=None,
+        description="The gravitational acceleration (in m/s2) (SWAN default: 9.81) ",
+        ge=0.0,
     )
-    rho: Optional[confloat(ge=0.0)] = Field(
+    rho: Optional[float] = Field(
+        default=None,
         description="The water density (in kg/m3) *=(SWAN default: `rho = 1025`).",
+        ge=0.0,
     )
-    cdcap: Optional[confloat(ge=0.0)] = Field(
+    cdcap: Optional[float] = Field(
+        default=None,
         description=(
             "The maximum value for the wind drag coefficient. A value of "
             "`cdcap = 99999` means no cutting off the drag coefficient. A suggestion "
             "for this parameter is `cdcap = 2.5x 10-3` (SWAN default: `cdcap = 99999`). "
         ),
+        ge=0.0,
     )
     inrhog: Optional[Literal[0, 1]] = Field(
+        default=None,
         description=(
             "To indicate whether the user requires output based on variance or based "
             "on true energy (see Section 2.5). `inrhog` = 0: output based on variance, "
             "`inrhog` = 1: output based on true energy (SWAN default: `inrhog=0`). "
         ),
     )
-    hsrerr: Optional[confloat(ge=0.0)] = Field(
+    hsrerr: Optional[float] = Field(
+        default=None,
         description=(
             "The relative difference between the user imposed significant wave height "
             "and the significant wave height computed by SWAN (anywhere along the "
@@ -159,6 +186,7 @@ class SET(BaseComponent):
             "command OFF BNDCHK (SWAN default: `hsrerr = 0.10`). "
             "ONLY MEANT FOR STRUCTURED GRIDS. "
         ),
+        ge=0.0,
     )
     direction_convention: Literal["nautical", "cartesian"] = Field(
         description=(
@@ -169,7 +197,8 @@ class SET(BaseComponent):
             "SWAN default: `cartesian`."
         ),
     )
-    pwtail: Optional[conint(ge=0)] = Field(
+    pwtail: Optional[int] = Field(
+        default=None,
         description=(
             "Power of high frequency tail; defines the shape of the spectral tail "
             "above the highest prognostic frequency `fhigh` (see command CGRID). "
@@ -178,8 +207,10 @@ class SET(BaseComponent):
             "command should be located in the command file after the GEN1, GEN2 or "
             "GEN3 command (these will override the SET command with respect to `pwtail`)."
         ),
+        ge=0,
     )
-    froudmax: Optional[confloat(ge=0.0)] = Field(
+    froudmax: Optional[float] = Field(
+        default=None,
         description=(
             "Is the maximum Froude number (`U/√gd` with `U` the current and `d` the "
             "water depth). The currents taken from a circulation model may mismatch "
@@ -187,8 +218,10 @@ class SET(BaseComponent):
             "larger than 1. For this, the current velocities will be maximized by "
             "Froude number times `√gd` (SWAN default: `froudmax = 0.8`)."
         ),
+        ge=0.0,
     )
     icewind: Optional[Literal[0, 1]] = Field(
+        default=None,
         description=(
             "Controls the scaling of wind input by open water fraction. Default value "
             "of zero corresponds to the case where wind input is scaled by the open "
@@ -198,7 +231,8 @@ class SET(BaseComponent):
         ),
     )
 
-    @validator("pwtail")
+    @field_validator("pwtail")
+    @classmethod
     def pwtail_after_gen(cls, v):
         if v is not None:
             logger.warning("pwtail only has effect if set after GEN command")
@@ -256,9 +290,7 @@ class MODE(BaseComponent):
     )
     kind: Literal["stationary", "nonstationary"] = Field(
         default="stationary",
-        description=(
-            "Indicates that the run will be either stationary or nonstationary."
-        ),
+        description="Indicates if run will be stationary or nonstationary.",
     )
     dim: Literal["onedimensional", "twodimensional"] = Field(
         default="twodimensional",
@@ -283,10 +315,11 @@ class COORDINATES(BaseComponent):
     """
 
     model_type: Literal["coordinates"] = Field(
-        default="coordinates", description="Model type discriminator",
+        default="coordinates",
+        description="Model type discriminator",
     )
     kind: CARTESIAN | SPHERICAL = Field(
-        default=CARTESIAN(),
+        default_factory=CARTESIAN,
         description="Coordinates kind",
     )
     reapeating: bool = Field(

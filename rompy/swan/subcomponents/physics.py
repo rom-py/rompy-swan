@@ -1,8 +1,8 @@
 """SWAN physics subcomponents."""
-from typing import Literal, Optional
-from pydantic import Field, validator, root_validator, confloat
+from typing import Annotated, Literal, Optional
+from pydantic import field_validator, Field, model_validator
 from abc import ABC
-from pydantic_numpy import NDArray
+from pydantic_numpy.typing import Np2DArray
 import numpy as np
 
 from rompy.swan.subcomponents.base import BaseSubComponent
@@ -26,6 +26,7 @@ class SourceTerms(BaseSubComponent, ABC):
         description="Activate the Cavaleri and Malanotte (1981) wave growth term",
     )
     a: Optional[float] = Field(
+        default=None,
         description=(
             "Proportionality coefficient when activating the Cavaleri and Malanotte "
             "(1981) wave growth term (SWAN default: 0.0015)"
@@ -73,12 +74,14 @@ class JANSSEN(SourceTerms):
         default="janssen", description="Model type discriminator"
     )
     cds1: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for determining the rate of whitecapping dissipation "
             "($Cds / s^4_{PM}$) (SWAN default: 4.5)"
         ),
     )
     delta: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient which determines the dependency of the whitecapping on wave "
             "number (mix with Komen et al. formulation) (SWAN default: 0.5)"
@@ -132,12 +135,14 @@ class KOMEN(SourceTerms):
         default="komen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
+        default=None,
         description=(
             "Coefficient for determining the rate of whitecapping dissipation "
             "(`Cds`) (SWAN default: 2.36e-5)"
         ),
     )
     stpm: Optional[float] = Field(
+        default=None,
         description=(
             "Value of the wave steepness for a Pierson-Moskowitz spectrum "
             "(`s^2_PM`) (SWAN default: 3.02e-3)"
@@ -200,13 +205,14 @@ class WESTHUYSEN(SourceTerms):
         default="westhuysen", description="Model type discriminator"
     )
     cds2: Optional[float] = Field(
+        default=None,
         description=(
             "proportionality coefficient due to Alves and Banner (2003) "
             "(SWAN default: 5.0e-5)."
         ),
     )
     br: Optional[float] = Field(
-        description="Threshold saturation level	(SWAN default: 1.75e-3)"
+        default=None, description="Threshold saturation level	(SWAN default: 1.75e-3)"
     )
 
     def cmd(self) -> str:
@@ -289,12 +295,14 @@ class ST6(SourceTerms):
         description="Coefficient related to local dissipation term T2 (a2 in RBW12)"
     )
     p1sds: Optional[float] = Field(
+        default=None,
         description=(
             "Power coefficient controlling strength of dissipation term T1 "
             "(L in RBW12, SWAN default: 4)"
         ),
     )
     p2sds: Optional[float] = Field(
+        default=None,
         description=(
             "Power coefficient controlling strength of dissipation term T2 "
             "(M in RBW12, SWAN default: 4)"
@@ -330,22 +338,22 @@ class ST6(SourceTerms):
         default=32.0,
         description="Factor to scale U10 with U* when using U10PROXY",
     )
-    cdfac: Optional[confloat(gt=0.0)] = Field(
+    cdfac: Optional[float] = Field(
+        default=None,
         description=(
             "Counter bias in the input wind fields by providing a multiplier "
             "on the drag coefficient"
         ),
+        gt=0.0,
     )
 
-    @root_validator
-    def debias_only_with_hwang(cls, values):
-        debias = values.get("debias")
-        wind_drag = values.get("wind_drag", "hwang")
-        if debias is not None and wind_drag != "hwang":
+    @model_validator(mode="after")
+    def debias_only_with_hwang(self) -> "ST6":
+        if self.cdfac is not None and self.wind_drag != "hwang":
             raise ValueError(
-                f"Debias is only supported with hwang wind drag, not {wind_drag}"
+                f"Debias is only supported with hwang wind drag, not {self.wind_drag}"
             )
-        return values
+        return self
 
     @property
     def u10_cmd(self) -> str:
@@ -561,12 +569,13 @@ class ELDEBERKY(BaseSubComponent):
         default="eldeberky", description="Model type discriminator"
     )
     urcrit: Optional[float] = Field(
+        default=None,
         description=(
             "The critical Ursell number appearing in the parametrization. Note: the "
             "value of `urcrit` is setted by Eldeberky (1996) at 0.2 based on a "
             "laboratory experiment, whereas Doering and Bowen (1995) employed the "
             "value of 0.63 based on the field experiment data (SWAN default: 0.63)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -612,11 +621,12 @@ class DEWIT(BaseSubComponent):
         default="dewit", description="Model type discriminator"
     )
     lpar: Optional[float] = Field(
+        default=None,
         description=(
             "Scales spatial averaging of the De Wit's biphase in terms of a multiple "
             "of peak wave length of the incident wave field. Note: `lpar` = 0` means "
             "no averaging (SWAN default: 0)"
-        )
+        ),
     )
 
     def cmd(self) -> str:
@@ -657,6 +667,7 @@ class TRANSM(BaseSubComponent):
         default="transm", description="Model type discriminator"
     )
     trcoef: Optional[float] = Field(
+        default=None,
         description=(
             "Constant transmission coefficient (ratio of transmitted over incoming "
             "significant wave height) (SWAN default: 0.0) (no transmission = complete "
@@ -699,14 +710,12 @@ class TRANS1D(BaseSubComponent):
     model_type: Literal["trans1d", "TRANS1D"] = Field(
         default="trans1d", description="Model type discriminator"
     )
-    trcoef: list[float] = Field(
+    trcoef: list[Annotated[float, Field(ge=0.0, le=1.0)]] = Field(
         description=(
             "Transmission coefficient (ratio of transmitted over incoming significant "
             "wave height) per frequency. The number of these transmission values must "
             "be equal to the number of frequencies, i.e. `msc` + 1"
         ),
-        ge=0.0,
-        le=1.0,
     )
 
     def cmd(self) -> str:
@@ -740,7 +749,7 @@ class TRANS2D(BaseSubComponent):
     model_type: Literal["trans2d", "TRANS2D"] = Field(
         default="trans2d", description="Model type discriminator"
     )
-    trcoef: NDArray = Field(
+    trcoef: Np2DArray = Field(
         description=(
             "Transmission coefficient (ratio of transmitted over incoming significant "
             "wave height) per frequency and direction, rows represent directions and "
@@ -748,11 +757,9 @@ class TRANS2D(BaseSubComponent):
         ),
     )
 
-    class Config:
-        json_encoders = JSON_ENCODERS
-
-    @validator("trcoef")
-    def constrained_0_1(cls, value):
+    @field_validator("trcoef")
+    @classmethod
+    def constrained_0_1(cls, value: float) -> float:
         """Ensure all directions have the same number of frequencies."""
         if value.min() < 0 or value.max() > 1:
             raise ValueError("Transmission coefficients must be between 0.0 and 1.0")
@@ -813,12 +820,14 @@ class GODA(BaseSubComponent):
         ),
     )
     alpha: Optional[float] = Field(
+        default=None,
         description=(
             "coefficient determining the transmission coefficient for Goda's "
             "transmission formula (SWAN default: 2.6)"
         ),
     )
     beta: Optional[float] = Field(
+        default=None,
         description=(
             "Another coefficient determining the transmission coefficient for Goda's "
             "transmission formula (SWAN default: 0.15)"
@@ -876,9 +885,7 @@ class DANGREMOND(BaseSubComponent):
         ),
     )
     slope: float = Field(
-        description="The slope of the obstacle (in degrees)",
-        ge=0.0,
-        le=90.0
+        description="The slope of the obstacle (in degrees)", ge=0.0, le=90.0
     )
     Bk: float = Field(description="The crest width of the obstacle")
 
@@ -917,6 +924,7 @@ class REFL(BaseSubComponent):
         default="refl", description="Model type discriminator"
     )
     reflc: Optional[float] = Field(
+        default=None,
         description=(
             "Constant reflection coefficient (ratio of reflected over incoming "
             "significant wave height) (SWAN default: 1.0)"
@@ -992,6 +1000,7 @@ class RDIFF(BaseSubComponent):
         default="rdiff", description="Model type discriminator"
     )
     pown: Optional[float] = Field(
+        default=None,
         description=(
             "Each incoming direction θ is scattered over reflected direction θ_refl "
             "according to cos^pown(θ-θ_refl). The parameter `pown` indicates the width"
@@ -1020,7 +1029,7 @@ class FREEBOARD(BaseSubComponent):
 
     Notes
     -----
-    See the Scientific/Technical documentation for background information on the 
+    See the Scientific/Technical documentation for background information on the
     `gammat` and `gammar` shape parameters.
 
     Examples
@@ -1053,6 +1062,7 @@ class FREEBOARD(BaseSubComponent):
         ),
     )
     gammat: Optional[float] = Field(
+        default=None,
         description=(
             "Shape parameter of relative freeboard dependency of transmission "
             "coefficient. This parameter should be higher than zero (SWAN default 1.0)"
@@ -1060,6 +1070,7 @@ class FREEBOARD(BaseSubComponent):
         gt=0.0,
     )
     gammar: Optional[float] = Field(
+        default=None,
         description=(
             "Shape parameter of relative freeboard dependency of reflection "
             "coefficient. This parameter should be higher than zero (SWAN default 1.0)"
@@ -1131,20 +1142,18 @@ class LINE(BaseSubComponent):
         default="line", description="Model type discriminator"
     )
     xp: list[float] = Field(
-        description="The x-coordinates of the points defining the line",
-        min_items=2
+        description="The x-coordinates of the points defining the line", min_length=2
     )
     yp: list[float] = Field(
-        description="The y-coordinates of the points defining the line",
-        min_items=2
+        description="The y-coordinates of the points defining the line", min_length=2
     )
 
-    @root_validator
-    def check_length(cls, values):
+    @model_validator(mode="after")
+    def check_length(self) -> "LINE":
         """Check that the length of xp and yp are the same."""
-        if len(values["xp"]) != len(values["yp"]):
+        if len(self.xp) != len(self.yp):
             raise ValueError("xp and yp must be the same length")
-        return values
+        return self
 
     def cmd(self) -> str:
         """Command file string for this subcomponent."""

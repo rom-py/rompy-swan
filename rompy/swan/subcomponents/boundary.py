@@ -1,7 +1,7 @@
 """Subcomponents to be rendered inside of components."""
 import logging
-from typing import Optional, Literal
-from pydantic import Field, root_validator, confloat, constr, conint
+from typing import Annotated, Optional, Literal
+from pydantic import Field, model_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent
 
@@ -20,7 +20,8 @@ class SIDE(BaseSubComponent):
     """
 
     model_type: Literal["side"] = Field(
-        default="side", description="Model type discriminator",
+        default="side",
+        description="Model type discriminator",
     )
     side: Literal["north", "nw", "west", "sw", "south", "se", "east", "ne"] = Field(
         description="The side of the grid to apply the boundary to",
@@ -48,7 +49,8 @@ class SEGMENTXY(BaseSubComponent):
     """
 
     model_type: Literal["segmentxy"] = Field(
-        default="segmentxy", description="Model type discriminator",
+        default="segmentxy",
+        description="Model type discriminator",
     )
     points: list[tuple[float, float]] = Field(
         description="Pairs of (x, y) values to define the segment",
@@ -80,7 +82,8 @@ class SEGMENTIJ(BaseSubComponent):
     """
 
     model_type: Literal["segmentij"] = Field(
-        default="segmentij", description="Model type discriminator",
+        default="segmentij",
+        description="Model type discriminator",
     )
     points: list[tuple[int, int]] = Field(
         description="Pairs of (i, j) values to define the segment",
@@ -101,12 +104,14 @@ class PAR(BaseSubComponent):
     """
 
     model_type: Literal["par"] = Field(
-        default="par", description="Model type discriminator",
+        default="par",
+        description="Model type discriminator",
     )
-    hs: confloat(gt=0.0) = Field(
+    hs: float = Field(
         description="The significant wave height (m)",
+        gt=0.0,
     )
-    per: confloat(gt=0.0) = Field(
+    per: float = Field(
         description=(
             "The characteristic period (s) of the energy spectrum (relative "
             "frequency; which is equal to absolute frequency in the absence of "
@@ -114,13 +119,14 @@ class PAR(BaseSubComponent):
             "chosen in command BOUND SHAPE or `per` is the value of the mean period, "
             "if option MEAN was chosen in command BOUND SHAPE."
         ),
+        gt=0.0,
     )
-    dir: confloat(ge=-360.0, le=360.0) = Field(
-        description=(
-            "The peak wave direction θpeak (degrees), constant over frequencies"
-        ),
+    dir: float = Field(
+        description="The peak wave direction θpeak (degree), constant over frequencies",
+        ge=-360.0,
+        le=360.0,
     )
-    dd: confloat(ge=0.0, le=360.0) = Field(
+    dd: float = Field(
         description=(
             "Coefficient of directional spreading; a $cos^m(θ)$ distribution is "
             "assumed. `dd` is interpreted as the directional standard deviation in "
@@ -128,6 +134,8 @@ class PAR(BaseSubComponent):
             "Default: `dd=30`. `dd` is interpreted as the power `m`, if the option "
             "POWER is chosen in the command BOUND SHAPE. Default: `dd=2`."
         ),
+        ge=0.0,
+        le=360.0,
     )
 
     def cmd(self) -> str:
@@ -143,7 +151,8 @@ class CONSTANTPAR(PAR):
     """
 
     model_type: Literal["constantpar"] = Field(
-        default="constantpar", description="Model type discriminator",
+        default="constantpar",
+        description="Model type discriminator",
     )
 
     def cmd(self) -> str:
@@ -159,12 +168,13 @@ class VARIABLEPAR(BaseSubComponent):
     """
 
     model_type: Literal["variablepar"] = Field(
-        default="variablepar", description="Model type discriminator",
+        default="variablepar",
+        description="Model type discriminator",
     )
-    hs: list[confloat(ge=0.0)] = Field(
+    hs: list[Annotated[float, Field(ge=0.0)]] = Field(
         description="The significant wave height (m)",
     )
-    per: list[confloat(ge=0.0)] = Field(
+    per: list[Annotated[float, Field(ge=0.0)]] = Field(
         description=(
             "The characteristic period (s) of the energy spectrum (relative "
             "frequency; which is equal to absolute frequency in the absence of "
@@ -173,10 +183,10 @@ class VARIABLEPAR(BaseSubComponent):
             "if option MEAN was chosen in command BOUND SHAPE."
         ),
     )
-    dir: list[confloat(ge=-360.0, le=360.0)] = Field(
+    dir: list[Annotated[float, Field(ge=-360.0, le=360.0)]] = Field(
         description="The peak wave direction θpeak (degrees), constant over frequencies"
     )
-    dd: list[confloat(ge=0.0, le=360.0)] = Field(
+    dd: list[Annotated[float, Field(ge=0.0, le=360.0)]] = Field(
         description=(
             "Coefficient of directional spreading; a $cos^m(θ)$ distribution is "
             "assumed. `dd` is interpreted as the directional standard deviation in "
@@ -185,7 +195,7 @@ class VARIABLEPAR(BaseSubComponent):
             "POWER is chosen in the command BOUND SHAPE (SWAN default: `dd=2`)."
         ),
     )
-    dist: list[confloat(ge=0)] = Field(
+    dist: list[Annotated[float, Field(ge=0)]] = Field(
         alias="len",
         description=(
             "Is the distance from the first point of the side or segment to the point "
@@ -200,12 +210,12 @@ class VARIABLEPAR(BaseSubComponent):
         ),
     )
 
-    @root_validator
-    def ensure_equal_size(cls, values):
+    @model_validator(mode="after")
+    def ensure_equal_size(self) -> "VARIABLEPAR":
         for key in ["hs", "per", "dir", "dd"]:
-            if len(values[key]) != len(values["dist"]):
-                raise ValueError(f"Sizes of dist and {key} must be the size")
-        return values
+            if len(getattr(self, key)) != len(self.dist):
+                raise ValueError(f"Size of dist and {key} must be the same")
+        return self
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
@@ -251,18 +261,22 @@ class CONSTANTFILE(BaseSubComponent):
     """
 
     model_type: Literal["constantfile"] = Field(
-        default="constantfile", description="Model type discriminator",
+        default="constantfile",
+        description="Model type discriminator",
     )
-    fname: constr(max_length=40) = Field(
+    fname: str = Field(
         description="Name of the file containing the boundary condition.",
+        max_length=40,
     )
-    seq: Optional[conint(ge=1)] = Field(
+    seq: Optional[int] = Field(
+        default=None,
         description=(
             "sequence number of geographic location in the file (see Appendix D); "
             "useful for files which contain spectra for more than one location. "
             "Note: a TPAR file always contains only one location so in this case "
             "[seq] must always be 1."
         ),
+        ge=1,
     )
 
     def cmd(self) -> str:
@@ -307,12 +321,14 @@ class VARIABLEFILE(BaseSubComponent):
     """
 
     model_type: Literal["variablefile"] = Field(
-        default="variablefile", description="Model type discriminator",
+        default="variablefile",
+        description="Model type discriminator",
     )
-    fname: list[constr(max_length=40)] = Field(
+    fname: list[Annotated[str, Field(max_length=40)]] = Field(
         description="Names of the file containing the boundary condition",
     )
-    seq: Optional[list[conint(ge=1)]] = Field(
+    seq: Optional[list[Annotated[int, Field(ge=1)]]] = Field(
+        default=None,
         description=(
             "sequence number of geographic location in the file (see Appendix D); "
             "useful for files which contain spectra for more than one location. "
@@ -320,7 +336,7 @@ class VARIABLEFILE(BaseSubComponent):
             "[seq] must always be 1."
         ),
     )
-    dist: list[confloat(ge=0)] = Field(
+    dist: list[Annotated[float, Field(ge=0)]] = Field(
         alias="len",
         description=(
             "Is the distance from the first point of the side or segment to the point "
@@ -336,14 +352,15 @@ class VARIABLEFILE(BaseSubComponent):
         ),
     )
 
-    @root_validator
-    def ensure_equal_size(cls, values):
+    @model_validator(mode="after")
+    def ensure_equal_size(self) -> "VARIABLEFILE":
         for key in ["fname", "seq"]:
-            if values.get(key) is not None and len(values[key]) != len(values["dist"]):
-                raise ValueError(f"Sizes of dist and {key} must be the size")
-        if values.get("seq") is None:
-            values["seq"] = [1] * len(values["dist"])
-        return values
+            attr = getattr(self, key)
+            if attr is not None and len(attr) != len(self.dist):
+                raise ValueError(f"Size of dist and {key} must be the same")
+        if self.seq is None:
+            self.seq = [1] * len(self.dist)
+        return self
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
@@ -368,7 +385,8 @@ class DEFAULT(BaseSubComponent):
     """
 
     model_type: Literal["default"] = Field(
-        default="default", description="Model type discriminator",
+        default="default",
+        description="Model type discriminator",
     )
 
 
@@ -384,7 +402,8 @@ class ZERO(BaseSubComponent):
     """
 
     model_type: Literal["zero"] = Field(
-        default="zero", description="Model type discriminator",
+        default="zero",
+        description="Model type discriminator",
     )
 
 
@@ -407,10 +426,12 @@ class HOTSINGLE(BaseSubComponent):
     """
 
     model_type: Literal["hotsingle"] = Field(
-        default="hotsingle", description="Model type discriminator",
+        default="hotsingle",
+        description="Model type discriminator",
     )
-    fname: constr(max_length=85) = Field(
+    fname: str = Field(
         description="Name of the file containing the initial wave field",
+        max_length=85,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",
@@ -442,10 +463,12 @@ class HOTMULTIPLE(BaseSubComponent):
     """
 
     model_type: Literal["hotmultiple"] = Field(
-        default="hotmultiple", description="Model type discriminator",
+        default="hotmultiple",
+        description="Model type discriminator",
     )
-    fname: constr(max_length=85) = Field(
+    fname: str = Field(
         description="Name of the file containing the initial wave field",
+        max_length=85,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",

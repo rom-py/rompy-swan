@@ -1,14 +1,12 @@
 import logging
 from pathlib import Path
-from typing import Literal, Optional, Union
+from typing import Annotated, Literal, Optional, Union
 
-from pydantic import Field, root_validator, validator
+from pydantic import field_validator, Field, model_validator
 
-from rompy.core import (BaseConfig, Coordinate, RompyBaseModel, Spectrum,
-                        TimeRange)
+from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 from rompy.swan.boundary import DataBoundary
-from rompy.swan.components import (base, boundary, cgrid, inpgrid, physics,
-                                   startup)
+from rompy.swan.components import boundary, cgrid, inpgrid, physics, startup
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
@@ -54,12 +52,9 @@ class OutputLocs(RompyBaseModel):
 
 
 class ForcingData(RompyBaseModel):
-    bottom: SwanDataGrid | None = Field(
-        None, description="Bathymetry data for SWAN")
-    wind: SwanDataGrid | None = Field(
-        None, description="The wind data for SWAN.")
-    current: SwanDataGrid | None = Field(
-        None, description="The current data for SWAN.")
+    bottom: SwanDataGrid | None = Field(None, description="Bathymetry data for SWAN")
+    wind: SwanDataGrid | None = Field(None, description="The wind data for SWAN.")
+    current: SwanDataGrid | None = Field(None, description="The current data for SWAN.")
     boundary: DataBoundary | None = Field(
         None, description="The boundary data for SWAN."
     )
@@ -106,7 +101,8 @@ class SwanPhysics(RompyBaseModel):
         description="The coefficient of friction for the given surface and object.",
     )
 
-    @validator("friction")
+    @field_validator("friction")
+    @classmethod
     def validate_friction(cls, v):
         if v not in ["JON", "COLL", "MAD", "RIP"]:
             raise ValueError(
@@ -114,7 +110,8 @@ class SwanPhysics(RompyBaseModel):
             )  # TODO Raf to add actual friction options
         return v
 
-    @validator("friction_coeff")
+    @field_validator("friction_coeff")
+    @classmethod
     def validate_friction_coeff(cls, v):
         # TODO Raf to add sensible friction coeff range
         if float(v) > 1:
@@ -221,8 +218,7 @@ class SwanConfig(BaseConfig):
     """SWAN configuration"""
 
     grid: SwanGrid = Field(description="The model grid for the SWAN run")
-    model_type: Literal["swan"] = Field(
-        "swan", description="The model type for SWAN.")
+    model_type: Literal["swan"] = Field("swan", description="The model type for SWAN.")
     spectral_resolution: SwanSpectrum = Field(
         SwanSpectrum(), description="The spectral resolution for SWAN."
     )
@@ -233,12 +229,11 @@ class SwanConfig(BaseConfig):
         SwanPhysics(), description="The physics options for SWAN."
     )
     outputs: Outputs = Field(Outputs(), description="The outputs for SWAN.")
-    spectra_file: str = Field(
-        "boundary.spec", description="The spectra file for SWAN.")
-    template: str = Field(
-        DEFAULT_TEMPLATE, description="The template for SWAN.")
-    _datefmt: str = Field(
-        "%Y%m%d.%H%M%S", description="The date format for SWAN.")
+    spectra_file: str = Field("boundary.spec", description="The spectra file for SWAN.")
+    template: str = Field(DEFAULT_TEMPLATE, description="The template for SWAN.")
+    _datefmt: Annotated[
+        str, Field(description="The date format for SWAN.")
+    ] = "%Y%m%d.%H%M%S"
     # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
 
     @property
@@ -283,69 +278,71 @@ class SwanConfigComponents(BaseConfig):
         default=str(Path(__file__).parent.parent / "templates" / "swancomp"),
         description="The template for SWAN.",
     )
-    project: PROJECT_TYPES = Field(
+    project: Optional[PROJECT_TYPES] = Field(
         default=None,
         description="SWAN PROJECT component",
     )
-    set: SET_TYPES = Field(
+    set: Optional[SET_TYPES] = Field(
         default=None,
         description="SWAN SET component",
     )
-    mode: MODE_TYPES = Field(
+    mode: Optional[MODE_TYPES] = Field(
         default=None,
         description="SWAN MODE component",
     )
-    coordinates: COORDINATES_TYPES = Field(
+    coordinates: Optional[COORDINATES_TYPES] = Field(
         default=None,
         description="SWAN COORDINATES component",
     )
-    cgrid: CGRID_TYPES = Field(
+    cgrid: Optional[CGRID_TYPES] = Field(
         default=None,
         description="SWAN CGRID component",
         discriminator="model_type",
     )
-    inpgrid: INPGRID_TYPES = Field(
-        default=None, description="SWAN INPGRID components")
-    boundary: BOUNDARY_TYPES = Field(
+    inpgrid: Optional[INPGRID_TYPES] = Field(
+        default=None, description="SWAN INPGRID components"
+    )
+    boundary: Optional[BOUNDARY_TYPES] = Field(
         default=None,
         description="SWAN BOUNDARY component",
         discriminator="model_type",
     )
-    initial: INITIAL_TYPES = Field(
+    initial: Optional[INITIAL_TYPES] = Field(
         default=None,
         description="SWAN INITIAL component",
     )
-    physics: PHYSICS_TYPES = Field(
+    physics: Optional[PHYSICS_TYPES] = Field(
         default=None,
         description="SWAN PHYSICS component",
     )
 
-    @root_validator
-    def no_nor_if_spherical(cls, values):
+    @model_validator(mode="after")
+    def no_nor_if_spherical(self) -> "SwanConfigComponents":
         """Ensure SET nor is not prescribed when using spherical coordinates."""
-        return values
+        return self
 
-    @root_validator
-    def no_repeating_if_setup(cls, values):
+    @model_validator(mode="after")
+    def no_repeating_if_setup(self) -> "SwanConfigComponents":
         """Ensure COORD repeating not set when using set-up."""
-        return values
+        return self
 
-    @root_validator
-    def alp_is_zero_if_spherical(cls, values):
+    @model_validator(mode="after")
+    def alp_is_zero_if_spherical(self) -> "SwanConfigComponents":
         """Ensure alp is zero when using spherical coordinates."""
-        return values
+        return self
 
-    @root_validator
-    def cgrid_contain_inpgrids(cls, values):
+    @model_validator(mode="after")
+    def cgrid_contain_inpgrids(self) -> "SwanConfigComponents":
         """Ensure all inpgrids are inside the cgrid area."""
-        return values
+        return self
 
-    @root_validator
-    def layer_defined_if_no_mud_inpgrid(cls, values):
+    @model_validator(mode="after")
+    def layer_defined_if_no_mud_inpgrid(self) -> "SwanConfigComponents":
         """Ensure layer is set in MUD command if not defined with INPGRID MUD."""
-        return values
+        return self
 
-    root_validator
-    def transm_msc_mdc (cls, values):
+    model_validator(mode="after")
+
+    def transm_msc_mdc(self) -> "SwanConfigComponents":
         """Ensure the number of transmission coefficients match msc and mdc."""
-        return values
+        return self

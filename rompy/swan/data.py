@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 import xarray as xr
-from pydantic import Field, root_validator, validator
+from pydantic import field_validator, Field, model_validator
 
 from rompy.core import DataGrid
 
@@ -20,10 +20,10 @@ class SwanDataGrid(DataGrid):
     """This class is used to write SWAN data from a dataset."""
 
     z1: str = Field(
-        description="Scaler paramater u componet of vecotr field",
+        description="Scaler paramater or u componet of vector field",
         default=None,
     )
-    z2: str = Field(description="v componet of vecotr field", type=str, default=None)
+    z2: str = Field(description="v componet of vector field", default=None)
     var: str = Field(
         description="SWAN variable name (WIND, BOTTOM, CURRENT)",
         default="WIND",
@@ -38,18 +38,19 @@ class SwanDataGrid(DataGrid):
     )
 
     # root validator
-    @root_validator
-    def ensure_z1_in_data_vars(cls, values):
-        data_vars = values.get("variables", [])
-        for z in [values.get("z1"), values.get("z2")]:
+    @model_validator(mode="after")
+    def ensure_z1_in_data_vars(self) -> "SwanDataGrid":
+        data_vars = self.variables
+        for z in [self.z1, self.z2]:
             if z and z not in data_vars:
                 logger.debug(f"Adding {z} to data_vars")
                 data_vars.append(z)
-        values["variables"] = data_vars
-        return values
+        self.variables = data_vars
+        return self
 
-    @validator("var")
-    def var_must_be_one_of_wind_bathy_current(cls, v):
+    @field_validator("var")
+    @classmethod
+    def var_must_be_one_of_wind_bathy_current(cls, v: str) -> str:
         if v not in ["WIND", "BOTTOM", "CURRENT"]:  # Raf to add any others here
             raise ValueError(f"var must be one of WIND, BOTTOM, CURRENT")
         return v
@@ -168,12 +169,12 @@ class Swan_accessor(object):
         self._obj = xarray_obj
 
     def grid(
-            self,
-            x: str = "lon",
-            y: str = "lat",
-            rot: float = 0.0,
-            exc: float = FILL_VALUE,
-        ):
+        self,
+        x: str = "lon",
+        y: str = "lat",
+        rot: float = 0.0,
+        exc: float = FILL_VALUE,
+    ):
         """SWAN Grid object for this dataset.
 
         Parameters
@@ -270,7 +271,7 @@ class Swan_accessor(object):
         x: str = "lon",
         y: str = "lat",
         z1: str = "u10",
-        z2: str | None =None,
+        z2: str | None = None,
         fac: float = 1.0,
         rot: float = 0.0,
         time: str = "time",
@@ -343,7 +344,7 @@ class Swan_accessor(object):
         grid = self.grid(x=x, y=y, rot=rot)
 
         inpgrid = f"INPGRID {var} {grid.inpgrid} NONSTATION {inptimes[0]} {dt} HR"
-        readinp =f"READINP {var} {fac} '{os.path.basename(output_file)}' 3 0 1 0 FREE"
+        readinp = f"READINP {var} {fac} '{os.path.basename(output_file)}' 3 0 1 0 FREE"
 
         return inpgrid, readinp
 
