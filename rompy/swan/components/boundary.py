@@ -1,7 +1,7 @@
 """Boundary for SWAN."""
-from typing import Literal, Optional, Any
+from typing import Literal, Optional
 from pathlib import Path
-from pydantic import Field, constr
+from pydantic import Field
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.spectrum import SHAPESPEC
@@ -37,7 +37,8 @@ class INITIAL(BaseComponent):
     """
 
     model_type: Literal["initial"] = Field(
-        default="initial", description="Model type discriminator",
+        default="initial",
+        description="Model type discriminator",
     )
     kind: DEFAULT | ZERO | PAR | HOTSINGLE | HOTMULTIPLE = Field(
         default=DEFAULT(),
@@ -112,12 +113,14 @@ class BOUNDNEST1(BaseComponent):
         default="boundnest1",
         description="Model type discriminator",
     )
-    fname: constr(min_length=1, max_length=98) = Field(
+    fname: str = Field(
         description=(
             "Name of the file containing the boundary conditions for the present run, "
             "created by the previous SWAN coarse grid run. This file is structured "
             "according to the rules given in Appendix D for 2D spectra."
         ),
+        min_length=1,
+        max_length=98,
     )
     rectangle: Literal["closed", "open"] = Field(
         default="closed",
@@ -171,11 +174,13 @@ class BOUNDNEST2(BaseComponent):
         default="boundnest2",
         description="Model type discriminator",
     )
-    fname: constr(min_length=1, max_length=48) = Field(
+    fname: str = Field(
         description=(
             "A file name that contains all the names of WAM files containing the "
             "nested boundary conditions in time-sequence (usually one file per day)."
         ),
+        min_length=1,
+        max_length=48,
     )
     format: Literal["cray", "wkstat", "free"] = Field(
         description=(
@@ -185,6 +190,7 @@ class BOUNDNEST2(BaseComponent):
         ),
     )
     xgc: Optional[float] = Field(
+        default=None,
         description=(
             "If SWAN is used with Cartesian coordinates: longitude of south-west "
             "corner of SWAN computational grid (in degrees); if the south-west "
@@ -195,6 +201,7 @@ class BOUNDNEST2(BaseComponent):
         ),
     )
     ygc: Optional[float] = Field(
+        default=None,
         description=(
             "If SWAN is used with Cartesian coordinates: latitude of south-west "
             "corner of SWAN computational grid (in degrees); if the south-west "
@@ -267,10 +274,12 @@ class BOUNDNEST3(BaseComponent):
         default="boundnest3",
         description="Model type discriminator",
     )
-    fname: constr(min_length=1, max_length=62) = Field(
+    fname: str = Field(
         description=(
             "The name of the file that contains the spectra computed by WAVEWATCH III."
         ),
+        min_length=1,
+        max_length=62,
     )
     format: Literal["unformatted", "free"] = Field(
         description=(
@@ -286,6 +295,7 @@ class BOUNDNEST3(BaseComponent):
         ),
     )
     xgc: Optional[float] = Field(
+        default=None,
         description=(
             "If SWAN is used with Cartesian coordinates: longitude of south-west "
             "corner of SWAN computational grid (in degrees); if the south-west "
@@ -296,6 +306,7 @@ class BOUNDNEST3(BaseComponent):
         ),
     )
     ygc: Optional[float] = Field(
+        default=None,
         description=(
             "If SWAN is used with Cartesian coordinates: latitude of south-west "
             "corner of SWAN computational grid (in degrees); if the south-west "

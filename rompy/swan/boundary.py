@@ -5,8 +5,7 @@ from typing import Literal, Optional, Union
 
 import numpy as np
 import wavespectra
-import xarray as xr
-from pydantic import Field, confloat, root_validator
+from pydantic import Field, model_validator
 
 from rompy.core.filters import Filter
 from rompy.core.data import (
@@ -17,8 +16,8 @@ from rompy.core.data import (
     SourceIntake,
     SourceDatamesh,
 )
-from rompy.core.types import RompyBaseModel
 from rompy.swan.grid import SwanGrid
+
 
 logger = logging.getLogger(__name__)
 
@@ -141,6 +140,7 @@ class DataBoundary(DataGrid):
         discriminator="model_type",
     )
     spacing: Optional[float] = Field(
+        default=None,
         description=(
             "Spacing between boundary points, by default defined as the minimum "
             "distance between points in the dataset"
@@ -152,11 +152,12 @@ class DataBoundary(DataGrid):
             "Wavespectra method to use for selecting boundary points from the dataset"
         ),
     )
-    tolerance: confloat(ge=0) = Field(
+    tolerance: float = Field(
         default=1.0,
         description=(
-        "Wavespectra tolerance for selecting boundary points from the dataset"
+            "Wavespectra tolerance for selecting boundary points from the dataset"
         ),
+        ge=0,
     )
     rectangle: Literal["closed", "open"] = Field(
         default="closed",
@@ -165,26 +166,23 @@ class DataBoundary(DataGrid):
         ),
     )
     filter: Optional[Filter] = Field(
-        default=Filter(),
+        default_factory=Filter,
         description="Optional filter specification to apply to the dataset",
     )
 
-    @root_validator
-    def assert_has_wavespectra_accessor(cls, values):
-        source = values.get("source")
-        if source is not None:
-            dset = source.open()
-            if not hasattr(dset, "spec"):
-                raise ValueError(f"Wavespectra compatible source is required")
-        return values
+    @model_validator(mode="after")
+    def assert_has_wavespectra_accessor(self) -> "DataBoundary":
+        dset = self.source.open()
+        if not hasattr(dset, "spec"):
+            raise ValueError(f"Wavespectra compatible source is required")
+        return self
 
     @property
     def ds(self):
         """Return the filtered xarray dataset instance."""
         dset = super().ds
         if dset.efth.size == 0:
-            raise ValueError(
-                f"Empty dataset after applying filter {self.filter}")
+            raise ValueError(f"Empty dataset after applying filter {self.filter}")
         return dset
 
     def _boundary_resolutions(self, grid):

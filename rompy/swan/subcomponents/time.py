@@ -2,7 +2,7 @@
 import logging
 from datetime import datetime, timedelta
 from typing import Literal, Optional
-from pydantic import Field, validator, root_validator
+from pydantic import Field, field_validator
 
 from rompy.swan.subcomponents.base import BaseSubComponent
 
@@ -57,32 +57,27 @@ class NONSTATIONARY(BaseSubComponent):
     model_type: Literal["nonstationary"] = Field(
         default="nonstationary", description="Model type discriminator"
     )
-    tbeg: datetime = Field(
-        description="Begin time of the first field of the variable"
-    )
-    delt: timedelta = Field(
-        description="Time interval between fields"
-    )
-    tend: datetime = Field(
-        description="End time of the last field of the variable"
-    )
+    tbeg: datetime = Field(description="Begin time of the first field of the variable")
+    delt: timedelta = Field(description="Time interval between fields")
+    tend: datetime = Field(description="End time of the last field of the variable")
     tfmt: Literal[1, 2, 3, 4, 5, 6] = Field(
         default=1,
         description="Format to render time specification",
+        validate_default=True,
     )
     deltfmt: Literal["sec", "min", "hr", "day"] = Field(
         default="sec",
         description="Format to render time interval specification",
     )
     suffix: Optional[str] = Field(
-        description="Suffix to append to the variable name when rendering"
+        default=None, description="Suffix to append to the variable name when rendering"
     )
 
-    @root_validator
-    def set_time_format(cls, values):
+    @field_validator("tfmt")
+    @classmethod
+    def set_time_format(cls, v: int) -> str:
         """Set the time format."""
-        values["tfmt"] = TIME_FORMATS[values.get("tfmt")]
-        return values
+        return TIME_FORMATS[v]
 
     @property
     def delt_string(self):

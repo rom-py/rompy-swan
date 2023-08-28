@@ -1,7 +1,7 @@
 from typing import Literal, Optional
 
 import numpy as np
-from pydantic import Field, root_validator, validator
+from pydantic import field_validator, Field, model_validator
 
 from rompy.core.grid import RegularGrid
 
@@ -12,7 +12,7 @@ class SwanGrid(RegularGrid):
     grid in some geographic space
     """
 
-    grid_type: Literal["REG"] = Field(
+    grid_type: Literal["REG", "CURV"] = Field(
         "REG", description="Type of grid (REG=regular, CURV=curvilinear)"
     )
     exc: Optional[float] = Field(None, description="Missing value")
@@ -20,44 +20,18 @@ class SwanGrid(RegularGrid):
         None, description="Name of grid file to load", max_length=100
     )
 
-    @validator("grid_type")
+    @field_validator("grid_type")
+    @classmethod
     def validate_grid_type(cls, v):
         if v not in ["REG", "CURV"]:
             raise ValueError("grid_type must be one of REG or CURV")
         return v
 
-    @root_validator
-    def validate_grid(cls, values):
-        grid_type = values["grid_type"]
-        x = values["x"]
-        y = values["y"]
-        x0 = values["x0"]
-        y0 = values["y0"]
-        dx = values["dx"]
-        dy = values["dy"]
-        nx = values["nx"]
-        ny = values["ny"]
-        gridfile = values["gridfile"]
-
-        if grid_type == "REG":
-            # test if x is numpy array or None
-            if isinstance(x, np.ndarray) or isinstance(y, np.ndarray):
-                if any([x0, y0, dx, dy, nx, ny]):
-                    raise ValueError(
-                        "x, y provided explicitly, cant process x0, y0, dx, dy, nx, ny"
-                    )
-                return values
-            for var in [x0, y0, dx, dy, nx, ny]:
-                if var is None:
-                    raise ValueError(
-                        "x0, y0, dx, dy, nx, ny must be provided for REG grid"
-                    )
-        elif grid_type == "CURV":
-            if not gridfile:
-                raise ValueError("gridfile must be provided for CURV grid")
-        else:
-            raise ValueError("Unknown SwanGrid type = " + str(grid_type))
-        return values
+    @model_validator(mode="after")
+    def validate_curvilinear_grid(self) -> "SwanGrid":
+        if self.grid_type == "CURV" and self.gridfile is None:
+            raise ValueError("gridfile must be provided for CURV grid")
+        return self
 
     def _regen_grid(self):
         if self.grid_type == "REG":
@@ -223,8 +197,7 @@ class SwanGrid(RegularGrid):
                         color="r",
                         lw=2,
                     )
-                    ax.scatter(specPoint.lon, specPoint.lat,
-                               marker="o", color="b")
+                    ax.scatter(specPoint.lon, specPoint.lat, marker="o", color="b")
                     ax.scatter(segLon, segLat, marker="x", color="g")
 
                 specPoint["lon"] = segLon

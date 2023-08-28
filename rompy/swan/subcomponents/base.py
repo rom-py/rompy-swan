@@ -1,7 +1,7 @@
 """Base class for SWAN sub-components."""
 from typing import Literal
 from abc import ABC
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
 from rompy.core import RompyBaseModel
 
@@ -17,11 +17,7 @@ class BaseSubComponent(RompyBaseModel, ABC):
     """
 
     model_type: Literal["subcomponent"] = Field(description="Model type discriminator")
-
-    class Config:
-        """Configure the model."""
-
-        extra = "forbid"
+    model_config = ConfigDict(extra="forbid")
 
     def cmd(self) -> str:
         return self.model_type.upper()
