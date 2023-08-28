@@ -46,7 +46,7 @@ dependencies = [
     "oceanum",
     "owslib",
     "pandas",
-    "pydantic",
+    "pydantic>2",
     "pydantic_numpy",
     "scipy",
     "tqdm",
