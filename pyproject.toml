@@ -1,0 +1,102 @@
+[build-system]
+requires = ["setuptools", "versioneer[toml]"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rompy"
+description = "Relocatable Ocean Modelling in PYthon (rompy)"
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["relocatable", "ocean", "modelling", "python", "csiro"]
+authors = [
+  { name = "CSIRO", email="paul.branson@csiro.au" },
+]
+maintainers = [
+  {name = "Paul Branson", email = "paul.branson@csiro.au"},
+  {name = "Tom Durrant", email = "t.durrant@oceanum.science"},
+  {name = "Rafael Guedes", email = "r.guedes@oceanum.science"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Topic :: Scientific/Engineering :: Visualization",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+]
+requires-python = ">=3.10"
+dependencies = [
+    "click",
+    "cloudpathlib",
+    "cookiecutter",
+    "dask",
+    "fsspec",
+    "geopandas",
+    "h5py",
+    "intake",
+    "intake-xarray",
+    "intake-geopandas",
+    "matplotlib",
+    "netcdf4",
+    "numpy",
+    "oceanum",
+    "owslib",
+    "pandas",
+    "pydantic>2",
+    "pydantic_numpy",
+    "scipy",
+    "tqdm",
+    "xarray",
+    "wavespectra",
+]
+dynamic = ["version"]
+
+[project.urls]
+"Documentation" = "https://oceanum.github.io/rompy/index.html"
+"Source" = "https://github.com/rom-py/rompy"
+"Tracker" = "https://github.com/rom-py/rompy/issues"
+"Changelog" = "https://github.com/rom-py/rompy/blob/main/HISTORY.rst"
+
+[project.scripts]
+rompy = "rompy.cli:main"
+
+[project.entry-points."intake.drivers"]
+"netcdf_fcstack" = "rompy.intake:NetCDFFCStackSource"
+
+[project.entry-points."intake.catalogs"]
+"rompy_data" = "rompy:cat"
+
+[project.optional-dependencies]
+test = ["pytest"]
+extra = [
+    "cartopy",
+    "gcsfs",
+    "zarr",
+]
+docs = [
+    "autodoc_pydantic",
+    "ipython",
+    "nbsphinx",
+    "pydata_sphinx_theme",
+    "sphinx",
+    "sphinx-collections",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["docker", "docs", "notebooks", "scripts", "tests"]
+
+[tool.setuptools.package-data]
+"*" = ["*.y*ml", "*.csv", "*.html"]
+
+[tool.setuptools.dynamic]
+version = {attr = "rompy.__version__"}
+
+[tool.pytest.ini_options]
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
