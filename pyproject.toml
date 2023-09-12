@@ -30,6 +30,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "cartopy",
     "click",
     "cloudpathlib",
     "cookiecutter",
@@ -73,7 +74,6 @@ rompy = "rompy.cli:main"
 [project.optional-dependencies]
 test = ["pytest"]
 extra = [
-    "cartopy",
     "gcsfs",
     "zarr",
 ]
