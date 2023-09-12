@@ -74,7 +74,6 @@ rompy = "rompy.cli:main"
 [project.optional-dependencies]
 test = ["pytest"]
 extra = [
-    "cartopy",
     "gcsfs",
     "zarr",
 ]
