@@ -5,7 +5,7 @@ from typing import Annotated, Literal, Optional, Union
 from pydantic import field_validator, Field, model_validator
 
 from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
-from rompy.swan.boundary import DataBoundary
+from rompy.swan.boundary import Boundnest1
 from rompy.swan.components import boundary, cgrid, inpgrid, physics, startup
 
 from .data import SwanDataGrid
@@ -55,7 +55,7 @@ class ForcingData(RompyBaseModel):
     bottom: SwanDataGrid | None = Field(None, description="Bathymetry data for SWAN")
     wind: SwanDataGrid | None = Field(None, description="The wind data for SWAN.")
     current: SwanDataGrid | None = Field(None, description="The current data for SWAN.")
-    boundary: DataBoundary | None = Field(
+    boundary: Boundnest1 | None = Field(
         None, description="The boundary data for SWAN."
     )
 
