@@ -30,6 +30,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+    "cartopy",
     "click",
     "cloudpathlib",
     "cookiecutter",
