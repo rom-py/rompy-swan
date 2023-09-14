@@ -11,6 +11,10 @@ from rompy.swan.subcomponents.base import BaseSubComponent
 class BSBT(BaseSubComponent):
     """BSBT first order propagation scheme.
 
+    .. code-block:: text
+
+        BSTB
+
     Examples
     --------
 
@@ -37,6 +41,10 @@ class BSBT(BaseSubComponent):
 
 class GSE(BaseSubComponent):
     """Garden-sprinkler effect.
+
+    .. code-block:: text
+
+        GSE [waveage] Sec|MIn|HR|DAy
 
     Garden-sprinkler effect is to be counteracted in the S&L propagation scheme
     (default for nonstationary regular grid computations) or in the propagation
@@ -78,5 +86,5 @@ class GSE(BaseSubComponent):
         """Command file string for this component."""
         repr = "GSE"
         if self.waveage is not None:
-            repr += f" {self.waveage} {self.units.upper()}"
+            repr += f" waveage={self.waveage} {self.units.upper()}"
         return repr

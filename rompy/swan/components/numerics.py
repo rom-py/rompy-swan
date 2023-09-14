@@ -1,102 +1,24 @@
-"""Model physics components."""
+"""Model numerics components."""
 import logging
 from typing import Any, Literal, Optional, Union, Annotated
 from pydantic import field_validator, model_validator, Field, FieldValidationInfo
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.types import IDLA, PhysicsOff
-from rompy.swan.subcomponents.physics import (
-    JANSSEN,
-    KOMEN,
-    WESTHUYSEN,
-    ST6,
-    ST6C1,
-    ST6C2,
-    ST6C3,
-    ST6C4,
-    ST6C5,
-    ELDEBERKY,
-    DEWIT,
-    TRANSM,
-    TRANS1D,
-    TRANS2D,
-    GODA,
-    DANGREMOND,
-    REFL,
-    RSPEC,
-    RDIFF,
-    FREEBOARD,
-    LINE,
+from rompy.swan.subcomponents.numerics import (
+    BSBT,
+    GSE,
 )
 
 
 logger = logging.getLogger(__name__)
 
 
-
-class BSBT(BaseComponent):
-    """BSBT first order propagation scheme."""
-
-    model_type: Literal["bsbt", "BSBT"] = Field(
-        default="bsbt", description="Model type discriminator"
-    )
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        return "BSBT"
-
-
-class GSE(BaseComponent):
-    """Third order propagation scheme with conteraction to the garden-sprinkler effect.
-
-    Garden-sprinkler effect is to be counteracted in the S&L propagation scheme
-    (default for nonstationary regular grid computations) or in the propagation
-    scheme for unstructured grids by adding a diffusion term to the basic equation.
-    This may affect the numerical stability of SWAN.
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-        :okexcept:
-
-        @suppress
-        from rompy.swan.components.numerics import GSE
-
-        scheme = GSE(waveage=1, units="day")
-        print(scheme.render())
-
-    """
-
-    model_type: Literal["gse", "GSE"] = Field(
-        default="gse", description="Model type discriminator"
-    )
-    waveage: Optional[float] = Field(
-        default=None,
-        description=(
-            "The time interval used to determine the diffusion which counteracts the "
-            "so-called garden-sprinkler effect. The default value of `waveage` is "
-            "zero, i.e. no added diffusion. The value of `waveage` should correspond "
-            "to the travel time of the waves over the computational region.",
-        ),
-    )
-    units: Literal["sec", "min", "hr", "day"] = Field(
-        default="hr", description="Units for waveage",
-    )
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        repr = "GSE"
-        if self.waveage is not None:
-            repr += f" {self.waveage} {self.units.upper()}"
-        return repr
-
-
 PROP_TYPE = Annotated[
     Union[BSBT, GSE],
     Field(description="Propagation scheme", discriminator="model_type"),
 ]
+
 
 class PROP(BaseComponent):
     """Propagation scheme.
@@ -158,4 +80,24 @@ class PROP(BaseComponent):
         repr = "PROP"
         if self.scheme is not None:
             repr += f" {self.scheme.render()}"
+        return repr
+
+
+class NUMERIC(BaseComponent):
+    """Numerical properties.
+
+    .. code-block:: text
+
+        NUMeric ( STOPC [dabs] [drel] [curvat] [npnts] ->STAT|NONSTAT [limiter] ) &
+            ( DIRimpl [cdd] ) ( SIGIMpl [css] [eps2] [outp] [niter] ) &
+            ( CTheta [cfl] ) ( CSigma [cfl] ) ( SETUP [eps2] [outp] [niter] )
+
+    """
+    model_type: Literal["numeric", "NUMERIC"] = Field(
+        default="numeric", description="Model type discriminator"
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "NUMERIC"
         return repr
