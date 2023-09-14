@@ -9,6 +9,7 @@ from rompy.swan.subcomponents.numerics import (
     BSBT,
     GSE,
     STOPC,
+    DIRIMPL,
 )
 
 
@@ -101,10 +102,16 @@ class NUMERIC(BaseComponent):
         default=None,
         description="Iteration termination criteria",
     )
+    dirimpl: Optional[DIRIMPL] = Field(
+        default=None,
+        description="Numerical scheme for refraction",
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "NUMERIC"
         if self.stopc is not None:
             repr += f" {self.stopc.render()}"
+        if self.dirimpl is not None:
+            repr += f" {self.dirimpl.render()}"
         return repr
