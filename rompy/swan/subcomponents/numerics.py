@@ -1,5 +1,5 @@
 """SWAN numerics subcomponents."""
-from typing import Annotated, Literal, Optional
+from typing import Annotated, Literal, Optional, Union
 from pydantic import field_validator, Field, model_validator
 from abc import ABC
 from pydantic_numpy.typing import Np2DArray
@@ -90,8 +90,102 @@ class GSE(BaseSubComponent):
         return repr
 
 
+class STAT(BaseSubComponent):
+    """Iteration termination for stationary computations.
+
+    .. code-block:: text
+
+        STAT [mxitst] [alfa]
+
+    Examples
+    --------
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.numerics import STAT
+
+        stat = STAT()
+        print(stat.render())
+        stat = STAT(mxitst=10, alfa=0.1)
+        print(stat.render())
+
+    """
+    model_type: Literal["stat", "STAT"] = Field(
+        default="stat", description="Model type discriminator"
+    )
+    mxitst: Optional[int] = Field(
+        default=None,
+        description=(
+            "Maximum number of iterations for stationary computations, the "
+            "computation stops when this number is exceeded (SWAN default: 50)"
+        ),
+    )
+    alfa: Optional[float] = Field(
+        default=None,
+        description=(
+            "Proportionality constant used in the frequency-dependent under-"
+            "relaxation technique. Based on experiences, a suggestion for this "
+            "parameter is `alfa = 0.01`. In case of diffraction computations, the use "
+            "of this parameter is recommended (SWAN default: 0.00)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "STAT"
+        if self.mxitst is not None:
+            repr += f" mxitst={self.mxitst}"
+        if self.alfa is not None:
+            repr += f" alfa={self.alfa}"
+        return repr
+
+
+class NONSTAT(BaseSubComponent):
+    """Iteration termination for nonstationary computations.
+
+    .. code-block:: text
+
+        NONSTAT [mxitst]
+
+    Examples
+    --------
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.numerics import NONSTAT
+
+        nonstat = NONSTAT()
+        print(nonstat.render())
+        nonstat = NONSTAT(mxitst=3)
+        print(nonstat.render())
+
+    """
+    model_type: Literal["nonstat", "NONSTAT"] = Field(
+        default="nonstat", description="Model type discriminator"
+    )
+    mxitst: Optional[int] = Field(
+        default=None,
+        description=(
+            "Maximum number of iterations for stationary computations, the "
+            "computation moves to the next time step when this number is exceeded "
+            "(SWAN default: 1)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "NONSTAT"
+        if self.mxitst is not None:
+            repr += f" mxitst={self.mxitst}"
+        return repr
+
+
 class STOPC(BaseSubComponent):
-    """Terminating the iterative procedure.
+    """Stop the iterative procedure.
 
     .. code-block:: text
 
@@ -127,9 +221,16 @@ class STOPC(BaseSubComponent):
 
         stop = STOPC()
         print(stop.render())
+        stop=STOPC(
+            dabs=0.005,
+            drel=0.01,
+            curvat=0.005,
+            npnts=99.5,
+            mode=dict(model_type="nonstat", mxitns=1),
+        )
+        print(stop.render())
 
     """
-
     model_type: Literal["stopc", "STOPC"] = Field(
         default="stopc", description="Model type discriminator"
     )
@@ -154,9 +255,26 @@ class STOPC(BaseSubComponent):
             "(SWAN default: 0.005 [-] (not used in the QC model))"
         ),
     )
-    npts
-    STAT|NONSTAT
-    limiter
+    npnts: Optional[float] = Field(
+        default=None,
+        description=(
+            "Percentage of points in the computational grid above which the stopping "
+            "criteria needs to be satisfied (SWAN default: 99.5 [-])"
+        ),
+    )
+    mode: Optional[Union[STAT, NONSTAT]] = Field(
+        default=None,
+        description=(
+            "Iteration termination criteria for stationary or nonstationary runs"
+        ),
+    )
+    limiter: Optional[float] = Field(
+        default=None,
+        description=(
+            "Determines the maximum change per iteration of the energy density per "
+            "spectral-bin given in terms of a fraction of the omni-directional "
+            "Phillips level (SWAN default: 0.1)"
+        )
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -167,4 +285,10 @@ class STOPC(BaseSubComponent):
             repr += f" drel={self.drel}"
         if self.curvat is not None:
             repr += f" curvat={self.curvat}"
+        if self.npnts is not None:
+            repr += f" npnts={self.npnts}"
+        if self.mode is not None:
+            repr += f" {self.mode.render()}"
+        if self.limiter is not None:
+            repr += f" limiter={self.limiter}"
         return repr

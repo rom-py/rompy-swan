@@ -8,6 +8,7 @@ from rompy.swan.types import IDLA, PhysicsOff
 from rompy.swan.subcomponents.numerics import (
     BSBT,
     GSE,
+    STOPC,
 )
 
 
@@ -96,8 +97,14 @@ class NUMERIC(BaseComponent):
     model_type: Literal["numeric", "NUMERIC"] = Field(
         default="numeric", description="Model type discriminator"
     )
+    stopc: STOPC = Field(
+        default=None,
+        description="Iteration termination criteria",
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "NUMERIC"
+        if self.stopc is not None:
+            repr += f" {self.stopc.render()}"
         return repr
