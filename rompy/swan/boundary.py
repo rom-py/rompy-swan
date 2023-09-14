@@ -290,10 +290,10 @@ def scatter_plot(
 
     # First set some plot parameters:
     minLon, minLat, maxLon, maxLat = (
-        ds[bnd.lonname].values[0],
-        ds[bnd.latname].values[0],
-        ds[bnd.lonname].values[-1],
-        ds[bnd.latname].values[-1],
+        ds[bnd.coords.x].values[0],
+        ds[bnd.coords.y].values[0],
+        ds[bnd.coords.x].values[-1],
+        ds[bnd.coords.y].values[-1],
     )
     extents = [minLon, maxLon, minLat, maxLat]
 
@@ -326,4 +326,4 @@ def scatter_plot(
         gl.xformatter = LONGITUDE_FORMATTER
         gl.yformatter = LATITUDE_FORMATTER
 
-    ax.scatter(ds[bnd.lonname], ds[bnd.latname], transform=ccrs.PlateCarree())
+    ax.scatter(ds[bnd.coords.x], ds[bnd.coords.y], transform=ccrs.PlateCarree())
