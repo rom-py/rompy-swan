@@ -274,7 +274,8 @@ class STOPC(BaseSubComponent):
             "Determines the maximum change per iteration of the energy density per "
             "spectral-bin given in terms of a fraction of the omni-directional "
             "Phillips level (SWAN default: 0.1)"
-        )
+        ),
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -291,4 +292,48 @@ class STOPC(BaseSubComponent):
             repr += f" {self.mode.render()}"
         if self.limiter is not None:
             repr += f" limiter={self.limiter}"
+        return repr
+
+
+class DIRIMPL(BaseSubComponent):
+    """Numerical scheme for refraction.
+
+    .. code-block:: text
+
+        DIRIMPL [cdd]
+
+    Examples
+    --------
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.numerics import DIRIMPL
+
+        dirimpl = DIRIMPL()
+        print(dirimpl.render())
+        dirimpl = DIRIMPL(cdd=0.5)
+        print(dirimpl.render())
+
+    """
+    model_type: Literal["dirimpl", "DIRIMPL"] = Field(
+        default="dirimpl", description="Model type discriminator"
+    )
+    cdd: Optional[float] = Field(
+        default=None,
+        description=(
+            "A value of `cdd=0` corresponds to a central scheme and has the largest "
+            "accuracy (diffusion ≈ 0) but the computation may more easily generate"
+            "spurious fluctuations. A value of `cdd=1` corresponds to a first order"
+            "upwind scheme and it is more diffusive and therefore preferable if "
+            "(strong) gradients in depth or current are present (SWAN default: 0.5)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "DIRIMPL"
+        if self.cdd is not None:
+            repr += f" cdd={self.cdd}"
         return repr
