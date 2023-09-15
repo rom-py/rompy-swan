@@ -344,7 +344,7 @@ class SIGIMPL(BaseSubComponent):
 
     .. code-block:: text
 
-        SIGIMpl [css] [eps2] [outp] [niter]
+        SIGIMpl [cfl] [eps2] [outp] [niter]
 
     Controls the accuracy of computing the frequency shifting and the stopping
     criterion and amount of output for the SIP solver (used in the computations in the
@@ -361,7 +361,7 @@ class SIGIMPL(BaseSubComponent):
 
         sigimpl = SIGIMPL()
         print(sigimpl.render())
-        sigimpl = SIGIMPL(cdd=0.5)
+        sigimpl = SIGIMPL(css=0.5, eps2=1e-4, outp=0, niter=20)
         print(sigimpl.render())
 
     """
@@ -406,11 +406,58 @@ class SIGIMPL(BaseSubComponent):
         """Command file string for this component."""
         repr = "SIGIMPL"
         if self.css is not None:
-            repr += f" css={self.cdd}"
+            repr += f" css={self.css}"
         if self.eps2 is not None:
             repr += f" eps2={self.eps2}"
         if self.outp is not None:
             repr += f" outp={self.outp}"
         if self.niter is not None:
             repr += f" niter={self.niter}"
+        return repr
+
+
+class CTHETA(BaseSubComponent):
+    """Prevents excessive directional turning.
+
+    .. code-block:: text
+
+        CTheta [cfl]
+
+    This option prevents an excessive directional turning at a single grid point or
+    vertex due to a very coarse bathymetry or current locally. This option limits the
+    directional turning rate cθ based on the CFL restriction. (See Eq. 3.41 of
+    Scientific/Technical documentation). See also the final remark in Section 2.6.3.
+    Note that if this command is not specified, then the limiter is not activated.
+
+    Examples
+    --------
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.numerics import CTHETA
+
+        ctheta = CTHETA()
+        print(sigimpl.render())
+        ctheta = CTHETA(cfl=0.9)
+        print(sigimpl.render())
+
+    """
+    model_type: Literal["ctheta", "CTHETA"] = Field(
+        default="ctheta", description="Model type discriminator"
+    )
+    cfl: Optional[float] = Field(
+        default=None,
+        description=(
+            "Upper limit for the CFL restriction for ctheta. A suggestion for this "
+            "parameter is `cfl = 0.9` (SWAN default: 0.9 when CTHETA is activated)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "CTHETA"
+        if self.cfl is not None:
+            repr += f" cfl={self.cfl}"
         return repr
