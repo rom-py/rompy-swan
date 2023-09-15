@@ -509,3 +509,66 @@ class CSIGMA(BaseSubComponent):
             repr += f" cfl={self.cfl}"
         return repr
 
+
+class SETUP(BaseSubComponent):
+    """Stop criteria in the computation of wave setup.
+
+    .. code-block:: text
+
+        SETUP [eps2] [outp] [niter]
+
+    Controls the stopping criterion and amount of output for the SOR solver in the
+    computation of the wave-induced set-up.
+
+    Examples
+    --------
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.numerics import SETUP
+
+        setup = SETUP()
+        print(setup.render())
+        setup = SETUP(eps2=1e-4, outp=0, niter=20)
+        print(setup.render())
+
+    """
+    model_type: Literal["setup", "SETUP"] = Field(
+        default="setup", description="Model type discriminator"
+    )
+    eps2: Optional[float] = Field(
+        default=None,
+        description=(
+            "Relative stopping criterion to terminate the linear solver (SIP or SOR). "
+            "(SWAN default: 1.e-4 in case of SIP and 1.e-6 in case of SOR)"
+        ),
+    )
+    outp: Optional[Literal[0, 1, 2, 3]] = Field(
+        default=None,
+        description=(
+            "Output for the iterative solver: * 0 = no output\n* 1 = additional "
+            "information about the iteration process is written to the PRINT file\n "
+            "* 2 = gives a maximal amount of output concerning the iteration process "
+            "\n* 3 = summary of the iteration process\n (SWAN default: 0)"
+        ),
+    )
+    niter: Optional[int] = Field(
+        default=None,
+        description=(
+            "Maximum number of iterations for the linear solver (SWAN default: 20 in "
+            "case of SIP and 1000 in case of SOR)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "SETUP"
+        if self.eps2 is not None:
+            repr += f" eps2={self.eps2}"
+        if self.outp is not None:
+            repr += f" outp={self.outp}"
+        if self.niter is not None:
+            repr += f" niter={self.niter}"
+        return repr

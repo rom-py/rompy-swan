@@ -13,6 +13,7 @@ from rompy.swan.subcomponents.numerics import (
     SIGIMPL,
     CTHETA,
     CSIGMA,
+    SETUP,
 )
 
 
@@ -115,6 +116,9 @@ class NUMERIC(BaseComponent):
     )
     csigma: Optional[CSIGMA] = Field(
         default=None, description="Prevents excessive frequency shifting",
+    )
+    setup: Optional[SETUP] = Field(
+        default=None, description="Stop criteria in the computation of wave setup",
     )
 
     def cmd(self) -> str:
