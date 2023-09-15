@@ -337,3 +337,80 @@ class DIRIMPL(BaseSubComponent):
         if self.cdd is not None:
             repr += f" cdd={self.cdd}"
         return repr
+
+
+class SIGIMPL(BaseSubComponent):
+    """Frequency shifting accuracy.
+
+    .. code-block:: text
+
+        SIGIMpl [css] [eps2] [outp] [niter]
+
+    Controls the accuracy of computing the frequency shifting and the stopping
+    criterion and amount of output for the SIP solver (used in the computations in the
+    presence of currents or time varying depth)
+
+    Examples
+    --------
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.numerics import SIGIMPL
+
+        sigimpl = SIGIMPL()
+        print(sigimpl.render())
+        sigimpl = SIGIMPL(cdd=0.5)
+        print(sigimpl.render())
+
+    """
+    model_type: Literal["sigimpl", "SIGIMPL"] = Field(
+        default="sigimpl", description="Model type discriminator"
+    )
+    css: Optional[float] = Field(
+        default=None,
+        description=(
+            "A value of `css=0` corresponds to a central scheme and has the largest "
+            "accuracy (diffusion ≈ 0) but the computation may more easily generate "
+            "spurious fluctuations. A value of `css=1` corresponds to a first order "
+            "upwind scheme and it is more diffusive and therefore preferable if "
+            "(strong) gradients in depth or current are present (SWAN default: 0.5)"
+        ),
+    )
+    eps2: Optional[float] = Field(
+        default=None,
+        description=(
+            "Relative stopping criterion to terminate the linear solver (SIP or SOR). "
+            "(SWAN default: 1.e-4 in case of SIP and 1.e-6 in case of SOR)"
+        ),
+    )
+    outp: Optional[Literal[0, 1, 2, 3]] = Field(
+        default=None,
+        description=(
+            "Output for the iterative solver: * 0 = no output\n* 1 = additional "
+            "information about the iteration process is written to the PRINT file\n "
+            "* 2 = gives a maximal amount of output concerning the iteration process "
+            "\n* 3 = summary of the iteration process\n (SWAN default: 0)"
+        ),
+    )
+    niter: Optional[int] = Field(
+        default=None,
+        description=(
+            "Maximum number of iterations for the linear solver (SWAN default: 20 in "
+            "case of SIP and 1000 in case of SOR)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "SIGIMPL"
+        if self.css is not None:
+            repr += f" css={self.cdd}"
+        if self.eps2 is not None:
+            repr += f" eps2={self.eps2}"
+        if self.outp is not None:
+            repr += f" outp={self.outp}"
+        if self.niter is not None:
+            repr += f" niter={self.niter}"
+        return repr
