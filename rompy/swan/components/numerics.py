@@ -11,6 +11,7 @@ from rompy.swan.subcomponents.numerics import (
     STOPC,
     DIRIMPL,
     SIGIMPL,
+    CTHETA,
 )
 
 
@@ -108,6 +109,9 @@ class NUMERIC(BaseComponent):
     sigimpl: Optional[SIGIMPL] = Field(
         default=None, description="Frequency shifting accuracy",
     )
+    ctheta: Optional[CTHETA] = Field(
+        default=None, description="Prevents excessive directional turning",
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -118,4 +122,6 @@ class NUMERIC(BaseComponent):
             repr += f" {self.dirimpl.render()}"
         if self.sigimpl is not None:
             repr += f" {self.sigimpl.render()}"
+        if self.ctheta is not None:
+            repr += f" {self.ctheta.render()}"
         return repr
