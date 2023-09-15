@@ -10,6 +10,7 @@ from rompy.swan.subcomponents.numerics import (
     GSE,
     STOPC,
     DIRIMPL,
+    SIGIMPL,
 )
 
 
@@ -99,12 +100,13 @@ class NUMERIC(BaseComponent):
         default="numeric", description="Model type discriminator"
     )
     stopc: STOPC = Field(
-        default=None,
-        description="Iteration termination criteria",
+        default=None, description="Iteration termination criteria",
     )
     dirimpl: Optional[DIRIMPL] = Field(
-        default=None,
-        description="Numerical scheme for refraction",
+        default=None, description="Numerical scheme for refraction",
+    )
+    sigimpl: Optional[SIGIMPL] = Field(
+        default=None, description="Frequency shifting accuracy",
     )
 
     def cmd(self) -> str:
@@ -114,4 +116,6 @@ class NUMERIC(BaseComponent):
             repr += f" {self.stopc.render()}"
         if self.dirimpl is not None:
             repr += f" {self.dirimpl.render()}"
+        if self.sigimpl is not None:
+            repr += f" {self.sigimpl.render()}"
         return repr
