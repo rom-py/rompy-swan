@@ -102,7 +102,7 @@ class NUMERIC(BaseComponent):
     model_type: Literal["numeric", "NUMERIC"] = Field(
         default="numeric", description="Model type discriminator"
     )
-    stopc: STOPC = Field(
+    stopc: Optional[STOPC] = Field(
         default=None, description="Iteration termination criteria",
     )
     dirimpl: Optional[DIRIMPL] = Field(
