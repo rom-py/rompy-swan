@@ -12,6 +12,7 @@ from rompy.swan.subcomponents.numerics import (
     DIRIMPL,
     SIGIMPL,
     CTHETA,
+    CSIGMA,
 )
 
 
@@ -111,6 +112,9 @@ class NUMERIC(BaseComponent):
     )
     ctheta: Optional[CTHETA] = Field(
         default=None, description="Prevents excessive directional turning",
+    )
+    csigma: Optional[CSIGMA] = Field(
+        default=None, description="Prevents excessive frequency shifting",
     )
 
     def cmd(self) -> str:

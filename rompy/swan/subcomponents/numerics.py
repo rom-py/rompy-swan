@@ -439,9 +439,9 @@ class CTHETA(BaseSubComponent):
         from rompy.swan.subcomponents.numerics import CTHETA
 
         ctheta = CTHETA()
-        print(sigimpl.render())
+        print(ctheta.render())
         ctheta = CTHETA(cfl=0.9)
-        print(sigimpl.render())
+        print(ctheta.render())
 
     """
     model_type: Literal["ctheta", "CTHETA"] = Field(
@@ -461,3 +461,51 @@ class CTHETA(BaseSubComponent):
         if self.cfl is not None:
             repr += f" cfl={self.cfl}"
         return repr
+
+
+class CSIGMA(BaseSubComponent):
+    """Prevents excessive directional turning.
+
+    .. code-block:: text
+
+        CSigma [cfl]
+
+    This option prevents an excessive frequency shifting at a single grid point or
+    vertex due to a very coarse bathymetry or current locally. This option limits the
+    frequency shifting rate csigma based on the CFL restriction. See also the final
+    remark in Section 2.6.3. Note that if this command is not specified, then the
+    limiter is not activated.
+
+    Examples
+    --------
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.numerics import CSIGMA
+
+        csigma = CSIGMA()
+        print(csigma.render())
+        csigma = CSIGMA(cfl=0.9)
+        print(csigma.render())
+
+    """
+    model_type: Literal["ctheta", "CTHETA"] = Field(
+        default="ctheta", description="Model type discriminator"
+    )
+    cfl: Optional[float] = Field(
+        default=None,
+        description=(
+            "Upper limit for the CFL restriction for csigma. A suggestion for this "
+            "parameter is `cfl = 0.9` (SWAN default: 0.9 when CSIGMA is activated)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "CSIGMA"
+        if self.cfl is not None:
+            repr += f" cfl={self.cfl}"
+        return repr
+
