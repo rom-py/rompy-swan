@@ -226,7 +226,7 @@ class STOPC(BaseSubComponent):
             drel=0.01,
             curvat=0.005,
             npnts=99.5,
-            mode=dict(model_type="nonstat", mxitns=1),
+            mode=dict(model_type="nonstat", mxitst=1),
         )
         print(stop.render())
 
@@ -267,6 +267,7 @@ class STOPC(BaseSubComponent):
         description=(
             "Iteration termination criteria for stationary or nonstationary runs"
         ),
+        discriminator="model_type",
     )
     limiter: Optional[float] = Field(
         default=None,
@@ -388,10 +389,10 @@ class SIGIMPL(BaseSubComponent):
     outp: Optional[Literal[0, 1, 2, 3]] = Field(
         default=None,
         description=(
-            "Output for the iterative solver: * 0 = no output\n* 1 = additional "
-            "information about the iteration process is written to the PRINT file\n "
-            "* 2 = gives a maximal amount of output concerning the iteration process "
-            "\n* 3 = summary of the iteration process\n (SWAN default: 0)"
+            "Output for the iterative solver:\n\n* 0 = no output\n* 1 = additional "
+            "information about the iteration process is written to the PRINT file "
+            "\n* 2 = gives a maximal amount of output concerning the iteration "
+            "process\n* 3 = summary of the iteration process\n(SWAN default: 0)"
         ),
     )
     niter: Optional[int] = Field(
@@ -548,10 +549,10 @@ class SETUP(BaseSubComponent):
     outp: Optional[Literal[0, 1, 2, 3]] = Field(
         default=None,
         description=(
-            "Output for the iterative solver: * 0 = no output\n* 1 = additional "
-            "information about the iteration process is written to the PRINT file\n "
-            "* 2 = gives a maximal amount of output concerning the iteration process "
-            "\n* 3 = summary of the iteration process\n (SWAN default: 0)"
+            "Output for the iterative solver:\n\n* 0 = no output\n* 1 = additional "
+            "information about the iteration process is written to the PRINT file "
+            "\n* 2 = gives a maximal amount of output concerning the iteration process "
+            "\n* 3 = summary of the iteration process\n\n(SWAN default: 0)"
         ),
     )
     niter: Optional[int] = Field(
