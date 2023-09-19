@@ -13,20 +13,22 @@ logger = logging.getLogger(__name__)
 
 
 class READGRID(BaseSubComponent, ABC):
-    """SWAN grid reader base class.
+    """SWAN grid reader abstract class.
 
-    File format identifiers:
-    ------------------------
+    Notes
+    -----
 
-    - 1: Format according to BODKAR convention (a standard of the Ministry of
-        Transport and Public Works in the Netherlands). Format string: (10X,12F5.0).
-    - 5: Format (16F5.0), an input line consists of 16 fields of 5 places each.
-    - 6: Format (12F6.0), an input line consists of 12 fields of 6 places each.
-    - 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
+    File format identifier:
+
+    * 1: Format according to BODKAR convention (a standard of the Ministry of
+      Transport and Public Works in the Netherlands). Format string: (10X,12F5.0).
+    * 5: Format (16F5.0), an input line consists of 16 fields of 5 places each.
+    * 6: Format (12F6.0), an input line consists of 12 fields of 6 places each.
+    * 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
 
     """
 
-    model_type: Literal["readgrid"] = Field(
+    model_type: Literal["readgrid", "READGRID"] = Field(
         default="readgrid", description="Model type discriminator"
     )
     grid_type: GridOptions | Literal["coordinates"] = Field(
@@ -37,7 +39,7 @@ class READGRID(BaseSubComponent, ABC):
         description=(
             "SWAN multiplies all values that are read from file by `fac`. For instance "
             "if the values are given in unit decimeter, one should make `fac=0.1` to "
-            "obtain values in m. To change sign use a negative `fac`."
+            "obtain values in m. To change sign use a negative `fac`"
         ),
         gt=0.0,
     )
@@ -45,7 +47,7 @@ class READGRID(BaseSubComponent, ABC):
         default=1,
         description=(
             "Prescribes the order in which the values of bottom levels "
-            "and other fields should be given in the file."
+            "and other fields should be given in the file"
         ),
     )
     nhedf: int = Field(
@@ -55,7 +57,7 @@ class READGRID(BaseSubComponent, ABC):
             "header lines is reproduced in the print file created by SWAN . The file "
             "may start with more header lines than `nhedf` because the start of the "
             "file is often also the start of a time step and possibly also of a "
-            "vector variable (each having header lines, see `nhedt` and `nhedvec`)."
+            "vector variable (each having header lines, see `nhedt` and `nhedvec`)"
         ),
         ge=0,
     )
@@ -63,7 +65,7 @@ class READGRID(BaseSubComponent, ABC):
         default=0,
         description=(
             "For each vector variable: number of header lines in the file "
-            "at the start of each component (e.g., x- or y-component)."
+            "at the start of each component (e.g., x- or y-component)"
         ),
         ge=0,
     )
@@ -74,14 +76,14 @@ class READGRID(BaseSubComponent, ABC):
             "file is assumed to use the FREE FORTRAN format. If 'fixed', the file is "
             "assumed to use a fixed format that must be specified by (only) one of "
             "'form' or 'idfm' arguments. Use 'unformatted' to read unformatted "
-            "(binary) files (not recommended for ordinary use)."
+            "(binary) files (not recommended for ordinary use)"
         ),
     )
     form: Optional[str] = Field(
         default=None,
         description=(
             "A user-specified format string in Fortran convention, e.g., '(10X,12F5.0)'."
-            "Only used if `format='fixed'`, do not use it if `idfm` is specified."
+            "Only used if `format='fixed'`, do not use it if `idfm` is specified"
         ),
     )
     idfm: Optional[Literal[1, 5, 6, 8]] = Field(
@@ -127,7 +129,24 @@ class READCOORD(READGRID):
         READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] FREE|FORMAT &
             ('form'|idfm)
 
-    
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.subcomponents.readgrid import READCOORD
+
+        readcoord = READCOORD(
+            fac=1.0,
+            fname="coords.txt",
+            idla=3,
+            format="free",
+        )
+        print(readcoord.render())
+
     """
 
     model_type: Literal["readcoord", "READCOORD"] = Field(
