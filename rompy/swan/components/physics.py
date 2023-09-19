@@ -2121,7 +2121,7 @@ class BRAGG(BaseComponent):
             "term is calculated per sweep and bottom spectrum is interpolated at the "
             "difference wave number per sweep (no storage)\n* 3: source term is "
             "calculated per iteration and bottom spectrum is interpolated at the "
-            "difference wave number per iteration (no storage)\n(SWAN default: 1)"
+            "difference wave number per iteration (no storage)\n\n(SWAN default: 1)"
         ),
     )
     nreg: int = Field(
@@ -2911,11 +2911,11 @@ class SCAT(BaseComponent):
     iqcm: Optional[Literal[0, 1, 2]] = Field(
         default=None,
         description=(
-            "Indicates the modelling and computation of QC scattering:\n\n*0: no "
-            "scattering\n*1: scattering due to non-uniform bathymetry and currents "
-            "(the latter only if applicable; see command `INPGRID CURRENT`)\*2: "
+            "Indicates the modelling and computation of QC scattering:\n\n* 0: no "
+            "scattering\n* 1: scattering due to non-uniform bathymetry and currents "
+            "(the latter only if applicable; see command `INPGRID CURRENT`)\n* 2: "
             "wave-current interaction under the assumption of a slowly varying "
-            "bathymetry\n(SWAN default: 1)"
+            "bathymetry\n\n(SWAN default: 1)"
         ),
     )
     rfac: Optional[float] = Field(

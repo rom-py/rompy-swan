@@ -193,21 +193,21 @@ class STOPC(BaseSubComponent):
 
     With this option the user can influence the criterion for terminating the iterative
     procedure in the SWAN computations (both stationary and nonstationary). The
-    criterion make use of the second derivative, or curvature, of the iteration curve
+    criterion makes use of the second derivative, or curvature, of the iteration curve
     of the significant wave height. As the solution of a simulation approaches full
     convergence, the curvature of the iteration curve will tend to zero. SWAN stops the
     process if the relative change in Hs from one iteration to the next is less than
     `drel` and the curvature of the iteration curve of Hs normalized with Hs is less
     than `curvat` or the absolute change in Hs from one iteration to the next is less
-    than `dabs`. Both conditions need to be fulfilled in more than fraction `npnts`% of
-    all wet grid points.
+    than `dabs`. Both conditions need to be fulfilled in more than fraction `npnts`
+    percent of all wet grid points.
 
     With respect to the QC modelling, another stopping criteria will be employed.
     Namely, SWAN stops the iteration process if the absolute change in Hs from one
     iterate to another is less than `dabs` * Hinc, where Hinc is the representative
     incident wave height, or the relative change in Hs from one to the next iteration
-    is less than `drel`. These criteria must be fulfilled in more than `npnts`% of
-    all active, well-defined points.
+    is less than `drel`. These criteria must be fulfilled in more than `npnts`
+    percent of all active, well-defined points.
 
     Examples
     --------
@@ -392,7 +392,7 @@ class SIGIMPL(BaseSubComponent):
             "Output for the iterative solver:\n\n* 0 = no output\n* 1 = additional "
             "information about the iteration process is written to the PRINT file "
             "\n* 2 = gives a maximal amount of output concerning the iteration "
-            "process\n* 3 = summary of the iteration process\n(SWAN default: 0)"
+            "process\n* 3 = summary of the iteration process\n\n(SWAN default: 0)"
         ),
     )
     niter: Optional[int] = Field(
