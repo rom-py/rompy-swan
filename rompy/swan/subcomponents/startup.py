@@ -56,7 +56,10 @@ class SPHERICAL(BaseSubComponent):
     )
     projection: Literal["ccm", "qc"] = Field(
         default="ccm",
-        description="Defines the projection method in case of spherical coordinates",
+        description=(
+            "Defines the projection method in case of spherical coordinates, `ccm` "
+            "Central Conformal Mercator, `qc` means Quasi-cartesian"
+        ),
     )
 
     def cmd(self) -> str:
