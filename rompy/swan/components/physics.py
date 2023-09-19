@@ -2420,7 +2420,7 @@ class OBSTACLE(BaseComponent):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"OBSTACLE"
+        repr = "OBSTACLE"
         if self.transmission is not None:
             repr += f" {self.transmission.render()}"
         if self.reflection:

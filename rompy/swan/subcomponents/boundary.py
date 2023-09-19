@@ -249,8 +249,8 @@ class CONSTANTFILE(BaseSubComponent):
     depending on command SET), Directional spread (in degrees or as power of cos
     depending on the choice given in command BOUND SHAPE).
 
-    Example of a TPAR file
-    ----------------------
+    Example of a TPAR file:
+
     TPAR
     19920516.130000 4.2 12. -110. 22.
     19920516.180000 4.2 12. -110. 22.
@@ -309,8 +309,8 @@ class VARIABLEFILE(BaseSubComponent):
     depending on command SET), Directional spread (in degrees or as power of cos
     depending on the choice given in command BOUND SHAPE).
 
-    Example of a TPAR file
-    ----------------------
+    Example of a TPAR file:
+
     TPAR
     19920516.130000 4.2 12. -110. 22.
     19920516.180000 4.2 12. -110. 22.
