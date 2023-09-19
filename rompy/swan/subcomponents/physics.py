@@ -498,6 +498,7 @@ class ST6C5(ST6C1):
     """Fifth ST6 calibration in the SWAN user manual.
 
     .. code-block:: text
+
         ST6 4.7e-7 6.6e-6 4.0 4.0 UP HWANG VECTAU U10PROXY 28.0 AGROW
 
     Examples
