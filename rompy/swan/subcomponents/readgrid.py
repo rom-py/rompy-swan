@@ -122,11 +122,15 @@ class READGRID(BaseSubComponent, ABC):
 class READCOORD(READGRID):
     """SWAN coordinates reader.
 
-    `READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] FREE|FORMAT ('form'|idfm)`
+    .. code-block:: text
 
+        READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] FREE|FORMAT &
+            ('form'|idfm)
+
+    
     """
 
-    model_type: Literal["readcoord"] = Field(
+    model_type: Literal["readcoord", "READCOORD"] = Field(
         default="readcoord", description="Model type discriminator"
     )
     grid_type: Literal["coordinates"] = Field(

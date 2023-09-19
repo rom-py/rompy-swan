@@ -12,7 +12,9 @@ logger = logging.getLogger(__name__)
 class SPECTRUM(BaseSubComponent):
     """SWAN spectrum specification.
 
-    `CIRCLE|SECTOR ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]`
+    .. code-block:: text
+
+        ->CIRCLE|SECTOR ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]`
 
     Notes
     -----
@@ -20,9 +22,9 @@ class SPECTRUM(BaseSubComponent):
     case of a SECTOR, both `dir1` and `dir2` must be specified. In the case of a
     CIRCLE, neither `dir1` nor `dir2` should be specified.
 
-    At least two of `flow`, `fhigh` and `msc` must be specified in which case the third
-    parameter will be calculated by SWAN such that the frequency resolution
-    $df/f$ = 0.1 (10% increments).
+    At least two of `flow`, `fhigh` and `msc` must be specified in which case the
+    third parameter will be calculated by SWAN such that the frequency resolution
+    `df/f = 0.1` (10% increments).
 
     """
 
@@ -32,10 +34,10 @@ class SPECTRUM(BaseSubComponent):
     mdc: int = Field(
         description=(
             "Number of meshes in θ-space. In the case of CIRCLE, this is the number "
-            "of subdivisions of the 360 degrees of a circle so ∆θ = [360]/[mdc] is "
-            "the spectral directional resolution. In the case of SECTOR, "
-            "∆θ = ([dir2] - [dir1])/[mdc]. The minimum number of directional bins is "
-            "3 per directional quadrant."
+            "of subdivisions of the 360 degrees of a circle so `dtheta = [360]/[mdc]` "
+            "is the spectral directional resolution. In the case of SECTOR, "
+            "`dtheta = ([dir2] - [dir1])/[mdc]`. The minimum number of directional "
+            "bins is 3 per directional quadrant."
         )
     )
     flow: Optional[float] = Field(
@@ -57,7 +59,8 @@ class SPECTRUM(BaseSubComponent):
             "resolution in frequency-space between the lowest discrete frequency "
             "`flow` and the highest discrete frequency `fhigh`. This resolution is "
             "not constant, since the frequencies are distributed logarithmical: "
-            "fi+1 = yfi with y is a constant. The minimum number of frequencies is 4."
+            "`fi+1 = yfi` where `y` is a constant. The minimum number of frequencies "
+            "is 4"
         ),
         ge=3,
     )
