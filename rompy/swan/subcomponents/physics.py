@@ -8,9 +8,6 @@ import numpy as np
 from rompy.swan.subcomponents.base import BaseSubComponent
 
 
-JSON_ENCODERS = {np.ndarray: lambda arr: arr.tolist()}
-
-
 # ======================================================================================
 # Source terms
 # ======================================================================================
