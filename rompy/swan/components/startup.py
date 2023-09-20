@@ -27,9 +27,7 @@ class PROJECT(BaseComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.startup import PROJECT
-
         proj = PROJECT(nr="01")
         print(proj.render())
         proj = PROJECT(
@@ -121,9 +119,7 @@ class SET(BaseComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.startup import SET
-
         set = SET(level=0.5, direction_convention="nautical")
         print(set.render())
         set = SET(
@@ -340,9 +336,7 @@ class MODE(BaseComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.startup import MODE
-
         mode = MODE()
         print(mode.render())
         mode = MODE(kind="nonstationary", dim="twodimensional")
@@ -374,7 +368,7 @@ class COORDINATES(BaseComponent):
 
     .. code-block:: text
 
-        COORDINATES ->CARTESIAN|SPHERICAL REPEATING`
+        COORDINATES ->CARTESIAN|SPHERICAL REPEATING
 
     Command to choose between Cartesian and spherical coordinates (see Section 2.5).
     A nested SWAN run must use the same coordinate system as the coarse grid SWAN run.
@@ -386,9 +380,7 @@ class COORDINATES(BaseComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.startup import COORDINATES
-
         coords = COORDINATES()
         print(coords.render())
         coords = COORDINATES(
