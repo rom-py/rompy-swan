@@ -15,16 +15,24 @@ logger = logging.getLogger(__name__)
 class READGRID(BaseSubComponent, ABC):
     """SWAN grid reader abstract class.
 
+    .. code-block:: text
+
+        READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
+            ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
+
+    This is the base class for all input grids. It is not meant to be used directly.
+
     Notes
     -----
 
-    File format identifier:
+    File format identifier
+    ~~~~~~~~~~~~~~~~~~~~~~
 
     * 1: Format according to BODKAR convention (a standard of the Ministry of
-      Transport and Public Works in the Netherlands). Format string: (10X,12F5.0).
-    * 5: Format (16F5.0), an input line consists of 16 fields of 5 places each.
-    * 6: Format (12F6.0), an input line consists of 12 fields of 6 places each.
-    * 8: Format (10F8.0), an input line consists of 10 fields of 8 places each.
+      Transport and Public Works in the Netherlands). Format string: (10X,12F5.0)
+    * 5: Format (16F5.0), an input line consists of 16 fields of 5 places each
+    * 6: Format (12F6.0), an input line consists of 12 fields of 6 places each
+    * 8: Format (10F8.0), an input line consists of 10 fields of 8 places each
 
     """
 
@@ -126,8 +134,8 @@ class READCOORD(READGRID):
 
     .. code-block:: text
 
-        READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] FREE|FORMAT &
-            ('form'|idfm)
+        READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] &
+            FREE|FORMAT ('form'|idfm)
 
     Examples
     --------
@@ -136,9 +144,7 @@ class READCOORD(READGRID):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.readgrid import READCOORD
-
         readcoord = READCOORD(
             fac=1.0,
             fname="coords.txt",
@@ -169,11 +175,31 @@ class READCOORD(READGRID):
 class READINP(READGRID):
     """SWAN input grid reader.
 
-    `READINP GRID_TYPE [fac] 'fname1'|SERIES 'fname2' [idla] [nhedf] ([nhedt]) [nhedvec] FREE|FORMAT ('form'|idfm)|UNFORMATTED`
+    .. code-block:: text
+
+        READINP GRID_TYPE [fac] ('fname1' | SERIES 'fname2') [idla] [nhedf] &
+            ([nhedt]) [nhedvec] FREE|FORMAT ('form'|idfm)|UNFORMATTED`
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.readgrid import READINP
+        readinp = READINP(
+            grid_type="wind",
+            fname1="wind.txt",
+            fac=1.0,
+            idla=3,
+            format="free",
+        )
+        print(readinp.render())
 
     """
 
-    model_type: Literal["readinp"] = Field(
+    model_type: Literal["readinp", "READINP"] = Field(
         default="readinp", description="Model type discriminator"
     )
     grid_type: Optional[GridOptions] = Field(
@@ -190,7 +216,7 @@ class READINP(READGRID):
             "proper time sequence. SWAN reads the next file when the previous file "
             "end has been encountered. In these files the input should be given in "
             "the same format as in the above file 'fname1' (that implies that a file "
-            "should start with the start of an input time step)."
+            "should start with the start of an input time step)"
         ),
     )
     nhedt: int = Field(
@@ -199,7 +225,7 @@ class READINP(READGRID):
             "Only if variable is time dependent: number of header lines in the file "
             "at the start of each time level. A time step may start with more header "
             "lines than `nhedt` because the variable may be a vector variable which "
-            "has its own header lines (see `nhedvec`)."
+            "has its own header lines (see `nhedvec`)"
         ),
         ge=0,
     )
