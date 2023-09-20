@@ -57,14 +57,16 @@ class INPGRID(BaseComponent, ABC):
 
 
 class REGULAR(INPGRID):
-    """SWAN regular input grid.
+    """SWAN regular input grid group component.
 
     .. code-block:: text
 
-        INPGRID REGULAR [grid_type] [xpinp] [ypinp] [alpinp] [mxinp] [myinp] &
+        INPGRID [grid_type] REGULAR [xpinp] [ypinp] [alpinp] [mxinp] [myinp] &
             [dxinp] [dyinp]
         READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
             ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
+
+    This is a group component that includes an `INPGRID` and `READGRID` components.
 
     Examples
     --------
@@ -76,6 +78,19 @@ class REGULAR(INPGRID):
         @suppress
         from rompy.swan.components.inpgrid import REGULAR
 
+        inpgrid = REGULAR(
+            grid_type="bottom",
+            excval=-99.0,
+            xpinp=172.0,
+            ypinp=-41.0,
+            alpinp=0.0,
+            mxinp=99,
+            myinp=99,
+            dxinp=0.005,
+            dyinp=0.005,
+            readinp=dict(fname1="bottom.txt"),
+        )
+        print(inpgrid.render())
         inpgrid = REGULAR(
             grid_type="wind",
             excval=-99.0,
@@ -167,15 +182,48 @@ class REGULAR(INPGRID):
 
 
 class CURVILINEAR(INPGRID):
-    """SWAN curvilinear input grid.
+    """SWAN curvilinear input grid group component.
 
-    `INPGRID CURVILINEAR [stagrx] [stagry] [mxinp] [myinp]`
+    .. code-block:: text
+
+        INPGRID [grid_type] CURVILINEAR [stagrx] [stagry] [mxinp] [myinp]
+        READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
+            ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
+
+    This is a group component that includes an `INPGRID` and `READGRID` components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.inpgrid import CURVILINEAR
+
+        inpgrid = CURVILINEAR(
+            grid_type="wind",
+            stagrx=0.0,
+            stagry=0.0,
+            mxinp=199,
+            myinp=199,
+            excval=-99.0,
+            readinp=dict(fname1="wind.txt"),
+            nonstationary=dict(
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                deltfmt="hr",
+            ),
+        )
+        print(inpgrid.render())
 
     TODO: Handle (or not) setting default values for mxinp and myinp from cgrid.
 
     """
 
-    model_type: Literal["curvilinear"] = Field(
+    model_type: Literal["curvilinear", "CURVILINEAR"] = Field(
         default="curvilinear", description="Model type discriminator"
     )
     stagrx: float = Field(
@@ -223,13 +271,42 @@ class CURVILINEAR(INPGRID):
 
 
 class UNSTRUCTURED(INPGRID):
-    """SWAN unstructured input grid.
+    """SWAN unstructured input grid group component.
 
-    `INPGRID UNSTRUCTURED`
+    .. code-block:: text
+
+        INPGRID [grid_type] UNSTRUCTURED
+        READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
+            ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
+
+    This is a group component that includes an `INPGRID` and `READGRID` components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.inpgrid import UNSTRUCTURED
+
+        inpgrid = UNSTRUCTURED(
+            grid_type="bottom",
+            excval=-99.0,
+            readinp=dict(fname1="bottom.txt"),
+            nonstationary=dict(
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                deltfmt="hr",
+            ),
+        )
+        print(inpgrid.render())
 
     """
 
-    model_type: Literal["unstructured"] = Field(
+    model_type: Literal["unstructured", "UNSTRUCTURED"] = Field(
         default="unstructured", description="Model type discriminator"
     )
 
