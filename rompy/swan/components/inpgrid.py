@@ -20,7 +20,7 @@ class INPGRID(BaseComponent, ABC):
 
     """
 
-    model_type: Literal["inpgrid"] = Field(
+    model_type: Literal["inpgrid", "INPGRID"] = Field(
         default="inpgrid",
         description="Model type discriminator",
     )
@@ -59,11 +59,46 @@ class INPGRID(BaseComponent, ABC):
 class REGULAR(INPGRID):
     """SWAN regular input grid.
 
-    `INPGRID REGULAR [grid_type] [xpinp] [ypinp] [alpinp] [mxinp] [myinp] [dxinp] [dyinp]`
+    .. code-block:: text
+
+        INPGRID REGULAR [grid_type] [xpinp] [ypinp] [alpinp] [mxinp] [myinp] &
+            [dxinp] [dyinp]
+        READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
+            ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        @suppress
+        from rompy.swan.components.inpgrid import REGULAR
+
+        inpgrid = REGULAR(
+            grid_type="wind",
+            excval=-99.0,
+            xpinp=172.0,
+            ypinp=-41.0,
+            alpinp=0.0,
+            mxinp=99,
+            myinp=99,
+            dxinp=0.005,
+            dyinp=0.005,
+            readinp=dict(fname1="wind.txt"),
+            nonstationary=dict(
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                deltfmt="hr",
+            ),
+        )
+        print(inpgrid.render())
 
     """
 
-    model_type: Literal["regular"] = Field(
+    model_type: Literal["regular", "REGULAR"] = Field(
         default="regular",
         description="Model type discriminator",
     )
