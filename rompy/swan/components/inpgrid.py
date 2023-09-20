@@ -16,6 +16,11 @@ HERE = Path(__file__).parent
 class INPGRID(BaseComponent, ABC):
     """SWAN input grid.
 
+    .. code-block:: text
+
+        INPGRID [grid_type] ->REGULAR|CURVILINEAR|UNSTRUCTURED (EXCEPTION [excval]) &
+            (NONSTATIONARY [tbeginp] [deltinp] ->SEC|MIN|HR|DAY [tendinp])
+
     This is the base class for all input grids. It is not meant to be used directly.
 
     """
@@ -62,11 +67,12 @@ class REGULAR(INPGRID):
     .. code-block:: text
 
         INPGRID [grid_type] REGULAR [xpinp] [ypinp] [alpinp] [mxinp] [myinp] &
-            [dxinp] [dyinp]
+            [dxinp] [dyinp] (EXCEPTION [excval]) &
+            (NONSTATIONARY [tbeginp] [deltinp] ->SEC|MIN|HR|DAY [tendinp])
         READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
             ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
 
-    This is a group component that includes an `INPGRID` and `READGRID` components.
+    This is a group component that includes an `INPGRID` and a `READGRID` component.
 
     Examples
     --------
@@ -75,9 +81,7 @@ class REGULAR(INPGRID):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.inpgrid import REGULAR
-
         inpgrid = REGULAR(
             grid_type="bottom",
             excval=-99.0,
@@ -186,11 +190,13 @@ class CURVILINEAR(INPGRID):
 
     .. code-block:: text
 
-        INPGRID [grid_type] CURVILINEAR [stagrx] [stagry] [mxinp] [myinp]
+        INPGRID [grid_type] CURVILINEAR [stagrx] [stagry] [mxinp] [myinp] &
+            (EXCEPTION [excval]) &
+            (NONSTATIONARY [tbeginp] [deltinp] ->SEC|MIN|HR|DAY [tendinp])
         READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
             ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
 
-    This is a group component that includes an `INPGRID` and `READGRID` components.
+    This is a group component that includes an `INPGRID` and a `READGRID` component.
 
     Examples
     --------
@@ -199,9 +205,7 @@ class CURVILINEAR(INPGRID):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.inpgrid import CURVILINEAR
-
         inpgrid = CURVILINEAR(
             grid_type="wind",
             stagrx=0.0,
@@ -275,11 +279,12 @@ class UNSTRUCTURED(INPGRID):
 
     .. code-block:: text
 
-        INPGRID [grid_type] UNSTRUCTURED
+        INPGRID [grid_type] UNSTRUCTURED EXCEPTION [excval]) &
+            (NONSTATIONARY [tbeginp] [deltinp] ->SEC|MIN|HR|DAY [tendinp])
         READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
             ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
 
-    This is a group component that includes an `INPGRID` and `READGRID` components.
+    This is a group component that includes an `INPGRID` and a `READGRID` component.
 
     Examples
     --------
@@ -288,9 +293,7 @@ class UNSTRUCTURED(INPGRID):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.inpgrid import UNSTRUCTURED
-
         inpgrid = UNSTRUCTURED(
             grid_type="bottom",
             excval=-99.0,
@@ -329,8 +332,59 @@ INPGRID_TYPES = Annotated[
 class INPGRIDS(BaseComponent):
     """SWAN input grids group component.
 
+    .. code-block:: text
+
+        INPGRID ...
+        READGRID ...
+
+        INPGRID ...
+        READGRID ...
+
+        ...
+
     This group component is a convenience to allow defining and rendering
     a list of input grid components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.components.inpgrid import REGULAR, INPGRIDS
+        inpgrid_bottom = REGULAR(
+            grid_type="bottom",
+            excval=-99.0,
+            xpinp=172.0,
+            ypinp=-41.0,
+            alpinp=0.0,
+            mxinp=99,
+            myinp=99,
+            dxinp=0.005,
+            dyinp=0.005,
+            readinp=dict(fname1="bottom.txt"),
+        )
+        inpgrid_wind = REGULAR(
+            grid_type="wind",
+            excval=-99.0,
+            xpinp=172.0,
+            ypinp=-41.0,
+            alpinp=0.0,
+            mxinp=99,
+            myinp=99,
+            dxinp=0.005,
+            dyinp=0.005,
+            readinp=dict(fname1="wind.txt"),
+            nonstationary=dict(
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                deltfmt="hr",
+            ),
+        )
+        inpgrids = INPGRIDS(inpgrids=[inpgrid_bottom, inpgrid_wind])
+        print(inpgrids.render())
 
     """
 

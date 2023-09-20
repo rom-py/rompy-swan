@@ -14,10 +14,11 @@ class SPECTRUM(BaseSubComponent):
 
     .. code-block:: text
 
-        ->CIRCLE|SECTOR ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]`
+        ->CIRCLE|SECTOR ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]
 
     Notes
     -----
+
     Directions in the spectra are defined either as a CIRCLE or as a SECTOR. In the
     case of a SECTOR, both `dir1` and `dir2` must be specified. In the case of a
     CIRCLE, neither `dir1` nor `dir2` should be specified.
@@ -26,18 +27,31 @@ class SPECTRUM(BaseSubComponent):
     third parameter will be calculated by SWAN such that the frequency resolution
     `df/f = 0.1` (10% increments).
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.spectrum import SPECTRUM
+        spec = SPECTRUM(mdc=36, flow=0.04, fhigh=1.0)
+        print(spec.render())
+        spec = SPECTRUM(mdc=36, dir1=0, dir2=180, flow=0.04, msc=31)
+        print(spec.render())
+
     """
 
-    model_type: Literal["spectrum"] = Field(
+    model_type: Literal["spectrum", "SPECTRUM"] = Field(
         default="spectrum", description="Model type discriminator"
     )
     mdc: int = Field(
         description=(
-            "Number of meshes in θ-space. In the case of CIRCLE, this is the number "
-            "of subdivisions of the 360 degrees of a circle so `dtheta = [360]/[mdc]` "
-            "is the spectral directional resolution. In the case of SECTOR, "
-            "`dtheta = ([dir2] - [dir1])/[mdc]`. The minimum number of directional "
-            "bins is 3 per directional quadrant."
+            "Number of meshes in theta-space. In the case of CIRCLE, this is the "
+            "number of subdivisions of the 360 degrees of a circle so "
+            "`dtheta = [360]/[mdc]` is the spectral directional resolution. In the "
+            "case of SECTOR, `dtheta = ([dir2] - [dir1])/[mdc]`. The minimum number "
+            "of directional bins is 3 per directional quadrant."
         )
     )
     flow: Optional[float] = Field(
@@ -122,11 +136,24 @@ class SPECTRUM(BaseSubComponent):
 class JONSWAP(BaseSubComponent):
     """Jonswap spectral shape.
 
-    `JONSWAP [gamma]`
+    .. code-block:: text
+
+        JONSWAP [gamma]
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.spectrum import JONSWAP
+        shape = JONSWAP(gamma=3.3)
+        print(shape.render())
 
     """
 
-    model_type: Literal["jonswap"] = Field(
+    model_type: Literal["jonswap", "JONSWAP"] = Field(
         default="jonswap", description="Model type discriminator"
     )
     gamma: float = Field(
@@ -142,11 +169,24 @@ class JONSWAP(BaseSubComponent):
 class TMA(JONSWAP):
     """TMA spectral shape.
 
-    `TMA [gamma] [d]`
+    .. code-block:: text
+
+        TMA [gamma] [d]
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.spectrum import TMA
+        shape = TMA(gamma=2.0, d=18)
+        print(shape.render())
 
     """
 
-    model_type: Literal["tma"] = Field(
+    model_type: Literal["tma", "TMA"] = Field(
         default="tma", description="Model type discriminator"
     )
     d: float = Field(
@@ -161,11 +201,24 @@ class TMA(JONSWAP):
 class GAUSS(BaseSubComponent):
     """Gaussian spectral shape.
 
-    `GAUSS [sigfr]`
+    .. code-block:: text
+
+        GAUSS [sigfr]
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.spectrum import GAUSS
+        shape = GAUSS(sigfr=0.02)
+        print(shape.render())
 
     """
 
-    model_type: Literal["gauss"] = Field(
+    model_type: Literal["gauss", "GAUSS"] = Field(
         default="gauss", description="Model type discriminator"
     )
     sigfr: float = Field(
@@ -183,11 +236,24 @@ class GAUSS(BaseSubComponent):
 class PM(BaseSubComponent):
     """Pearson-Moskowitz spectral shape.
 
-    `PM`
+    .. code-block:: text
+
+        PM
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.spectrum import PM
+        shape = PM()
+        print(shape.render())
 
     """
 
-    model_type: Literal["pm"] = Field(
+    model_type: Literal["pm", "PM"] = Field(
         default="pm", description="Model type discriminator"
     )
 
@@ -195,11 +261,24 @@ class PM(BaseSubComponent):
 class BIN(BaseSubComponent):
     """Single frequency bin spectral shape.
 
-    `BIN`
+    .. code-block:: text
+
+        BIN
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.spectrum import BIN
+        shape = BIN()
+        print(shape.render())
 
     """
 
-    model_type: Literal["bin"] = Field(
+    model_type: Literal["bin", "BIN"] = Field(
         default="bin", description="Model type discriminator"
     )
 
@@ -207,7 +286,9 @@ class BIN(BaseSubComponent):
 class SHAPESPEC(BaseSubComponent):
     """Spectral shape specification.
 
-    `BOUND SHAPESPEC JONSWAP|PM|GAUSS|BIN|TMA PEAK|MEAN DSPR [POWER|DEGREES]`
+    .. code-block:: text
+
+        BOUND SHAPESPEC JONSWAP|PM|GAUSS|BIN|TMA PEAK|MEAN DSPR [POWER|DEGREES]
 
     This command BOUND SHAPESPEC defines the shape of the spectra (both in frequency
     and direction) at the boundary of the computational grid in case of parametric
@@ -218,22 +299,36 @@ class SHAPESPEC(BaseSubComponent):
     While technically a component `BOUND SHAPESPEC`, this is only intended to be used
     as a subcomponent of the `BOUNDSPEC` component.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.subcomponents.spectrum import SHAPESPEC
+        shapespec = SHAPESPEC()
+        print(shapespec.render())
+        shapespec = SHAPESPEC(
+            shape=dict(model_type="tma", gamma=3.1, d=12),
+            per_type="mean",
+            dspr_type="degrees",
+        )
+        print(shapespec.render())
+
     """
 
-    model_type: Literal["shapespec"] = Field(
+    model_type: Literal["shapespec", "SHAPESPEC"] = Field(
         default="shapespec", description="Model type discriminator"
     )
     shape: JONSWAP | PM | GAUSS | BIN | TMA = Field(
-        default=JONSWAP(),
-        description="The spectral shape",
+        default_factory=JONSWAP, description="The spectral shape",
     )
     per_type: Literal["peak", "mean"] = Field(
-        default="peak",
-        description="The type of characteristic wave period",
+        default="peak", description="The type of characteristic wave period",
     )
     dspr_type: Literal["power", "degrees"] = Field(
-        default="power",
-        description="The type of directional spreading",
+        default="power", description="The type of directional spreading",
     )
 
     def cmd(self) -> str:

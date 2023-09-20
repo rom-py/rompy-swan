@@ -15,6 +15,11 @@ logger = logging.getLogger(__name__)
 class CGRID(BaseComponent, ABC):
     """SWAN computational grid abstract component.
 
+    .. code-block:: text
+
+        CGRID ->REGULAR|CURVILINEAR|UNSTRUCTURED &
+            CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+
     This class should not be used directly.
 
     """
@@ -34,8 +39,10 @@ class REGULAR(CGRID):
 
     .. code-block:: text
 
-        CGRID REGULAR [xpc] [ypc] [alpc] [xlenc] [ylenc] [mxc] [myc] ->CIRCLE|SECTOR &
-            ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]`
+        CGRID REGULAR [xpc] [ypc] [alpc] [xlenc] [ylenc] [mxc] [myc] &
+            ->CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+
+    This is a group component that includes a `CGRID` and a `READGRID` component.
 
     Examples
     --------
@@ -44,9 +51,7 @@ class REGULAR(CGRID):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.cgrid import REGULAR
-
         cgrid = REGULAR(
             xpc=0.0,
             ypc=0.0,
@@ -127,10 +132,12 @@ class CURVILINEAR(CGRID):
 
     .. code-block:: text
 
-        CGRID CURVILINEAR [mxc] [myc] (EXCEPTION [xexc] [yexc]) ->CIRCLE|SECTOR &
-            ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]
-        READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] FREE|FORMAT &
-            ('form'|[idfm])`
+        CGRID CURVILINEAR [mxc] [myc] (EXCEPTION [xexc] [yexc])
+            ->CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+        READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] &
+            FREE|FORMAT ('form'|[idfm])
+
+    This is a group component that includes a `CGRID` and a `READGRID` component.
 
     Examples
     --------
@@ -139,9 +146,7 @@ class CURVILINEAR(CGRID):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.cgrid import CURVILINEAR
-
         cgrid = CURVILINEAR(
             mxc=199,
             myc=199,
@@ -228,8 +233,10 @@ class UNSTRUCTURED(CGRID):
 
     .. code-block:: text
 
-        CGRID UNSTRUCTURED CIRCLE|SECTOR ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]
+        CGRID UNSTRUCTURED CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
         READGRID UNSTRUCTURED [grid_type] ('fname')
+
+    This is a group component that includes a `CGRID` and a `READGRID` component.
 
     Examples
     --------
@@ -238,9 +245,7 @@ class UNSTRUCTURED(CGRID):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.cgrid import UNSTRUCTURED
-
         cgrid = UNSTRUCTURED(
             grid_type="adcirc",
             spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
