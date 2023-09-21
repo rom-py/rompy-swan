@@ -22,9 +22,7 @@ class CARTESIAN(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.startup import CARTESIAN
-
         coords = CARTESIAN()
         print(coords.render())
 
@@ -74,9 +72,7 @@ class SPHERICAL(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.startup import SPHERICAL
-
         coords = SPHERICAL()
         print(coords.render())
         coords = SPHERICAL(projection="qc")

@@ -22,9 +22,7 @@ class BSBT(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import BSBT
-
         scheme = BSBT()
         print(scheme.render())
 
@@ -58,9 +56,7 @@ class GSE(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import GSE
-
         scheme = GSE(waveage=1, units="day")
         print(scheme.render())
 
@@ -103,9 +99,7 @@ class STAT(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import STAT
-
         stat = STAT()
         print(stat.render())
         stat = STAT(mxitst=10, alfa=0.1)
@@ -155,9 +149,7 @@ class NONSTAT(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import NONSTAT
-
         nonstat = NONSTAT()
         print(nonstat.render())
         nonstat = NONSTAT(mxitst=3)
@@ -216,9 +208,7 @@ class STOPC(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import STOPC
-
         stop = STOPC()
         print(stop.render())
         stop=STOPC(
@@ -309,9 +299,7 @@ class DIRIMPL(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import DIRIMPL
-
         dirimpl = DIRIMPL()
         print(dirimpl.render())
         dirimpl = DIRIMPL(cdd=0.5)
@@ -357,9 +345,7 @@ class SIGIMPL(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import SIGIMPL
-
         sigimpl = SIGIMPL()
         print(sigimpl.render())
         sigimpl = SIGIMPL(css=0.5, eps2=1e-4, outp=0, niter=20)
@@ -436,9 +422,7 @@ class CTHETA(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import CTHETA
-
         ctheta = CTHETA()
         print(ctheta.render())
         ctheta = CTHETA(cfl=0.9)
@@ -483,9 +467,7 @@ class CSIGMA(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import CSIGMA
-
         csigma = CSIGMA()
         print(csigma.render())
         csigma = CSIGMA(cfl=0.9)
@@ -527,9 +509,7 @@ class SETUP(BaseSubComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.subcomponents.numerics import SETUP
-
         setup = SETUP()
         print(setup.render())
         setup = SETUP(eps2=1e-4, outp=0, niter=20)

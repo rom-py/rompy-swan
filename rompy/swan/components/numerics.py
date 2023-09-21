@@ -59,9 +59,7 @@ class PROP(BaseComponent):
         :okwarning:
         :okexcept:
 
-        @suppress
         from rompy.swan.components.numerics import PROP
-
         prop = PROP()
         print(prop.render())
         prop = PROP(scheme=dict(model_type="bsbt"))
@@ -97,6 +95,25 @@ class NUMERIC(BaseComponent):
         NUMeric ( STOPC [dabs] [drel] [curvat] [npnts] ->STAT|NONSTAT [limiter] ) &
             ( DIRimpl [cdd] ) ( SIGIMpl [css] [eps2] [outp] [niter] ) &
             ( CTheta [cfl] ) ( CSigma [cfl] ) ( SETUP [eps2] [outp] [niter] )
+
+    Examples
+    --------
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.components.numerics import NUMERIC
+        numeric = NUMERIC()
+        print(numeric.render())
+        numeric = NUMERIC(
+            stopc=dict(dabs=0.05, drel=0.01, curvat=0.05, npnts=99.5),
+            dirimpl=dict(cdd=0.5),
+            sigimpl=dict(css=0.5, eps2=1e-4, outp=0, niter=20),
+            ctheta=dict(cfl=0.9),
+            csigma=dict(cfl=0.9),
+            setup=dict(eps2=1e-4, outp=0, niter=20),
+        )
+        print(numeric.render())
 
     """
     model_type: Literal["numeric", "NUMERIC"] = Field(
