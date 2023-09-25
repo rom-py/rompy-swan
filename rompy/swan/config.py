@@ -330,7 +330,16 @@ class SwanConfigComponents(BaseConfig):
         return self
 
     model_validator(mode="after")
-
     def transm_msc_mdc(self) -> "SwanConfigComponents":
         """Ensure the number of transmission coefficients match msc and mdc."""
         return self
+
+    @model_validator(mode="after")
+    def locations_2d(self) -> "SwanConfigComponents":
+        """Ensure Location components not used in 1D mode."""
+        # FRAME, GROUP, RAY, ISOLINE and NGRID not in 1D
+        # BLOCK and NESTOUT not in 1D
+        # GROUP not in unstructured
+        return self
+
+    # BOTTGRID and COMPGRID are reserved
