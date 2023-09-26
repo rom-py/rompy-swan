@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.spectrum import SPECTRUM
-from rompy.swan.subcomponents.readgrid import READCOORD
+from rompy.swan.subcomponents.readgrid import READCOORD, GRIDREGULAR
 
 
 logger = logging.getLogger(__name__)
@@ -58,13 +58,7 @@ class REGULAR(CGRID):
 
         from rompy.swan.components.cgrid import REGULAR
         cgrid = REGULAR(
-            xpc=0.0,
-            ypc=0.0,
-            alpc=0.0,
-            xlenc=2000.0,
-            ylenc=1300.0,
-            mxc=100,
-            myc=100,
+            grid=dict(xp=0, yp=0, alp=0, xlen=2000, ylen=1300, mx=100, my=100),
             spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
         )
         print(cgrid.render())
@@ -74,61 +68,18 @@ class REGULAR(CGRID):
     model_type: Literal["regular", "REGULAR"] = Field(
         default="regular", description="Model type discriminator"
     )
-    xpc: float = Field(
-        default=0.0,
-        description=(
-            "Geographic location of the origin of the computational grid in the "
-            "problem coordinate system (x-coordinate, in m)"
-        ),
-    )
-    ypc: float = Field(
-        default=0.0,
-        description=(
-            "Geographic location of the origin of the computational grid in the "
-            "problem coordinate system (y-coordinate, in m)"
-        ),
-    )
-    alpc: float = Field(
-        default=0.0,
-        description=(
-            "Direction of the positive x-axis of the computational grid (in degrees, "
-            "Cartesian convention). In 1D-mode, `alpc` should be equal to the "
-            "direction `alpinp`"
-        ),
-    )
-    xlenc: float = Field(
-        description=(
-            "Length of the computational grid in x-direction (in m). In case of "
-            "spherical coordinates `xlenc` is in degrees"
-        ),
-    )
-    ylenc: float = Field(
-        description=(
-            "Length of the computational grid in y-direction (in m). In 1D-mode, "
-            "`ylenc` should be 0. In case of spherical coordinates `ylenc` is in "
-            "degrees"
-        ),
-    )
-    mxc: int = Field(
-        description=(
-            "Number of meshes in computational grid in x-direction (this number is "
-            "one less than the number of grid points in this domain)"
-        ),
-    )
-    myc: int = Field(
-        description=(
-            "Number of meshes in computational grid in y-direction (this number is "
-            "one less than the number of grid points in this domain). In 1D-mode, "
-            "`myc` should be 0"
-        ),
-    )
+    grid: GRIDREGULAR = Field(description="Computational grid definition")
+
+    @model_validator(mode="after")
+    def grid_suffix(self) -> "REGULAR":
+        """Set expected grid suffix."""
+        if self.grid.suffix != "c":
+            logger.debug(f"Set grid suffix 'c' instead of {self.grid.suffix}")
+            self.grid.suffix = "c"
+        return self
 
     def cmd(self) -> str:
-        repr = (
-            f"CGRID REGULAR xpc={self.xpc} ypc={self.ypc} alpc={self.alpc} "
-            f"xlenc={self.xlenc} ylenc={self.ylenc} mxc={self.mxc} myc={self.myc} "
-            f"{self.spectrum.render()}"
-        )
+        repr = f"CGRID REGULAR {self.grid.render()} {self.spectrum.render()}"
         return repr
 
 
