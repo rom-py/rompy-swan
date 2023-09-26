@@ -347,4 +347,8 @@ class SwanConfigComponents(BaseConfig):
         """Ensure group indices are contained in computational grid."""
         return self
 
-    # BOTTGRID and COMPGRID are reserved
+    @model_validator(mode="after")
+    def not_curvilinear_if_ray(self) -> "SwanConfigComponents":
+        """Ensure bottom and water level grids are not curvilinear for RAY."""
+        return self
+
