@@ -145,7 +145,7 @@ class CURVE(BaseComponent):
     of the output quantities along the curve are interpolated from the computational
     grid. This command may be used more than once to define more curves.
 
-    Info
+    Note
     ----
     The following pre-defined curves are available and could be used instead of a CURVE
     component: 'BOUNDARY' and `BOUND_0N` where `N` is boundary part number.
@@ -236,7 +236,28 @@ class RAY(BaseComponent):
 
     .. code-block:: text
 
-        RAY
+        RAY ’rname’ [xp1] [yp1] [xq1] [yq1] < [int] [xp] [yp] [xq] [yq] >
+
+    With this optional command the user provides SWAN with information to determine
+    output locations along the depth contour line(s) defined subsequently in command
+    `ISOLINE` (see below).
+
+    These locations are determined by SWAN as the intersections of the depth contour
+    line(s) and the set of straight rays defined in this command RAY. These rays are
+    characterized by a set of master rays defined by their start and end positions
+    (`xp`,`yp`) and (`xq`,`yq`). Between each pair of sequential master rays thus
+    defined SWAN generates `int-1` intermediate rays by linear interpolation of the
+    start and end positions.
+
+    Note that the rays thus defined have nothing in common with wave rays (e.g. as
+    obtained from conventional refraction computations).
+
+    Also note that when using rays, the input grid for bottom and water level should
+    not be curvilinear.
+
+    Note
+    ----
+    Cannot be used in 1D-mode.
 
     Examples
     --------
