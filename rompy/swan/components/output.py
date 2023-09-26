@@ -5,6 +5,7 @@ from pydantic import field_validator, model_validator, Field, FieldValidationInf
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.output import *
+from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 
 
 logger = logging.getLogger(__name__)
@@ -18,7 +19,11 @@ class FRAME(BaseComponent):
 
     .. code-block:: text
 
-        FRAME
+        FRAME ’sname’ ([xpfr] [ypfr] [alpfr] [xlenfr] [ylenfr] [mxfr] [myfr])
+
+    With this optional command the user defines output on a rectangular, uniform grid
+    in a regular frame. If the set of output locations is identical to a part of the
+    computational grid, then the user can use the alternative command GROUP.
 
     Examples
     --------
@@ -28,17 +33,32 @@ class FRAME(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import FRAME
-        loc = FRAME()
+        loc = FRAME(
+            sname="outgrid",
+            grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
+        )
         print(loc.render())
 
     """
     model_type: Literal["frame", "FRAME"] = Field(
         default="frame", description="Model type discriminator"
     )
+    sname: str = Field(
+        description="Name of the frame defined by this command", max_length=16,
+    )
+    grid: GRIDREGULAR = Field(description="Frame grid definition")
+
+    @model_validator(mode="after")
+    def grid_suffix(self) -> "FRAME":
+        """Set expected grid suffix."""
+        if self.grid.suffix != "fr":
+            logger.debug(f"Set expected grid suffix 'c' instead of {self.grid.suffix}")
+            self.grid.suffix = "fr"
+        return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "FRAME"
+        repr = f"FRAME '{self.sname}' {self.grid.render()}"
         return repr
 
 
