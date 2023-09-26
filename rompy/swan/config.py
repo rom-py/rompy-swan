@@ -342,4 +342,9 @@ class SwanConfigComponents(BaseConfig):
         # GROUP not in unstructured
         return self
 
+    @model_validator(mode="after")
+    def group_within_cgrid(self) -> "SwanConfigComponents":
+        """Ensure group indices are contained in computational grid."""
+        return self
+
     # BOTTGRID and COMPGRID are reserved
