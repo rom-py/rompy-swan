@@ -44,6 +44,11 @@ class REGULAR(CGRID):
 
     This is a group component that includes a `CGRID` and a `READGRID` component.
 
+    Note
+    ----
+    In 1D-mode, `alpc` should be equal to the direction `alpinp`.
+
+
     Examples
     --------
 
