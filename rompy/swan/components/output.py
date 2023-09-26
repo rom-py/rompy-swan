@@ -11,6 +11,10 @@ from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 logger = logging.getLogger(__name__)
 
 
+# TODO: Ensure 'BOTTGRID' and 'COMPGRID' are accepted in place of FRAME
+# TODO 'BOUNDARY' and 'BOUND_0N' are accepted in appropriate write commands
+# TODO: Allow setting float precision where appropriate
+
 # =====================================================================================
 # Locations
 # =====================================================================================
@@ -62,7 +66,7 @@ class FRAME(BaseComponent):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"FRAME '{self.sname}' {self.grid.render()}"
+        repr = f"FRAME sname='{self.sname}' {self.grid.render()}"
         return repr
 
 
@@ -124,7 +128,7 @@ class GROUP(BaseComponent):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"GROUP '{self.sname}'"
+        repr = f"GROUP sname='{self.sname}'"
         repr += f" SUBGRID ix1={self.ix1} iy1={self.iy1} ix2={self.ix2} iy2={self.iy2}"
         return repr
 
@@ -134,7 +138,27 @@ class CURVE(BaseComponent):
 
     .. code-block:: text
 
-        CURVE
+        CURVE 'sname' [xp1] [yp1] < [int] [xp] [yp] >
+
+    With this optional command the user defines output along a curved line. Actually
+    this curve is a broken line, defined by the user with its corner points. The values
+    of the output quantities along the curve are interpolated from the computational
+    grid. This command may be used more than once to define more curves.
+
+    Info
+    ----
+    The following pre-defined curves are available and could be used instead of a CURVE
+    component: 'BOUNDARY' and `BOUND_0N` where `N` is boundary part number.
+
+    Note
+    ----
+    All coordinates and distances should be given in m when Cartesian coordinates are
+    used or degrees when Spherical coordinates are used (see command COORD).
+
+    Note
+    ----
+    Repeat the group `< int xp yp` > in proper order if there are more corner points
+    on the curve.
 
     Examples
     --------
@@ -144,17 +168,66 @@ class CURVE(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import CURVE
-        loc = CURVE()
+        loc = CURVE(
+            sname="outcurve",
+            xp1=172,
+            yp1=-40,
+            npts=[3, 3],
+            xp=[172.0, 174.0],
+            yp=[-38.0, -38.0],
+        )
         print(loc.render())
 
     """
     model_type: Literal["curve", "CURVE"] = Field(
         default="curve", description="Model type discriminator"
     )
+    sname: str = Field(
+        description="Name of the set of output locations defined by this command",
+        max_length=16,
+    )
+    xp1: float = Field(
+        description=(
+            "Problem coordinate of the first point of the curve in the x-direction"
+        ),
+    )
+    yp1: float = Field(
+        description=(
+            "Problem coordinate of the first point of the curve in the y-direction"
+        ),
+    )
+    npts: list[int] = Field(
+        description=(
+            "The `int` CURVE parameter, SWAN will generate `npts-1` equidistant "
+            "locations between two subsequent corner points of the curve "
+            "including the two corner points"
+        ),
+    )
+    xp: list[float] = Field(
+        description=(
+            "problem coordinates of a corner point of the curve in the x-direction"
+        ),
+        min_length=1,
+    )
+    yp: list[float] = Field(
+        description=(
+            "problem coordinates of a corner point of the curve in the y-direction"
+        ),
+        min_length=1,
+    )
+
+    @model_validator(mode="after")
+    def ensure_equal_size(self) -> "CURVE":
+        for key in ["xp", "yp"]:
+            if len(getattr(self, key)) != len(self.npts):
+                raise ValueError(f"Size of npts and {key} must be the same")
+        return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "CURVE"
+        repr = f"CURVE sname='{self.sname}' xp1={self.xp1} yp1={self.yp1}"
+        for npts, xp, yp in zip(self.npts, self.xp, self.yp):
+            repr += f" \n\tint={npts} xp={xp} yp={yp}"
         return repr
 
 
@@ -426,6 +499,9 @@ class NESTOUT(BaseComponent):
 #     Union[GEN1, GEN2, GEN3],
 #     Field(description="Wave generation component", discriminator="model_type"),
 # ]
+
+# TODO: CURVE should be a list type
+
 FRAME_TYPE = Annotated[FRAME, Field(description="Frame locations component")]
 GROUP_TYPE = Annotated[GROUP, Field(description="Group locations component")]
 CURVE_TYPE = Annotated[CURVE, Field(description="Curve locations component")]
