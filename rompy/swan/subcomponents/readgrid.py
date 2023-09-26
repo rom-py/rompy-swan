@@ -36,15 +36,7 @@ class GRIDREGULAR(BaseSubComponent):
         :okexcept:
 
         from rompy.swan.subcomponents.readgrid import GRIDREGULAR
-        kwargs = dict(
-            xp=173.0,
-            yp=-40.0,
-            alp=0.0,
-            xlen=2.0,
-            ylen=2.0,
-            mx=199,
-            my=199,
-        )
+        kwargs = dict(xp=173, yp=-40, alp=0, xlen=2, ylen=2, mx=199, my=199)
         grid = GRIDREGULAR(suffix="c", **kwargs)
         print(grid.render())
         grid = GRIDREGULAR(suffix="inp", **kwargs)

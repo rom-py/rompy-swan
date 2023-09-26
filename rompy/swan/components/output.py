@@ -52,7 +52,7 @@ class FRAME(BaseComponent):
     def grid_suffix(self) -> "FRAME":
         """Set expected grid suffix."""
         if self.grid.suffix != "fr":
-            logger.debug(f"Set expected grid suffix 'c' instead of {self.grid.suffix}")
+            logger.debug(f"Set grid suffix 'fr' instead of {self.grid.suffix}")
             self.grid.suffix = "fr"
         return self
 
