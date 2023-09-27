@@ -865,6 +865,81 @@ class QUANTITY(BaseComponent):
         return repr
 
 
+class OUTPUT_OPTIONS(BaseComponent):
+    """Write spatial distributions.
+
+    .. code-block:: text
+
+        OUTPUT OPTIons 'comment' (TABLE [field]) (BLOCK [ndec] [len]) (SPEC [ndec])
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.components.output import OUTPUT_OPTIONS
+        opts = OUTPUT_OPTIONS(
+            comment="!", field=10, ndec_block=4, len=20, ndec_spec=6,
+        )
+        print(opts.render())
+
+    """
+    model_type: Literal["block", "BLOCK"] = Field(
+        default="block", description="Model type discriminator"
+    )
+    comment: Optional[str] = Field(
+        default=None,
+        description=(
+            "Comment character used in comment lines in the output (SWAN default: %)"
+        ),
+        min_length=1,
+        max_length=1,
+    )
+    field: Optional[int] = Field(
+        default=None,
+        description="Length of one data field in a table (SWAN default: 12)",
+        ge=8,
+        le=16,
+    )
+    ndec_block: Optional[int] = Field(
+        default=None,
+        description="Number of decimals in block output (SWAN default: 4)",
+        ge=0,
+        le=9,
+    )
+    len: Optional[int] = Field(
+        default=None,
+        description="Number of data on one line of block output (SWAN default: 6)",
+        ge=1,
+        le=9999,
+    )
+    ndec_spec: Optional[int] = Field(
+        default=None,
+        description="Number of decimals in spectra output (SWAN default: 4)",
+        ge=0,
+        le=9,
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "OUTPUT OPTIONS"
+        if self.comment is not None:
+            repr += f" comment='{self.comment}'"
+        if self.field is not None:
+            repr += f" TABLE field={self.field}"
+        if self.ndec_block is not None or self.len is not None:
+            repr += f" BLOCK"
+            if self.ndec_block is not None:
+                repr += f" ndec={self.ndec_block}"
+            if self.len is not None:
+                repr += f" len={self.len}"
+        if self.ndec_spec is not None:
+            repr += f" SPEC ndec={self.ndec_spec}"
+        return repr
+
+
 class BLOCK(BaseComponent):
     """Write spatial distributions.
 

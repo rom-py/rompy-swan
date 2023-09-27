@@ -38,6 +38,7 @@ Write / plot
    :toctree: _generated/
 
     rompy.swan.components.output.QUANTITY
+    rompy.swan.components.output.OUTPUT_OPTIONS
     rompy.swan.components.output.BLOCK
     rompy.swan.components.output.TABLE
     rompy.swan.components.output.SPECOUT
