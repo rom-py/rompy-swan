@@ -25,6 +25,7 @@ Locations
     rompy.swan.components.output.RAY
     rompy.swan.components.output.ISOLINE
     rompy.swan.components.output.POINTS
+    rompy.swan.components.output.POINTS_FILE
     rompy.swan.components.output.NGRID
 
 
