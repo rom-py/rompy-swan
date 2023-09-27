@@ -27,6 +27,7 @@ Locations
     rompy.swan.components.output.POINTS
     rompy.swan.components.output.POINTS_FILE
     rompy.swan.components.output.NGRID
+    rompy.swan.components.output.NGRID_UNSTRUCTURED
 
 
 Write / plot
