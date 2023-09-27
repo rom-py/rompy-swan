@@ -23,7 +23,7 @@ class FRAME(BaseComponent):
 
     .. code-block:: text
 
-        FRAME ’sname’ [xpfr] [ypfr] [alpfr] [xlenfr] [ylenfr] [mxfr] [myfr]
+        FRAME 'sname' [xpfr] [ypfr] [alpfr] [xlenfr] [ylenfr] [mxfr] [myfr]
 
     With this optional command the user defines output on a rectangular, uniform grid
     in a regular frame. If the set of output locations is identical to a part of the
@@ -52,16 +52,14 @@ class FRAME(BaseComponent):
         default="frame", description="Model type discriminator"
     )
     sname: str = Field(
-        description="Name of the frame defined by this command", max_length=16,
+        description="Name of the frame defined by this command", max_length=32,
     )
     grid: GRIDREGULAR = Field(description="Frame grid definition")
 
     @model_validator(mode="after")
     def grid_suffix(self) -> "FRAME":
         """Set expected grid suffix."""
-        if self.grid.suffix != "fr":
-            logger.debug(f"Set grid suffix 'fr' instead of {self.grid.suffix}")
-            self.grid.suffix = "fr"
+        self.grid.suffix = "fr"
         return self
 
     def cmd(self) -> str:
@@ -111,7 +109,7 @@ class GROUP(BaseComponent):
     )
     sname: str = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=16,
+        max_length=32,
     )
     ix1: int = Field(
         description="Lowest index of the computational grid in the ix-direction",
@@ -184,7 +182,7 @@ class CURVE(BaseComponent):
     )
     sname: str = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=16,
+        max_length=32,
     )
     xp1: float = Field(
         description=(
@@ -228,7 +226,7 @@ class CURVE(BaseComponent):
         """Command file string for this component."""
         repr = f"CURVE sname='{self.sname}' xp1={self.xp1} yp1={self.yp1}"
         for npts, xp, yp in zip(self.npts, self.xp, self.yp):
-            repr += f" \n\tint={npts} xp={xp} yp={yp}"
+            repr += f"\nint={npts} xp={xp} yp={yp}"
         return repr
 
 
@@ -296,7 +294,7 @@ class RAY(BaseComponent):
     )
     rname: str = Field(
         description="Name of the set of rays defined by this command",
-        max_length=16,
+        max_length=32,
     )
     xp1: float = Field(
         description=(
@@ -371,7 +369,7 @@ class RAY(BaseComponent):
         repr = f"CURVE rname='{self.rname}'"
         repr += f" xp1={self.xp1} yp1={self.yp1} xq1={self.xq1} yq1={self.yq1}"
         for npts, xp, yp, xq, yq in zip(self.npts, self.xp, self.yp, self.xq, self.yq):
-            repr += f" \n\tint={npts} xp={xp} yp={yp} xq={xq} yq={yq}"
+            repr += f"\nint={npts} xp={xp} yp={yp} xq={xq} yq={yq}"
         return repr
 
 
@@ -406,11 +404,11 @@ class ISOLINE(BaseComponent):
     )
     sname: str = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=16,
+        max_length=32,
     )
     rname: str = Field(
         description="Name of the set of rays defined by this command",
-        max_length=16,
+        max_length=32,
     )
     dep: float = Field(
         description=(
@@ -432,7 +430,7 @@ class ISOLINE(BaseComponent):
         repr = f"ISOLINE sname='{self.sname}' rname='{self.rname}'"
         if self.dep_type is not None:
             repr += f" {self.dep_type.upper()}"
-        repr += f"dep={self.dep}"
+        repr += f" dep={self.dep}"
         return repr
 
 
@@ -441,7 +439,15 @@ class POINTS(BaseComponent):
 
     .. code-block:: text
 
-        POINTS
+        POINTS 'sname' < [xp] [yp] >
+
+    With this optional command the user defines a set of individual output point
+    locations.
+
+    Note
+    ----
+    All coordinates and distances should be given in m when Cartesian coordinates are
+    used or degrees when Spherical coordinates are used (see command COORD).
 
     Examples
     --------
@@ -451,17 +457,83 @@ class POINTS(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import POINTS
-        loc = POINTS()
+        loc = POINTS(sname="outpoints", xp=[172.3, 172.4], yp=[-39, -39])
         print(loc.render())
 
     """
     model_type: Literal["points", "POINTS"] = Field(
         default="points", description="Model type discriminator"
     )
+    sname: str = Field(
+        description="Name of the set of output locations defined by this command",
+        max_length=32,
+    )
+    xp: Optional[list[float]] = Field(
+        description="problem coordinates of the points in the x-direction",
+        min_length=1,
+    )
+    yp: Optional[list[float]] = Field(
+        description="problem coordinates of the points in the y-direction",
+        min_length=1,
+    )
+
+    @model_validator(mode="after")
+    def ensure_equal_size(self) -> "POINTS":
+        if len(self.xp) != len(self.yp):
+            raise ValueError(f"xp and yp must be the same size")
+        return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "POINTS"
+        repr = f"POINTS sname='{self.sname}'"
+        for xp, yp in zip(self.xp, self.yp):
+            repr += f"\nxp={xp} yp={yp}"
+        return repr
+
+
+class POINTS_FILE(BaseComponent):
+    """Isolated output locations.
+
+    .. code-block:: text
+
+        POINTS 'sname' FILE 'fname'
+
+    With this optional command the user defines a set of individual output point
+    locations from text file. The file should have one point per row with x-coordinates
+    and y-coordinates in the first and second columns respectively.
+
+    Note
+    ----
+    All coordinates and distances should be given in m when Cartesian coordinates are
+    used or degrees when Spherical coordinates are used (see command COORD).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.components.output import POINTS_FILE
+        loc = POINTS_FILE(sname="outpoints", fname="./output_locations.txt")
+        print(loc.render())
+
+    """
+    model_type: Literal["points_file", "POINTS_FILE"] = Field(
+        default="points_file", description="Model type discriminator"
+    )
+    sname: str = Field(
+        description="Name of the set of output locations defined by this command",
+        max_length=32,
+    )
+    fname: str = Field(
+        description="Name of the file containing the output locations",
+        max_length=110,
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = f"POINTS sname='{self.sname}' fname='{self.fname}'"
         return repr
 
 
@@ -470,7 +542,18 @@ class NGRID(BaseComponent):
 
     .. code-block:: text
 
-        NGRID
+        NGRID 'sname' [xpn] [ypn] [alpn] [xlenn] [ylenn] [mxn] [myn]
+
+    If the user wishes to carry out nested SWAN runs, a separate coarse-grid SWAN run
+    is required. With this optional command `NGRID`, the user defines in the present
+    coarse-grid run, a set of output locations along the boundary of the subsequent
+    nested computational grid. The set of output locations thus defined is of the type
+    NGRID.
+
+    Note
+    ----
+    Command `NESTOUT` is required after this command `NGRID` to generate some data for
+    the (subsequent) nested run.
 
     Examples
     --------
@@ -480,17 +563,34 @@ class NGRID(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import NGRID
-        loc = NGRID()
+        loc = NGRID(
+            sname="outgrid",
+            grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
+        )
         print(loc.render())
 
     """
     model_type: Literal["ngrid", "NGRID"] = Field(
         default="ngrid", description="Model type discriminator"
     )
+    sname: str = Field(
+        description=(
+            "name of the set of output locations along the boundaries of the "
+            "following nested computational grid defined by this command"
+        ),
+        max_length=32,
+    )
+    grid: GRIDREGULAR = Field(description="NGRID grid definition")
+
+    @model_validator(mode="after")
+    def grid_suffix(self) -> "FRAME":
+        """Set expected grid suffix."""
+        self.grid.suffix = "n"
+        return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "NGRID"
+        repr = f"NGRID {self.grid.render()}"
         return repr
 
 
@@ -654,7 +754,10 @@ GROUP_TYPE = Annotated[GROUP, Field(description="Group locations component")]
 CURVE_TYPE = Annotated[CURVE, Field(description="Curve locations component")]
 RAY_TYPE = Annotated[RAY, Field(description="Ray locations component")]
 ISOLINE_TYPE = Annotated[ISOLINE, Field(description="Isoline locations component")]
-POINTS_TYPE = Annotated[POINTS, Field(description="Points locations component")]
+POINTS_TYPE = Annotated[
+    Union[POINTS, POINTS_FILE],
+    Field(description="Points locations component", discriminator="model_type"),
+]
 NGRID_TYPE = Annotated[NGRID, Field(description="Frame locations component")]
 
 BLOCK_TYPE = Annotated[BLOCK, Field(description="Block write component")]
@@ -711,6 +814,11 @@ class OUTPUT(BaseComponent):
                     f"Isoline rname='{self.isoline.rname}' does not match "
                     f"the ray rname='{self.ray.rname}'"
                 )
+        return self
+
+    @model_validator(mode="after")
+    def ngrid_and_nestout(self) -> "OUTPUT":
+        """Ensure NGRID and NESTOUT are specified together."""
         return self
 
     def cmd(self) -> str:
