@@ -1,4 +1,4 @@
-"""Test startup components."""
+"""Test physics components."""
 import pytest
 from pydantic import ValidationError
 

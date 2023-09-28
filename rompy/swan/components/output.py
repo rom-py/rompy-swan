@@ -56,11 +56,11 @@ class FRAME(BaseComponent):
     )
     grid: GRIDREGULAR = Field(description="Frame grid definition")
 
-    @model_validator(mode="after")
-    def grid_suffix(self) -> "FRAME":
-        """Set expected grid suffix."""
-        self.grid.suffix = "fr"
-        return self
+    @field_validator("grid")
+    @classmethod
+    def grid_suffix(cls, grid: GRIDREGULAR) -> GRIDREGULAR:
+        grid.suffix = "fr"
+        return grid
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -582,11 +582,11 @@ class NGRID(BaseComponent):
     )
     grid: GRIDREGULAR = Field(description="NGRID grid definition")
 
-    @model_validator(mode="after")
-    def grid_suffix(self) -> "FRAME":
-        """Set expected grid suffix."""
-        self.grid.suffix = "n"
-        return self
+    @field_validator("grid")
+    @classmethod
+    def grid_suffix(cls, grid: GRIDREGULAR) -> GRIDREGULAR:
+        grid.suffix = "n"
+        return grid
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -1037,31 +1037,25 @@ class BLOCK(BaseComponent):
         ),
     )
 
-    @model_validator(mode="after")
-    def idla_validator(self) -> "BLOCK":
-        """Validate IDLA."""
-        if self.idla not in (1, 3, 4, None):
+    @field_validator("idla")
+    @classmethod
+    def validate_idla(cls, idla: IDLA) -> IDLA:
+        if idla not in (1, 3, 4):
             raise ValueError(
-                f"Only IDLA options (1, 3, 4) are supported in BLOCK, got {self.idla}"
+                f"Only IDLA options (1, 3, 4) are supported in BLOCK, got {idla}"
             )
-        if self.fname.endswith(".mat") and self.idla != 3:
-            logger.warning(
-                "MATLAB binary output requested, `idla=3` is recommended "
-                f"(idla={self.idla} set)."
-            )
-        return self
+        return idla
 
-    @model_validator(mode="after")
-    def time_suffix(self) -> "BLOCK":
-        """Set expected time suffix."""
-        if self.time is not None:
-            self.time.suffix = "blk"
-            if self.time.tend is not None:
-                logger.warning(
-                    "Time specification `tend` is not supported in BLOCK ignoring"
-                )
-                self.time.tend = None
-        return self
+    @field_validator("time")
+    @classmethod
+    def validate_time(cls, time: TIME) -> TIME:
+        time.suffix = "blk"
+        if time.tend is not None:
+            logger.warning(
+                "Time specification `tend` is not supported in TABLE ignoring"
+            )
+            time.tend = None
+        return time
 
     @property
     def _header(self) -> str:
@@ -1093,11 +1087,34 @@ class BLOCK(BaseComponent):
 
 
 class TABLE(BaseComponent):
-    """Write output for output locations.
+    """Write spatial distributions.
 
     .. code-block:: text
 
-        TABLE
+        TABLE 'sname' ->HEADER|NOHEADER|INDEXED 'fname'  [output1 ...] &
+            (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+
+    With this optional command the user indicates that for each location of the output
+    location set 'sname' (see commands `POINTS`, `CURVE`, `FRAME` or `GROUP`) one or
+    more variables should be written to a file. The keywords `HEADER` and `NOHEADER`
+    determine the appearance of the table; the filename determines the destination of
+    the data.
+
+    Note
+    ----
+    **HEADER**:
+    output is written in fixed format to file with headers giving name of variable
+    and unit per column (numbers too large to be written will be shown as `****`.
+    The number of header lines is 4.
+
+    **NOHEADER**:
+    output is written in floating point format to file and has no headers.
+
+    **INDEXED**:
+    output compatible with GIS tools such as ARCVIEW, ARCINFO, etc. The user should
+    give two TABLE commands, one to produce one file with `XP` and `YP` as output
+    quantities, the other with `HS`, `RTM01` or other output quantities.
+
 
     Examples
     --------
@@ -1107,17 +1124,73 @@ class TABLE(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import TABLE
-        out = TABLE()
-        print(out.render())
+        table = TABLE(
+            sname="outpoints",
+            format="noheader",
+            fname="./output_table.nc",
+            output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
+            time=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", deltfmt="min"),
+        )
+        print(table.render())
 
     """
-    model_type: Literal["block", "TABLE"] = Field(
-        default="block", description="Model type discriminator"
+    model_type: Literal["table", "TABLE"] = Field(
+        default="table", description="Model type discriminator"
     )
+    sname: str = Field(description="Name of the set of POINTS, CURVE, FRAME or GROUP")
+    format: Optional[Literal["header", "noheader", "indexed"]] = Field(
+        default=None,
+        description=(
+            "Indicate if the table should be written to a file as a HEADER, NOHEADER "
+            "or INDEXED table format (SWAN default: HEADER)"
+        ),
+    )
+    fname: str = Field(
+        description=(
+            "Name of the data file where the output is to be written to. The file "
+            "format is defined by the file extension, use `.mat` for MATLAB binary "
+            "(single precision) or `.nc` for netCDF format. If any other extension is "
+            "used the ASCII format is assumed"
+        ),
+    )
+    output: list[BlockOptions] = Field(
+        description="The output variables to output to block file",
+        min_length=1,
+    )
+    time: Optional[TIME] = Field(
+        default=None,
+        description=(
+            "Time specification if the user requires output at various times. If this "
+            "option is not specified block will be written for the last time step of "
+            "the computation"
+        ),
+    )
+
+    @field_validator("time")
+    @classmethod
+    def validate_time(cls, time: TIME) -> TIME:
+        time.suffix = "tbl"
+        if time.tend is not None:
+            logger.warning(
+                "Time specification `tend` is not supported in TABLE ignoring"
+            )
+            time.tend = None
+        return time
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "TABLE"
+        repr = f"TABLE sname='{self.sname}'"
+        if self.format is not None:
+            repr += f" {self.format.upper()}"
+        repr += f" fname='{self.fname}'"
+        for output in self.output:
+            if len(self.output) > 1:
+                repr += "\n"
+            else:
+                repr += " "
+            repr += f"{output.upper()}"
+        if self.time is not None:
+            repr += f"\nOUTPUT {self.time.render()}"
         return repr
 
 
@@ -1220,6 +1293,10 @@ NGRID_TYPE = Annotated[
     Union[NGRID, NGRID_UNSTRUCTURED], Field(description="Ngrid locations component")
 ]
 
+QUANTITY_TYPE = Annotated[QUANTITY, Field(description="Block write component")]
+OUTPUT_OPTIONS_TYPE = Annotated[
+    OUTPUT_OPTIONS, Field(description="Block write component")
+]
 BLOCK_TYPE = Annotated[BLOCK, Field(description="Block write component")]
 TABLE_TYPE = Annotated[TABLE, Field(description="Table write component")]
 SPECOUT_TYPE = Annotated[SPECOUT, Field(description="Spectra write component")]
@@ -1239,6 +1316,8 @@ class OUTPUT(BaseComponent):
         out = OUTPUT()
         print(out.render())
 
+    TODO: Handle list type parameters such as quantity.
+
     """
     model_type: Literal["output", "OUTPUT"] = Field(
         default="output", description="Model type discriminator"
@@ -1250,6 +1329,8 @@ class OUTPUT(BaseComponent):
     isoline: Optional[ISOLINE_TYPE] = Field(default=None)
     points: Optional[POINTS_TYPE] = Field(default=None)
     ngrid: Optional[NGRID_TYPE] = Field(default=None)
+    quantity: Optional[QUANTITY_TYPE] = Field(default=None)
+    output_options: Optional[OUTPUT_OPTIONS_TYPE] = Field(default=None)
     block: Optional[BLOCK_TYPE] = Field(default=None)
     table: Optional[TABLE_TYPE] = Field(default=None)
     specout: Optional[SPECOUT_TYPE] = Field(default=None)
@@ -1298,6 +1379,10 @@ class OUTPUT(BaseComponent):
             repr += [f"{self.points.render()}"]
         if self.ngrid is not None:
             repr += [f"{self.ngrid.render()}"]
+        if self.quantity is not None:
+            repr += [f"{self.quantity.render()}"]
+        if self.output_options is not None:
+            repr += [f"{self.output_options.render()}"]
         if self.block is not None:
             repr += [f"{self.block.render()}"]
         if self.table is not None:
