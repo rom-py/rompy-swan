@@ -3,16 +3,15 @@ import logging
 from typing import Any, Literal, Optional, Union, Annotated
 from pydantic import field_validator, model_validator, Field, FieldValidationInfo
 
-from rompy.swan.types import BlockOptions
+from rompy.swan.types import BlockOptions, IDLA
 from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.output import *
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR
+from rompy.swan.subcomponents.time import TIME
 
 
 logger = logging.getLogger(__name__)
 
 
-# TODO: Ensure 'BOTTGRID' and 'COMPGRID' are accepted in place of FRAME
 # TODO 'BOUNDARY' and 'BOUND_0N' are accepted in appropriate write commands
 # TODO: Allow setting float precision where appropriate
 
@@ -659,7 +658,7 @@ class QUANTITY(BaseComponent):
 
     .. code-block:: text
 
-        QUANTITY {quantities} 'short' 'long' [lexp] [hexp] [excv] [power] [ref] &
+        QUANTITY [output1 ...] 'short' 'long' [lexp] [hexp] [excv] [power] [ref] &
             [fswell] [fmin] [fmax] ->PROBLEMCOORD|FRAME
 
         Examples:
@@ -720,25 +719,25 @@ class QUANTITY(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import QUANTITY
-        quant = QUANTITY(quantities=["xp"], hexp=100)
+        quant = QUANTITY(output=["xp"], hexp=100)
         print(quant.render())
-        quant = QUANTITY(quantities=["hsign", "tm01", "rtmm10"], excv=-9)
+        quant = QUANTITY(output=["hsign", "tm01", "rtmm10"], excv=-9)
         print(quant.render())
-        quant = QUANTITY(quantities=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
+        quant = QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
         print(quant.render())
-        quant = QUANTITY(quantities=["hsign"], fswell=0.08)
+        quant = QUANTITY(output=["hsign"], fswell=0.08)
         print(quant.render())
-        quant = QUANTITY(quantities=["per"], short="Tm-1,0", power=0)
+        quant = QUANTITY(output=["per"], short="Tm-1,0", power=0)
         print(quant.render())
-        quant = QUANTITY(quantities=["transp", "force"], coord="frame")
+        quant = QUANTITY(output=["transp", "force"], coord="frame")
         print(quant.render())
 
     """
     model_type: Literal["quantity", "QUANTITY"] = Field(
         default="quantity", description="Model type discriminator"
     )
-    quantities: list[BlockOptions] = Field(
-        description="The output quantities to define settings for",
+    output: list[BlockOptions] = Field(
+        description="The output variables to define settings for",
         min_length=1,
     )
     short: Optional[str] = Field(
@@ -836,8 +835,8 @@ class QUANTITY(BaseComponent):
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "QUANTITY"
-        for quantity in self.quantities:
-            repr += f" {quantity.upper()}"
+        for output in self.quantities:
+            repr += f" {output.upper()}"
         if self.short is not None:
             repr += f" short='{self.short}'"
         if self.long is not None:
@@ -866,11 +865,14 @@ class QUANTITY(BaseComponent):
 
 
 class OUTPUT_OPTIONS(BaseComponent):
-    """Write spatial distributions.
+    """Set format of output.
 
     .. code-block:: text
 
         OUTPUT OPTIons 'comment' (TABLE [field]) (BLOCK [ndec] [len]) (SPEC [ndec])
+
+    This command enables the user to influence the format of block, table and spectral
+    output.
 
     Examples
     --------
@@ -945,15 +947,16 @@ class BLOCK(BaseComponent):
 
     .. code-block:: text
 
-        BLOCK
+        BLOCK 'sname' ->HEADER|NOHEADER 'fname' (LAYOUT [idla]) [output1 ...] &
+            [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+
+    With this optional command the user indicates that one or more spatial
+    distributions should be written to a file.
 
     Note
     ----
-    Only for FRAME and GROUP.
-
-    Note
-    ----
-    Cannot be used in 1D-mode.
+    The text of the header indicates run identification (see command `PROJECT`), time,
+    frame or group name ('sname'), variable and unit. The number of header lines is 8.
 
     Examples
     --------
@@ -963,17 +966,129 @@ class BLOCK(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import BLOCK
-        out = BLOCK()
-        print(out.render())
+        block = BLOCK(sname="outgrid", fname="./depth-frame.nc", output=["depth"])
+        print(block.render())
+        block = BLOCK(
+            sname="COMPGRID",
+            header=False,
+            fname="./output-grid.nc",
+            idla=3,
+            output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
+            time=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", deltfmt="min"),
+        )
+        print(block.render())
 
     """
     model_type: Literal["block", "BLOCK"] = Field(
         default="block", description="Model type discriminator"
     )
+    sname: str = Field(
+        description=(
+            "Name of the frame in which the output is to be written to including one "
+            "of the SWAN special frames 'BOTTGRID' or 'COMPGRID'"
+        ),
+    )
+    header: Optional[bool] = Field(
+        default=None,
+        description=(
+            "Indicate if the output should be written to a file with header lines "
+            "(SWAN default: True)"
+        ),
+    )
+    fname: str = Field(
+        description=(
+            "Name of the data file where the output is to be written to. The file "
+            "format is defined by the file extension, use `.mat` for MATLAB binary "
+            "(single precision) or `.nc` for netCDF format. If any other extension is "
+            "used the ASCII format is assumed"
+        ),
+    )
+    idla: Optional[IDLA] = Field(
+        default=None,
+        description=(
+            "Prescribe the lay-out of the output to file (supported options here are "
+            "1, 3, 4). Option 4 is recommended for postprocessing an ASCII file by "
+            "MATLAB, however option 3 is recommended in case of binary MATLAB output "
+            "(SWAN default: 1)"
+        ),
+    )
+    output: list[BlockOptions] = Field(
+        description="The output variables to output to block file",
+        min_length=1,
+    )
+    unit: Optional[float] = Field(
+        default=None,
+        description=(
+            "Controls the scaling of the output. The program divides computed values "
+            "by `unit` before writing to file, so the user should multiply the "
+            "written value by `unit` to obtain the proper value. By default, if "
+            "HEADER is selected, value is written as a 5 position integer. SWAN takes "
+            "`unit` such that the largest number occurring in the block can be "
+            "printed. If NOHEADER is selected, values are printed in floating-point "
+            "format by default (`unit=1`)"
+        ),
+    )
+    time: Optional[TIME] = Field(
+        default=None,
+        description=(
+            "Time specification if the user requires output at various times. If this "
+            "option is not specified block will be written for the last time step of "
+            "the computation"
+        ),
+    )
+
+    @model_validator(mode="after")
+    def idla_validator(self) -> "BLOCK":
+        """Validate IDLA."""
+        if self.idla not in (1, 3, 4, None):
+            raise ValueError(
+                f"Only IDLA options (1, 3, 4) are supported in BLOCK, got {self.idla}"
+            )
+        if self.fname.endswith(".mat") and self.idla != 3:
+            logger.warning(
+                "MATLAB binary output requested, `idla=3` is recommended "
+                f"(idla={self.idla} set)."
+            )
+        return self
+
+    @model_validator(mode="after")
+    def time_suffix(self) -> "BLOCK":
+        """Set expected time suffix."""
+        if self.time is not None:
+            self.time.suffix = "blk"
+            if self.time.tend is not None:
+                logger.warning(
+                    "Time specification `tend` is not supported in BLOCK ignoring"
+                )
+                self.time.tend = None
+        return self
+
+    @property
+    def _header(self) -> str:
+        """Render the header instruction."""
+        if self.header:
+            return "HEADER"
+        else:
+            return "NOHEADER"
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "BLOCK"
+        repr = f"BLOCK sname='{self.sname}'"
+        if self.header is not None:
+            repr += f" {self._header}"
+        repr += f" fname='{self.fname}'"
+        if self.idla is not None:
+            repr += f" LAYOUT idla={self.idla}"
+        for output in self.output:
+            if len(self.output) > 1:
+                repr += "\n"
+            else:
+                repr += " "
+            repr += f"{output.upper()}"
+        if self.unit is not None:
+            repr += f"\nunit={self.unit}"
+        if self.time is not None:
+            repr += f"\nOUTPUT {self.time.render()}"
         return repr
 
 
