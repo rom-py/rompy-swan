@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 # TODO 'BOUNDARY' and 'BOUND_0N' are accepted in appropriate write commands
 # TODO: Allow setting float precision where appropriate
 
+
 # =====================================================================================
 # Locations
 # =====================================================================================
@@ -49,11 +50,13 @@ class FRAME(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["frame", "FRAME"] = Field(
         default="frame", description="Model type discriminator"
     )
     sname: str = Field(
-        description="Name of the frame defined by this command", max_length=32,
+        description="Name of the frame defined by this command",
+        max_length=32,
     )
     grid: GRIDREGULAR = Field(description="Frame grid definition")
 
@@ -105,6 +108,7 @@ class GROUP(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["group", "GROUP"] = Field(
         default="group", description="Model type discriminator"
     )
@@ -178,6 +182,7 @@ class CURVE(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["curve", "CURVE"] = Field(
         default="curve", description="Model type discriminator"
     )
@@ -290,6 +295,7 @@ class RAY(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["ray", "RAY"] = Field(
         default="ray", description="Model type discriminator"
     )
@@ -400,6 +406,7 @@ class ISOLINE(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["isoline", "ISOLINE"] = Field(
         default="isoline", description="Model type discriminator"
     )
@@ -462,6 +469,7 @@ class POINTS(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["points", "POINTS"] = Field(
         default="points", description="Model type discriminator"
     )
@@ -520,6 +528,7 @@ class POINTS_FILE(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["points_file", "POINTS_FILE"] = Field(
         default="points_file", description="Model type discriminator"
     )
@@ -556,6 +565,10 @@ class NGRID(BaseComponent):
     Command `NESTOUT` is required after this command `NGRID` to generate some data for
     the (subsequent) nested run.
 
+    Note
+    ----
+    Cannot be used in 1D-mode.
+
     Examples
     --------
 
@@ -571,6 +584,7 @@ class NGRID(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["ngrid", "NGRID"] = Field(
         default="ngrid", description="Model type discriminator"
     )
@@ -628,6 +642,7 @@ class NGRID_UNSTRUCTURED(BaseComponent):
         print(loc.render())
 
     """
+
     model_type: Literal["ngrid_unstructured", "NGRID_UNSTRUCTURED"] = Field(
         default="ngrid_unstructured", description="Model type discriminator"
     )
@@ -734,6 +749,7 @@ class QUANTITY(BaseComponent):
         print(quant.render())
 
     """
+
     model_type: Literal["quantity", "QUANTITY"] = Field(
         default="quantity", description="Model type discriminator"
     )
@@ -806,9 +822,7 @@ class QUANTITY(BaseComponent):
     )
     noswll: Optional[int] = Field(
         default=None,
-        description=(
-            "Number of swells to output for watershed quantities "
-        ),
+        description=("Number of swells to output for watershed quantities "),
     )
     fmin: Optional[float] = Field(
         default=None,
@@ -889,6 +903,7 @@ class OUTPUT_OPTIONS(BaseComponent):
         print(opts.render())
 
     """
+
     model_type: Literal["block", "BLOCK"] = Field(
         default="block", description="Model type discriminator"
     )
@@ -959,6 +974,10 @@ class BLOCK(BaseComponent):
     The text of the header indicates run identification (see command `PROJECT`), time,
     frame or group name ('sname'), variable and unit. The number of header lines is 8.
 
+    Note
+    ----
+    Cannot be used in 1D-mode.
+
     Examples
     --------
 
@@ -980,6 +999,7 @@ class BLOCK(BaseComponent):
         print(block.render())
 
     """
+
     model_type: Literal["block", "BLOCK"] = Field(
         default="block", description="Model type discriminator"
     )
@@ -1135,6 +1155,7 @@ class TABLE(BaseComponent):
         print(table.render())
 
     """
+
     model_type: Literal["table", "TABLE"] = Field(
         default="table", description="Model type discriminator"
     )
@@ -1209,6 +1230,8 @@ FREQ_TYPE = Annotated[
         discriminator="model_type",
     ),
 ]
+
+
 class SPECOUT(BaseComponent):
     """Write to data file the wave spectra.
 
@@ -1247,6 +1270,7 @@ class SPECOUT(BaseComponent):
         print(out.render())
 
     """
+
     model_type: Literal["specout", "SPECOUT"] = Field(
         default="specout", description="Model type discriminator"
     )
@@ -1255,7 +1279,7 @@ class SPECOUT(BaseComponent):
     freq: Optional[FREQ_TYPE] = Field(default=None)
     fname: str = Field(
         description=(
-            "name of the data file where the output is written to, netCDF files are "
+            "Name of the data file where the output is written to, netCDF files are "
             "written if extension is `.nc` otherwise SWAN ASCII file is written"
         ),
     )
@@ -1297,15 +1321,11 @@ class NESTOUT(BaseComponent):
 
     .. code-block:: text
 
-        NESTOUT
+        NESTOUT 'sname' 'fname' (OUTPUT [tbegnst] [deltnst] ->SEC|MIN|HR|DAY)
 
     Write to data file two-dimensional action density spectra (relative frequency)
     along the boundary of a nested grid (see command NGRID) to be used in a subsequent
     SWAN run.
-
-    Note
-    ----
-    See command SET for definition of variance or energy density.
 
     Note
     ----
@@ -1319,17 +1339,51 @@ class NESTOUT(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import NESTOUT
-        out = NESTOUT()
+        out = NESTOUT(
+            sname="outgrid",
+            fname="./nestout.swn",
+            time=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", deltfmt="min"),
+        )
         print(out.render())
 
     """
+
     model_type: Literal["nestout", "NESTOUT"] = Field(
         default="nestout", description="Model type discriminator"
     )
+    sname: str = Field(
+        description=(
+            "Name of the set of output locations as defined in a command `NGRID`"
+        ),
+    )
+    fname: str = Field(
+        description="Name of the data file where the output is written to",
+    )
+    time: Optional[TIME] = Field(
+        default=None,
+        description=(
+            "Time specification if the user requires output at various times. If this "
+            "option is not specified NESTOUT will be written for the last time step "
+            "of the computation"
+        ),
+    )
+
+    @field_validator("time")
+    @classmethod
+    def validate_time(cls, time: TIME) -> TIME:
+        time.suffix = "nst"
+        if time.tend is not None:
+            logger.warning(
+                "Time specification `tend` is not supported in NESTOUT, ignoring"
+            )
+            time.tend = None
+        return time
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "NESTOUT"
+        repr = f"NESTOUT sname='{self.sname}' fname='{self.fname}'"
+        if self.time is not None:
+            repr += f" OUTPUT {self.time.render()}"
         return repr
 
 
@@ -1365,6 +1419,7 @@ TABLE_TYPE = Annotated[TABLE, Field(description="Table write component")]
 SPECOUT_TYPE = Annotated[SPECOUT, Field(description="Spectra write component")]
 NESTOUT_TYPE = Annotated[NESTOUT, Field(description="Spectra write component")]
 
+
 class OUTPUT(BaseComponent):
     """Output group component.
 
@@ -1382,6 +1437,7 @@ class OUTPUT(BaseComponent):
     TODO: Handle list type parameters such as quantity.
 
     """
+
     model_type: Literal["output", "OUTPUT"] = Field(
         default="output", description="Model type discriminator"
     )
