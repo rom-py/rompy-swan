@@ -76,6 +76,7 @@ arguments to one or more component. The following modules are available:
     subcomponents/boundary
     subcomponents/physics
     subcomponents/numerics
+    subcomponents/output
 
 * :doc:`subcomponents/startup`
 * :doc:`subcomponents/spectrum`
@@ -85,6 +86,7 @@ arguments to one or more component. The following modules are available:
 * :doc:`subcomponents/boundary`
 * :doc:`subcomponents/physics`
 * :doc:`subcomponents/numerics`
+* :doc:`subcomponents/output`
 
 
 Types

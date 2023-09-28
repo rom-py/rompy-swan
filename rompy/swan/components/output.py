@@ -7,6 +7,7 @@ from rompy.swan.types import BlockOptions, IDLA
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 from rompy.swan.subcomponents.time import TIME
+from rompy.swan.subcomponents.output import SPEC1D, SPEC2D, ABS, REL
 
 
 logger = logging.getLogger(__name__)
@@ -694,9 +695,9 @@ class QUANTITY(BaseComponent):
     **PROBLEMCOORD**: Vector components are relative to the x- and y-axes of the
     problem coordinate system (see command `SET`):
 
-    - Directions are counterclockwise relative to the positive x-axis of the problem
+    * Directions are counterclockwise relative to the positive x-axis of the problem
       coordinate system if Cartesian direction convention is used.
-    - Directions are relative to North (clockwise) if Nautical direction convention is
+    * Directions are relative to North (clockwise) if Nautical direction convention is
       used.
 
     Note
@@ -704,12 +705,12 @@ class QUANTITY(BaseComponent):
     **FRAME**: If output is requested on sets created by command FRAME or
     automatically (see command `SET`) (`COMPGRID` or `BOTTGRID`):
 
-    - Vector components are relative to the x- and y-axes of the frame coordinate
-    system.
-    - Directions are counterclockwise relative to the positive x-axis of the frame
-    coordinate system if Cartesian direction convention is used.
-    - Directions are relative to North (clockwise) if Nautical direction convention
-    is used.
+    * Vector components are relative to the x- and y-axes of the frame coordinate
+      system.
+    * Directions are counterclockwise relative to the positive x-axis of the frame
+      coordinate system if Cartesian direction convention is used.
+    * Directions are relative to North (clockwise) if Nautical direction convention
+      is used.
 
     Examples
     --------
@@ -1032,7 +1033,7 @@ class BLOCK(BaseComponent):
         default=None,
         description=(
             "Time specification if the user requires output at various times. If this "
-            "option is not specified block will be written for the last time step of "
+            "option is not specified BLOCK will be written for the last time step of "
             "the computation"
         ),
     )
@@ -1052,7 +1053,7 @@ class BLOCK(BaseComponent):
         time.suffix = "blk"
         if time.tend is not None:
             logger.warning(
-                "Time specification `tend` is not supported in TABLE ignoring"
+                "Time specification `tend` is not supported in BLOCK, ignoring"
             )
             time.tend = None
         return time
@@ -1161,7 +1162,7 @@ class TABLE(BaseComponent):
         default=None,
         description=(
             "Time specification if the user requires output at various times. If this "
-            "option is not specified block will be written for the last time step of "
+            "option is not specified TABLE will be written for the last time step of "
             "the computation"
         ),
     )
@@ -1172,7 +1173,7 @@ class TABLE(BaseComponent):
         time.suffix = "tbl"
         if time.tend is not None:
             logger.warning(
-                "Time specification `tend` is not supported in TABLE ignoring"
+                "Time specification `tend` is not supported in TABLE, ignoring"
             )
             time.tend = None
         return time
@@ -1194,18 +1195,37 @@ class TABLE(BaseComponent):
         return repr
 
 
+DIM_TYPE = Annotated[
+    Union[SPEC1D, SPEC2D],
+    Field(
+        description="Choose between 1D or 2D spectra output",
+        discriminator="model_type",
+    ),
+]
+FREQ_TYPE = Annotated[
+    Union[ABS, REL],
+    Field(
+        description="Choose between absolute or relative frequency spectra",
+        discriminator="model_type",
+    ),
+]
 class SPECOUT(BaseComponent):
     """Write to data file the wave spectra.
 
     .. code-block:: text
 
-        SPECOUT
+        SPECOUT 'sname' SPEC1D|->SPEC2D ->ABS|REL 'fname' &
+            (OUTPUT [tbeg] [delt] SEC|MIN|HR|DAY)
 
-    Write to data file the variance / energy density spectrum for output locations.
+    With this optional command the user indicates that for each location of the output
+    location set 'sname' (see commands `POINTS`, `CURVE`, `FRAME` or `GROUP`) the 1D
+    or 2D variance / energy (see command `SET`) density spectrum (either the relative
+    frequency or the absolute frequency spectrum) is to be written to a data file.
 
     Note
     ----
-    See command SET for definition of variance or energy density.
+    This output file can be used for defining boundary conditions for subsequent SWAN
+    runs (command `BOUNDSPEC`).
 
     Examples
     --------
@@ -1215,17 +1235,60 @@ class SPECOUT(BaseComponent):
         :okexcept:
 
         from rompy.swan.components.output import SPECOUT
-        out = SPECOUT()
+        out = SPECOUT(sname="outpoints", fname="./specout.swn")
+        print(out.render())
+        out = SPECOUT(
+            sname="outpoints",
+            dim=dict(model_type="spec2d"),
+            freq=dict(model_type="rel"),
+            fname="./specout.nc",
+            time=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", deltfmt="min"),
+        )
         print(out.render())
 
     """
     model_type: Literal["specout", "SPECOUT"] = Field(
         default="specout", description="Model type discriminator"
     )
+    sname: str = Field(description="Name of the set of POINTS, CURVE, FRAME or GROUP")
+    dim: Optional[DIM_TYPE] = Field(default=None)
+    freq: Optional[FREQ_TYPE] = Field(default=None)
+    fname: str = Field(
+        description=(
+            "name of the data file where the output is written to, netCDF files are "
+            "written if extension is `.nc` otherwise SWAN ASCII file is written"
+        ),
+    )
+    time: Optional[TIME] = Field(
+        default=None,
+        description=(
+            "Time specification if the user requires output at various times. If this "
+            "option is not specified SPECOUT will be written for the last time step "
+            "of the computation"
+        ),
+    )
+
+    @field_validator("time")
+    @classmethod
+    def validate_time(cls, time: TIME) -> TIME:
+        time.suffix = "spc"
+        if time.tend is not None:
+            logger.warning(
+                "Time specification `tend` is not supported in SPECOUT, ignoring"
+            )
+            time.tend = None
+        return time
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "SPECOUT"
+        repr = f"SPECOUT sname='{self.sname}'"
+        if self.dim is not None:
+            repr += f" {self.dim.render()}"
+        if self.freq is not None:
+            repr += f" {self.freq.render()}"
+        repr += f" fname='{self.fname}'"
+        if self.time is not None:
+            repr += f" OUTPUT {self.time.render()}"
         return repr
 
 
