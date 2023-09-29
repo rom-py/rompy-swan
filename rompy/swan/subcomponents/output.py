@@ -20,7 +20,6 @@ class SPEC1D(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.output import SPEC1D
         spec = SPEC1D()
@@ -48,7 +47,6 @@ class SPEC2D(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.output import SPEC2D
         spec = SPEC2D()
@@ -79,7 +77,6 @@ class ABS(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.output import ABS
         freq = ABS()
@@ -110,7 +107,6 @@ class REL(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.output import REL
         freq = REL()

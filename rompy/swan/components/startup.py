@@ -25,7 +25,6 @@ class PROJECT(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import PROJECT
         proj = PROJECT(nr="01")
@@ -117,7 +116,6 @@ class SET(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import SET
         set = SET(level=0.5, direction_convention="nautical")
@@ -334,7 +332,6 @@ class MODE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import MODE
         mode = MODE()
@@ -378,7 +375,6 @@ class COORDINATES(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import COORDINATES
         coords = COORDINATES()

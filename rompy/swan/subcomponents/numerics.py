@@ -17,7 +17,6 @@ class BSBT(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import BSBT
         scheme = BSBT()
@@ -51,7 +50,6 @@ class GSE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import GSE
         scheme = GSE(waveage=1, units="day")
@@ -94,7 +92,6 @@ class STAT(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import STAT
         stat = STAT()
@@ -144,7 +141,6 @@ class NONSTAT(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import NONSTAT
         nonstat = NONSTAT()
@@ -203,7 +199,6 @@ class STOPC(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import STOPC
         stop = STOPC()
@@ -294,7 +289,6 @@ class DIRIMPL(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import DIRIMPL
         dirimpl = DIRIMPL()
@@ -340,7 +334,6 @@ class SIGIMPL(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import SIGIMPL
         sigimpl = SIGIMPL()
@@ -417,7 +410,6 @@ class CTHETA(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import CTHETA
         ctheta = CTHETA()
@@ -462,7 +454,6 @@ class CSIGMA(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import CSIGMA
         csigma = CSIGMA()
@@ -504,7 +495,6 @@ class SETUP(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import SETUP
         setup = SETUP()

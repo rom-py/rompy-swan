@@ -33,7 +33,6 @@ class GRIDREGULAR(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.readgrid import GRIDREGULAR
         kwargs = dict(xp=173, yp=-40, alp=0, xlen=2, ylen=2, mx=199, my=199)
@@ -220,7 +219,6 @@ class READCOORD(READGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.readgrid import READCOORD
         readcoord = READCOORD(
@@ -263,7 +261,6 @@ class READINP(READGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.readgrid import READINP
         readinp = READINP(

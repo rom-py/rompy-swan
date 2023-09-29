@@ -57,7 +57,6 @@ class PROP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.numerics import PROP
         prop = PROP()
@@ -100,7 +99,6 @@ class NUMERIC(BaseComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.numerics import NUMERIC
         numeric = NUMERIC()

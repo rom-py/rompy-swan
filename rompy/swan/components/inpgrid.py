@@ -79,7 +79,6 @@ class REGULAR(INPGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.inpgrid import REGULAR
         inpgrid = REGULAR(
@@ -203,7 +202,6 @@ class CURVILINEAR(INPGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.inpgrid import CURVILINEAR
         inpgrid = CURVILINEAR(
@@ -291,7 +289,6 @@ class UNSTRUCTURED(INPGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.inpgrid import UNSTRUCTURED
         inpgrid = UNSTRUCTURED(
@@ -350,7 +347,6 @@ class INPGRIDS(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.inpgrid import REGULAR, INPGRIDS
         inpgrid_bottom = REGULAR(

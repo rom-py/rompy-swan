@@ -64,7 +64,6 @@ class TIME(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.time import TIME
         import datetime
@@ -179,7 +178,6 @@ class NONSTATIONARY(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.time import NONSTATIONARY
         nonstat = NONSTATIONARY(
