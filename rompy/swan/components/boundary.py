@@ -65,7 +65,7 @@ class INITIAL(BaseComponent):
 
 
 class BOUNDSPEC(BaseComponent):
-    """Parametric or spectra boundary along sides or segments.
+    """Boundary along sides or segment.
 
     .. code-block:: text
 
@@ -91,6 +91,15 @@ class BOUNDSPEC(BaseComponent):
         boundary = BOUNDSPEC(
             shapespec=dict(model_type="shapespec", shape=dict(model_type="pm")),
             location=dict(model_type="side", side="west", direction="ccw"),
+            data=dict(model_type="constantpar", hs=2, per=8, dir=270, dd=30),
+        )
+        print(boundary.render())
+        boundary = BOUNDSPEC(
+            shapespec=dict(model_type="shapespec", shape=dict(model_type="pm")),
+            location=dict(
+                model_type="segment",
+                points=dict(model_type="ij", i=[0, 0], j=[0, 3])
+            ),
             data=dict(model_type="constantpar", hs=2, per=8, dir=270, dd=30),
         )
         print(boundary.render())

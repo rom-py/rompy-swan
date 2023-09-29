@@ -43,3 +43,4 @@ Write / plot
     rompy.swan.components.output.TABLE
     rompy.swan.components.output.SPECOUT
     rompy.swan.components.output.NESTOUT
+    rompy.swan.components.output.TEST
