@@ -33,7 +33,7 @@ class XY(BaseSubComponent):
 
     .. code-block:: text
 
-        XY < [x] [y] >
+        < [x] [y] >
 
     Note
     ----
@@ -87,7 +87,7 @@ class IJ(BaseSubComponent):
 
     .. code-block:: text
 
-        IJ < [x] [y] >
+        < [x] [y] >
 
     Note
     ----
@@ -101,10 +101,7 @@ class IJ(BaseSubComponent):
         :okwarning:
 
         from rompy.swan.subcomponents.base import IJ
-        points = IJ(
-            i=[0, 0, 5],
-            j=[0, 19, 19],
-        )
+        points = IJ(i=[0, 0, 5], j=[0, 19, 19])
         print(points.render())
 
     """
