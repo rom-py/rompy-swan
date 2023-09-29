@@ -5,6 +5,7 @@ from pydantic import field_validator, model_validator, Field, FieldValidationInf
 
 from rompy.swan.types import BlockOptions, IDLA
 from rompy.swan.components.base import BaseComponent
+from rompy.swan.subcomponents.base import XY, IJ
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 from rompy.swan.subcomponents.time import TIME
 from rompy.swan.subcomponents.output import SPEC1D, SPEC2D, ABS, REL
@@ -1389,7 +1390,9 @@ class TEST(BaseComponent):
         :okwarning:
 
         from rompy.swan.components.output import TEST
-        test = TEST()
+        test = TEST(
+            points=dict(model_type="xy", x=[172.5, 172.5], y=[-40, -39])
+        )
         print(test.render())
 
     """
@@ -1397,10 +1400,27 @@ class TEST(BaseComponent):
     model_type: Literal["test", "TEST"] = Field(
         default="test", description="Model type discriminator"
     )
+    points: Union[XY, IJ] = Field(
+        description="Points where detailed print output is produced (max of 50 points)",
+        discriminator="model_type",
+    )
+
+    @field_validator("points")
+    @classmethod
+    def validate_points(cls, points: Union[XY, IJ]) -> Union[XY, IJ]:
+        if points.size > 50:
+            raise ValueError(
+                f"Maximum of 50 points allowed in TEST, got {points.size}"
+            )
+        return points
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        return "TEST"
+        repr = "TEST"
+        if self.points is not None:
+            points = self.points.render().replace("&", "")
+            repr += f" POINTS {self.points.model_type.upper()} {points}"
+        return repr
 
 
 # =====================================================================================

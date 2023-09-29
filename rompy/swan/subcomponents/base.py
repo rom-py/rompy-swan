@@ -6,9 +6,6 @@ from pydantic import ConfigDict, Field, model_validator
 from rompy.core import RompyBaseModel
 
 
-TAB = 4 * " "
-
-
 class BaseSubComponent(RompyBaseModel, ABC):
     """Base class for SWAN sub-components.
 
@@ -53,15 +50,9 @@ class XY(BaseSubComponent):
         points = XY(
             x=[172, 172, 172, 172.5, 173],
             y=[-41, -40.5, -40, -40, -40],
-        )
-        print(points.render())
-
-        points = XY(
-            x=[172, 172, 172, 172.5, 173],
-            y=[-41, -40.5, -40, -40, -40],
             fmt="0.2f",
         )
-        print("SEGMENT XY " + points.render())
+        print(points.render())
 
     """
 
@@ -80,11 +71,15 @@ class XY(BaseSubComponent):
             raise ValueError(f"x and y must be the same size")
         return self
 
+    @property
+    def size(self):
+        return len(self.x)
+
     def cmd(self) -> str:
         repr = ""
         for x, y in zip(self.x, self.y):
-            repr += f" &\n{TAB}{x:{self.fmt}} {y:{self.fmt}}"
-        return repr.lstrip()
+            repr += f"\n{x:{self.fmt}} {y:{self.fmt}}"
+        return repr + "\n"
 
 
 class IJ(BaseSubComponent):
@@ -111,7 +106,6 @@ class IJ(BaseSubComponent):
             j=[0, 19, 19],
         )
         print(points.render())
-        print("SEGMENT IJ " + points.render())
 
     """
 
@@ -127,8 +121,12 @@ class IJ(BaseSubComponent):
             raise ValueError(f"i and j must be the same size")
         return self
 
+    @property
+    def size(self):
+        return len(self.i)
+
     def cmd(self) -> str:
         repr = ""
         for i, j in zip(self.i, self.j):
-            repr += f" &\n{TAB}{i} {j}"
-        return repr.lstrip()
+            repr += f"\n{i} {j}"
+        return repr + "\n"
