@@ -68,6 +68,7 @@ arguments to one or more component. The following modules are available:
 .. toctree::
     :hidden:
 
+    subcomponents/base
     subcomponents/startup
     subcomponents/spectrum
     subcomponents/time
@@ -78,6 +79,7 @@ arguments to one or more component. The following modules are available:
     subcomponents/numerics
     subcomponents/output
 
+* :doc:`subcomponents/base`
 * :doc:`subcomponents/startup`
 * :doc:`subcomponents/spectrum`
 * :doc:`subcomponents/time`
