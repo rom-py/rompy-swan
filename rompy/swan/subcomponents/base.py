@@ -78,7 +78,7 @@ class XY(BaseSubComponent):
     def cmd(self) -> str:
         repr = ""
         for x, y in zip(self.x, self.y):
-            repr += f"\n{x:{self.fmt}} {y:{self.fmt}}"
+            repr += f"\nx={x:{self.fmt}} y={y:{self.fmt}}"
         return repr + "\n"
 
 
@@ -125,5 +125,5 @@ class IJ(BaseSubComponent):
     def cmd(self) -> str:
         repr = ""
         for i, j in zip(self.i, self.j):
-            repr += f"\n{i} {j}"
+            repr += f"\ni={i} j={j}"
         return repr + "\n"

@@ -1397,7 +1397,7 @@ class TEST(BaseComponent):
         from rompy.swan.components.output import TEST
         test = TEST(
             itest=10,
-            points=dict(model_type="xy", x=[172.5, 172.5], y=[-40, -39]),
+            points=dict(model_type="ij", i=[0, 0], j=[10, 20]),
             fname_par="integral_parameters.test",
             fname_s1d="1d_variance_density.test",
             fname_s2d="2d_variance_density.test",
