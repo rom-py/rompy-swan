@@ -64,7 +64,6 @@ class GEN1(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import GEN1
         gen = GEN1()
@@ -168,7 +167,6 @@ class GEN2(GEN1):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import GEN2
         gen = GEN2()
@@ -249,7 +247,6 @@ class GEN3(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import GEN3
         gen = GEN3(
@@ -313,7 +310,6 @@ class NEGATINP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import NEGATINP
         negatinp = NEGATINP()
@@ -360,7 +356,6 @@ class SSWELL_ROGERS(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SSWELL_ROGERS
         sswell = SSWELL_ROGERS()
@@ -414,7 +409,6 @@ class SSWELL_ARDHUIN(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SSWELL_ARDHUIN
         sswell = SSWELL_ARDHUIN()
@@ -470,7 +464,6 @@ class SSWELL_ZIEGER(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SSWELL_ZIEGER
         sswell = SSWELL_ZIEGER()
@@ -524,7 +517,6 @@ class WCAPPING_KOMEN(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import WCAPPING_KOMEN
         wcapping = WCAPPING_KOMEN()
@@ -607,7 +599,6 @@ class WCAPPING_AB(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import WCAPPING_AB
         wcapping = WCAPPING_AB()
@@ -684,7 +675,6 @@ class QUADRUPL(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import QUADRUPL
         quadrupl = QUADRUPL()
@@ -781,7 +771,6 @@ class BREAKING_CONSTANT(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BREAKING_CONSTANT
         breaking = BREAKING_CONSTANT()
@@ -834,7 +823,6 @@ class BREAKING_BKD(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BREAKING_BKD
         breaking = BREAKING_BKD()
@@ -920,7 +908,6 @@ class FRICTION_JONSWAP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import FRICTION_JONSWAP
         friction = FRICTION_JONSWAP()
@@ -971,7 +958,6 @@ class FRICTION_COLLINS(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import FRICTION_COLLINS
         friction = FRICTION_COLLINS()
@@ -1023,7 +1009,6 @@ class FRICTION_MADSEN(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import FRICTION_MADSEN
         friction = FRICTION_MADSEN()
@@ -1074,7 +1059,6 @@ class FRICTION_RIPPLES(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import FRICTION_RIPPLES
         friction = FRICTION_RIPPLES()
@@ -1123,7 +1107,6 @@ class TRIAD(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TRIAD
         triad = TRIAD()
@@ -1170,7 +1153,6 @@ class TRIAD_DCTA(TRIAD):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TRIAD_DCTA
         triad = TRIAD_DCTA()
@@ -1243,7 +1225,6 @@ class TRIAD_LTA(TRIAD):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TRIAD_LTA
         triad = TRIAD_LTA()
@@ -1306,7 +1287,6 @@ class TRIAD_SPB(TRIAD):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TRIAD_SPB
         triad = TRIAD_SPB()
@@ -1411,7 +1391,6 @@ class VEGETATION(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import VEGETATION
         # Single layer
@@ -1523,7 +1502,6 @@ class MUD(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import MUD
         mud = MUD()
@@ -1619,7 +1597,6 @@ class SICE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE
         sice = SICE()
@@ -1683,7 +1660,6 @@ class SICE_R19(SICE):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE_R19
         sice = SICE_R19()
@@ -1794,7 +1770,6 @@ class SICE_D15(SICE):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE_D15
         sice = SICE_D15()
@@ -1838,7 +1813,6 @@ class SICE_M18(SICE):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE_M18
         sice = SICE_M18()
@@ -1882,7 +1856,6 @@ class SICE_R21B(SICE):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE_R21B
         sice = SICE_R21B()
@@ -1938,7 +1911,6 @@ class TURBULENCE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TURBULENCE
         turbulence = TURBULENCE(current=False)
@@ -2041,7 +2013,6 @@ class BRAGG(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BRAGG
         bragg = BRAGG(nreg=200)
@@ -2114,7 +2085,6 @@ class BRAGG_FT(BRAGG):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BRAGG_FT
         bragg = BRAGG_FT(nreg=350)
@@ -2151,7 +2121,6 @@ class BRAGG_FILE(BRAGG):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BRAGG_FILE
         bragg = BRAGG_FILE(fname="bottom_spectrum.txt", nreg=500, mkx=99, dkx=0.1)
@@ -2244,7 +2213,6 @@ class LIMITER(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import LIMITER
         limiter = LIMITER()
@@ -2322,7 +2290,6 @@ class OBSTACLE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import OBSTACLE
         obs = OBSTACLE(
@@ -2413,7 +2380,6 @@ class OBSTACLE_FIG(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import OBSTACLE_FIG
         obs = OBSTACLE_FIG(
@@ -2491,7 +2457,6 @@ class OBSTACLES(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import OBSTACLES, OBSTACLE, OBSTACLE_FIG
         obst1 = dict(
@@ -2564,7 +2529,6 @@ class SETUP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SETUP
         setup = SETUP()
@@ -2940,7 +2904,6 @@ class DEACTIVATE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import DEACTIVATE
         off1 = dict(physics="windgrowth")
@@ -3037,7 +3000,6 @@ class PHYSICS(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import PHYSICS
         gen = {"model_type": "gen3", "source_terms": {"model_type": "komen"}}

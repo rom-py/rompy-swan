@@ -54,7 +54,6 @@ class REGULAR(CGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.cgrid import REGULAR
         cgrid = REGULAR(
@@ -100,7 +99,6 @@ class CURVILINEAR(CGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.cgrid import CURVILINEAR
         cgrid = CURVILINEAR(
@@ -199,7 +197,6 @@ class UNSTRUCTURED(CGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.cgrid import UNSTRUCTURED
         cgrid = UNSTRUCTURED(

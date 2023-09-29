@@ -41,7 +41,6 @@ class INITIAL(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import INITIAL
         init = INITIAL()
@@ -87,7 +86,6 @@ class BOUNDSPEC(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import BOUNDSPEC
         boundary = BOUNDSPEC(
@@ -144,7 +142,6 @@ class BOUNDNEST1(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import BOUNDNEST1
         boundary = BOUNDNEST1(fname="boundary.swn", rectangle="closed")
@@ -220,7 +217,6 @@ class BOUNDNEST2(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import BOUNDNEST2
         boundary = BOUNDNEST2(fname="boundary.wam", format="cray", lwdate=12)
@@ -332,7 +328,6 @@ class BOUNDNEST3(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import BOUNDNEST3
         boundary = BOUNDNEST3(

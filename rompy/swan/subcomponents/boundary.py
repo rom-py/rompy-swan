@@ -28,7 +28,6 @@ class SIDE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import SIDE
         side = SIDE(side="west", direction="ccw")
@@ -114,7 +113,6 @@ class PAR(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import PAR
         par = PAR(hs=1.5, per=8.1, dir=225)
@@ -180,7 +178,6 @@ class CONSTANTPAR(PAR):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import CONSTANTPAR
         par = CONSTANTPAR(hs=1.5, per=8.1, dir=225)
@@ -209,7 +206,6 @@ class VARIABLEPAR(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import VARIABLEPAR
         par = VARIABLEPAR(
@@ -324,7 +320,6 @@ class CONSTANTFILE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import CONSTANTFILE
         par = CONSTANTFILE(fname="tpar.txt")
@@ -398,7 +393,6 @@ class VARIABLEFILE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import VARIABLEFILE
         par = VARIABLEFILE(
@@ -478,7 +472,6 @@ class DEFAULT(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import DEFAULT
         init = DEFAULT()
@@ -507,7 +500,6 @@ class ZERO(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import ZERO
         init = ZERO()
@@ -543,7 +535,6 @@ class HOTSINGLE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import HOTSINGLE
         init = HOTSINGLE(fname="hotstart.swn", format="free")
@@ -594,7 +585,6 @@ class HOTMULTIPLE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import HOTMULTIPLE
         init = HOTMULTIPLE(fname="hotstart.swn", format="free")

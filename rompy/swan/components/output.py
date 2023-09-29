@@ -40,7 +40,6 @@ class FRAME(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import FRAME
         loc = FRAME(
@@ -101,7 +100,6 @@ class GROUP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import GROUP
         loc = GROUP(sname="outsubgrid", ix1=20, iy1=0, ix2=50, iy2=100)
@@ -168,7 +166,6 @@ class CURVE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import CURVE
         loc = CURVE(
@@ -277,7 +274,6 @@ class RAY(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import RAY
         loc = RAY(
@@ -399,7 +395,6 @@ class ISOLINE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import ISOLINE
         loc = ISOLINE(sname="outcurve", rname="outray", dep_type="depth", dep=12.0)
@@ -462,7 +457,6 @@ class POINTS(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import POINTS
         loc = POINTS(sname="outpoints", xp=[172.3, 172.4], yp=[-39, -39])
@@ -521,7 +515,6 @@ class POINTS_FILE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import POINTS_FILE
         loc = POINTS_FILE(sname="outpoints", fname="./output_locations.txt")
@@ -574,7 +567,6 @@ class NGRID(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import NGRID
         loc = NGRID(
@@ -635,7 +627,6 @@ class NGRID_UNSTRUCTURED(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import NGRID_UNSTRUCTURED
         loc = NGRID_UNSTRUCTURED(kind="triangle", fname="ngrid.txt")
@@ -732,7 +723,6 @@ class QUANTITY(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import QUANTITY
         quant = QUANTITY(output=["xp"], hexp=100)
@@ -850,7 +840,7 @@ class QUANTITY(BaseComponent):
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "QUANTITY"
-        for output in self.quantities:
+        for output in self.output:
             repr += f" {output.upper()}"
         if self.short is not None:
             repr += f" short='{self.short}'"
@@ -894,7 +884,6 @@ class OUTPUT_OPTIONS(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import OUTPUT_OPTIONS
         opts = OUTPUT_OPTIONS(
@@ -983,7 +972,6 @@ class BLOCK(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import BLOCK
         block = BLOCK(sname="outgrid", fname="./depth-frame.nc", output=["depth"])
@@ -1142,7 +1130,6 @@ class TABLE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import TABLE
         table = TABLE(
@@ -1255,7 +1242,6 @@ class SPECOUT(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import SPECOUT
         out = SPECOUT(sname="outpoints", fname="./specout.swn")
@@ -1336,7 +1322,6 @@ class NESTOUT(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import NESTOUT
         out = NESTOUT(
@@ -1402,7 +1387,6 @@ class TEST(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import TEST
         test = TEST()
@@ -1434,7 +1418,6 @@ class COMPUTE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import COMPUTE
         comp = COMPUTE()
@@ -1463,7 +1446,6 @@ class HOTFILE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import HOTFILE
         hotfile = HOTFILE()
@@ -1492,7 +1474,6 @@ class STOP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import STOP
         stop = STOP()
@@ -1550,7 +1531,6 @@ class OUTPUT(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.output import OUTPUT
         out = OUTPUT()
