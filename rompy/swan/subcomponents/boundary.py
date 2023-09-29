@@ -1,9 +1,9 @@
 """SWAN boundary subcomponents."""
 import logging
-from typing import Annotated, Optional, Literal
+from typing import Annotated, Optional, Literal, Union
 from pydantic import Field, model_validator
 
-from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy.swan.subcomponents.base import BaseSubComponent, XY, IJ
 
 
 logger = logging.getLogger(__name__)
@@ -51,90 +51,55 @@ class SIDE(BaseSubComponent):
         return repr
 
 
-class SEGMENTXY(BaseSubComponent):
-    """Boundary over a segment defined from point coordinates.
+class SEGMENT(BaseSubComponent):
+    """Boundary over a segment defined from points.
 
     .. code-block:: text
 
         SEGMENT XY < [x] [y] >
+        SEGMENT IJ < [i] [j] >
 
-    The segment is defined by means of a series of points in terms of problem
-    coordinates; these points do not have to coincide with grid points. The (straight)
-    line connecting two points must be close to grid lines of the computational grid
-    (the maximum distance is one hundredth of the length of the straight line).
+    The segment is defined either by means of a series of points in terms of problem
+    coordinates (`XY`) or by means of a series of points in terms of grid indices
+    (`IJ`). The points do not have to include all or coincide with actual grid points.
 
     Examples
     --------
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
-        from rompy.swan.subcomponents.boundary import SEGMENTXY
-        seg = SEGMENTXY(
-            points=[(172, -41), (172, -40.5), (172, -40), (172.5, -40), (173, -40)],
-            float_format="0.2f",
+        from rompy.swan.subcomponents.boundary import SEGMENT
+        seg = SEGMENT(
+            points=dict(
+                model_type="xy",
+                x=[172, 172, 172, 172.5, 173],
+                y=[-41, -40.5, -40, -40, -40],
+                fmt="0.2f",
+            ),
+        )
+        print(seg.render())
+        seg = SEGMENT(
+            points=dict(
+                model_type="ij",
+                i=[0, 0, 5],
+                j=[0, 19, 19],
+            ),
         )
         print(seg.render())
 
     """
 
-    model_type: Literal["segmentxy", "SEGMENTXY"] = Field(
-        default="segmentxy", description="Model type discriminator",
+    model_type: Literal["segment", "SEGMENT"] = Field(
+        default="segment", description="Model type discriminator",
     )
-    points: list[tuple[float, float]] = Field(
-        description="Pairs of (x, y) values to define the segment",
-    )
-    float_format: str = Field(
-        default="0.8f", description="The format to use for the floats in the points",
+    points: Union[XY, IJ] = Field(
+        description="Points to define the segment",
+        discriminator="model_type",
     )
 
     def cmd(self) -> str:
-        repr = f"SEGMENT XY &"
-        for point in self.points:
-            repr += (
-                f"\n\t{point[0]:{self.float_format}} {point[1]:{self.float_format}} &"
-            )
-        return repr + "\n\t"
-
-
-class SEGMENTIJ(BaseSubComponent):
-    """Boundary over a segment defined from grid indices.
-
-    .. code-block:: text
-
-        SEGMENT IJ < [i] [j] >
-
-    The segment is defined by means of a series of computational grid points given in
-    terms of grid indices (origin at 0,0); not all grid points on the segment have to
-    be mentioned. If two points are on the same grid line, intermediate points are
-    assumed to be on the segment as well.
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-        :okexcept:
-
-        from rompy.swan.subcomponents.boundary import SEGMENTIJ
-        seg = SEGMENTIJ(points=[(0, 0), (0, 19), (5, 19)])
-        print(seg.render())
-
-    """
-
-    model_type: Literal["segmentij", "SEGMENTIJ"] = Field(
-        default="segmentij", description="Model type discriminator",
-    )
-    points: list[tuple[int, int]] = Field(
-        description="Pairs of (i, j) values to define the segment",
-    )
-
-    def cmd(self) -> str:
-        repr = f"SEGMENT IJ &"
-        for point in self.points:
-            repr += f"\n\t{point[0]} {point[1]} &"
-        return repr + "\n\t"
+        return f"SEGMENT {self.points.model_type.upper()} {self.points.render()}"
 
 
 class PAR(BaseSubComponent):

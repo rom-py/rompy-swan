@@ -11,8 +11,7 @@ from rompy.swan.subcomponents.boundary import (
     HOTSINGLE,
     HOTMULTIPLE,
     SIDE,
-    SEGMENTXY,
-    SEGMENTIJ,
+    SEGMENT,
     PAR,
     CONSTANTPAR,
     VARIABLEPAR,
@@ -106,7 +105,7 @@ class BOUNDSPEC(BaseComponent):
     shapespec: SHAPESPEC = Field(
         default_factory=SHAPESPEC, description="Spectral shape specification",
     )
-    location: SIDE | SEGMENTXY | SEGMENTIJ = Field(
+    location: SIDE | SEGMENT = Field(
         description="Location to apply the boundary",
     )
     data: CONSTANTPAR | CONSTANTFILE | VARIABLEPAR | VARIABLEFILE = Field(

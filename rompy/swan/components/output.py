@@ -667,7 +667,7 @@ class NGRID_UNSTRUCTURED(BaseComponent):
 
 
 # =====================================================================================
-# Write / plot
+# Write
 # =====================================================================================
 class QUANTITY(BaseComponent):
     """Define output settings.
@@ -963,7 +963,7 @@ class BLOCK(BaseComponent):
 
     .. code-block:: text
 
-        BLOCK 'sname' ->HEADER|NOHEADER 'fname' (LAYOUT [idla]) [output1 ...] &
+        BLOCK 'sname' ->HEADER|NOHEADER 'fname' (LAYOUT [idla]) < output > &
             [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
 
     With this optional command the user indicates that one or more spatial
@@ -1112,7 +1112,7 @@ class TABLE(BaseComponent):
 
     .. code-block:: text
 
-        TABLE 'sname' ->HEADER|NOHEADER|INDEXED 'fname'  [output1 ...] &
+        TABLE 'sname' ->HEADER|NOHEADER|INDEXED 'fname'  < output > &
             (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
 
     With this optional command the user indicates that for each location of the output
@@ -1385,6 +1385,128 @@ class NESTOUT(BaseComponent):
         if self.time is not None:
             repr += f" OUTPUT {self.time.render()}"
         return repr
+
+
+# =====================================================================================
+# Write or plot intermediate results
+# =====================================================================================
+class TEST(BaseComponent):
+    """Write intermediate results.
+
+    .. code-block:: text
+
+        TEST [itest] [itrace] POINTS
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.components.output import TEST
+        test = TEST()
+        print(test.render())
+
+    """
+
+    model_type: Literal["test", "TEST"] = Field(
+        default="test", description="Model type discriminator"
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        return "TEST"
+
+
+# =====================================================================================
+# Lock up
+# =====================================================================================
+class COMPUTE(BaseComponent):
+    """Write intermediate results.
+
+    .. code-block:: text
+
+        COMPUTE 
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.components.output import COMPUTE
+        comp = COMPUTE()
+        print(comp.render())
+
+    """
+
+    model_type: Literal["compute", "COMPUTE"] = Field(
+        default="compute", description="Model type discriminator"
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        return "COMPUTE"
+
+
+class HOTFILE(BaseComponent):
+    """Write intermediate results.
+
+    .. code-block:: text
+
+        HOTFILE 
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.components.output import HOTFILE
+        hotfile = HOTFILE()
+        print(hotfile.render())
+
+    """
+
+    model_type: Literal["hotfile", "HOTFILE"] = Field(
+        default="hotfile", description="Model type discriminator"
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        return "HOTFILE"
+
+
+class STOP(BaseComponent):
+    """Write intermediate results.
+
+    .. code-block:: text
+
+        STOP 
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+        :okexcept:
+
+        from rompy.swan.components.output import STOP
+        stop = STOP()
+        print(stop.render())
+
+    """
+
+    model_type: Literal["stop", "STOP"] = Field(
+        default="stop", description="Model type discriminator"
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        return "STOP"
 
 
 # =====================================================================================
