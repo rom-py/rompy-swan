@@ -112,7 +112,32 @@ class HOTFILE(BaseComponent):
 
     .. code-block:: text
 
-        HOTFILE 
+        HOTFILE 'fname' ->FREE|UNFORMATTED
+
+    This command can be used to write the entire wave field at the end of a computation
+    to a so-called hotfile, to be used as initial condition in a subsequent SWAN run
+    (see command `INITIAL HOTSTART`). This command must be entered immediately after a
+    `COMPUTE` command.
+
+    The user may choose the format of the hotfile to be written either as free or
+    unformatted. If the free format is chosen, then this format is identical to the
+    format of the files written by the `SPECOUT` command (option `SPEC2D`). This
+    hotfile is therefore an ASCII file which is human readable.
+
+    An unformatted (or binary) file usually requires less space on your computer than
+    an ASCII file. Moreover, it can be readed by a subsequent SWAN run much faster than
+    an ASCII file. Especially, when the hotfile might become a big file, the choice for
+    unformatted is preferable. Note that your compiler and OS should follow the same
+    ABI (Application Binary Interface) conventions (e.g. word size, endianness), so
+    that unformatted hotfiles may transfer properly between different OS or platforms.
+    This implies that the present and subsequent SWAN runs do not have to be carried
+    out on the same operating system (e.g. Windows, Linux) or on the same computer,
+    provided that distinct ABI conventions have been followed.
+
+    Note
+    ----
+    For parallel MPI runs, more than one hotfile will be generated depending on the
+    number of processors (`fname-001`, `fname-002`, etc).
 
     Examples
     --------
@@ -121,7 +146,9 @@ class HOTFILE(BaseComponent):
         :okwarning:
 
         from rompy.swan.components.lockup import HOTFILE
-        hotfile = HOTFILE()
+        hotfile = HOTFILE(fname="hotfile.swn")
+        print(hotfile.render())
+        hotfile = HOTFILE(fname="hotfile.dat", format="unformatted")
         print(hotfile.render())
 
     """
@@ -129,18 +156,34 @@ class HOTFILE(BaseComponent):
     model_type: Literal["hotfile", "HOTFILE"] = Field(
         default="hotfile", description="Model type discriminator"
     )
+    fname: str = Field(
+        description="Name of the file to which the wave field is written",
+    )
+    format: Optional[Literal["free", "unformatted"]] = Field(
+        default=None,
+        description=(
+            "Choose between free (SWAN ASCII) or unformatted (binary) format"
+        ),
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        return "HOTFILE"
+        repr = f"HOTFILE fname='{self.fname}'"
+        if self.format is not None:
+            repr += f" {self.format.upper()}"
+        return repr
 
 
 class STOP(BaseComponent):
-    """Write intermediate results.
+    """End of commands.
 
     .. code-block:: text
 
         STOP 
+
+    This required command marks the end of the commands in the command file. Note that
+    the command `STOP` may be the last command in the input file; any information in
+    the input file beyond this command is ignored.
 
     Examples
     --------
