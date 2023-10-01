@@ -6,18 +6,18 @@ SWAN output commands
 
 
 .. autosummary::
-   :nosignatures:
-   :toctree: _generated/
+    :nosignatures:
+    :toctree: _generated/
 
-   rompy.swan.components.output.OUTPUT
+    rompy.swan.components.output.OUTPUT
 
 
 Locations
 ~~~~~~~~~
 
 .. autosummary::
-   :nosignatures:
-   :toctree: _generated/
+    :nosignatures:
+    :toctree: _generated/
 
     rompy.swan.components.output.FRAME
     rompy.swan.components.output.GROUP
@@ -34,8 +34,8 @@ Write / plot
 ~~~~~~~~~~~~
 
 .. autosummary::
-   :nosignatures:
-   :toctree: _generated/
+    :nosignatures:
+    :toctree: _generated/
 
     rompy.swan.components.output.QUANTITY
     rompy.swan.components.output.OUTPUT_OPTIONS
