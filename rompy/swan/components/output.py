@@ -7,7 +7,7 @@ from rompy.swan.types import BlockOptions, IDLA
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.base import XY, IJ
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR
-from rompy.swan.subcomponents.time import TIME
+from rompy.swan.subcomponents.time import TIMERANGE
 from rompy.swan.subcomponents.output import SPEC1D, SPEC2D, ABS, REL
 
 
@@ -983,7 +983,11 @@ class BLOCK(BaseComponent):
             fname="./output-grid.nc",
             idla=3,
             output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-            time=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", deltfmt="min"),
+            time=dict(
+                tbeg=dict(time="2012-01-01T00:00:00", tfmt=1),
+                delt=dict(delt="PT30M", dfmt="min"),
+                suffix="",
+            )
         )
         print(block.render())
 
@@ -1038,7 +1042,7 @@ class BLOCK(BaseComponent):
             "format by default (`unit=1`)"
         ),
     )
-    time: Optional[TIME] = Field(
+    time: Optional[TIMERANGE] = Field(
         default=None,
         description=(
             "Time specification if the user requires output at various times. If this "
@@ -1058,7 +1062,7 @@ class BLOCK(BaseComponent):
 
     @field_validator("time")
     @classmethod
-    def validate_time(cls, time: TIME) -> TIME:
+    def validate_time(cls, time: TIMERANGE) -> TIMERANGE:
         time.suffix = "blk"
         if time.tend is not None:
             logger.warning(
@@ -1138,7 +1142,10 @@ class TABLE(BaseComponent):
             format="noheader",
             fname="./output_table.nc",
             output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-            time=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", deltfmt="min"),
+            time=dict(
+                tbeg=dict(time="2012-01-01T00:00:00"),
+                delt=dict(delt="PT30M", dfmt="min"),
+            )
         )
         print(table.render())
 
@@ -1167,7 +1174,7 @@ class TABLE(BaseComponent):
         description="The output variables to output to block file",
         min_length=1,
     )
-    time: Optional[TIME] = Field(
+    time: Optional[TIMERANGE] = Field(
         default=None,
         description=(
             "Time specification if the user requires output at various times. If this "
@@ -1178,7 +1185,7 @@ class TABLE(BaseComponent):
 
     @field_validator("time")
     @classmethod
-    def validate_time(cls, time: TIME) -> TIME:
+    def validate_time(cls, time: TIMERANGE) -> TIMERANGE:
         time.suffix = "tbl"
         if time.tend is not None:
             logger.warning(
@@ -1252,7 +1259,10 @@ class SPECOUT(BaseComponent):
             dim=dict(model_type="spec2d"),
             freq=dict(model_type="rel"),
             fname="./specout.nc",
-            time=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", deltfmt="min"),
+            time=dict(
+                tbeg=dict(time="2012-01-01T00:00:00"),
+                delt=dict(delt="PT30M", dfmt="min"),
+            )
         )
         print(out.render())
 
@@ -1270,7 +1280,7 @@ class SPECOUT(BaseComponent):
             "written if extension is `.nc` otherwise SWAN ASCII file is written"
         ),
     )
-    time: Optional[TIME] = Field(
+    time: Optional[TIMERANGE] = Field(
         default=None,
         description=(
             "Time specification if the user requires output at various times. If this "
@@ -1281,7 +1291,7 @@ class SPECOUT(BaseComponent):
 
     @field_validator("time")
     @classmethod
-    def validate_time(cls, time: TIME) -> TIME:
+    def validate_time(cls, time: TIMERANGE) -> TIMERANGE:
         time.suffix = "spc"
         if time.tend is not None:
             logger.warning(
@@ -1328,7 +1338,10 @@ class NESTOUT(BaseComponent):
         out = NESTOUT(
             sname="outgrid",
             fname="./nestout.swn",
-            time=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", deltfmt="min"),
+            time=dict(
+                tbeg=dict(time="2012-01-01T00:00:00"),
+                delt=dict(delt="PT30M", dfmt="min"),
+            )
         )
         print(out.render())
 
@@ -1345,7 +1358,7 @@ class NESTOUT(BaseComponent):
     fname: str = Field(
         description="Name of the data file where the output is written to",
     )
-    time: Optional[TIME] = Field(
+    time: Optional[TIMERANGE] = Field(
         default=None,
         description=(
             "Time specification if the user requires output at various times. If this "
@@ -1356,7 +1369,7 @@ class NESTOUT(BaseComponent):
 
     @field_validator("time")
     @classmethod
-    def validate_time(cls, time: TIME) -> TIME:
+    def validate_time(cls, time: TIMERANGE) -> TIMERANGE:
         time.suffix = "nst"
         if time.tend is not None:
             logger.warning(
@@ -1497,93 +1510,6 @@ class TEST(BaseComponent):
         if self.fname_s2d is not None:
             repr += f"S2D fname='{self.fname_s2d}' "
         return repr.rstrip()
-
-
-# =====================================================================================
-# Lock up
-# =====================================================================================
-class COMPUTE(BaseComponent):
-    """Write intermediate results.
-
-    .. code-block:: text
-
-        COMPUTE 
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-
-        from rompy.swan.components.output import COMPUTE
-        comp = COMPUTE()
-        print(comp.render())
-
-    """
-
-    model_type: Literal["compute", "COMPUTE"] = Field(
-        default="compute", description="Model type discriminator"
-    )
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        return "COMPUTE"
-
-
-class HOTFILE(BaseComponent):
-    """Write intermediate results.
-
-    .. code-block:: text
-
-        HOTFILE 
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-
-        from rompy.swan.components.output import HOTFILE
-        hotfile = HOTFILE()
-        print(hotfile.render())
-
-    """
-
-    model_type: Literal["hotfile", "HOTFILE"] = Field(
-        default="hotfile", description="Model type discriminator"
-    )
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        return "HOTFILE"
-
-
-class STOP(BaseComponent):
-    """Write intermediate results.
-
-    .. code-block:: text
-
-        STOP 
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-
-        from rompy.swan.components.output import STOP
-        stop = STOP()
-        print(stop.render())
-
-    """
-
-    model_type: Literal["stop", "STOP"] = Field(
-        default="stop", description="Model type discriminator"
-    )
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        return "STOP"
 
 
 # =====================================================================================
