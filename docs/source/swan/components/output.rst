@@ -23,6 +23,7 @@ Locations
     rompy.swan.components.output.FRAME
     rompy.swan.components.output.GROUP
     rompy.swan.components.output.CURVE
+    rompy.swan.components.output.CURVES
     rompy.swan.components.output.RAY
     rompy.swan.components.output.ISOLINE
     rompy.swan.components.output.POINTS
