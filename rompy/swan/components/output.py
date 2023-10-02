@@ -15,9 +15,13 @@ from rompy.swan.subcomponents.output import SPEC1D, SPEC2D, ABS, REL
 logger = logging.getLogger(__name__)
 
 
-# TODO 'BOUNDARY' and 'BOUND_0N' are accepted in appropriate write commands
-# TODO: Allow setting float precision where appropriate
+SPECIAL_NAMES = ["BOTTGRID", "COMPGRID", "BOUNDARY", "BOUND_"]
+
+# TODO: Define which commands can use each special name.
+# TODO: Allow setting float precision where appropriate.
 # TODO: Use group component to validate that write commands have a predefined loc.
+# TODO: Ensure ISOLINE is associated with a valid RAY.
+# TODO: Ensure NESTOUT follows NESTGRID and uses the correct sname.
 
 # =====================================================================================
 # Locations
@@ -35,7 +39,8 @@ class BaseLocation(BaseComponent, ABC):
     Note
     ----
     The name of the set of output locations `sname` cannot be longer than 8 characters
-    and must not match any SWAN special names such as `BOTTGRID` or `COMPGRID`.
+    and must not match any SWAN special names such as `BOTTGRID` (define output over
+    the bottom/current grid) or `COMPGRID` (define output over the computational grid).
 
     Examples
     --------
@@ -62,9 +67,8 @@ class BaseLocation(BaseComponent, ABC):
     @classmethod
     def not_special_name(cls, sname: str) -> str:
         """Ensure sname is not defined as one of the special names."""
-        special_names = ["BOTTGRID", "COMPGRID"]
-        for name in special_names:
-            if sname.upper() == name:
+        for name in SPECIAL_NAMES:
+            if sname.upper().startswith(name):
                 raise ValueError(f"sname {sname} is a special name and cannot be used")
         return sname
 
@@ -81,8 +85,10 @@ class FRAME(BaseLocation):
         FRAME 'sname' [xpfr] [ypfr] [alpfr] [xlenfr] [ylenfr] [mxfr] [myfr]
 
     With this optional command the user defines output on a rectangular, uniform grid
-    in a regular frame. If the set of output locations is identical to a part of the
-    computational grid, then the user can use the alternative command GROUP.
+    in a regular frame.
+
+    If the set of output locations is identical to a part of the computational grid,
+    then the user can use the alternative command GROUP.
 
     Note
     ----
@@ -116,12 +122,12 @@ class FRAME(BaseLocation):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"FRAME sname='{self.sname}' {self.grid.render()}"
+        repr = f"{super().cmd()} {self.grid.render()}"
         return repr
 
 
 class GROUP(BaseLocation):
-    """Output locations on a regular or curvilinear grid.
+    """Output locations on subset of a regular or curvilinear grid.
 
     .. code-block:: text
 
@@ -132,13 +138,12 @@ class GROUP(BaseLocation):
     grid (rectilinear or curvilinear). Such a group may be convenient for the user to
     obtain output that is not affected by interpolation errors.
 
-    The subgrid contains those points (ix,iy) of the computational grid for which:
-    `ix1` <= `ix` <= `ix2` and `iy1` <= `iy` <= `iy2 (The origin of the computational
-    grid is `ix=0`, `iy=0`)`
+    The subgrid contains those points (`ix`,`iy`) of the computational grid for which:
+    `ix1` <= `ix` <= `ix2` and `iy1` <= `iy` <= `iy2` (The origin of the computational
+    grid is `ix=0`, `iy=0`)
 
-    Note
-    ----
-    Command **CGRID** should precede this command **GROUP**.
+    Limitations: `ix1>=0`, `ix2<=mxc`, `iy1>=0`, `iy2<=myc` (`mxc` and `myc` as
+    defined in the command `CGRID` which should always precede this command `GROUP`)
 
     Note
     ----
@@ -161,9 +166,11 @@ class GROUP(BaseLocation):
     )
     ix1: int = Field(
         description="Lowest index of the computational grid in the ix-direction",
+        ge=0,
     )
     iy1: int = Field(
         description="Lowest index of the computational grid in the iy-direction",
+        ge=0,
     )
     ix2: int = Field(
         description="Highest index of the computational grid in the ix-direction",
@@ -174,7 +181,7 @@ class GROUP(BaseLocation):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"GROUP sname='{self.sname}'"
+        repr = f"{super().cmd()}"
         repr += f" SUBGRID ix1={self.ix1} iy1={self.iy1} ix2={self.ix2} iy2={self.iy2}"
         return repr
 
@@ -274,6 +281,47 @@ class CURVE(BaseLocation):
         return repr
 
 
+class CURVES(BaseComponent):
+    """Output locations along multiple curves.
+
+    .. code-block:: text
+
+        CURVE 'sname1' [xp1] [yp1] < [int] [xp] [yp] >
+        CURVE 'sname2' [xp1] [yp1] < [int] [xp] [yp] >
+        ..
+
+    This component can be used to prescribe and render multiple CURVE components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.components.output import CURVE, CURVES
+        loc1 = CURVE(
+            sname="c1", xp1=7, yp1=-40, npts=[3, 3], xp=[7, 9], yp=[-38, -38],
+        )
+        loc2 = CURVE(
+            sname="c2", xp1=3, yp1=-37, npts=[5, 5], xp=[4, 5], yp=[-37, -36],
+        )
+        locs = CURVES(curves=[loc1, loc2])
+        print(locs.render())
+
+    """
+
+    model_type: Literal["curves", "CURVES"] = Field(
+        default="curves", description="Model type discriminator"
+    )
+    curves: list[CURVE] = Field(description="CURVE components")
+
+    def cmd(self) -> str | list:
+        repr = []
+        for curve in self.curves:
+            repr += [curve.cmd()]
+        return repr
+
+
 class RAY(BaseComponent):
     """Output locations along a depth contour.
 
@@ -297,16 +345,16 @@ class RAY(BaseComponent):
 
     Note
     ----
+    Cannot be used in 1D-mode.
+
+    Note
+    ----
     All coordinates and distances should be given in m when Cartesian coordinates are
     used or degrees when Spherical coordinates are used (see command `COORD`).
 
     Note
     ----
     When using rays the input grid for bottom and water level should not be curvilinear.
-
-    Note
-    ----
-    Cannot be used in 1D-mode.
 
     Examples
     --------
@@ -673,7 +721,10 @@ class NGRID_UNSTRUCTURED(BaseLocation):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"NGRID UNSTRUCTURED {self.kind} fname='{self.fname}'"
+        repr = f"NGRID sname='{self.sname}' UNSTRUCTURED"
+        if self.kind is not None:
+            repr += f" {self.kind.upper()}"
+        repr += f" fname='{self.fname}'"
         return repr
 
 
@@ -1551,26 +1602,26 @@ class TEST(BaseComponent):
 
 FRAME_TYPE = Annotated[FRAME, Field(description="Frame locations component")]
 GROUP_TYPE = Annotated[GROUP, Field(description="Group locations component")]
-CURVE_TYPE = Annotated[CURVE, Field(description="Curve locations component")]
 RAY_TYPE = Annotated[RAY, Field(description="Ray locations component")]
 ISOLINE_TYPE = Annotated[ISOLINE, Field(description="Isoline locations component")]
-POINTS_TYPE = Annotated[
-    Union[POINTS, POINTS_FILE],
-    Field(description="Points locations component", discriminator="model_type"),
-]
-NGRID_TYPE = Annotated[
-    Union[NGRID, NGRID_UNSTRUCTURED], Field(description="Ngrid locations component")
-]
-
-QUANTITY_TYPE = Annotated[QUANTITY, Field(description="Block write component")]
-OUTPUT_OPTIONS_TYPE = Annotated[
-    OUTPUT_OPTIONS, Field(description="Block write component")
-]
+QUANTITY_TYPE = Annotated[QUANTITY, Field(description="Quantity component")]
+OUTOPT_TYPE = Annotated[OUTPUT_OPTIONS, Field(description="Output options component")]
 BLOCK_TYPE = Annotated[BLOCK, Field(description="Block write component")]
 TABLE_TYPE = Annotated[TABLE, Field(description="Table write component")]
 SPECOUT_TYPE = Annotated[SPECOUT, Field(description="Spectra write component")]
 NESTOUT_TYPE = Annotated[NESTOUT, Field(description="Spectra write component")]
-
+CURVE_TYPES = Annotated[
+    Union[CURVE, CURVES],
+    Field(description="Curve locations component", discriminator="model_type"),
+]
+POINTS_TYPES = Annotated[
+    Union[POINTS, POINTS_FILE],
+    Field(description="Points locations component", discriminator="model_type"),
+]
+NGRID_TYPES = Annotated[
+    Union[NGRID, NGRID_UNSTRUCTURED],
+    Field(description="Ngrid locations component", discriminator="model_type")
+]
 
 class OUTPUT(BaseComponent):
     """Output group component.
@@ -1594,13 +1645,13 @@ class OUTPUT(BaseComponent):
     )
     frame: Optional[FRAME_TYPE] = Field(default=None)
     group: Optional[GROUP_TYPE] = Field(default=None)
-    curve: Optional[CURVE_TYPE] = Field(default=None)
+    curve: Optional[CURVE_TYPES] = Field(default=None)
     ray: Optional[RAY_TYPE] = Field(default=None)
     isoline: Optional[ISOLINE_TYPE] = Field(default=None)
-    points: Optional[POINTS_TYPE] = Field(default=None)
-    ngrid: Optional[NGRID_TYPE] = Field(default=None)
+    points: Optional[POINTS_TYPES] = Field(default=None)
+    ngrid: Optional[NGRID_TYPES] = Field(default=None)
     quantity: Optional[QUANTITY_TYPE] = Field(default=None)
-    output_options: Optional[OUTPUT_OPTIONS_TYPE] = Field(default=None)
+    output_options: Optional[OUTOPT_TYPE] = Field(default=None)
     block: Optional[BLOCK_TYPE] = Field(default=None)
     table: Optional[TABLE_TYPE] = Field(default=None)
     specout: Optional[SPECOUT_TYPE] = Field(default=None)
