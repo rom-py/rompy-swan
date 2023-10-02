@@ -1,6 +1,7 @@
 """Model output components."""
 import logging
 from typing import Literal, Optional, Union, Annotated
+from abc import ABC
 from pydantic import field_validator, model_validator, Field
 
 from rompy.swan.types import BlockOptions, IDLA
@@ -21,7 +22,58 @@ logger = logging.getLogger(__name__)
 # =====================================================================================
 # Locations
 # =====================================================================================
-class FRAME(BaseComponent):
+class BaseLocation(BaseComponent, ABC):
+    """Base class for SWAN output locations.
+
+    .. code-block:: text
+
+        {MODEL_TYPE} sname='sname'
+
+    This is the base class for all locations components. It is not meant to be used
+    directly.
+
+    Note
+    ----
+    The name of the set of output locations `sname` cannot be longer than 8 characters
+    and must not match any SWAN special names such as `BOTTGRID` or `COMPGRID`.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.components.output import BaseLocation
+        loc = BaseLocation(sname="outsites")
+        print(loc.render())
+
+    """
+
+    model_type: Literal["locations", "LOCATIONS"] = Field(
+        default="locations",
+        description="Model type discriminator",
+    )
+    sname: str = Field(
+        description="Name of the set of output locations defined by this command",
+        max_length=8,
+    )
+
+    @field_validator("sname")
+    @classmethod
+    def not_special_name(cls, sname: str) -> str:
+        """Ensure sname is not defined as one of the special names."""
+        special_names = ["BOTTGRID", "COMPGRID"]
+        for name in special_names:
+            if sname.upper() == name:
+                raise ValueError(f"sname {sname} is a special name and cannot be used")
+        return sname
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        return f"{self.model_type.upper()} sname='{self.sname}'"
+
+
+class FRAME(BaseLocation):
     """Output locations on a regular grid.
 
     .. code-block:: text
@@ -54,10 +106,6 @@ class FRAME(BaseComponent):
     model_type: Literal["frame", "FRAME"] = Field(
         default="frame", description="Model type discriminator"
     )
-    sname: str = Field(
-        description="Name of the frame defined by this command",
-        max_length=8,
-    )
     grid: GRIDREGULAR = Field(description="Frame grid definition")
 
     @field_validator("grid")
@@ -72,7 +120,7 @@ class FRAME(BaseComponent):
         return repr
 
 
-class GROUP(BaseComponent):
+class GROUP(BaseLocation):
     """Output locations on a regular or curvilinear grid.
 
     .. code-block:: text
@@ -103,17 +151,13 @@ class GROUP(BaseComponent):
         :okwarning:
 
         from rompy.swan.components.output import GROUP
-        loc = GROUP(sname="outsubgrid", ix1=20, iy1=0, ix2=50, iy2=100)
+        loc = GROUP(sname="subgrid", ix1=20, iy1=0, ix2=50, iy2=100)
         print(loc.render())
 
     """
 
     model_type: Literal["group", "GROUP"] = Field(
         default="group", description="Model type discriminator"
-    )
-    sname: str = Field(
-        description="Name of the set of output locations defined by this command",
-        max_length=8,
     )
     ix1: int = Field(
         description="Lowest index of the computational grid in the ix-direction",
@@ -135,7 +179,7 @@ class GROUP(BaseComponent):
         return repr
 
 
-class CURVE(BaseComponent):
+class CURVE(BaseLocation):
     """Output locations along a curve.
 
     .. code-block:: text
@@ -183,10 +227,6 @@ class CURVE(BaseComponent):
 
     model_type: Literal["curve", "CURVE"] = Field(
         default="curve", description="Model type discriminator"
-    )
-    sname: str = Field(
-        description="Name of the set of output locations defined by this command",
-        max_length=8,
     )
     xp1: float = Field(
         description=(
@@ -252,15 +292,13 @@ class RAY(BaseComponent):
     defined SWAN generates `int-1` intermediate rays by linear interpolation of the
     start and end positions.
 
-    Note
-    ----
-    All coordinates and distances should be given in m when Cartesian coordinates are
-    used or degrees when Spherical coordinates are used (see command COORD).
+    Rays defined by this component have nothing in common with wave rays (e.g. as
+    obtained from conventional refraction computations).
 
     Note
     ----
-    Rays defined by this component have nothing in common with wave rays (e.g. as
-    obtained from conventional refraction computations).
+    All coordinates and distances should be given in m when Cartesian coordinates are
+    used or degrees when Spherical coordinates are used (see command `COORD`).
 
     Note
     ----
@@ -377,7 +415,7 @@ class RAY(BaseComponent):
         return repr
 
 
-class ISOLINE(BaseComponent):
+class ISOLINE(BaseLocation):
     """Output locations along a depth contour.
 
     .. code-block:: text
@@ -405,10 +443,6 @@ class ISOLINE(BaseComponent):
 
     model_type: Literal["isoline", "ISOLINE"] = Field(
         default="isoline", description="Model type discriminator"
-    )
-    sname: str = Field(
-        description="Name of the set of output locations defined by this command",
-        max_length=8,
     )
     rname: str = Field(
         description="Name of the set of rays defined by this command",
@@ -438,7 +472,7 @@ class ISOLINE(BaseComponent):
         return repr
 
 
-class POINTS(BaseComponent):
+class POINTS(BaseLocation):
     """Isolated output locations.
 
     .. code-block:: text
@@ -460,17 +494,13 @@ class POINTS(BaseComponent):
         :okwarning:
 
         from rompy.swan.components.output import POINTS
-        loc = POINTS(sname="outpoints", xp=[172.3, 172.4], yp=[-39, -39])
+        loc = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
         print(loc.render())
 
     """
 
     model_type: Literal["points", "POINTS"] = Field(
         default="points", description="Model type discriminator"
-    )
-    sname: str = Field(
-        description="Name of the set of output locations defined by this command",
-        max_length=8,
     )
     xp: Optional[list[float]] = Field(
         description="problem coordinates of the points in the x-direction",
@@ -495,7 +525,7 @@ class POINTS(BaseComponent):
         return repr
 
 
-class POINTS_FILE(BaseComponent):
+class POINTS_FILE(BaseLocation):
     """Isolated output locations.
 
     .. code-block:: text
@@ -518,17 +548,13 @@ class POINTS_FILE(BaseComponent):
         :okwarning:
 
         from rompy.swan.components.output import POINTS_FILE
-        loc = POINTS_FILE(sname="outpoints", fname="./output_locations.txt")
+        loc = POINTS_FILE(sname="outpts", fname="./output_locations.txt")
         print(loc.render())
 
     """
 
     model_type: Literal["points_file", "POINTS_FILE"] = Field(
         default="points_file", description="Model type discriminator"
-    )
-    sname: str = Field(
-        description="Name of the set of output locations defined by this command",
-        max_length=8,
     )
     fname: str = Field(
         description="Name of the file containing the output locations",
@@ -541,7 +567,7 @@ class POINTS_FILE(BaseComponent):
         return repr
 
 
-class NGRID(BaseComponent):
+class NGRID(BaseLocation):
     """Output locations for a nested grid.
 
     .. code-block:: text
@@ -571,7 +597,7 @@ class NGRID(BaseComponent):
 
         from rompy.swan.components.output import NGRID
         loc = NGRID(
-            sname="outgrid",
+            sname="outnest",
             grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
         )
         print(loc.render())
@@ -580,13 +606,6 @@ class NGRID(BaseComponent):
 
     model_type: Literal["ngrid", "NGRID"] = Field(
         default="ngrid", description="Model type discriminator"
-    )
-    sname: str = Field(
-        description=(
-            "name of the set of output locations along the boundaries of the "
-            "following nested computational grid defined by this command"
-        ),
-        max_length=8,
     )
     grid: GRIDREGULAR = Field(description="NGRID grid definition")
 
@@ -602,7 +621,7 @@ class NGRID(BaseComponent):
         return repr
 
 
-class NGRID_UNSTRUCTURED(BaseComponent):
+class NGRID_UNSTRUCTURED(BaseLocation):
     """Output locations for a nested grid.
 
     .. code-block:: text
@@ -630,7 +649,7 @@ class NGRID_UNSTRUCTURED(BaseComponent):
         :okwarning:
 
         from rompy.swan.components.output import NGRID_UNSTRUCTURED
-        loc = NGRID_UNSTRUCTURED(kind="triangle", fname="ngrid.txt")
+        loc = NGRID_UNSTRUCTURED(sname="outnest", kind="triangle", fname="ngrid.txt")
         print(loc.render())
 
     """
@@ -1139,7 +1158,7 @@ class TABLE(BaseComponent):
 
         from rompy.swan.components.output import TABLE
         table = TABLE(
-            sname="outpoints",
+            sname="outpts",
             format="noheader",
             fname="./output_table.nc",
             output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
@@ -1256,10 +1275,10 @@ class SPECOUT(BaseComponent):
         :okwarning:
 
         from rompy.swan.components.output import SPECOUT
-        out = SPECOUT(sname="outpoints", fname="./specout.swn")
+        out = SPECOUT(sname="outpts", fname="./specout.swn")
         print(out.render())
         out = SPECOUT(
-            sname="outpoints",
+            sname="outpts",
             dim=dict(model_type="spec2d"),
             freq=dict(model_type="rel"),
             fname="./specout.nc",
@@ -1343,7 +1362,7 @@ class NESTOUT(BaseComponent):
 
         from rompy.swan.components.output import NESTOUT
         out = NESTOUT(
-            sname="outgrid",
+            sname="outnest",
             fname="./nestout.swn",
             time=dict(
                 tbeg=dict(time="2012-01-01T00:00:00"),
@@ -1611,6 +1630,11 @@ class OUTPUT(BaseComponent):
     @model_validator(mode="after")
     def ngrid_and_nestout(self) -> "OUTPUT":
         """Ensure NGRID and NESTOUT are specified together."""
+        return self
+
+    @model_validator(mode="after")
+    def location_ids_unique(self) -> "OUTPUT":
+        """Ensure `sname` isn't repeated for more than one set of output locations."""
         return self
 
     def cmd(self) -> str:
