@@ -736,7 +736,7 @@ class QUANTITY(BaseComponent):
 
     .. code-block:: text
 
-        QUANTITY [output1 ...] 'short' 'long' [lexp] [hexp] [excv] [power] [ref] &
+        QUANTITY < output > 'short' 'long' [lexp] [hexp] [excv] [power] [ref] &
             [fswell] [fmin] [fmax] ->PROBLEMCOORD|FRAME
 
         Examples:
