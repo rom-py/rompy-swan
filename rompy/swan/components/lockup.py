@@ -187,6 +187,12 @@ class COMPUTE_HOTFILE(COMPUTE, HOTFILE):
     uses the timestamp from the `COMPUTE` component (if available) to set the timestamp
     of the hotfile filename in the `HOTFILE` component.
 
+    Note
+    ----
+    The stationary timestamp or the last timestamp of a nonstationary `COMPUTE`
+    component is used when available to set the timestamp of the hotfile `fname` so
+    multiple sequences of associated `COMPUTE` and `HOTFILE` commands can specified.
+
     Examples
     --------
 
@@ -210,13 +216,6 @@ class COMPUTE_HOTFILE(COMPUTE, HOTFILE):
 
     model_type: Literal["compute_hotfile", "COMPUTE_HOTFILE"] = Field(
         default="compute", description="Model type discriminator"
-    )
-    fname: Path = Field(
-        # default="hotfile",
-        description=(
-            "Basename of the file to which the wave field is written, the stationary "
-            "timestamp or the last timestamp of a nonstationary run will be appended "
-        ),
     )
     tfmt: str = Field(
         default="%Y%m%dT%H%M%S",
