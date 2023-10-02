@@ -189,9 +189,9 @@ class COMPUTE_HOTFILE(COMPUTE, HOTFILE):
 
     Note
     ----
-    The stationary timestamp or the last timestamp of a nonstationary `COMPUTE`
-    component is used when available to set the timestamp of the hotfile `fname` so
-    multiple sequences of associated `COMPUTE` and `HOTFILE` commands can specified.
+    The stationary time or the last time of a nonstationary `COMPUTE` component is used
+    (when available) to set the timestamp of the hotfile `fname` so multiple sequences
+    of associated `COMPUTE` and `HOTFILE` commands can specified.
 
     Examples
     --------
