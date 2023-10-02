@@ -1,7 +1,7 @@
 """Model output components."""
 import logging
-from typing import Any, Literal, Optional, Union, Annotated
-from pydantic import field_validator, model_validator, Field, FieldValidationInfo
+from typing import Literal, Optional, Union, Annotated
+from pydantic import field_validator, model_validator, Field
 
 from rompy.swan.types import BlockOptions, IDLA
 from rompy.swan.components.base import BaseComponent
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 # TODO 'BOUNDARY' and 'BOUND_0N' are accepted in appropriate write commands
 # TODO: Allow setting float precision where appropriate
-
+# TODO: Use group component to validate that write commands have a predefined loc.
 
 # =====================================================================================
 # Locations
@@ -56,7 +56,7 @@ class FRAME(BaseComponent):
     )
     sname: str = Field(
         description="Name of the frame defined by this command",
-        max_length=32,
+        max_length=8,
     )
     grid: GRIDREGULAR = Field(description="Frame grid definition")
 
@@ -113,7 +113,7 @@ class GROUP(BaseComponent):
     )
     sname: str = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=32,
+        max_length=8,
     )
     ix1: int = Field(
         description="Lowest index of the computational grid in the ix-direction",
@@ -186,7 +186,7 @@ class CURVE(BaseComponent):
     )
     sname: str = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=32,
+        max_length=8,
     )
     xp1: float = Field(
         description=(
@@ -408,11 +408,11 @@ class ISOLINE(BaseComponent):
     )
     sname: str = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=32,
+        max_length=8,
     )
     rname: str = Field(
         description="Name of the set of rays defined by this command",
-        max_length=32,
+        max_length=8,
     )
     dep: float = Field(
         description=(
@@ -470,7 +470,7 @@ class POINTS(BaseComponent):
     )
     sname: str = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=32,
+        max_length=8,
     )
     xp: Optional[list[float]] = Field(
         description="problem coordinates of the points in the x-direction",
@@ -528,7 +528,7 @@ class POINTS_FILE(BaseComponent):
     )
     sname: str = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=32,
+        max_length=8,
     )
     fname: str = Field(
         description="Name of the file containing the output locations",
@@ -586,7 +586,7 @@ class NGRID(BaseComponent):
             "name of the set of output locations along the boundaries of the "
             "following nested computational grid defined by this command"
         ),
-        max_length=32,
+        max_length=8,
     )
     grid: GRIDREGULAR = Field(description="NGRID grid definition")
 
@@ -1001,6 +1001,7 @@ class BLOCK(BaseComponent):
             "Name of the frame in which the output is to be written to including one "
             "of the SWAN special frames 'BOTTGRID' or 'COMPGRID'"
         ),
+        max_length=8,
     )
     header: Optional[bool] = Field(
         default=None,
@@ -1154,7 +1155,10 @@ class TABLE(BaseComponent):
     model_type: Literal["table", "TABLE"] = Field(
         default="table", description="Model type discriminator"
     )
-    sname: str = Field(description="Name of the set of POINTS, CURVE, FRAME or GROUP")
+    sname: str = Field(
+        description="Name of the set of POINTS, CURVE, FRAME or GROUP",
+        max_length=8,
+    )
     format: Optional[Literal["header", "noheader", "indexed"]] = Field(
         default=None,
         description=(
@@ -1271,7 +1275,10 @@ class SPECOUT(BaseComponent):
     model_type: Literal["specout", "SPECOUT"] = Field(
         default="specout", description="Model type discriminator"
     )
-    sname: str = Field(description="Name of the set of POINTS, CURVE, FRAME or GROUP")
+    sname: str = Field(
+        description="Name of the set of POINTS, CURVE, FRAME or GROUP",
+        max_length=8,
+    )
     dim: Optional[DIM_TYPE] = Field(default=None)
     freq: Optional[FREQ_TYPE] = Field(default=None)
     fname: str = Field(
@@ -1354,6 +1361,7 @@ class NESTOUT(BaseComponent):
         description=(
             "Name of the set of output locations as defined in a command `NGRID`"
         ),
+        max_length=8,
     )
     fname: str = Field(
         description="Name of the data file where the output is written to",
