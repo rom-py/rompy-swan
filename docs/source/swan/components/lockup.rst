@@ -18,4 +18,5 @@ SWAN lock-up commands
 
     rompy.swan.components.lockup.COMPUTE
     rompy.swan.components.lockup.HOTFILE
+    rompy.swan.components.lockup.COMPUTE_HOTFILE
     rompy.swan.components.lockup.STOP
