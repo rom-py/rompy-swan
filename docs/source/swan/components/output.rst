@@ -19,6 +19,7 @@ Locations
     :nosignatures:
     :toctree: _generated/
 
+    rompy.swan.components.output.BaseLocation
     rompy.swan.components.output.FRAME
     rompy.swan.components.output.GROUP
     rompy.swan.components.output.CURVE
