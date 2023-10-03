@@ -275,7 +275,7 @@ class CURVE(BaseLocation):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"CURVE sname='{self.sname}' xp1={self.xp1} yp1={self.yp1}"
+        repr = f"{super().cmd()} xp1={self.xp1} yp1={self.yp1}"
         for npts, xp, yp in zip(self.npts, self.xp, self.yp):
             repr += f"\nint={npts} xp={xp} yp={yp}"
         return repr
@@ -456,7 +456,7 @@ class RAY(BaseComponent):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"CURVE rname='{self.rname}'"
+        repr = f"RAY rname='{self.rname}'"
         repr += f" xp1={self.xp1} yp1={self.yp1} xq1={self.xq1} yq1={self.yq1}"
         for npts, xp, yp, xq, yq in zip(self.npts, self.xp, self.yp, self.xq, self.yq):
             repr += f"\nint={npts} xp={xp} yp={yp} xq={xq} yq={yq}"
@@ -513,7 +513,7 @@ class ISOLINE(BaseLocation):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"ISOLINE sname='{self.sname}' rname='{self.rname}'"
+        repr = f"{super().cmd()} rname='{self.rname}'"
         if self.dep_type is not None:
             repr += f" {self.dep_type.upper()}"
         repr += f" dep={self.dep}"
@@ -567,7 +567,7 @@ class POINTS(BaseLocation):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"POINTS sname='{self.sname}'"
+        repr = f"{super().cmd()}"
         for xp, yp in zip(self.xp, self.yp):
             repr += f"\nxp={xp} yp={yp}"
         return repr
@@ -665,7 +665,7 @@ class NGRID(BaseLocation):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"NGRID {self.grid.render()}"
+        repr = f"{super().cmd()} {self.grid.render()}"
         return repr
 
 
@@ -1593,13 +1593,6 @@ class TEST(BaseComponent):
 # =====================================================================================
 # Output group component
 # =====================================================================================
-# GEN_TYPE = Annotated[
-#     Union[GEN1, GEN2, GEN3],
-#     Field(description="Wave generation component", discriminator="model_type"),
-# ]
-
-# TODO: CURVE should be a list type
-
 FRAME_TYPE = Annotated[FRAME, Field(description="Frame locations component")]
 GROUP_TYPE = Annotated[GROUP, Field(description="Group locations component")]
 RAY_TYPE = Annotated[RAY, Field(description="Ray locations component")]
@@ -1692,29 +1685,36 @@ class OUTPUT(BaseComponent):
         """Command file string for this component."""
         repr = []
         if self.frame is not None:
-            repr += [f"{self.frame.render()}"]
+            repr += [f"{self.frame.cmd()}"]
         if self.group is not None:
-            repr += [f"{self.group.render()}"]
+            repr += [f"{self.group.cmd()}"]
         if self.curve is not None:
-            repr += [f"{self.curve.render()}"]
+            repr += [f"{self.curve.cmd()}"]
         if self.ray is not None:
-            repr += [f"{self.ray.render()}"]
+            repr += [f"{self.ray.cmd()}"]
         if self.isoline is not None:
-            repr += [f"{self.isoline.render()}"]
+            repr += [f"{self.isoline.cmd()}"]
         if self.points is not None:
-            repr += [f"{self.points.render()}"]
+            repr += [f"{self.points.cmd()}"]
         if self.ngrid is not None:
-            repr += [f"{self.ngrid.render()}"]
+            repr += [f"{self.ngrid.cmd()}"]
         if self.quantity is not None:
-            repr += [f"{self.quantity.render()}"]
+            repr += [f"{self.quantity.cmd()}"]
         if self.output_options is not None:
-            repr += [f"{self.output_options.render()}"]
+            repr += [f"{self.output_options.cmd()}"]
         if self.block is not None:
-            repr += [f"{self.block.render()}"]
+            repr += [f"{self.block.cmd()}"]
         if self.table is not None:
-            repr += [f"{self.table.render()}"]
+            repr += [f"{self.table.cmd()}"]
         if self.specout is not None:
-            repr += [f"{self.specout.render()}"]
+            repr += [f"{self.specout.cmd()}"]
         if self.nestout is not None:
-            repr += [f"{self.nestout.render()}"]
+            repr += [f"{self.nestout.cmd()}"]
         return repr
+
+    def render(self) -> str:
+        """Override base class to allow rendering list of components."""
+        cmds = []
+        for cmd in self.cmd():
+            cmds.append(super().render(cmd))
+        return "\n\n".join(cmds)
