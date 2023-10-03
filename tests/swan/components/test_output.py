@@ -363,31 +363,24 @@ def test_output_write_locations_exist(table):
         OUTPUT(table=table)
 
 
-def test_ray_defined_if_isoline(isoline):
+def test_output_ray_defined_if_isoline(isoline):
     with pytest.raises(ValidationError):
         OUTPUT(isoline=isoline)
 
 
-def test_ray_rname_matches_isoline_rname(isoline, ray):
+def test_output_ray_rname_matches_isoline_rname(isoline, ray):
     isoline.rname = "dummy"
     with pytest.raises(ValidationError):
         OUTPUT(isoline=isoline, ray=ray)
 
 
-def test_ngrid_nestout_defined(ngrid, nestout):
+def test_output_ngrid_nestout_defined(ngrid, nestout):
     with pytest.raises(ValidationError):
         OUTPUT(ngrid=ngrid)
         OUTPUT(nestout=nestout)
 
 
-def test_sname_ngrid_nestout_match(ngrid, nestout):
+def test_output_sname_ngrid_nestout_match(ngrid, nestout):
     ngrid.sname = "dummy"
     with pytest.raises(ValidationError):
         OUTPUT(ngrid=ngrid, nestout=nestout)
-
-
-# def test_dev(frame, group, block):
-#     block = BLOCK(sname="outgrid", fname="./depth-frame.nc", output=["depth"])
-#     frame.sname = "outgrid"
-#     # OUTPUT(frame=frame, group=group, block=block)
-#     OUTPUT(frame=frame, block=block, group=group)
