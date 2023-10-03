@@ -17,11 +17,6 @@ logger = logging.getLogger(__name__)
 
 SPECIAL_NAMES = ["BOTTGRID", "COMPGRID", "BOUNDARY", "BOUND_"]
 
-# TODO: Define which commands can use each special name.
-# TODO: Allow setting float precision where appropriate.
-# TODO: Use group component to validate that write commands have a predefined loc.
-# TODO: Ensure ISOLINE is associated with a valid RAY.
-# TODO: Ensure NESTOUT follows NESTGRID and uses the correct sname.
 
 # =====================================================================================
 # Locations
@@ -314,6 +309,10 @@ class CURVES(BaseComponent):
         default="curves", description="Model type discriminator"
     )
     curves: list[CURVE] = Field(description="CURVE components")
+
+    @property
+    def sname(self) -> list[str]:
+        return [curve.sname for curve in self.curves]
 
     def cmd(self) -> str | list:
         repr = []
@@ -937,6 +936,47 @@ class QUANTITY(BaseComponent):
             repr += f" fmax={self.fmax}"
         if self.coord is not None:
             repr += f" {self.coord.upper()}"
+        return repr
+
+
+class QUANTITIES(BaseComponent):
+    """Define output settings for multiple output.
+
+    .. code-block:: text
+
+        QUANTITY < output > ...
+        QUANTITY < output > ...
+        ..
+
+    This component can be used to prescribe and render multiple QUANTITY components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.components.output import QUANTITY, QUANTITIES
+        q1 = QUANTITY(output=["xp"], hexp=100)
+        q2 = QUANTITY(output=["hsign", "tm01", "rtmm10"], excv=-9)
+        q3 = QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
+        q4 = QUANTITY(output=["hsign"], fswell=0.08)
+        q5 = QUANTITY(output=["per"], short="Tm-1,0", power=0)
+        q6 = QUANTITY(output=["transp", "force"], coord="frame")
+        quantities = QUANTITIES(quantities=[q1, q2, q3, q4, q5, q6])
+        print(quantities.render())
+
+    """
+
+    model_type: Literal["quantities", "QUANTITIES"] = Field(
+        default="quantities", description="Model type discriminator"
+    )
+    quantities: list[QUANTITY] = Field(description="QUANTITY components")
+
+    def cmd(self) -> list:
+        repr = []
+        for quantity in self.quantities:
+            repr += [quantity.cmd()]
         return repr
 
 
@@ -1597,12 +1637,12 @@ FRAME_TYPE = Annotated[FRAME, Field(description="Frame locations component")]
 GROUP_TYPE = Annotated[GROUP, Field(description="Group locations component")]
 RAY_TYPE = Annotated[RAY, Field(description="Ray locations component")]
 ISOLINE_TYPE = Annotated[ISOLINE, Field(description="Isoline locations component")]
-QUANTITY_TYPE = Annotated[QUANTITY, Field(description="Quantity component")]
 OUTOPT_TYPE = Annotated[OUTPUT_OPTIONS, Field(description="Output options component")]
 BLOCK_TYPE = Annotated[BLOCK, Field(description="Block write component")]
 TABLE_TYPE = Annotated[TABLE, Field(description="Table write component")]
 SPECOUT_TYPE = Annotated[SPECOUT, Field(description="Spectra write component")]
-NESTOUT_TYPE = Annotated[NESTOUT, Field(description="Spectra write component")]
+NESTOUT_TYPE = Annotated[NESTOUT, Field(description="Nest write component")]
+TEST_TYPE = Annotated[TEST, Field(description="Intermediate write component")]
 CURVE_TYPES = Annotated[
     Union[CURVE, CURVES],
     Field(description="Curve locations component", discriminator="model_type"),
@@ -1615,9 +1655,45 @@ NGRID_TYPES = Annotated[
     Union[NGRID, NGRID_UNSTRUCTURED],
     Field(description="Ngrid locations component", discriminator="model_type")
 ]
+QUANTITY_TYPES = Annotated[
+    Union[QUANTITY, QUANTITIES],
+    Field(description="Quantity component", discriminator="model_type")
+]
+
 
 class OUTPUT(BaseComponent):
     """Output group component.
+
+    .. code-block:: text
+
+        FRAME 'sname' ...
+        GROUP 'sname' ...
+        CURVE 'sname' ...
+        RAY 'rname' ...
+        ISOLINE 'sname' 'rname' ...
+        POINTS 'sname ...
+        NGRID 'sname' ...
+        QUANTITY ...
+        OUTPUT OPTIONS ...
+        BLOCK 'sname' ...
+        TABLE 'sname' ...
+        SPECOUT 'sname' ...
+        NESTOUT 'sname ...
+
+    This group component is used to define multiple types of output locations and
+    write components in a single model. Only fields that are explicitly prescribed are
+    rendered by this group component.
+
+    Note
+    ----
+    The components prescribed are validated according to some constraints as defined
+    in the SWAN manual:
+
+    - The name `'sname'` of each Locations component must be unique.
+    - The Locations `'sname'` assigned to each write component must be defined.
+    - The BLOCK component must be associated with either a `FRAME` or `GROUP`.
+    - The ISOLINE write component must be associated with a `RAY` component.
+    - The NGRID and NESTOUT components must be defined together.
 
     Examples
     --------
@@ -1625,11 +1701,34 @@ class OUTPUT(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import OUTPUT
-        out = OUTPUT()
+        from rompy.swan.components.output import POINTS, BLOCK, QUANTITY, TABLE, OUTPUT
+        points = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
+        quantity = QUANTITY(output=["depth", "hsign", "tps", "dir", "tm01"], excv=-9)
+        times = dict(
+            tbeg=dict(time="2012-01-01T00:00:00", tfmt=1),
+            delt=dict(delt="PT30M", dfmt="min"),
+        )
+        block = BLOCK(
+            model_type="block",
+            sname="COMPGRID",
+            fname="./swangrid.nc",
+            output=["depth", "hsign", "tps", "dir"],
+            time=times,
+        )
+        table = TABLE(
+            sname="outpts",
+            format="noheader",
+            fname="./swantable.nc",
+            output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
+            time=times,
+        )
+        out = OUTPUT(
+            points=points,
+            quantity=quantity,
+            block=block,
+            table=table,
+        )
         print(out.render())
-
-    TODO: Handle list type parameters such as quantity.
 
     """
 
@@ -1643,16 +1742,58 @@ class OUTPUT(BaseComponent):
     isoline: Optional[ISOLINE_TYPE] = Field(default=None)
     points: Optional[POINTS_TYPES] = Field(default=None)
     ngrid: Optional[NGRID_TYPES] = Field(default=None)
-    quantity: Optional[QUANTITY_TYPE] = Field(default=None)
+    quantity: Optional[QUANTITY_TYPES] = Field(default=None)
     output_options: Optional[OUTOPT_TYPE] = Field(default=None)
     block: Optional[BLOCK_TYPE] = Field(default=None)
     table: Optional[TABLE_TYPE] = Field(default=None)
     specout: Optional[SPECOUT_TYPE] = Field(default=None)
     nestout: Optional[NESTOUT_TYPE] = Field(default=None)
+    test: Optional[TEST_TYPE] = Field(default=None)
+    _location_fields: list = ["frame", "group", "curve", "isoline", "points", "ngrid"]
+    _write_fields: list = ["block", "table", "specout", "nestout"]
 
     @model_validator(mode="after")
-    def block_only_with_frame_or_group(self) -> "OUTPUT":
-        """Ensure Block is only defined for FRAME and GROUP locations."""
+    def write_locations_exists(self) -> "OUTPUT":
+        """Ensure the location component requested by a write component exists."""
+        for write in self.write_set:
+            sname = getattr(self, write).sname
+            if sname in SPECIAL_NAMES:
+                return self
+            try:
+                self._filter_location(sname)
+            except ValueError as err:
+                raise ValueError(
+                    f"Write component '{write}' specified with sname='{sname}' but no "
+                    f"location component with sname='{sname}' has been defined"
+                ) from err
+        return self
+
+    @model_validator(mode="after")
+    def locations_sname_unique(self) -> "OUTPUT":
+        """Ensure same `sname` isn't used in more than one set of output locations."""
+        duplicates = {x for x in self.snames if self.snames.count(x) > 1}
+        if duplicates:            
+            raise ValueError(
+                "The following snames are used to define more than one set of output "
+                f"components: {duplicates}, please ensure each location component has "
+                "a unique `sname`"
+            )
+        return self
+
+    @model_validator(mode="after")
+    def block_with_frame_or_group(self) -> "OUTPUT":
+        """Ensure Block is only defined for FRAME or GROUP locations."""
+        if self.block is not None:
+            sname = self.block.sname
+            if sname in ["BOTTGRID", "COMPGRID"]:
+                return self
+            location = self._filter_location(sname)
+            component = location.model_type.upper().split("_")[0]
+            if component not in ["FRAME", "GROUP"]:
+                raise ValueError(
+                    f"Block sname='{sname}' specified with {component} Location "
+                    "component but only only FRAME or GROUP components are supported"
+                )
         return self
 
     @model_validator(mode="after")
@@ -1674,12 +1815,52 @@ class OUTPUT(BaseComponent):
     @model_validator(mode="after")
     def ngrid_and_nestout(self) -> "OUTPUT":
         """Ensure NGRID and NESTOUT are specified together."""
+        if self.ngrid is not None and self.nestout is None:
+            raise ValueError(
+                "NGRID component specified but no NESTOUT component has been defined"
+            )
+        elif self.ngrid is None and self.nestout is not None:
+            raise ValueError(
+                "NESTOUT component specified but no NGRID component has been defined"
+            )
+        elif self.ngrid is not None and self.nestout is not None:
+            if self.ngrid.sname != self.nestout.sname:
+                raise ValueError(
+                    f"NGRID sname='{self.ngrid.sname}' does not match "
+                    f"the NESTOUT sname='{self.nestout.sname}'"
+                )
         return self
 
-    @model_validator(mode="after")
-    def location_ids_unique(self) -> "OUTPUT":
-        """Ensure `sname` isn't repeated for more than one set of output locations."""
-        return self
+    @property
+    def locations_set(self):
+        """List of specified location fields."""
+        return [fld for fld in self.__fields_set__ if fld in self._location_fields]
+
+    @property
+    def write_set(self):
+        """List of specified write fields."""
+        return [fld for fld in self.__fields_set__ if fld in self._write_fields]
+
+    @property
+    def snames(self):
+        """List of snames from specified location components."""
+        snames = []
+        for field in self.locations_set:
+            sname = getattr(self, field).sname
+            if isinstance(sname, str):
+                sname = [sname]
+            snames.extend(sname)
+        return snames
+
+    def _filter_location(self, sname):
+        """Filter the location component defined with the specified sname."""
+        for field in self.locations_set:
+            obj = getattr(self, field)
+            obj_snames = obj.sname if isinstance(obj.sname, list) else [obj.sname]
+            for obj_sname in obj_snames:
+                if obj_sname == sname:
+                    return obj
+        raise ValueError(f"Location component with sname='{sname}' not found")
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -1710,6 +1891,8 @@ class OUTPUT(BaseComponent):
             repr += [f"{self.specout.cmd()}"]
         if self.nestout is not None:
             repr += [f"{self.nestout.cmd()}"]
+        if self.test is not None:
+            repr += [f"{self.test.cmd()}"]
         return repr
 
     def render(self) -> str:

@@ -1,4 +1,5 @@
 """Test output components."""
+import copy
 import pytest
 import numpy as np
 from pydantic import ValidationError
@@ -192,7 +193,7 @@ def test_curve(curve):
 
 
 def test_ray(ray):
-    assert ray.render().startswith("CURVE rname='outray'")
+    assert ray.render().startswith("RAY rname='outray'")
 
 
 def test_isoline(isoline):
@@ -210,7 +211,8 @@ def test_points_file():
 
 def test_ngrid(ngrid):
     assert ngrid.render() == (
-        "NGRID xpn=173.0 ypn=-40.0 alpn=0.0 xlenn=2.0 ylenn=2.0 mxn=19 myn=19"
+        "NGRID sname='outnest' xpn=173.0 ypn=-40.0 alpn=0.0 xlenn=2.0 ylenn=2.0 "
+        "mxn=19 myn=19"
     )
 
 
@@ -303,7 +305,7 @@ def test_test_max50():
         )
 
 
-def test_output_groupcomponent(
+def test_output_group_all_set(
         frame,
         group,
         curve,
@@ -335,3 +337,57 @@ def test_output_groupcomponent(
     )
     print("")
     print(output.render())
+
+
+def test_output_sname_unique(frame, group):
+    group1 = copy.deepcopy(group)
+    group1.sname = frame.sname
+    with pytest.raises(ValidationError):
+        OUTPUT(frame=frame, group=group1)
+
+
+def test_output_block_frame_or_group(points):
+    block = BLOCK(sname="outpts", fname="./depth-frame.nc", output=["depth"])
+    with pytest.raises(ValidationError):
+        OUTPUT(points=points, block=block)
+
+
+def test_output_block_frame_or_group(points):
+    block = BLOCK(sname="outpts", fname="./depth-frame.nc", output=["depth"])
+    with pytest.raises(ValidationError):
+        OUTPUT(points=points, block=block)
+
+
+def test_output_write_locations_exist(table):
+    with pytest.raises(ValidationError):
+        OUTPUT(table=table)
+
+
+def test_ray_defined_if_isoline(isoline):
+    with pytest.raises(ValidationError):
+        OUTPUT(isoline=isoline)
+
+
+def test_ray_rname_matches_isoline_rname(isoline, ray):
+    isoline.rname = "dummy"
+    with pytest.raises(ValidationError):
+        OUTPUT(isoline=isoline, ray=ray)
+
+
+def test_ngrid_nestout_defined(ngrid, nestout):
+    with pytest.raises(ValidationError):
+        OUTPUT(ngrid=ngrid)
+        OUTPUT(nestout=nestout)
+
+
+def test_sname_ngrid_nestout_match(ngrid, nestout):
+    ngrid.sname = "dummy"
+    with pytest.raises(ValidationError):
+        OUTPUT(ngrid=ngrid, nestout=nestout)
+
+
+# def test_dev(frame, group, block):
+#     block = BLOCK(sname="outgrid", fname="./depth-frame.nc", output=["depth"])
+#     frame.sname = "outgrid"
+#     # OUTPUT(frame=frame, group=group, block=block)
+#     OUTPUT(frame=frame, block=block, group=group)
