@@ -1,7 +1,9 @@
 """Test startup components."""
+import pytest
 from pydantic import ValidationError
 
 from rompy.swan.components.startup import PROJECT, SET, MODE, COORDINATES
+from rompy.swan.components.group import STARTUP
 
 
 def test_project():
@@ -23,7 +25,7 @@ def test_project_no_titles():
         name="Test project",
         nr="0001",
     )
-    assert proj.render() == ("PROJECT name='Test project' nr='0001'")
+    assert proj.render() == "PROJECT name='Test project' nr='0001'"
 
 
 def test_set():
@@ -44,3 +46,20 @@ def test_mode_non_default():
 def test_coord_default():
     coord = COORDINATES()
     assert coord.render() == "COORDINATES CARTESIAN"
+
+
+def test_startup():
+    proj = PROJECT(nr="01")
+    set = SET(level=0.5, direction_convention="nautical")
+    mode = MODE(kind="nonstationary", dim="twodimensional")
+    coords = COORDINATES(kind=dict(model_type="spherical", projection="ccm"))
+    startup = STARTUP(
+        project=proj,
+        set=set,
+        mode=mode,
+        coordinates=coords,
+    )
+    assert "PROJECT nr='01'" in startup.render()
+    assert "SET level=0.5 NAUTICAL" in startup.render()
+    assert "MODE NONSTATIONARY TWODIMENSIONAL" in startup.render()
+    assert "COORDINATES SPHERICAL CCM" in startup.render()

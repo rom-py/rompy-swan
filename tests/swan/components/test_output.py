@@ -5,6 +5,7 @@ import numpy as np
 from pydantic import ValidationError
 
 from rompy.swan.subcomponents.time import TIMERANGE
+from rompy.swan.components.group import OUTPUT
 from rompy.swan.components.output import (
     SPECIAL_NAMES,
     BaseLocation,
@@ -25,7 +26,6 @@ from rompy.swan.components.output import (
     SPECOUT,
     NESTOUT,
     TEST,
-    OUTPUT,
 )
 
 
