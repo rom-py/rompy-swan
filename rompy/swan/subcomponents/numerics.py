@@ -53,7 +53,7 @@ class GSE(BaseSubComponent):
         :okwarning:
 
         from rompy.swan.subcomponents.numerics import GSE
-        scheme = GSE(waveage=dict(delt=1, dfmt="day")
+        scheme = GSE(waveage=dict(delt=86400, dfmt="day")
         print(scheme.render())
 
     """

@@ -62,7 +62,11 @@ class PROP(BaseComponent):
         print(prop.render())
         prop = PROP(scheme=dict(model_type="bsbt"))
         print(prop.render())
-        prop = PROP(scheme=dict(model_type="gse", waveage=5, units="hr"))
+        prop = PROP(
+            scheme=dict(
+                model_type="gse",
+                waveage=dict(delt="PT5H", dfmt="hr"),
+        )
         print(prop.render())
 
     """
