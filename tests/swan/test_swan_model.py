@@ -27,6 +27,8 @@ def test_swan_model(tmpdir, config_dict):
         # boundary=config_dict["boundary"],
         initial=config_dict["initial"],
         physics=config_dict["physics"],
+        prop=config_dict["prop"],
+        # numerics=config_dict["numerics"],
     )
     model = ModelRun(
         run_id="test",

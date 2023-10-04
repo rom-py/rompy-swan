@@ -178,8 +178,19 @@ physics:
     spacing: uniform
   scat:
     model_type: scat
-  # off:
-  #   model_type: offs
-  #   physics:
-  #     - physics: wcapping
-  #     - physics: breaking
+  deactivate:
+    model_type: offs
+    offs:
+      - physics: wcapping
+      - physics: breaking
+
+prop:
+  scheme:
+    model_type: gse
+    waveage:
+      delt: P1D
+      dfmt: day
+  # numeric: {}
+
+
+# PROP GSE waveage=1.0 DAY

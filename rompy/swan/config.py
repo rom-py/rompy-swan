@@ -6,7 +6,7 @@ from pydantic import field_validator, Field, model_validator
 
 from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 from rompy.swan.boundary import DataBoundary
-from rompy.swan.components import boundary, cgrid, inpgrid, physics, startup, group
+from rompy.swan.components import boundary, cgrid, inpgrid, physics, numerics, startup, group
 from rompy.swan.components.group import STARTUP, PHYSICS
 
 from .data import SwanDataGrid
@@ -251,6 +251,8 @@ STARTUP_TYPE = Annotated[STARTUP, Field(description="Startup components")]
 INPGRID_TYPE = Annotated[inpgrid.INPGRIDS, Field(description="Inpgrid components")]
 INITIAL_TYPE = Annotated[boundary.INITIAL, Field(description="Initial component")]
 PHYSICS_TYPE = Annotated[PHYSICS, Field(description="Physics components")]
+PROP_TYPE = Annotated[numerics.PROP, Field(description="Propagation components")]
+NUMERIC_TYPE = Annotated[numerics.NUMERIC, Field(description="Numerics components")]
 CGRID_TYPES = Annotated[
     Union[cgrid.REGULAR, cgrid.CURVILINEAR, cgrid.UNSTRUCTURED],
     Field(description="Cgrid component", discriminator="model_type"),
@@ -286,6 +288,8 @@ class SwanConfigComponents(BaseConfig):
     boundary: Optional[BOUNDARY_TYPES] = Field(default=None)
     initial: Optional[INITIAL_TYPE] = Field(default=None)
     physics: Optional[PHYSICS_TYPE] = Field(default=None)
+    prop: Optional[PROP_TYPE] = Field(default=None)
+    numeric: Optional[NUMERIC_TYPE] = Field(default=None)
 
     @model_validator(mode="after")
     def no_nor_if_spherical(self) -> "SwanConfigComponents":
