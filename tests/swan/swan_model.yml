@@ -188,7 +188,7 @@ prop:
   scheme:
     model_type: gse
     waveage:
-      delt: P1D
+      delt: 86400
       dfmt: day
   # numeric: {}
 
