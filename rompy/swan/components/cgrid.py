@@ -217,7 +217,7 @@ class UNSTRUCTURED(CGRID):
     fname: Optional[str] = Field(
         default=None,
         description="Name of the file containing the unstructured grid",
-        max_length=80,
+        max_length=36,
     )
 
     @model_validator(mode="after")

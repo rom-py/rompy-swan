@@ -17,7 +17,7 @@ from rompy.core import RompyBaseModel
 
 logger = logging.getLogger(__name__)
 
-MAX_LENGTH = 132
+MAX_LENGTH = 180
 SPACES = 4
 
 

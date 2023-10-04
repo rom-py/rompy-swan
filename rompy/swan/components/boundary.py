@@ -168,7 +168,7 @@ class BOUNDNEST1(BaseComponent):
             "according to the rules given in Appendix D for 2D spectra"
         ),
         min_length=1,
-        max_length=98,
+        max_length=36,
     )
     rectangle: Literal["closed", "open"] = Field(
         default="closed",
@@ -242,7 +242,7 @@ class BOUNDNEST2(BaseComponent):
             "nested boundary conditions in time-sequence (usually one file per day)"
         ),
         min_length=1,
-        max_length=48,
+        max_length=36,
     )
     format: Literal["cray", "wkstat", "free"] = Field(
         description=(
@@ -356,7 +356,7 @@ class BOUNDNEST3(BaseComponent):
             "The name of the file that contains the spectra computed by WAVEWATCH III"
         ),
         min_length=1,
-        max_length=62,
+        max_length=36,
     )
     format: Literal["unformatted", "free"] = Field(
         description=(

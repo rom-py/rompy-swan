@@ -332,7 +332,7 @@ class CONSTANTFILE(BaseSubComponent):
     )
     fname: str = Field(
         description="Name of the file containing the boundary condition.",
-        max_length=40,
+        max_length=36,
     )
     seq: Optional[int] = Field(
         default=None,
@@ -407,7 +407,7 @@ class VARIABLEFILE(BaseSubComponent):
         default="variablefile",
         description="Model type discriminator",
     )
-    fname: list[Annotated[str, Field(max_length=40)]] = Field(
+    fname: list[Annotated[str, Field(max_length=36)]] = Field(
         description="Names of the files containing the boundary condition",
     )
     seq: Optional[list[Annotated[int, Field(ge=1)]]] = Field(
@@ -547,7 +547,7 @@ class HOTSINGLE(BaseSubComponent):
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",
-        max_length=85,
+        max_length=36,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",
@@ -597,7 +597,7 @@ class HOTMULTIPLE(BaseSubComponent):
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",
-        max_length=85,
+        max_length=36,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",

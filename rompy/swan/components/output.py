@@ -605,7 +605,7 @@ class POINTS_FILE(BaseLocation):
     )
     fname: str = Field(
         description="Name of the file containing the output locations",
-        max_length=110,
+        max_length=36,
     )
 
     def cmd(self) -> str:
