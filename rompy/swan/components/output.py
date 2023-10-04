@@ -314,7 +314,7 @@ class CURVES(BaseComponent):
     def sname(self) -> list[str]:
         return [curve.sname for curve in self.curves]
 
-    def cmd(self) -> str | list:
+    def cmd(self) -> list:
         repr = []
         for curve in self.curves:
             repr += [curve.cmd()]

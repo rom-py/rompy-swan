@@ -2884,9 +2884,6 @@ class OFF(BaseComponent):
         return f"OFF {self.physics.value.upper()}"
 
 
-OFF_TYPES = Annotated[list[OFF], Field(description="Deactivate physics command")]
-
-
 class OFFS(BaseComponent):
     """Deactivate multiple physics commands.
 
@@ -2917,18 +2914,11 @@ class OFFS(BaseComponent):
     model_type: Literal["offs", "OFFS"] = Field(
         default="offs", description="Model type discriminator"
     )
-    physics: OFF_TYPES
+    offs: list[OFF] = Field(description="Physics commands to deactivate")
 
     def cmd(self) -> list:
         """Command file strings for this component."""
         repr = []
-        for physics in self.physics:
-            repr += [physics.cmd()]
+        for off in self.offs:
+            repr += [off.cmd()]
         return repr
-
-    def render(self) -> str:
-        """Override base class to allow rendering list of components."""
-        cmds = []
-        for cmd in self.cmd():
-            cmds.append(super().render(cmd))
-        return cmds

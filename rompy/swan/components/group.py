@@ -1,7 +1,9 @@
 """SWAN group components."""
+import logging
 from typing import Annotated, Literal, Optional, Union
 from pydantic import Field, model_validator, field_validator
 
+from rompy.swan.types import PhysicsOff
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.components.startup import PROJECT, SET, MODE, COORDINATES
 from rompy.swan.components.physics import (
@@ -66,6 +68,9 @@ from rompy.swan.components.output import (
     TEST,
     SPECIAL_NAMES,
 )
+
+
+logger = logging.getLogger(__name__)
 
 
 class BaseGroupComponent(BaseComponent):
@@ -206,6 +211,7 @@ BRAGG_TYPES = Annotated[
     Field(description="Bragg scattering component", discriminator="model_type"),
 ]
 
+
 class PHYSICS(BaseGroupComponent):
     """Physics group component.
 
@@ -255,26 +261,16 @@ class PHYSICS(BaseGroupComponent):
     diffraction: Optional[DIFFRACTION_TYPE] = Field(default=None)
     surfbeat: Optional[SURFBEAT_TYPE] = Field(default=None)
     scat: Optional[SCAT_TYPE] = Field(default=None)
-    off: Optional[OFF_TYPES] = Field(default=None)
+    deactivate: Optional[OFF_TYPES] = Field(default=None)
 
-    # @validator("off")
-    # def off_physics(cls, value, values):
-    #     if "windgrowth" in value:
-    #         logger.info("Switching off WINDGROWTH")
-    #     if "quadrupl" in value and values.get("quadrupl") is not None:
-    #         logger.warning("Switching off QUADRUPL")
-    #     if "wcapping" in value:
-    #         logger.info("Switching off WCAPPING")
-    #     if "breaking" in value:
-    #         logger.info("Switching off BREAKING")
-    #     return values
-
-    @field_validator("off")
+    @field_validator("deactivate")
     @classmethod
-    def off_to_offs(cls, off: OFF_TYPES) -> OFFS:
+    def deactivate_physics(cls, off: OFF_TYPES) -> OFFS:
         """Convert OFF to OFFS so list is rendered."""
         if isinstance(off, OFF):
-            return OFFS(physics=[off])
+            return OFFS(offs=[off])
+        for phys in PhysicsOff:
+            print(phys.value)
         return off
 
     @model_validator(mode="after")
@@ -335,8 +331,8 @@ class PHYSICS(BaseGroupComponent):
             repr += [self.surfbeat.cmd()]
         if self.scat is not None:
             repr += [self.scat.cmd()]
-        if self.off is not None:
-            repr += self.off.cmd()  # Object returns a list of components
+        if self.deactivate is not None:
+            repr += self.deactivate.cmd()  # Object returns a list of components
         return repr
 
 

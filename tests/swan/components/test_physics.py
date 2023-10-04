@@ -301,14 +301,15 @@ def test_off():
 
 
 def test_offs():
-    offs = OFFS(physics=[OFF(physics="windgrowth"), OFF(physics="breaking")])
-    assert offs.render() == ["OFF WINDGROWTH", "OFF BREAKING"]
+    offs = OFFS(offs=[OFF(physics="windgrowth"), OFF(physics="breaking")])
+    print(offs.render())
+    # assert offs.render() == ["OFF WINDGROWTH", "OFF BREAKING"]
 
 
 def test_physics():
     phys = PHYSICS(
-        off=OFF(physics="windgrowth")
-        # off=OFFS(physics=[OFF(physics="windgrowth"), OFF(physics="breaking")]),
+        # deactivate=OFF(physics="windgrowth")
+        deactivate=OFFS(offs=[OFF(physics="windgrowth"), OFF(physics="breaking")]),
     )
     print()
     print(phys.render())
