@@ -1,27 +1,25 @@
-project: # null
-  model_type: project
-  name: Test rompy setup
-  nr: '0001'
-
-set:
-  model_type: set
-  level: 0.0
-  depmin: 0.05
-  maxerr: 1
-  grav: 9.81
-  rho: 1025.0
-  cdcap: 0.0025
-  direction_convention: nautical
-
-mode:
-  model_type: mode
-  kind: nonstationary
-  dim: twodimensional
-
-coordinates:
-  model_type: coordinates
-  kind:
-    model_type: spherical
+startup:
+  project:
+    model_type: project
+    name: Test rompy setup
+    nr: '0001'
+  set:
+    model_type: set
+    level: 0.0
+    depmin: 0.05
+    maxerr: 1
+    grav: 9.81
+    rho: 1025.0
+    cdcap: 0.0025
+    direction_convention: nautical
+  mode:
+    model_type: mode
+    kind: nonstationary
+    dim: twodimensional
+  coordinates:
+    model_type: coordinates
+    kind:
+      model_type: spherical
 
 # cgrid:
 #   model_type: regular

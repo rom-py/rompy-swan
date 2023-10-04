@@ -14,7 +14,7 @@ class SwanGrid(RegularGrid):
     )
     exc: Optional[float] = Field(None, description="Missing value")
     gridfile: Optional[str] = Field(
-        None, description="Name of grid file to load", max_length=100
+        None, description="Name of grid file to load", max_length=36
     )
 
     @field_validator("grid_type")

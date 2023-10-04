@@ -2145,7 +2145,7 @@ class BRAGG_FILE(BRAGG):
     )
     fname: str = Field(
         description="Name of file containing the bottom spectrum",
-        max_length=40,
+        max_length=36,
     )
     idla: Optional[IDLA] = Field(
         default=None,
