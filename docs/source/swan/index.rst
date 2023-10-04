@@ -47,6 +47,7 @@ render an entire SWAN command line specification. The following modules are avai
     components/numerics
     components/output
     components/lockup
+    components/group
 
 * :doc:`components/startup`
 * :doc:`components/cgrid`
@@ -56,6 +57,7 @@ render an entire SWAN command line specification. The following modules are avai
 * :doc:`components/numerics`
 * :doc:`components/output`
 * :doc:`components/lockup`
+* :doc:`components/group`
 
 
 Subcomponents

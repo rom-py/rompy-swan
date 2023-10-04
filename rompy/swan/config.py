@@ -6,28 +6,19 @@ from pydantic import field_validator, Field, model_validator
 
 from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
 from rompy.swan.boundary import DataBoundary
-from rompy.swan.components import boundary, cgrid, inpgrid, physics, startup
+from rompy.swan.components import boundary, cgrid, inpgrid, physics, startup, group
+from rompy.swan.components.group import STARTUP, PHYSICS
 
 from .data import SwanDataGrid
 from .grid import SwanGrid
 
+
 logger = logging.getLogger(__name__)
+
 
 HERE = Path(__file__).parent
 
 DEFAULT_TEMPLATE = str(Path(__file__).parent.parent / "templates" / "swan")
-
-PROJECT_TYPES = startup.PROJECT
-SET_TYPES = startup.SET
-MODE_TYPES = startup.MODE
-COORDINATES_TYPES = startup.COORDINATES
-CGRID_TYPES = Union[cgrid.REGULAR, cgrid.CURVILINEAR, cgrid.UNSTRUCTURED]
-INPGRID_TYPES = inpgrid.INPGRIDS
-BOUNDARY_TYPES = Union[
-    boundary.BOUNDSPEC, boundary.BOUNDNEST1, boundary.BOUNDNEST2, boundary.BOUNDNEST3
-]
-INITIAL_TYPES = boundary.INITIAL
-PHYSICS_TYPES = physics.PHYSICS
 
 
 class OutputLocs(RompyBaseModel):
@@ -255,54 +246,46 @@ class SwanConfig(BaseConfig):
         return ret
 
 
-class SwanConfigComponents(BaseConfig):
-    """SWAN config class."""
 
-    model_type: Literal["swancomp"] = Field(
-        default="swancomp",
-        description="Model type discriminator",
+STARTUP_TYPE = Annotated[STARTUP, Field(description="Startup components")]
+INPGRID_TYPE = Annotated[inpgrid.INPGRIDS, Field(description="Inpgrid components")]
+INITIAL_TYPE = Annotated[boundary.INITIAL, Field(description="Initial component")]
+PHYSICS_TYPE = Annotated[PHYSICS, Field(description="Physics components")]
+CGRID_TYPES = Annotated[
+    Union[cgrid.REGULAR, cgrid.CURVILINEAR, cgrid.UNSTRUCTURED],
+    Field(description="Cgrid component", discriminator="model_type"),
+]
+BOUNDARY_TYPES = Annotated[
+    Union[
+        boundary.BOUNDSPEC,
+        boundary.BOUNDNEST1,
+        boundary.BOUNDNEST2,
+        boundary.BOUNDNEST3,
+    ],
+    Field(description="Boundary component", discriminator="model_type"),
+]
+
+
+class SwanConfigComponents(BaseConfig):
+    """SWAN config class.
+
+    TODO: Turn inpgrid/readgrid into group component.
+
+    """
+
+    model_type: Literal["swanconfig", "SWANCONFIG"] = Field(
+        default="swanconfig", description="Model type discriminator",
     )
     template: str = Field(
-        default=str(Path(__file__).parent.parent / "templates" / "swancomp"),
+        default=str(HERE.parent / "templates" / "swancomp"),
         description="The template for SWAN.",
     )
-    project: Optional[PROJECT_TYPES] = Field(
-        default=None,
-        description="SWAN PROJECT component",
-    )
-    set: Optional[SET_TYPES] = Field(
-        default=None,
-        description="SWAN SET component",
-    )
-    mode: Optional[MODE_TYPES] = Field(
-        default=None,
-        description="SWAN MODE component",
-    )
-    coordinates: Optional[COORDINATES_TYPES] = Field(
-        default=None,
-        description="SWAN COORDINATES component",
-    )
-    cgrid: Optional[CGRID_TYPES] = Field(
-        default=None,
-        description="SWAN CGRID component",
-        discriminator="model_type",
-    )
-    inpgrid: Optional[INPGRID_TYPES] = Field(
-        default=None, description="SWAN INPGRID components"
-    )
-    boundary: Optional[BOUNDARY_TYPES] = Field(
-        default=None,
-        description="SWAN BOUNDARY component",
-        discriminator="model_type",
-    )
-    initial: Optional[INITIAL_TYPES] = Field(
-        default=None,
-        description="SWAN INITIAL component",
-    )
-    physics: Optional[PHYSICS_TYPES] = Field(
-        default=None,
-        description="SWAN PHYSICS component",
-    )
+    startup: Optional[STARTUP_TYPE] = Field(default=None)
+    cgrid: Optional[CGRID_TYPES] = Field(default=None)
+    inpgrid: Optional[INPGRID_TYPE] = Field(default=None)
+    boundary: Optional[BOUNDARY_TYPES] = Field(default=None)
+    initial: Optional[INITIAL_TYPE] = Field(default=None)
+    physics: Optional[PHYSICS_TYPE] = Field(default=None)
 
     @model_validator(mode="after")
     def no_nor_if_spherical(self) -> "SwanConfigComponents":
@@ -351,4 +334,3 @@ class SwanConfigComponents(BaseConfig):
     def not_curvilinear_if_ray(self) -> "SwanConfigComponents":
         """Ensure bottom and water level grids are not curvilinear for RAY."""
         return self
-
