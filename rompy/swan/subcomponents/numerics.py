@@ -3,6 +3,7 @@ from typing import Literal, Optional, Union
 from pydantic import Field
 
 from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy.swan.subcomponents.time import DELT
 
 
 class BSBT(BaseSubComponent):
@@ -52,7 +53,7 @@ class GSE(BaseSubComponent):
         :okwarning:
 
         from rompy.swan.subcomponents.numerics import GSE
-        scheme = GSE(waveage=1, units="day")
+        scheme = GSE(waveage=dict(delt=1, dfmt="day")
         print(scheme.render())
 
     """
@@ -60,7 +61,7 @@ class GSE(BaseSubComponent):
     model_type: Literal["gse", "GSE"] = Field(
         default="gse", description="Model type discriminator"
     )
-    waveage: Optional[float] = Field(
+    waveage: Optional[DELT] = Field(
         default=None,
         description=(
             "The time interval used to determine the diffusion which counteracts the "
@@ -69,15 +70,12 @@ class GSE(BaseSubComponent):
             "to the travel time of the waves over the computational region."
         ),
     )
-    units: Literal["sec", "min", "hr", "day"] = Field(
-        default="hr", description="Units for waveage",
-    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "GSE"
         if self.waveage is not None:
-            repr += f" waveage={self.waveage} {self.units.upper()}"
+            repr += f" waveage={self.waveage.render()}"
         return repr
 
 

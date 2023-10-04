@@ -161,7 +161,7 @@ class STARTUP(BaseGroupComponent):
 
 
 # =====================================================================================
-# Physics group component
+# Physics
 # =====================================================================================
 NEGATINP_TYPE = Annotated[NEGATINP, Field(description="Negative wind input component")]
 QUADRUPL_TYPE = Annotated[QUADRUPL, Field(description="Quadruplets component")]
