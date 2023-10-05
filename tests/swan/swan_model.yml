@@ -21,16 +21,19 @@ startup:
     kind:
       model_type: spherical
 
-# cgrid:
-#   model_type: regular
-#   spectrum:
-#     mdc: 36
-#     flow: 0.04
-#     fhigh: 0.4
-#   xlenc: 100.0
-#   ylenc: 100.0
-#   mxc: 10
-#   myc: 10
+cgrid:
+  model_type: regular
+  spectrum:
+    mdc: 36
+    flow: 0.04
+    fhigh: 0.4
+  grid:
+    xp: 173
+    yp: -40
+    xlen: 2
+    ylen: 2
+    mx: 199
+    my: 199
 
 # inpgrid:
 #   inpgrids:
