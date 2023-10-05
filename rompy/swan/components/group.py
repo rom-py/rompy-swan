@@ -1,6 +1,6 @@
 """SWAN group components."""
 import logging
-from typing import Annotated, Literal, Optional, Union
+from typing import Annotated, Literal, Optional, Union, Any
 from pydantic import Field, model_validator, field_validator
 
 from rompy.swan.types import PhysicsOff
@@ -174,10 +174,7 @@ SETUP_TYPE = Annotated[SETUP, Field(description="Setup component")]
 DIFFRACTION_TYPE = Annotated[DIFFRACTION, Field(description="Diffraction component")]
 SURFBEAT_TYPE = Annotated[SURFBEAT, Field(description="Surfbeat component")]
 SCAT_TYPE = Annotated[SCAT, Field(description="Scattering component")]
-OFF_TYPES = Annotated[
-    Union[OFF, OFFS],
-    Field(description="Deactivate components", discriminator="model_type"),
-]
+OFF_TYPE = Annotated[OFFS, Field(description="Deactivate components")]
 GEN_TYPES = Annotated[
     Union[GEN1, GEN2, GEN3],
     Field(description="Wave generation component", discriminator="model_type"),
@@ -261,14 +258,12 @@ class PHYSICS(BaseGroupComponent):
     diffraction: Optional[DIFFRACTION_TYPE] = Field(default=None)
     surfbeat: Optional[SURFBEAT_TYPE] = Field(default=None)
     scat: Optional[SCAT_TYPE] = Field(default=None)
-    deactivate: Optional[OFF_TYPES] = Field(default=None)
+    deactivate: Optional[OFF_TYPE] = Field(default=None)
 
     @field_validator("deactivate")
     @classmethod
-    def deactivate_physics(cls, off: OFF_TYPES) -> OFFS:
+    def deactivate_physics(cls, off: OFF_TYPE) -> OFF_TYPE:
         """Convert OFF to OFFS so list is rendered."""
-        if isinstance(off, OFF):
-            return OFFS(offs=[off])
         for phys in PhysicsOff:
             print(phys.value)
         return off
@@ -341,18 +336,16 @@ class PHYSICS(BaseGroupComponent):
 # =====================================================================================
 FRAME_TYPE = Annotated[FRAME, Field(description="Frame locations component")]
 GROUP_TYPE = Annotated[GROUP, Field(description="Group locations component")]
+CURVE_TYPE = Annotated[CURVES, Field(description="Curve locations component")]
 RAY_TYPE = Annotated[RAY, Field(description="Ray locations component")]
 ISOLINE_TYPE = Annotated[ISOLINE, Field(description="Isoline locations component")]
+QUANTITY_TYPE = Annotated[QUANTITIES, Field(description="Quantity component")]
 OUTOPT_TYPE = Annotated[OUTPUT_OPTIONS, Field(description="Output options component")]
 BLOCK_TYPE = Annotated[BLOCK, Field(description="Block write component")]
 TABLE_TYPE = Annotated[TABLE, Field(description="Table write component")]
 SPECOUT_TYPE = Annotated[SPECOUT, Field(description="Spectra write component")]
 NESTOUT_TYPE = Annotated[NESTOUT, Field(description="Nest write component")]
 TEST_TYPE = Annotated[TEST, Field(description="Intermediate write component")]
-CURVE_TYPES = Annotated[
-    Union[CURVE, CURVES],
-    Field(description="Curve locations component", discriminator="model_type"),
-]
 POINTS_TYPES = Annotated[
     Union[POINTS, POINTS_FILE],
     Field(description="Points locations component", discriminator="model_type"),
@@ -360,10 +353,6 @@ POINTS_TYPES = Annotated[
 NGRID_TYPES = Annotated[
     Union[NGRID, NGRID_UNSTRUCTURED],
     Field(description="Ngrid locations component", discriminator="model_type")
-]
-QUANTITY_TYPES = Annotated[
-    Union[QUANTITY, QUANTITIES],
-    Field(description="Quantity component", discriminator="model_type")
 ]
 
 
@@ -444,12 +433,12 @@ class OUTPUT(BaseGroupComponent):
     )
     frame: Optional[FRAME_TYPE] = Field(default=None)
     group: Optional[GROUP_TYPE] = Field(default=None)
-    curve: Optional[CURVE_TYPES] = Field(default=None)
+    curve: Optional[CURVE_TYPE] = Field(default=None)
     ray: Optional[RAY_TYPE] = Field(default=None)
     isoline: Optional[ISOLINE_TYPE] = Field(default=None)
     points: Optional[POINTS_TYPES] = Field(default=None)
     ngrid: Optional[NGRID_TYPES] = Field(default=None)
-    quantity: Optional[QUANTITY_TYPES] = Field(default=None)
+    quantity: Optional[QUANTITY_TYPE] = Field(default=None)
     output_options: Optional[OUTOPT_TYPE] = Field(default=None)
     block: Optional[BLOCK_TYPE] = Field(default=None)
     table: Optional[TABLE_TYPE] = Field(default=None)
@@ -577,7 +566,7 @@ class OUTPUT(BaseGroupComponent):
         if self.group is not None:
             repr += [f"{self.group.cmd()}"]
         if self.curve is not None:
-            repr += [f"{self.curve.cmd()}"]
+            repr += self.curve.cmd() # Component renders a list
         if self.ray is not None:
             repr += [f"{self.ray.cmd()}"]
         if self.isoline is not None:
@@ -587,7 +576,7 @@ class OUTPUT(BaseGroupComponent):
         if self.ngrid is not None:
             repr += [f"{self.ngrid.cmd()}"]
         if self.quantity is not None:
-            repr += [f"{self.quantity.cmd()}"]
+            repr += self.quantity.cmd() # Component renders a list
         if self.output_options is not None:
             repr += [f"{self.output_options.cmd()}"]
         if self.block is not None:

@@ -28,7 +28,8 @@ def test_swan_model(tmpdir, config_dict):
         initial=config_dict["initial"],
         physics=config_dict["physics"],
         prop=config_dict["prop"],
-        # numerics=config_dict["numerics"],
+        numeric=config_dict["numeric"],
+        output=config_dict["output"],
     )
     model = ModelRun(
         run_id="test",
