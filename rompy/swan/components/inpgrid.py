@@ -10,6 +10,8 @@ from rompy.swan.subcomponents.readgrid import READINP
 from rompy.swan.types import GridOptions
 
 
+# TODO: Components are a bit mixed up here, define them a bit better.
+
 HERE = Path(__file__).parent
 
 

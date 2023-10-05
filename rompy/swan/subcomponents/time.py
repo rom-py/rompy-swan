@@ -124,8 +124,9 @@ class DELT(BaseSubComponent):
     @model_validator(mode="after")
     def to_time_unit(self) -> "DELT":
         """Convert interval value to the time unit specified."""
-        delt_scaling = {"sec": 1, "min": 60, "hr": 3600, "day": 86400}
-        self.delt = self.delt.total_seconds() / delt_scaling[self.dfmt]
+        if isinstance(self.delt, timedelta):
+            delt_scaling = {"sec": 1, "min": 60, "hr": 3600, "day": 86400}
+            self.delt = self.delt.total_seconds() / delt_scaling[self.dfmt]
         return self
 
     def cmd(self) -> str:
