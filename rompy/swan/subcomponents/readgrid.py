@@ -99,11 +99,10 @@ class READGRID(BaseSubComponent, ABC):
 
     This is the base class for all input grids. It is not meant to be used directly.
 
-    Notes
-    -----
+    Note
+    ----
 
-    File format identifier
-    ~~~~~~~~~~~~~~~~~~~~~~
+    File format identifier:
 
     * 1: Format according to BODKAR convention (a standard of the Ministry of
       Transport and Public Works in the Netherlands). Format string: (10X,12F5.0)
