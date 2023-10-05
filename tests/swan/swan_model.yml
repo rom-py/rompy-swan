@@ -74,22 +74,22 @@ inpgrid:
         time: '2023-02-01T00:00:00'
         tfmt: 1
 
-# boundary:
-#   model_type: boundspec
-#   shapespec:
-#     model_type: shapespec
-#     shape:
-#       model_type: tma
-#       d: 12.0
-#   location:
-#     model_type: side
-#     side: west
-#   data:
-#     model_type: constantpar
-#     hs: 1.0
-#     per: 10.0
-#     dir: 0.0
-#     dd: 10.0
+boundary:
+  model_type: boundspec
+  shapespec:
+    model_type: shapespec
+    shape:
+      model_type: tma
+      d: 12.0
+  location:
+    model_type: side
+    side: west
+  data:
+    model_type: constantpar
+    hs: 1.0
+    per: 10.0
+    dir: 0.0
+    dd: 10.0
 
 initial:
   model_type: initial
