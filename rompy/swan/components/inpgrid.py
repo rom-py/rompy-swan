@@ -113,6 +113,8 @@ class REGULAR(INPGRID):
         )
         print(inpgrid.render())
 
+    TODO: Use grid object, requires different grid parameters to be allowed.
+
     """
 
     model_type: Literal["regular", "REGULAR"] = Field(

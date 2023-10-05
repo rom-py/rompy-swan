@@ -35,39 +35,44 @@ cgrid:
     mx: 199
     my: 199
 
-# inpgrid:
-#   inpgrids:
-#   - model_type: regular
-#     grid_type: bottom
-#     xpinp: 0.0
-#     ypinp: 0.0
-#     alpinp: 0.0
-#     mxinp: 10
-#     myinp: 10
-#     dxinp: 0.1
-#     dyinp: 0.1
-#     excval: -999.0
-#     readinp:
-#       model_type: readinp
-#       fname1: bottom.txt
-#   - model_type: regular
-#     grid_type: wind
-#     xpinp: 0.0
-#     ypinp: 0.0
-#     alpinp: 0.0
-#     mxinp: 10
-#     myinp: 10
-#     dxinp: 0.1
-#     dyinp: 0.1
-#     excval: -999.0
-#     readinp:
-#       model_type: readinp
-#       fname1: wind.txt
-#     nonstationary:
-#       tbeg: '2023-01-01T00:00:00'
-#       delt: PT30M
-#       tend: '2023-02-01T00:00:00'
-#       deltfmt: hr
+inpgrid:
+  inpgrids:
+  - model_type: regular
+    grid_type: bottom
+    xpinp: 0.0
+    ypinp: 0.0
+    alpinp: 0.0
+    mxinp: 10
+    myinp: 10
+    dxinp: 0.1
+    dyinp: 0.1
+    excval: -999.0
+    readinp:
+      model_type: readinp
+      fname1: bottom.txt
+  - model_type: regular
+    grid_type: wind
+    xpinp: 0.0
+    ypinp: 0.0
+    alpinp: 0.0
+    mxinp: 10
+    myinp: 10
+    dxinp: 0.1
+    dyinp: 0.1
+    excval: -999.0
+    readinp:
+      model_type: readinp
+      fname1: wind.txt
+    nonstationary:
+      tbeg:
+        time: '2023-01-01T00:00:00'
+        tfmt: 1
+      delt:
+        delt: PT30M
+        dfmt: min
+      tend:
+        time: '2023-02-01T00:00:00'
+        tfmt: 1
 
 # boundary:
 #   model_type: boundspec
