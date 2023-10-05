@@ -53,7 +53,7 @@ class GSE(BaseSubComponent):
         :okwarning:
 
         from rompy.swan.subcomponents.numerics import GSE
-        scheme = GSE(waveage=dict(delt=86400, dfmt="day")
+        scheme = GSE(waveage=dict(delt=86400, dfmt="day"))
         print(scheme.render())
 
     """
@@ -80,32 +80,16 @@ class GSE(BaseSubComponent):
 
 
 class STAT(BaseSubComponent):
-    """Iteration termination for stationary computations.
+    """Computation parameters in stationary computation."""
 
-    .. code-block:: text
-
-        STAT [mxitst] [alfa]
-
-    Examples
-    --------
-    .. ipython:: python
-        :okwarning:
-
-        from rompy.swan.subcomponents.numerics import STAT
-        stat = STAT()
-        print(stat.render())
-        stat = STAT(mxitst=10, alfa=0.1)
-        print(stat.render())
-
-    """
     model_type: Literal["stat", "STAT"] = Field(
         default="stat", description="Model type discriminator"
     )
     mxitst: Optional[int] = Field(
         default=None,
         description=(
-            "Maximum number of iterations for stationary computations, the "
-            "computation stops when this number is exceeded (SWAN default: 50)"
+            "The maximum number of iterations for stationary computations. The "
+            "computation stops when this number is exceeded (SWAN default:  50)"
         ),
     )
     alfa: Optional[float] = Field(
@@ -120,7 +104,7 @@ class STAT(BaseSubComponent):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "STAT"
+        repr = "STATIONARY"
         if self.mxitst is not None:
             repr += f" mxitst={self.mxitst}"
         if self.alfa is not None:
@@ -129,39 +113,23 @@ class STAT(BaseSubComponent):
 
 
 class NONSTAT(BaseSubComponent):
-    """Iteration termination for nonstationary computations.
+    """Computation parameters in nonstationary computation."""
 
-    .. code-block:: text
-
-        NONSTAT [mxitst]
-
-    Examples
-    --------
-    .. ipython:: python
-        :okwarning:
-
-        from rompy.swan.subcomponents.numerics import NONSTAT
-        nonstat = NONSTAT()
-        print(nonstat.render())
-        nonstat = NONSTAT(mxitst=3)
-        print(nonstat.render())
-
-    """
     model_type: Literal["nonstat", "NONSTAT"] = Field(
         default="nonstat", description="Model type discriminator"
     )
     mxitst: Optional[int] = Field(
         default=None,
         description=(
-            "Maximum number of iterations for stationary computations, the "
-            "computation moves to the next time step when this number is exceeded "
-            "(SWAN default: 1)"
+            "The maximum number of iterations per time step for nonstationary "
+            "computations. The computation moves to the next time step when this "
+            "number is exceeded (SWAN default: `mxitns = 1`"
         ),
     )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "NONSTAT"
+        repr = "NONSTATIONARY"
         if self.mxitst is not None:
             repr += f" mxitst={self.mxitst}"
         return repr
@@ -244,9 +212,7 @@ class STOPC(BaseSubComponent):
     )
     mode: Optional[Union[STAT, NONSTAT]] = Field(
         default=None,
-        description=(
-            "Iteration termination criteria for stationary or nonstationary runs"
-        ),
+        description="Termination criteria for stationary or nonstationary runs",
         discriminator="model_type",
     )
     limiter: Optional[float] = Field(

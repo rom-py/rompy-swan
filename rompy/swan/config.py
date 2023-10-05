@@ -5,11 +5,11 @@ from typing import Annotated, Literal, Optional, Union
 from pydantic import field_validator, Field, model_validator
 
 from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
-from rompy.swan.boundary import DataBoundary
-from rompy.swan.components import boundary, cgrid, inpgrid, physics, numerics, startup, group
+from rompy.swan.forcing import ForcingData
+
+from rompy.swan.components import boundary, cgrid, inpgrid, numerics
 from rompy.swan.components.group import STARTUP, PHYSICS, OUTPUT, LOCKUP
 
-from .data import SwanDataGrid
 from .grid import SwanGrid
 
 
@@ -39,37 +39,6 @@ class OutputLocs(RompyBaseModel):
         ret = ""
         for coord in self.coords:
             ret += f"  {coord.lat} {coord.lon}\n"
-        return ret
-
-
-class ForcingData(RompyBaseModel):
-    """SWAN forcing data."""
-    bottom: SwanDataGrid | None = Field(None, description="Bathymetry data for SWAN")
-    wind: SwanDataGrid | None = Field(None, description="The wind data for SWAN.")
-    current: SwanDataGrid | None = Field(None, description="The current data for SWAN.")
-    boundary: DataBoundary | None = Field(
-        None, description="The boundary data for SWAN."
-    )
-
-    def get(self, grid: SwanGrid, period: TimeRange, staging_dir: Path):
-        forcing = []
-        boundary = []
-        for source in self:
-            if source[1]:
-                logger.info(f"\t Processing {source[0]} forcing")
-                source[1]._filter_grid(grid)
-                source[1]._filter_time(period)
-                if source[0] == "boundary":
-                    boundary.append(source[1].get(staging_dir, grid))
-                else:
-                    forcing.append(source[1].get(staging_dir, grid))
-        return dict(forcing="\n".join(forcing), boundary="\n".join(boundary))
-
-    def __str__(self):
-        ret = ""
-        for forcing in self:
-            if forcing[1]:
-                ret += f"\t{forcing[0]}: {forcing[1].source}\n"
         return ret
 
 
