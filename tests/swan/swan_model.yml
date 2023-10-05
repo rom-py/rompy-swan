@@ -190,7 +190,65 @@ prop:
     waveage:
       delt: 86400
       dfmt: day
-  # numeric: {}
 
+numeric:
+  stopc:
+    dabs: 0.05
+    drel: 0.01
+    curvat: 0.05
+    npnts: 99.5
+  mode:
+    model_type: nonstationary
+    mxitst: 3
+  dirimpl:
+    cdd: 0.5
+  sigimpl:
+    css: 0.5
+    eps2: 1e-4
+    outp: 0
+    niter: 20
+  ctheta: 
+    cfl: 0.9
+  csigma: 
+    cfl: 0.9
+  setup: 
+    eps2: 1e-4
+    outp: 0
+    niter: 20
 
-# PROP GSE waveage=1.0 DAY
+output:
+  points:
+    model_type: points
+    sname: outpts
+    xp: [172.3, 172.4]
+    yp: [-39, -39]
+  quantity:
+    model_type: quantities
+    quantities:
+      - output: [depth, hsign, tps, dir, tm01]
+        excv: -9
+      - output: [hswell]
+        fswell: 0.125
+  block:
+    sname: COMPGRID
+    fname: ./swangrid.nc
+    output: [depth, hsign, tps, dir]
+    time:
+      tbeg:
+        time: '2023-01-01T00:00:00'
+        tfmt: 1
+      delt:
+        delt: PT30M
+        dfmt: min
+  table:
+    sname: outpts
+    format: noheader
+    fname: ./swantable.nc
+    output: [hsign, hswell, dir, tps, tm01, watlev, qp]
+    time:
+      tbeg:
+        time: '2023-01-01T00:00:00'
+        tfmt: 1
+      delt:
+        delt: PT30M
+        dfmt: min

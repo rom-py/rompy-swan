@@ -30,3 +30,8 @@
 {% if config.prop %}{{config.prop.render()}}{% endif %}
 
 {% if config.numeric %}{{config.numeric.render()}}{% endif %}
+
+
+!----------------------------------------------------------- Output -------------------------------------------------------------
+
+{% if config.output %}{{config.output.render()}}{% endif %}

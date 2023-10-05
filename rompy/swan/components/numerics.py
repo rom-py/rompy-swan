@@ -89,6 +89,62 @@ class PROP(BaseComponent):
         return repr
 
 
+class STATIONARY(BaseComponent):
+    """Computation parameters in stationary computation."""
+
+    model_type: Literal["stationary", "STATIONARY"] = Field(
+        default="stationary", description="Model type discriminator"
+    )
+    mxitst: Optional[int] = Field(
+        default=None,
+        description=(
+            "The maximum number of iterations for stationary computations. The "
+            "computation stops when this number is exceeded (SWAN default:  50)"
+        ),
+    )
+    alfa: Optional[float] = Field(
+        default=None,
+        description=(
+            "Proportionality constant used in the frequency-dependent under-"
+            "relaxation technique. Based on experiences, a suggestion for this "
+            "parameter is `alfa = 0.01`. In case of diffraction computations, the use "
+            "of this parameter is recommended (SWAN default: 0.00)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "STATIONARY"
+        if self.mxitst is not None:
+            repr += f" mxitst={self.mxitst}"
+        if self.alfa is not None:
+            repr += f" alfa={self.alfa}"
+        return repr
+
+
+class NONSTATIONARY(BaseComponent):
+    """Computation parameters in stationary computation."""
+
+    model_type: Literal["nonstationary", "NONSTATIONARY"] = Field(
+        default="nonstationary", description="Model type discriminator"
+    )
+    mxitst: Optional[int] = Field(
+        default=None,
+        description=(
+            "The maximum number of iterations per time step for nonstationary "
+            "computations. The computation moves to the next time step when this "
+            "number is exceeded (SWAN default: `mxitns = 1`"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "NONSTATIONARY"
+        if self.mxitst is not None:
+            repr += f" mxitst={self.mxitst}"
+        return repr
+
+
 class NUMERIC(BaseComponent):
     """Numerical properties.
 
@@ -108,6 +164,7 @@ class NUMERIC(BaseComponent):
         print(numeric.render())
         numeric = NUMERIC(
             stopc=dict(dabs=0.05, drel=0.01, curvat=0.05, npnts=99.5),
+            mode=dict(model_type="nonstationary", mxitst=3)
             dirimpl=dict(cdd=0.5),
             sigimpl=dict(css=0.5, eps2=1e-4, outp=0, niter=20),
             ctheta=dict(cfl=0.9),
@@ -122,6 +179,11 @@ class NUMERIC(BaseComponent):
     )
     stopc: Optional[STOPC] = Field(
         default=None, description="Iteration termination criteria",
+    )
+    mode: Optional[Union[STATIONARY, NONSTATIONARY]] = Field(
+        default=None,
+        description="Define use of parameters in stationary or nonstationary mode",
+        discriminator="model_type",
     )
     dirimpl: Optional[DIRIMPL] = Field(
         default=None, description="Numerical scheme for refraction",
@@ -144,6 +206,8 @@ class NUMERIC(BaseComponent):
         repr = "NUMERIC"
         if self.stopc is not None:
             repr += f" {self.stopc.render()}"
+        if self.mode is not None:
+            repr += f" {self.mode.render()}"
         if self.dirimpl is not None:
             repr += f" {self.dirimpl.render()}"
         if self.sigimpl is not None:
