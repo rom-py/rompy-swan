@@ -36,6 +36,7 @@ cgrid:
     my: 199
 
 inpgrid:
+  model_type: inpgrids
   inpgrids:
   - model_type: regular
     grid_type: bottom
