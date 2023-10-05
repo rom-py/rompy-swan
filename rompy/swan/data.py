@@ -9,7 +9,8 @@ from pydantic import field_validator, Field, model_validator
 
 from rompy.core import DataGrid
 
-from .grid import SwanGrid
+from rompy.swan.grid import SwanGrid
+
 
 logger = logging.getLogger(__name__)
 
