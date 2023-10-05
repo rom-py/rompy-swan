@@ -2,10 +2,48 @@
 SWAN
 ====
 
-The SWAN command instructions are described in Rompy by a set of pydantic models
-defined as `components`. Each component defines a full command instruction such
-as `PROJECT`, `CGRID`, `GEN3`, etc. Inputs to the components may include other
-pydantic models called `subcomponents` to handle more complex arguments.
+TODO: Ensure the `model_type` is shown next to each class in the autosummaries.
+
+TODO: Fix broken links to classes and modules.
+
+Grid
+----
+
+.. autosummary::
+   :nosignatures:
+   :toctree: _generated/
+
+   rompy.swan.grid.SwanGrid
+
+
+Data
+----
+
+.. autosummary::
+    :nosignatures:
+    :toctree: _generated/
+
+    rompy.swan.data.SwanDataGrid
+    rompy.swan.boundary.DataBoundary
+
+
+Forcing
+-------
+
+.. autosummary::
+    :nosignatures:
+    :toctree: _generated/
+
+    rompy.swan.forcing.ForcingData
+
+
+Components
+----------
+
+SWAN command instructions are described in Rompy by a set of pydantic models defined as
+`components`. Each component defines a full command instruction such as `PROJECT`,
+`CGRID`, `GEN3`, NUMERIC, etc. Inputs to the components may include other pydantic
+models called `subcomponents` to handle more complex arguments.
 
 Components are subclasses of :py:class:`rompy.swan.components.base.BaseComponent`.
 The base component class implements the following attribues:
@@ -25,13 +63,6 @@ The base component class implements the following attribues:
   the model template to construct the specific command line instruction from that
   component, taking care of maximum line size, line break and line continuation.
 
-TODO: Ensure the `model_type` is shown next to each class in the autosummaries.
-
-TODO: Fix broken links to classes and modules.
-
-
-Components
-----------
 
 Components are defined within the :py:mod:`rompy.swan.components` subpackage and
 render an entire SWAN command line specification. The following modules are available:

@@ -397,10 +397,14 @@ class OUTPUT(BaseGroupComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import POINTS, BLOCK, QUANTITY, TABLE
+        from rompy.swan.components.output import POINTS, BLOCK, QUANTITIES, TABLE
         from rompy.swan.components.group import OUTPUT
         points = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
-        quantity = QUANTITY(output=["depth", "hsign", "tps", "dir", "tm01"], excv=-9)
+        quantity = QUANTITIES(
+            quantities=[
+                dict(output=["depth", "hsign", "tps", "dir", "tm01"], excv=-9),
+            ]
+        )
         times = dict(
             tbeg=dict(time="2012-01-01T00:00:00", tfmt=1),
             delt=dict(delt="PT30M", dfmt="min"),
@@ -630,7 +634,7 @@ class LOCKUP(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.lockup import LOCKUP
+        from rompy.swan.components.group import LOCKUP
         comp = dict(
             model_type="compute_hotfile",
             fname="./hotfile",

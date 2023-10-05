@@ -205,9 +205,10 @@ numeric:
     drel: 0.01
     curvat: 0.05
     npnts: 99.5
-  mode:
-    model_type: nonstationary
-    mxitst: 3
+    mode:
+      model_type: nonstat
+      mxitst: 3
+    limiter: 0.1
   dirimpl:
     cdd: 0.5
   sigimpl:
@@ -282,5 +283,5 @@ lockup:
           delt: PT30M
           dfmt: min
   hotfile:
-    fname: ./hotfile.swn
+    fname: ./hotfile.txt
     format: free

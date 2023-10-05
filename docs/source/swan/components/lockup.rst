@@ -4,14 +4,6 @@ Lock-up
 
 SWAN lock-up commands
 
-
-.. autosummary::
-    :nosignatures:
-    :toctree: _generated/
-
-    rompy.swan.components.lockup.LOCKUP
-
-
 .. autosummary::
     :nosignatures:
     :toctree: _generated/

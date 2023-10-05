@@ -2905,7 +2905,7 @@ class OFFS(BaseComponent):
         from rompy.swan.components.physics import OFFS
         off1 = dict(physics="windgrowth")
         off2 = dict(physics="wcapping")
-        offs = OFFS(physics=[off1, off2])
+        offs = OFFS(offs=[off1, off2])
         for off in offs.render():
             print(off)
 

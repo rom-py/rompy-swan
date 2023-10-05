@@ -5,13 +5,6 @@ Output
 SWAN output commands
 
 
-.. autosummary::
-    :nosignatures:
-    :toctree: _generated/
-
-    rompy.swan.components.output.OUTPUT
-
-
 Locations
 ~~~~~~~~~
 
