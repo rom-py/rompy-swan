@@ -159,6 +159,7 @@ class HOTFILE(BaseComponent):
     )
     fname: Path = Field(
         description="Name of the file to which the wave field is written",
+        max_length=36,
     )
     format: Optional[Literal["free", "unformatted"]] = Field(
         default=None,
@@ -276,83 +277,3 @@ class STOP(BaseComponent):
     def cmd(self) -> str:
         """Command file string for this component."""
         return "STOP"
-
-
-COMPUTE_TYPE = Annotated[
-    Union[COMPUTE, COMPUTE_HOTFILE], Field(discriminator="model_type"),
-]
-HOTFILE_TYPE = Annotated[HOTFILE, Field(description="Hotfile component")]
-
-
-class LOCKUP(BaseComponent):
-    """Lockup group component.
-
-    .. code-block:: text
-
-        COMPUTE ...
-        HOTFILE ...
-        COMPUTE ...
-        HOTFILE ...
-        ...
-        STOP
-
-    This is a group component to specify SWAN "Lockup" commands including multiple
-    `COMPUTE` commands that may or may not be interleaved with `HOTFILE` commands,
-    single `HOTFILE` commands, and a final `STOP` command.
-
-    Hotfile components can be specified in one (and only one) of two ways: either as a
-    `COMPUTE_HOTFILE` component instance in the `compute` field, or as a `HOTFILE`
-    component instance in the `hotfile` field (which case `compute` field must be
-    defined by a `COMPUTE` component instance).
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-
-        from rompy.swan.components.lockup import LOCKUP
-        comp = dict(
-            model_type="compute_hotfile",
-            fname="./hotfile",
-            times=dict(
-                model_type="nonstationary",
-                tbeg=dict(time="1990-01-01T00:00:00", tfmt=1),
-                tend=dict(time="1990-02-01T00:00:00", tfmt=1),
-                delt=dict(delt="PT1H", dfmt="hr"),
-            ),
-        )
-        lockup = LOCKUP(compute=[comp])
-        print(lockup.render())
-
-    """
-
-    model_type: Literal["lockup", "LOCKUP"] = Field(
-        default="lockup", description="Model type discriminator"
-    )
-    compute: list[COMPUTE_TYPE] = Field(description="List of Compute components")
-    hotfile: Optional[HOTFILE_TYPE] = Field(default=None)
-
-    @model_validator(mode="after")
-    def hotfile_specified_once(self) -> "LOCKUP":
-        """Ensure hotfile is specified only once."""
-        if isinstance(self.compute[0], COMPUTE_HOTFILE) and self.hotfile is not None:
-            raise ValueError(
-                "Hotfile specified both with COMPUTE_HOTFILE and HOTFILE components, "
-                "please ensure it is only specified once"
-            )
-        return self
-
-    def cmd(self) -> list:
-        """Command file strings for this component."""
-        repr = []
-        for compute in self.compute:
-            # COMPUTE returns a string while COMPUTE_HOTFILE returns a list
-            if compute.model_type.upper() == "COMPUTE":
-                repr += [compute.cmd()]
-            elif compute.model_type.upper() == "COMPUTE_HOTFILE":
-                repr += compute.cmd()
-        if self.hotfile is not None:
-            repr += [self.hotfile.render()]
-        repr += [STOP().render()]
-        return repr

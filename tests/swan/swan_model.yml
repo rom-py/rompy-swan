@@ -252,3 +252,27 @@ output:
       delt:
         delt: PT30M
         dfmt: min
+
+lockup:
+  compute:
+    - model_type: compute
+      times:
+        model_type: stationary
+        time:
+          time: '2023-01-01T00:00:00'
+          tfmt: 1
+    - model_type: compute
+      times:
+        model_type: nonstationary
+        tbeg:
+          time: '2023-01-01T00:00:00'
+          tfmt: 1
+        tend:
+          time: '2023-02-01T00:00:00'
+          tfmt: 1
+        delt:
+          delt: PT30M
+          dfmt: min
+  hotfile:
+    fname: ./hotfile.swn
+    format: free
