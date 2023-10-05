@@ -24,7 +24,7 @@ def test_swan_model(tmpdir, config_dict):
         startup=config_dict["startup"],
         cgrid=config_dict["cgrid"],
         inpgrid=config_dict["inpgrid"],
-        # boundary=config_dict["boundary"],
+        boundary=config_dict["boundary"],
         initial=config_dict["initial"],
         physics=config_dict["physics"],
         prop=config_dict["prop"],
