@@ -30,6 +30,7 @@ def test_swan_model(tmpdir, config_dict):
         prop=config_dict["prop"],
         numeric=config_dict["numeric"],
         output=config_dict["output"],
+        lockup=config_dict["lockup"],
     )
     model = ModelRun(
         run_id="test",
