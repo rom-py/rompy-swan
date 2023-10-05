@@ -20,6 +20,7 @@ from rompy.swan.components.output import (
     NGRID,
     NGRID_UNSTRUCTURED,
     QUANTITY,
+    QUANTITIES,
     OUTPUT_OPTIONS,
     BLOCK,
     TABLE,
@@ -63,6 +64,13 @@ def curve():
 
 
 @pytest.fixture(scope="module")
+def curves(curve):
+    curve2 = copy.deepcopy(curve)
+    curve2.sname = "curve2"
+    yield CURVES(curves=[curve, curve2])
+
+
+@pytest.fixture(scope="module")
 def ray():
     yield RAY(
         rname="outray",
@@ -98,6 +106,16 @@ def ngrid():
 @pytest.fixture(scope="module")
 def quantity():
     yield QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
+
+
+@pytest.fixture(scope="module")
+def quantities():
+    yield QUANTITIES(
+        quantities=[
+            QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5),
+            QUANTITY(output=["hswell"], fswell=0.125),
+        ],
+    )
 
 
 @pytest.fixture(scope="module")
@@ -308,12 +326,12 @@ def test_test_max50():
 def test_output_group_all_set(
         frame,
         group,
-        curve,
+        curves,
         ray,
         isoline,
         points,
         ngrid,
-        quantity,
+        quantities,
         output_options,
         block,
         table,
@@ -323,12 +341,12 @@ def test_output_group_all_set(
     output = OUTPUT(
         frame=frame,
         group=group,
-        curve=curve,
+        curve=curves,
         ray=ray,
         isoline=isoline,
         points=points,
         ngrid=ngrid,
-        quantity=quantity,
+        quantity=quantities,
         output_options=output_options,
         block=block,
         table=table,

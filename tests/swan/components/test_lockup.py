@@ -3,9 +3,8 @@ import pytest
 from pydantic import ValidationError
 
 from rompy.swan.subcomponents.time import NONSTATIONARY
-from rompy.swan.components.lockup import (
-    COMPUTE, HOTFILE, STOP, COMPUTE_HOTFILE, LOCKUP,
-)
+from rompy.swan.components.lockup import COMPUTE, HOTFILE, STOP, COMPUTE_HOTFILE
+from rompy.swan.components.group import LOCKUP
 
 
 @pytest.fixture(scope="module")

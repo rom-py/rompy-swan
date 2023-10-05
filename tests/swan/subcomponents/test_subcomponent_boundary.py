@@ -20,7 +20,7 @@ def test_side():
 
 
 def test_segment_xy():
-    seg = SEGMENT(points=dict(x=[0, 1, 2], y=[0, 1, 2]))
+    seg = SEGMENT(points=dict(model_type="xy", x=[0, 1, 2], y=[0, 1, 2]))
     assert seg.render().startswith("SEGMENT XY")
 
 

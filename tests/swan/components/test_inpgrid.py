@@ -12,7 +12,7 @@ from rompy.swan.components.inpgrid import (
     UNSTRUCTURED,
     READINP,
 )
-from rompy.swan.subcomponents.time import NONSTATIONARY
+from rompy.swan.subcomponents.time import NONSTATIONARY, TIME, DELT
 
 
 logger = logging.getLogger(__name__)
@@ -26,10 +26,9 @@ def readinp():
 @pytest.fixture(scope="module")
 def nonstat():
     inst = NONSTATIONARY(
-        tbeg="2023-01-01T00:00:00",
-        delt="PT30M",
-        tend="2023-02-01T00:00:00",
-        deltfmt="hr",
+        tbeg=TIME(time="2023-01-01T00:00:00"),
+        delt=DELT(delt="PT30M"),
+        tend=TIME(time="2023-02-01T00:00:00"),
     )
     yield inst
 
