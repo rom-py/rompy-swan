@@ -23,7 +23,7 @@ def test_swan_model(tmpdir, config_dict):
         template=str(HERE / "../../rompy/templates/swancomp"),
         startup=config_dict["startup"],
         cgrid=config_dict["cgrid"],
-        # inpgrid=config_dict["inpgrid"],
+        inpgrid=config_dict["inpgrid"],
         # boundary=config_dict["boundary"],
         initial=config_dict["initial"],
         physics=config_dict["physics"],
