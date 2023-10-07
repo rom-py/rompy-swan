@@ -4,13 +4,15 @@ from typing import Annotated, Literal, Optional, Union
 
 from pydantic import field_validator, Field, model_validator
 
-from rompy.core import BaseConfig, Coordinate, RompyBaseModel, Spectrum, TimeRange
-from rompy.swan.forcing import ForcingData
+from rompy.core import BaseConfig, RompyBaseModel, TimeRange
+from rompy.swan.forcing import ForcingData as ForcingDataNew
+
+from rompy.swan.legacy import ForcingData, SwanSpectrum, SwanPhysics, Outputs
 
 from rompy.swan.components import boundary, cgrid, inpgrid, numerics
 from rompy.swan.components.group import STARTUP, PHYSICS, OUTPUT, LOCKUP
 
-from .grid import SwanGrid
+from rompy.swan.grid import SwanGrid
 
 
 logger = logging.getLogger(__name__)
@@ -19,147 +21,6 @@ logger = logging.getLogger(__name__)
 HERE = Path(__file__).parent
 
 DEFAULT_TEMPLATE = str(Path(__file__).parent.parent / "templates" / "swan")
-
-
-class OutputLocs(RompyBaseModel):
-    """Output locations"""
-
-    coords: list[Coordinate] = Field(
-        [], description="list of coordinates to output spectra"
-    )
-    # coords: list[Coordinate] = [["115.61", "-32.618"], ["115.686067", "-32.532381"]]
-
-    def __repr__(self):
-        ret = __class__.__name__ + "\n"
-        for coord in self.coords:
-            ret += f"  {coord.lat} {coord.lon}\n"
-        return ret
-
-    def __str__(self):
-        ret = ""
-        for coord in self.coords:
-            ret += f"  {coord.lat} {coord.lon}\n"
-        return ret
-
-
-class SwanSpectrum(Spectrum):
-    """SWAN Spectrum"""
-
-    @property
-    def cmd(self):
-        return f"CIRCLE {self.ndirs} {self.fmin} {self.fmax} {self.nfreqs}"
-
-
-class SwanPhysics(RompyBaseModel):
-    """Container class represting configuraable SWAN physics options"""
-
-    friction: str = Field(
-        default="MAD",
-        description="The type of friction, either MAD, COLL, JON or RIP",
-    )
-    friction_coeff: float = Field(
-        default=0.1,
-        description="The coefficient of friction for the given surface and object.",
-    )
-
-    @field_validator("friction")
-    @classmethod
-    def validate_friction(cls, v):
-        if v not in ["JON", "COLL", "MAD", "RIP"]:
-            raise ValueError(
-                "friction must be one of JON, COLL, MAD or RIP"
-            )  # TODO Raf to add actual friction options
-        return v
-
-    @field_validator("friction_coeff")
-    @classmethod
-    def validate_friction_coeff(cls, v):
-        # TODO Raf to add sensible friction coeff range
-        if float(v) > 1:
-            raise ValueError("friction_coeff must be less than 1")
-        if float(v) < 0:
-            raise ValueError("friction_coeff must be greater than 0")
-        return v
-
-    @property
-    def cmd(self):
-        ret = ""
-        ret += f"GEN3 WESTH 0.000075 0.00175\n"
-        ret += f"BREAKING\n"
-        ret += f"FRICTION {self.friction} {self.friction_coeff}\n"
-        ret += "\n"
-        ret += f"TRIADS\n"
-        ret += "\n"
-        ret += f"PROP BSBT\n"
-        ret += f"NUM ACCUR 0.02 0.02 0.02 95 NONSTAT 20\n"
-        return ret
-
-
-class GridOutput(RompyBaseModel):
-    """Gridded outputs for SWAN"""
-
-    period: TimeRange | None = None
-    variables: list[str] = [
-        "DEPTH",
-        "UBOT",
-        "HSIGN",
-        "HSWELL",
-        "DIR",
-        "TPS",
-        "TM01",
-        "WIND",
-    ]
-
-    def __str__(self):
-        ret = "\tGrid:\n"
-        if self.period:
-            ret += f"\t\tperiod: {self.period}\n"
-        ret += f"\tvariables: {' '.join(self.variables)}\n"
-        return ret
-
-
-class SpecOutput(RompyBaseModel):
-    """Spectral outputs for SWAN"""
-    period: Optional[TimeRange] = Field(
-        None, description="Time range for which the spectral outputs are requested"
-    )
-    locations: Optional[OutputLocs] = Field(
-        OutputLocs(coords=[]),
-        description="Output locations for which the spectral outputs are requested",
-    )
-
-    def __str__(self):
-        ret = "\tSpec\n"
-        if self.period:
-            ret += f"\t\tperiod: {self.period}\n"
-        ret += f"\t\tlocations: {self.locations}\n"
-        return ret
-
-
-class Outputs(RompyBaseModel):
-    """Outputs for SWAN"""
-
-    grid: GridOutput = GridOutput()
-    spec: SpecOutput = SpecOutput()
-    _datefmt: str = "%Y%m%d.%H%M%S"
-
-    @property
-    def cmd(self):
-        out_intvl = "1.0 HR"  # Hardcoded for now, need to get from time object too TODO
-        ret = "OUTPUT OPTIONS BLOCK 8\n"
-        ret += f"BLOCK 'COMPGRID' HEADER 'outputs/swan_out.nc' LAYOUT 1 {' '.join(self.grid.variables)} OUT {self.grid.period.start.strftime(self._datefmt)} {out_intvl}\n"
-        ret += "\n"
-        if len(self.spec.locations.coords) > 0:
-            ret += f"POINTs 'pts' FILE 'out.loc'\n"
-            ret += f"SPECout 'pts' SPEC2D ABS 'outputs/spec_out.nc' OUTPUT {self.spec.period.start.strftime(self._datefmt)} {out_intvl}\n"
-            ret += f"TABle 'pts' HEADer 'outputs/tab_out.nc' TIME XP YP HS TPS TM01 DIR DSPR WIND OUTPUT {self.grid.period.start.strftime(self._datefmt)} {out_intvl}\n"
-        return ret
-
-    def __str__(self):
-        ret = ""
-        ret += f"{self.grid}"
-        ret += f"{self.spec}"
-        return ret
 
 
 class SwanConfig(BaseConfig):
@@ -217,7 +78,6 @@ class SwanConfig(BaseConfig):
 
 
 STARTUP_TYPE = Annotated[STARTUP, Field(description="Startup components")]
-INPGRID_TYPE = Annotated[inpgrid.INPGRIDS, Field(description="Inpgrid components")]
 INITIAL_TYPE = Annotated[boundary.INITIAL, Field(description="Initial component")]
 PHYSICS_TYPE = Annotated[PHYSICS, Field(description="Physics components")]
 PROP_TYPE = Annotated[numerics.PROP, Field(description="Propagation components")]
@@ -227,6 +87,10 @@ LOCKUP_TYPE = Annotated[LOCKUP, Field(description="Output components")]
 CGRID_TYPES = Annotated[
     Union[cgrid.REGULAR, cgrid.CURVILINEAR, cgrid.UNSTRUCTURED],
     Field(description="Cgrid component", discriminator="model_type"),
+]
+INPGRID_TYPES = Annotated[
+    Union[inpgrid.INPGRIDS, ForcingDataNew],
+    Field(description="Inpgrid components", discriminator="model_type")
 ]
 BOUNDARY_TYPES = Annotated[
     Union[
@@ -256,7 +120,7 @@ class SwanConfigComponents(BaseConfig):
     )
     startup: Optional[STARTUP_TYPE] = Field(default=None)
     cgrid: Optional[CGRID_TYPES] = Field(default=None)
-    inpgrid: Optional[INPGRID_TYPE] = Field(default=None)
+    inpgrid: Optional[INPGRID_TYPES] = Field(default=None)
     boundary: Optional[BOUNDARY_TYPES] = Field(default=None)
     initial: Optional[INITIAL_TYPE] = Field(default=None)
     physics: Optional[PHYSICS_TYPE] = Field(default=None)
@@ -311,4 +175,27 @@ class SwanConfigComponents(BaseConfig):
     @model_validator(mode="after")
     def not_curvilinear_if_ray(self) -> "SwanConfigComponents":
         """Ensure bottom and water level grids are not curvilinear for RAY."""
+        return self
+
+    # @property
+    # def domain(self):
+    #     output = f"CGRID {self.grid.cgrid} {self.spectral_resolution.cmd}\n"
+    #     output += f"{self.grid.cgrid_read}\n"
+    #     return output
+
+    def __call__(self, runtime) -> str:
+        ret = {}
+        # import ipdb; ipdb.set_trace()
+        # if not self.outputs.grid.period:
+        #     self.outputs.grid.period = runtime.period
+        # if not self.outputs.spec.period:
+        #     self.outputs.spec.period = runtime.period
+        # ret["grid"] = f"{self.domain}"
+        # ret["forcing"] = self.forcing.get(
+        #     self.grid, runtime.period, runtime.staging_dir
+        # )
+        # ret["physics"] = f"{self.physics.cmd}"
+        # ret["outputs"] = self.outputs.cmd
+        # ret["output_locs"] = self.outputs.spec.locations
+        # return ret
         return self
