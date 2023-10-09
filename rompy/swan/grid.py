@@ -85,7 +85,7 @@ class SwanGrid(RegularGrid):
     @property
     def cgrid(self):
         if self.grid_type == "REG":
-            return f"REG {self.x0} {self.y0} {self.rot} {self.dx*self.nx} {self.dy*self.ny} {self.nx-1:0.0f} {self.ny-1:0.0f}"
+            return f"REG {self.x0} {self.y0} {self.rot} {self.xlen} {self.ylen} {self.nx-1:0.0f} {self.ny-1:0.0f}"
         elif self.grid_type == "CURV":
             raise NotImplementedError("Curvilinear grids not supported yet")
             # return (f'CURVilinear {self.nx-1:0.0f} {self.ny-1:0.0f}',f'READGRID COOR 1 \'{os.path.basename(self.gridpath)}\' 1 0 1 FREE')
