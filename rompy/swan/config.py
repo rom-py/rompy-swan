@@ -11,6 +11,7 @@ from rompy.swan.legacy import ForcingData, SwanSpectrum, SwanPhysics, Outputs
 
 from rompy.swan.components import boundary, cgrid, inpgrid, numerics
 from rompy.swan.components.group import STARTUP, PHYSICS, OUTPUT, LOCKUP
+from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 
 from rompy.swan.grid import SwanGrid
 
@@ -90,7 +91,7 @@ CGRID_TYPES = Annotated[
 ]
 INPGRID_TYPES = Annotated[
     Union[inpgrid.INPGRIDS, ForcingDataNew],
-    Field(description="Inpgrid components", discriminator="model_type")
+    Field(description="Input grid components", discriminator="model_type")
 ]
 BOUNDARY_TYPES = Annotated[
     Union[
@@ -108,6 +109,8 @@ class SwanConfigComponents(BaseConfig):
 
     TODO: Turn inpgrid/readgrid into group component.
     TODO: Think of a way to integrate ouptut so time can be passed dynamically.
+    TODO: Merge `grid` and `cgrid` into a single input type.
+    TODO: Pass to and use `period` in: output, lockup
 
     """
 
@@ -118,6 +121,7 @@ class SwanConfigComponents(BaseConfig):
         default=str(HERE.parent / "templates" / "swancomp"),
         description="The template for SWAN.",
     )
+    grid: SwanGrid = Field(description="The model grid for the SWAN run")
     startup: Optional[STARTUP_TYPE] = Field(default=None)
     cgrid: Optional[CGRID_TYPES] = Field(default=None)
     inpgrid: Optional[INPGRID_TYPES] = Field(default=None)
@@ -177,25 +181,46 @@ class SwanConfigComponents(BaseConfig):
         """Ensure bottom and water level grids are not curvilinear for RAY."""
         return self
 
-    # @property
-    # def domain(self):
-    #     output = f"CGRID {self.grid.cgrid} {self.spectral_resolution.cmd}\n"
-    #     output += f"{self.grid.cgrid_read}\n"
-    #     return output
+    @model_validator(mode="after")
+    def set_cgrid_from_grid(self) -> "SwanConfigComponents":
+        """Temporary hack to adjust cgrid parameters from grid."""
+        self.cgrid.grid = GRIDREGULAR(
+            xp=self.grid.x0,
+            yp=self.grid.y0,
+            alp=self.grid.rot,
+            xlen=self.grid.xlen,
+            ylen=self.grid.ylen,
+            mx=self.grid.nx - 1,
+            my=self.grid.ny - 1,
+            suffix="c",
+        )
+        return self
 
     def __call__(self, runtime) -> str:
+        grid = self.grid
+        period = runtime.period
+        staging_dir = runtime.staging_dir
+
         ret = {}
-        # import ipdb; ipdb.set_trace()
-        # if not self.outputs.grid.period:
-        #     self.outputs.grid.period = runtime.period
-        # if not self.outputs.spec.period:
-        #     self.outputs.spec.period = runtime.period
-        # ret["grid"] = f"{self.domain}"
-        # ret["forcing"] = self.forcing.get(
-        #     self.grid, runtime.period, runtime.staging_dir
-        # )
-        # ret["physics"] = f"{self.physics.cmd}"
-        # ret["outputs"] = self.outputs.cmd
-        # ret["output_locs"] = self.outputs.spec.locations
-        # return ret
-        return self
+
+        if self.startup:
+            ret["startup"] = self.startup.render()
+        if self.cgrid:
+            ret["cgrid"] = self.cgrid.render()
+        if self.inpgrid:
+            ret["inpgrid"] = self.inpgrid.render(grid, period, staging_dir)
+        if self.boundary:
+            ret["boundary"] = self.boundary.render()
+        if self.initial:
+            ret["initial"] = self.initial.render()
+        if self.physics:
+            ret["physics"] = self.physics.render()
+        if self.prop:
+            ret["prop"] = self.prop.render()
+        if self.numeric:
+            ret["numeric"] = self.numeric.render()
+        if self.output:
+            ret["output"] = self.output.render()
+        if self.lockup:
+            ret["lockup"] = self.lockup.render()
+        return ret

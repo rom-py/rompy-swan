@@ -1,42 +1,40 @@
 !------------------------------------------------------------ Startup -------------------------------------------------------------
 
-{% if config.startup %}{{config.startup.render()}}{% endif %}
-
+{% if config.get("startup") %}{{config.startup}}{% endif %}
 
 !------------------------------------------------------- Computational Grid -------------------------------------------------------
 
-{% if config.cgrid %}{{config.cgrid.render()}}{% endif %}
 
+{% if config.get("cgrid") %}{{config.cgrid}}{% endif %}
 
 !----------------------------------------------------------- Input Grids ----------------------------------------------------------
 
-{% if config.inpgrid %}{{config.inpgrid.render()}}{% endif %}
+{% if config.get("inpgrid") %}{{config.inpgrid}}{% endif %}
 
 
 !------------------------------------------------- Boundary and Initial conditions ------------------------------------------------
 
-{% if config.boundary %}{{config.boundary.render()}}{% endif %}
+{% if config.get("boundary") %}{{config.boundary}}{% endif %}
 
-{% if config.initial %}{{config.initial.render()}}{% endif %}
+{% if config.get("initial") %}{{config.initial}}{% endif %}
 
 
 !------------------------------------------------------------ Physics -------------------------------------------------------------
 
-{% if config.physics %}{{config.physics.render()}}{% endif %}
+{% if config.get("physics") %}{{config.physics}}{% endif %}
 
 
 !----------------------------------------------------------- Numerics -------------------------------------------------------------
 
-{% if config.prop %}{{config.prop.render()}}{% endif %}
-
-{% if config.numeric %}{{config.numeric.render()}}{% endif %}
+{% if config.get("prop") %}{{config.prop}}{% endif %}
+{% if config.get("numeric") %}{{config.numeric}}{% endif %}
 
 
 !----------------------------------------------------------- Output -------------------------------------------------------------
 
-{% if config.output %}{{config.output.render()}}{% endif %}
+{% if config.get("output") %}{{config.output}}{% endif %}
 
 
 !----------------------------------------------------------- Lockup -------------------------------------------------------------
 
-{% if config.lockup %}{{config.lockup.render()}}{% endif %}
+{% if config.get("lockup") %}{{config.lockup}}{% endif %}
