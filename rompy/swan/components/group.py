@@ -87,7 +87,7 @@ class BaseGroupComponent(BaseComponent):
         default="group", description="Model type discriminator"
     )
 
-    def render(self) -> str:
+    def render(self, *args, **kwargs) -> str:
         """Override base class to allow rendering list of components."""
         cmds = []
         for cmd in self.cmd():
