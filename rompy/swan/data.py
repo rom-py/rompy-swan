@@ -1,6 +1,7 @@
 import logging
 import os
 from pathlib import Path
+from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -10,6 +11,7 @@ from pydantic import field_validator, Field, model_validator
 from rompy.core import DataGrid
 
 from rompy.swan.grid import SwanGrid
+from rompy.swan.types import GridOptions
 
 
 logger = logging.getLogger(__name__)
@@ -20,25 +22,30 @@ FILL_VALUE = -99.0
 class SwanDataGrid(DataGrid):
     """This class is used to write SWAN data from a dataset."""
 
-    z1: str = Field(
-        description="Scaler paramater or u componet of vector field",
+    z1: Optional[str] = Field(
         default=None,
+        description=(
+            "Name of the data variable in dataset representing either a scaler "
+            "parameter or the u-componet of a vector field"
+        ),
     )
-    z2: str = Field(description="v componet of vector field", default=None)
-    var: str = Field(
-        description="SWAN variable name (WIND, BOTTOM, CURRENT)",
-        default="WIND",
+    z2: Optional[str] = Field(
+        default=None,
+        description=(
+            "Name of the data variable in dataset representing "
+            "the v-componet of a vector field"
+        ),
     )
+    var: GridOptions = Field(description="SWAN input grid name")
     fac: float = Field(
         description=(
-            "SWAN multiplies all values that are read from file by `fac`. For instance "
-            "if the values are given in unit decimeter, one should make `fac=0.1` to "
-            "obtain values in m. To change sign use a negative `fac`."
+            "SWAN multiplies all values that are read from file by `fac`. For "
+            "instance if the values are given in unit decimeter, one should make "
+            "`fac=0.1` to obtain values in m. To change sign use a negative `fac`"
         ),
         default=1.0,
     )
 
-    # root validator
     @model_validator(mode="after")
     def ensure_z1_in_data_vars(self) -> "SwanDataGrid":
         data_vars = self.variables
@@ -48,13 +55,6 @@ class SwanDataGrid(DataGrid):
                 data_vars.append(z)
         self.variables = data_vars
         return self
-
-    @field_validator("var")
-    @classmethod
-    def var_must_be_one_of_wind_bathy_current(cls, v: str) -> str:
-        if v not in ["WIND", "BOTTOM", "CURRENT"]:  # Raf to add any others here
-            raise ValueError(f"var must be one of WIND, BOTTOM, CURRENT")
-        return v
 
     def get(self, staging_dir: str, grid: SwanGrid = None):
         """Write the data to a SWAN grid file.
@@ -79,9 +79,9 @@ class SwanDataGrid(DataGrid):
             written to the SWAN input file.
 
         """
-        output_file = os.path.join(staging_dir, f"{self.id}.grd")
-        logger.info(f"\tWriting {self.id} to {output_file}")
-        if self.var == "BOTTOM":
+        output_file = os.path.join(staging_dir, f"{self.var}.grd")
+        logger.info(f"\tWriting {self.var} to {output_file}")
+        if self.var == "bottom":
             inpgrid, readgrid = self.ds.swan.to_bottom_grid(
                 output_file,
                 fmt="%4.2f",
@@ -101,12 +101,12 @@ class SwanDataGrid(DataGrid):
                 z2=self.z2,
                 fac=self.fac,
                 rot=0.0,
-                var=self.var,
+                var=self.var.name,
             )
         return f"{inpgrid}\n{readgrid}\n"
 
     def __str__(self):
-        return f"SWANDataGrid {self.id}"
+        return f"SWANDataGrid {self.var.name}"
 
 
 def dset_to_swan(
