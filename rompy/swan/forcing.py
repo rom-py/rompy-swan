@@ -24,36 +24,45 @@ class ForcingData(RompyBaseModel):
 
         from rompy.swan.forcing import ForcingData
 
+    TODO: Should we simplify it and have one single list field?
+
     """
     model_type: Literal["forcing", "FORCING"] = Field(
         default="forcing", description="Model type discriminator"
     )
     bottom: Optional[SwanDataGrid] = Field(default=None, description="Bathymetry data")
-    wind: Optional[SwanDataGrid] = Field(default=None, description="Wind input data")
-    current: Optional[SwanDataGrid] = Field(
-        default=None, description="Current input data"
-    )
-    boundary: Optional[DataBoundary] = Field(
-        default=None, description="Boundary input data"
-    )
+    input: list[SwanDataGrid] = Field(default=[], description="Input grid data")
+    boundary: Optional[DataBoundary] = Field(default=None, description="Boundary data")
 
     def get(self, grid: SwanGrid, period: TimeRange, staging_dir: Path):
-        forcing = []
-        boundary = []
-        for source in self:
-            if source[1]:
-                logger.info(f"\t Processing {source[0]} forcing")
-                source[1]._filter_grid(grid)
-                source[1]._filter_time(period)
-                if source[0] == "boundary":
-                    boundary.append(source[1].get(staging_dir, grid))
-                else:
-                    forcing.append(source[1].get(staging_dir, grid))
-        return dict(forcing="\n".join(forcing), boundary="\n".join(boundary))
+        cmds = []
+        # Bottom grid
+        if self.bottom is not None:
+            self.bottom._filter_grid(grid)
+            self.bottom._filter_time(period)
+            cmds.append(self.bottom.get(staging_dir, grid))
+        # Input grids
+        for input in self.input:
+            input._filter_grid(grid)
+            input._filter_time(period)
+            cmds.append(input.get(staging_dir, grid))
+        # Boundary data
+        if self.boundary is not None:
+            self.boundary._filter_grid(grid)
+            self.boundary._filter_time(period)
+            cmds.append(self.boundary.get(staging_dir, grid))
+        return "\n".join(cmds)
+
+    def render(self, *args, **kwargs):
+        """Make this class consistent with the components API."""
+        return self.get(*args, **kwargs)
 
     def __str__(self):
         ret = ""
-        for forcing in self:
-            if forcing[1]:
-                ret += f"\t{forcing[0]}: {forcing[1].source}\n"
+        if self.bottom:
+            ret += self.bottom.source
+        for input in self.input:
+            ret += input.source
+        if self.boundary:
+            ret += self.boundary.source
         return ret
