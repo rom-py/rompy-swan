@@ -1,6 +1,6 @@
 """Readgrid subcomponents."""
 import logging
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 from abc import ABC
 
 from pydantic import Field, model_validator, field_validator
@@ -115,7 +115,7 @@ class READGRID(BaseSubComponent, ABC):
     model_type: Literal["readgrid", "READGRID"] = Field(
         default="readgrid", description="Model type discriminator"
     )
-    grid_type: GridOptions | Literal["coordinates"] = Field(
+    grid_type: Union[GridOptions, Literal["coordinates"]] = Field(
         description="Type of the SWAN grid file",
     )
     fac: float = Field(

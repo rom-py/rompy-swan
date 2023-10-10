@@ -255,7 +255,8 @@ class TimeRangeClosed(TimeRangeOpen):
     def __call__(self) -> list[Time]:
         """Returns the list of Time objects."""
         times = pd.date_range(start=self.tbeg, end=self.tend, freq=self.delt)
-        return [Time(time=time, tfmt=self.tfmt) for time in times]
+        # return [Time(time=time, tfmt=self.tfmt) for time in times]
+        return [time.to_pydatetime() for time in times]
 
     def __getitem__(self, index) -> Time | list[Time]:
         """Slicing from the times array."""
@@ -344,43 +345,43 @@ class STATIONARY(BaseSubComponent):
         return f"STATIONARY time={Time(time=self.time, tfmt=self.tfmt).render()}"
 
 
-class STATIONARIES(BaseSubComponent):
-    """Multiple stationary time specifications.
+# class STATIONARIES(BaseSubComponent):
+#     """Multiple stationary time specifications.
 
-    .. code-block:: text
+#     .. code-block:: text
 
-        STATIONARY [time]
-        STATIONARY [time]
-        STATIONARY [time]
-        .
-        .
+#         STATIONARY [time]
+#         STATIONARY [time]
+#         STATIONARY [time]
+#         .
+#         .
 
-    Examples
-    --------
+#     Examples
+#     --------
 
-    .. ipython:: python
-        :okwarning:
+#     .. ipython:: python
+#         :okwarning:
 
-        from rompy.swan.subcomponents.time import STATIONARIES
-        stats = STATIONARIES(
-            times=dict(
-                tbeg="2012-01-01T00:00:00", tend="2012-02-01T00:00:00", delt="PT1H"
-            ),
-        )
-        print(stats.render())
+#         from rompy.swan.subcomponents.time import STATIONARIES
+#         stats = STATIONARIES(
+#             times=dict(
+#                 tbeg="2012-01-01T00:00:00", tend="2012-02-01T00:00:00", delt="PT1H"
+#             ),
+#         )
+#         print(stats.render())
 
-    """
+#     """
 
-    model_type: Literal["stationaries", "STATIONARIES"] = Field(
-        default="stationaries", description="Model type discriminator"
-    )
-    times: TimeRangeClosed = Field(
-        description="Times to which stationary runs are to be made"
-    )
+#     model_type: Literal["stationaries", "STATIONARIES"] = Field(
+#         default="stationaries", description="Model type discriminator"
+#     )
+#     times: TimeRangeClosed = Field(
+#         description="Times to which stationary runs are to be made"
+#     )
 
-    def cmd(self) -> str:
-        """Render subcomponent cmd."""
-        repr = ""
-        for time in self.times():
-            repr +=f"\nSTATIONARY {time.render()}"        
-        return repr
+#     def cmd(self) -> str:
+#         """Render subcomponent cmd."""
+#         repr = ""
+#         for time in self.times():
+#             repr +=f"\nSTATIONARY {time.render()}"        
+#         return repr
