@@ -268,74 +268,6 @@ class TimeRangeClosed(TimeRangeOpen):
         return repr
 
 
-class TIMERANGE(BaseSubComponent):
-    """Regular times specification.
-
-    .. code-block:: text
-
-        [tbeg] [delt] SEC|MIN|HR|DAY
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-
-        from rompy.swan.subcomponents.time import TIMERANGE
-        from datetime import datetime, timedelta
-        times = TIMERANGE(
-            tbeg=dict(time=datetime(1990, 1, 1)),
-            tend=dict(time=datetime(1990, 1, 7)),
-            delt=dict(delt=timedelta(minutes=30), dfmt="min"),
-        )
-        print(times.render())
-        times = TIMERANGE(
-            tbeg=dict(time="2012-01-01T00:00:00", tfmt=2),
-            delt=dict(delt="PT1H", dfmt="hr"),
-            suffix="blk",
-        )
-        print(times.render())
-
-    """
-
-    model_type: Literal["timerange", "TIMERANGE"] = Field(
-        default="timerange", description="Model type discriminator"
-    )
-    tbeg: Time = Field(description="Begin time of the first field of the variable")
-    delt: Delt = Field(description="Time interval between fields")
-    tend: Optional[Time] = Field(
-        default=None,
-        description="End time of the last field of the variable",
-    )
-    suffix: str = Field(
-        default="",
-        description="Suffix to prepend to argument names when rendering",
-    )
-
-    def __call__(self):
-        """Returns the list of datetime objects."""
-        if self.tend is None:
-            raise ValueError("`tend` must be defined to construct a list of times")
-        times = pd.date_range(
-            start=self.tbeg.time,
-            end=self.tend.time,
-            freq=self.delt.delt,
-        )
-        return [Time(time=time, tfmt=self.tbeg.tfmt) for time in times]
-
-    def __getitem__(self, index):
-        """Slicing from the times array."""
-        return self.__call__()[index]
-
-    def cmd(self) -> str:
-        """Render subcomponent cmd."""
-        repr = f"tbeg{self.suffix}={self.tbeg.render()}"
-        repr += f" delt{self.suffix}={self.delt.render()}"
-        if self.tend is not None:
-            repr += f" tend{self.suffix}={self.tend.render()}"
-        return repr
-
-
 class NONSTATIONARY(TimeRangeClosed):
     """Nonstationary time specification.
 
@@ -445,13 +377,6 @@ class STATIONARIES(BaseSubComponent):
     times: TimeRangeClosed = Field(
         description="Times to which stationary runs are to be made"
     )
-
-    @field_validator("times")
-    @classmethod
-    def tend_must_be_defined(cls, times: TIMERANGE) -> TIMERANGE:
-        if times.tend is None:
-            raise ValueError("`tend` must be defined for `STATIONARIES`")
-        return times
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
