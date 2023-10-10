@@ -25,8 +25,8 @@ Locations
     rompy.swan.components.output.NGRID_UNSTRUCTURED
 
 
-Write / plot
-~~~~~~~~~~~~
+Settings
+~~~~~~~~
 
 .. autosummary::
     :nosignatures:
@@ -35,6 +35,16 @@ Write / plot
     rompy.swan.components.output.QUANTITY
     rompy.swan.components.output.QUANTITIES
     rompy.swan.components.output.OUTPUT_OPTIONS
+
+
+Write
+~~~~~
+
+.. autosummary::
+    :nosignatures:
+    :toctree: _generated/
+
+    rompy.swan.components.output.BaseWrite
     rompy.swan.components.output.BLOCK
     rompy.swan.components.output.TABLE
     rompy.swan.components.output.SPECOUT

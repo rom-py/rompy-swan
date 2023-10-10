@@ -8,8 +8,10 @@ Sub-commands to support time definition
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.subcomponents.time.TIME
-    rompy.swan.subcomponents.time.DELT
-    rompy.swan.subcomponents.time.TIMERANGE
-    rompy.swan.subcomponents.time.STATIONARY
+    rompy.swan.subcomponents.time.Time
+    rompy.swan.subcomponents.time.Delt
+    rompy.swan.subcomponents.time.TimeRangeOpen
+    rompy.swan.subcomponents.time.TimeRangeClosed
     rompy.swan.subcomponents.time.NONSTATIONARY
+    rompy.swan.subcomponents.time.STATIONARY
+    rompy.swan.subcomponents.time.STATIONARIES
