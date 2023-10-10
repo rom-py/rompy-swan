@@ -3,7 +3,7 @@ from typing import Literal, Optional, Union
 from pydantic import Field
 
 from rompy.swan.subcomponents.base import BaseSubComponent
-from rompy.swan.subcomponents.time import DELT
+from rompy.swan.subcomponents.time import Delt
 
 
 class BSBT(BaseSubComponent):
@@ -61,7 +61,7 @@ class GSE(BaseSubComponent):
     model_type: Literal["gse", "GSE"] = Field(
         default="gse", description="Model type discriminator"
     )
-    waveage: Optional[DELT] = Field(
+    waveage: Optional[Delt] = Field(
         default=None,
         description=(
             "The time interval used to determine the diffusion which counteracts the "

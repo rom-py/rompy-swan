@@ -281,46 +281,32 @@ output:
     sname: COMPGRID
     fname: ./swangrid.nc
     output: [depth, hsign, tps, dir]
-    time:
-      tbeg:
-        time: '2023-01-01T00:00:00'
-        tfmt: 1
-      delt:
-        delt: PT30M
-        dfmt: min
+    times:
+      tbeg: '2023-01-01T00:00:00'
+      delt: PT30M
+      tfmt: 1
+      dfmt: min
   table:
     sname: outpts
     format: noheader
     fname: ./swantable.nc
     output: [hsign, hswell, dir, tps, tm01, watlev, qp]
-    time:
-      tbeg:
-        time: '2023-01-01T00:00:00'
-        tfmt: 1
-      delt:
-        delt: PT30M
-        dfmt: min
 
 lockup:
   compute:
     - model_type: compute
       times:
         model_type: stationary
-        time:
-          time: '2023-01-01T00:00:00'
-          tfmt: 1
+        time: '2023-01-01T00:00:00'
+        tfmt: 1
     - model_type: compute
       times:
         model_type: nonstationary
-        tbeg:
-          time: '2023-01-01T00:00:00'
-          tfmt: 1
-        tend:
-          time: '2023-02-01T00:00:00'
-          tfmt: 1
-        delt:
-          delt: PT30M
-          dfmt: min
+        tbeg: '2023-01-01T00:00:00'
+        tend: '2023-02-01T00:00:00'
+        delt: PT30M
+        tfmt: 1
+        dfmt: min
   hotfile:
     fname: ./hotfile.txt
     format: free

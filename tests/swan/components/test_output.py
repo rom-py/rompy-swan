@@ -4,7 +4,7 @@ import pytest
 import numpy as np
 from pydantic import ValidationError
 
-from rompy.swan.subcomponents.time import TIMERANGE
+from rompy.swan.subcomponents.time import TimeRangeOpen
 from rompy.swan.components.group import OUTPUT
 from rompy.swan.components.output import (
     SPECIAL_NAMES,
@@ -32,10 +32,7 @@ from rompy.swan.components.output import (
 
 @pytest.fixture(scope="module")
 def times():
-    yield TIMERANGE(
-        tbeg=dict(time="1990-01-01T00:00:00", tfmt=1),
-        delt=dict(delt="PT1H", dfmt="hr"),
-    )
+    yield TimeRangeOpen(tbeg="1990-01-01T00:00:00", delt="PT1H", tfmt=1, dfmt="hr")
 
 
 @pytest.fixture(scope="module")
@@ -131,7 +128,7 @@ def block(times):
         fname="./output-grid.nc",
         idla=3,
         output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-        time=times,
+        times=times,
     )
 
 
@@ -142,7 +139,7 @@ def table(times):
         format="noheader",
         fname="./output_table.nc",
         output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-        time=times,
+        times=times,
     )
 
 
@@ -153,13 +150,13 @@ def specout(times):
         dim=dict(model_type="spec2d"),
         freq=dict(model_type="rel"),
         fname="./specout.nc",
-        time=times,
+        times=times,
     )
 
 
 @pytest.fixture(scope="module")
 def nestout(times):
-    yield NESTOUT(sname="outnest", fname="./nestout.swn", time=times)
+    yield NESTOUT(sname="outnest", fname="./nestout.swn", times=times)
 
 
 @pytest.fixture(scope="module")

@@ -405,23 +405,20 @@ class OUTPUT(BaseGroupComponent):
                 dict(output=["depth", "hsign", "tps", "dir", "tm01"], excv=-9),
             ]
         )
-        times = dict(
-            tbeg=dict(time="2012-01-01T00:00:00", tfmt=1),
-            delt=dict(delt="PT30M", dfmt="min"),
-        )
+        times = dict(tbeg="2012-01-01T00:00:00", delt="PT30M", tfmt=1, dfmt="min")
         block = BLOCK(
             model_type="block",
             sname="COMPGRID",
             fname="./swangrid.nc",
             output=["depth", "hsign", "tps", "dir"],
-            time=times,
+            times=times,
         )
         table = TABLE(
             sname="outpts",
             format="noheader",
             fname="./swantable.nc",
             output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-            time=times,
+            times=times,
         )
         out = OUTPUT(
             points=points,
@@ -535,12 +532,12 @@ class OUTPUT(BaseGroupComponent):
     @property
     def locations_set(self):
         """List of specified location fields."""
-        return [fld for fld in self.__fields_set__ if fld in self._location_fields]
+        return [fld for fld in self.model_fields_set if fld in self._location_fields]
 
     @property
     def write_set(self):
         """List of specified write fields."""
-        return [fld for fld in self.__fields_set__ if fld in self._write_fields]
+        return [fld for fld in self.model_fields_set if fld in self._write_fields]
 
     @property
     def snames(self):
@@ -563,7 +560,7 @@ class OUTPUT(BaseGroupComponent):
                     return obj
         raise ValueError(f"Location component with sname='{sname}' not found")
 
-    def cmd(self) -> str:
+    def cmd(self) -> list:
         """Command file string for this component."""
         repr = []
         if self.frame is not None:
@@ -640,9 +637,11 @@ class LOCKUP(BaseComponent):
             fname="./hotfile",
             times=dict(
                 model_type="nonstationary",
-                tbeg=dict(time="1990-01-01T00:00:00", tfmt=1),
-                tend=dict(time="1990-02-01T00:00:00", tfmt=1),
-                delt=dict(delt="PT1H", dfmt="hr"),
+                tbeg="1990-01-01T00:00:00",
+                tend="1990-02-01T00:00:00",
+                delt="PT1H",
+                tfmt=1,
+                dfmt="hr",
             ),
         )
         lockup = LOCKUP(compute=[comp])
