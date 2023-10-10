@@ -8,7 +8,7 @@ from rompy.swan.types import BlockOptions, IDLA
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.base import XY, IJ
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR
-from rompy.swan.subcomponents.time import TIMERANGE
+from rompy.swan.subcomponents.time import TimeRangeOpen
 from rompy.swan.subcomponents.output import SPEC1D, SPEC2D, ABS, REL
 
 
@@ -122,7 +122,7 @@ class FRAME(BaseLocation):
 
 
 class GROUP(BaseLocation):
-    """Output locations on subset of a regular or curvilinear grid.
+    """Output locations on subset of a grid.
 
     .. code-block:: text
 
@@ -143,6 +143,10 @@ class GROUP(BaseLocation):
     Note
     ----
     Cannot be used in 1D-mode or in case of unstructured grids.
+
+    Note
+    ----
+    Regular and curvilinear grids are supported.
 
     Examples
     --------
@@ -728,7 +732,7 @@ class NGRID_UNSTRUCTURED(BaseLocation):
 
 
 # =====================================================================================
-# Write
+# Settings
 # =====================================================================================
 class QUANTITY(BaseComponent):
     """Define output settings.
@@ -1058,7 +1062,91 @@ class OUTPUT_OPTIONS(BaseComponent):
         return repr
 
 
-class BLOCK(BaseComponent):
+# =====================================================================================
+# Write
+# =====================================================================================
+class BaseWrite(BaseComponent, ABC):
+    """Base class for SWAN output writing.
+
+    .. code-block:: text
+
+        {MODEL_TYPE} sname='sname'
+
+    This is the base class for all write components. It is not meant to be used
+    directly.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.components.output import BaseWrite
+        write = BaseWrite(
+            sname="outgrid",
+            fname="./output-grid.nc",
+            times=dict(
+                tbeg="2012-01-01T00:00:00",
+                delt="PT30M",
+                tfmt=1,
+                dfmt="min",
+                suffix="",
+            )
+        )
+        print(write.render())
+
+    """
+
+    model_type: Literal["write", "WRITE"] = Field(
+        default="write",
+        description="Model type discriminator",
+    )
+    sname: str = Field(
+        description=(
+            "Name of the set of output locations in which the output is to be written"
+        ),
+        max_length=8,
+    )
+    fname: str = Field(
+        description=(
+            "Name of the data file where the output is written to The file format is "
+            "defined by the file extension, use `.mat` for MATLAB binary (single "
+            "precision) or `.nc` for netCDF format. If any other extension is used "
+            "the ASCII format is assumed"
+        ),
+    )
+    times: Optional[TimeRangeOpen] = Field(
+        default=None,
+        description=(
+            "Time specification if the user requires output at various times. If this "
+            "option is not specified data will be written for the last time step of "
+            "the computation"
+        ),
+    )
+
+    @model_validator(mode="after")
+    def validate_special_names(self) -> "BaseWrite":
+        special_names = ("COMPGRID", "BOTTGRID")
+        if self.sname in special_names and self.model_type.upper() != "BLOCK":
+            raise ValueError(f"Special name {self.sname} is only supported with BLOCK")
+        return self
+
+    @model_validator(mode="after")
+    def validate_times(self) -> "BLOCK":
+        if self.times is not None:
+            self.times.suffix = self.suffix
+        return self
+
+    @property
+    def suffix(self) -> str:
+        return ""
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        return ""
+
+
+class BLOCK(BaseWrite):
     """Write spatial distributions.
 
     .. code-block:: text
@@ -1068,6 +1156,10 @@ class BLOCK(BaseComponent):
 
     With this optional command the user indicates that one or more spatial
     distributions should be written to a file.
+
+    Note
+    ----
+    The SWAN special frames 'BOTTGRID' or 'COMPGRID' can be set with the `sname` field.
 
     Note
     ----
@@ -1093,9 +1185,11 @@ class BLOCK(BaseComponent):
             fname="./output-grid.nc",
             idla=3,
             output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-            time=dict(
-                tbeg=dict(time="2012-01-01T00:00:00", tfmt=1),
-                delt=dict(delt="PT30M", dfmt="min"),
+            times=dict(
+                tbeg="2012-01-01T00:00:00",
+                delt="PT30M",
+                tfmt=1,
+                dfmt="min",
                 suffix="",
             )
         )
@@ -1106,26 +1200,11 @@ class BLOCK(BaseComponent):
     model_type: Literal["block", "BLOCK"] = Field(
         default="block", description="Model type discriminator"
     )
-    sname: str = Field(
-        description=(
-            "Name of the frame in which the output is to be written to including one "
-            "of the SWAN special frames 'BOTTGRID' or 'COMPGRID'"
-        ),
-        max_length=8,
-    )
     header: Optional[bool] = Field(
         default=None,
         description=(
             "Indicate if the output should be written to a file with header lines "
             "(SWAN default: True)"
-        ),
-    )
-    fname: str = Field(
-        description=(
-            "Name of the data file where the output is to be written to. The file "
-            "format is defined by the file extension, use `.mat` for MATLAB binary "
-            "(single precision) or `.nc` for netCDF format. If any other extension is "
-            "used the ASCII format is assumed"
         ),
     )
     idla: Optional[IDLA] = Field(
@@ -1153,14 +1232,6 @@ class BLOCK(BaseComponent):
             "format by default (`unit=1`)"
         ),
     )
-    time: Optional[TIMERANGE] = Field(
-        default=None,
-        description=(
-            "Time specification if the user requires output at various times. If this "
-            "option is not specified BLOCK will be written for the last time step of "
-            "the computation"
-        ),
-    )
 
     @field_validator("idla")
     @classmethod
@@ -1171,16 +1242,9 @@ class BLOCK(BaseComponent):
             )
         return idla
 
-    @field_validator("time")
-    @classmethod
-    def validate_time(cls, time: TIMERANGE) -> TIMERANGE:
-        time.suffix = "blk"
-        if time.tend is not None:
-            logger.warning(
-                "Time specification `tend` is not supported in BLOCK, ignoring"
-            )
-            time.tend = None
-        return time
+    @property
+    def suffix(self) -> str:
+        return "blk"
 
     @property
     def _header(self) -> str:
@@ -1206,12 +1270,12 @@ class BLOCK(BaseComponent):
             repr += f"{output.upper()}"
         if self.unit is not None:
             repr += f"\nunit={self.unit}"
-        if self.time is not None:
-            repr += f"\nOUTPUT {self.time.render()}"
+        if self.times is not None:
+            repr += f"\nOUTPUT {self.times.render()}"
         return repr
 
 
-class TABLE(BaseComponent):
+class TABLE(BaseWrite):
     """Write spatial distributions.
 
     .. code-block:: text
@@ -1253,10 +1317,7 @@ class TABLE(BaseComponent):
             format="noheader",
             fname="./output_table.nc",
             output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-            time=dict(
-                tbeg=dict(time="2012-01-01T00:00:00"),
-                delt=dict(delt="PT30M", dfmt="min"),
-            )
+            times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
         )
         print(table.render())
 
@@ -1265,10 +1326,6 @@ class TABLE(BaseComponent):
     model_type: Literal["table", "TABLE"] = Field(
         default="table", description="Model type discriminator"
     )
-    sname: str = Field(
-        description="Name of the set of POINTS, CURVE, FRAME or GROUP",
-        max_length=8,
-    )
     format: Optional[Literal["header", "noheader", "indexed"]] = Field(
         default=None,
         description=(
@@ -1276,37 +1333,14 @@ class TABLE(BaseComponent):
             "or INDEXED table format (SWAN default: HEADER)"
         ),
     )
-    fname: str = Field(
-        description=(
-            "Name of the data file where the output is to be written to. The file "
-            "format is defined by the file extension, use `.mat` for MATLAB binary "
-            "(single precision) or `.nc` for netCDF format. If any other extension is "
-            "used the ASCII format is assumed"
-        ),
-    )
     output: list[BlockOptions] = Field(
         description="The output variables to output to block file",
         min_length=1,
     )
-    time: Optional[TIMERANGE] = Field(
-        default=None,
-        description=(
-            "Time specification if the user requires output at various times. If this "
-            "option is not specified TABLE will be written for the last time step of "
-            "the computation"
-        ),
-    )
 
-    @field_validator("time")
-    @classmethod
-    def validate_time(cls, time: TIMERANGE) -> TIMERANGE:
-        time.suffix = "tbl"
-        if time.tend is not None:
-            logger.warning(
-                "Time specification `tend` is not supported in TABLE, ignoring"
-            )
-            time.tend = None
-        return time
+    @property
+    def suffix(self) -> str:
+        return "tbl"
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -1320,8 +1354,8 @@ class TABLE(BaseComponent):
             else:
                 repr += " "
             repr += f"{output.upper()}"
-        if self.time is not None:
-            repr += f"\nOUTPUT {self.time.render()}"
+        if self.times is not None:
+            repr += f"\nOUTPUT {self.times.render()}"
         return repr
 
 
@@ -1341,7 +1375,7 @@ FREQ_TYPE = Annotated[
 ]
 
 
-class SPECOUT(BaseComponent):
+class SPECOUT(BaseWrite):
     """Write to data file the wave spectra.
 
     .. code-block:: text
@@ -1353,6 +1387,11 @@ class SPECOUT(BaseComponent):
     location set 'sname' (see commands `POINTS`, `CURVE`, `FRAME` or `GROUP`) the 1D
     or 2D variance / energy (see command `SET`) density spectrum (either the relative
     frequency or the absolute frequency spectrum) is to be written to a data file.
+
+    Note
+    ----
+    This write command supports the following location types: `POINTS`, `CURVE`,
+    `FRAME` and `GROUP`.
 
     Note
     ----
@@ -1373,10 +1412,7 @@ class SPECOUT(BaseComponent):
             dim=dict(model_type="spec2d"),
             freq=dict(model_type="rel"),
             fname="./specout.nc",
-            time=dict(
-                tbeg=dict(time="2012-01-01T00:00:00"),
-                delt=dict(delt="PT30M", dfmt="min"),
-            )
+            times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
         )
         print(out.render())
 
@@ -1385,37 +1421,12 @@ class SPECOUT(BaseComponent):
     model_type: Literal["specout", "SPECOUT"] = Field(
         default="specout", description="Model type discriminator"
     )
-    sname: str = Field(
-        description="Name of the set of POINTS, CURVE, FRAME or GROUP",
-        max_length=8,
-    )
     dim: Optional[DIM_TYPE] = Field(default=None)
     freq: Optional[FREQ_TYPE] = Field(default=None)
-    fname: str = Field(
-        description=(
-            "Name of the data file where the output is written to, netCDF files are "
-            "written if extension is `.nc` otherwise SWAN ASCII file is written"
-        ),
-    )
-    time: Optional[TIMERANGE] = Field(
-        default=None,
-        description=(
-            "Time specification if the user requires output at various times. If this "
-            "option is not specified SPECOUT will be written for the last time step "
-            "of the computation"
-        ),
-    )
 
-    @field_validator("time")
-    @classmethod
-    def validate_time(cls, time: TIMERANGE) -> TIMERANGE:
-        time.suffix = "spc"
-        if time.tend is not None:
-            logger.warning(
-                "Time specification `tend` is not supported in SPECOUT, ignoring"
-            )
-            time.tend = None
-        return time
+    @property
+    def suffix(self) -> str:
+        return "spc"
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -1425,12 +1436,12 @@ class SPECOUT(BaseComponent):
         if self.freq is not None:
             repr += f" {self.freq.render()}"
         repr += f" fname='{self.fname}'"
-        if self.time is not None:
-            repr += f" OUTPUT {self.time.render()}"
+        if self.times is not None:
+            repr += f" OUTPUT {self.times.render()}"
         return repr
 
 
-class NESTOUT(BaseComponent):
+class NESTOUT(BaseWrite):
     """Write to 2D boundary spectra.
 
     .. code-block:: text
@@ -1455,10 +1466,7 @@ class NESTOUT(BaseComponent):
         out = NESTOUT(
             sname="outnest",
             fname="./nestout.swn",
-            time=dict(
-                tbeg=dict(time="2012-01-01T00:00:00"),
-                delt=dict(delt="PT30M", dfmt="min"),
-            )
+            times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
         )
         print(out.render())
 
@@ -1467,40 +1475,16 @@ class NESTOUT(BaseComponent):
     model_type: Literal["nestout", "NESTOUT"] = Field(
         default="nestout", description="Model type discriminator"
     )
-    sname: str = Field(
-        description=(
-            "Name of the set of output locations as defined in a command `NGRID`"
-        ),
-        max_length=8,
-    )
-    fname: str = Field(
-        description="Name of the data file where the output is written to",
-    )
-    time: Optional[TIMERANGE] = Field(
-        default=None,
-        description=(
-            "Time specification if the user requires output at various times. If this "
-            "option is not specified NESTOUT will be written for the last time step "
-            "of the computation"
-        ),
-    )
 
-    @field_validator("time")
-    @classmethod
-    def validate_time(cls, time: TIMERANGE) -> TIMERANGE:
-        time.suffix = "nst"
-        if time.tend is not None:
-            logger.warning(
-                "Time specification `tend` is not supported in NESTOUT, ignoring"
-            )
-            time.tend = None
-        return time
+    @property
+    def suffix(self) -> str:
+        return "nst"
 
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = f"NESTOUT sname='{self.sname}' fname='{self.fname}'"
-        if self.time is not None:
-            repr += f" OUTPUT {self.time.render()}"
+        if self.times is not None:
+            repr += f" OUTPUT {self.times.render()}"
         return repr
 
 
