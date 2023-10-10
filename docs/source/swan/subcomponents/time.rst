@@ -14,4 +14,3 @@ Sub-commands to support time definition
     rompy.swan.subcomponents.time.TimeRangeClosed
     rompy.swan.subcomponents.time.NONSTATIONARY
     rompy.swan.subcomponents.time.STATIONARY
-    rompy.swan.subcomponents.time.STATIONARIES
