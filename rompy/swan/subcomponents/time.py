@@ -1,8 +1,9 @@
 """Time subcomponents."""
 import logging
 from datetime import datetime, timedelta
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 from pydantic import Field, field_validator, model_validator
+import pandas as pd
 
 from rompy.swan.subcomponents.base import BaseSubComponent
 
@@ -10,7 +11,17 @@ from rompy.swan.subcomponents.base import BaseSubComponent
 logger = logging.getLogger(__name__)
 
 
-class TIME(BaseSubComponent):
+TIME_FORMAT = {
+    1: "%Y%m%d.%H%M%S",
+    2: "'%d-%b-%y %H:%M:%S'",
+    3: "%m/%d/%y.%H:%M:%S",
+    4: "%H:%M:%S",
+    5: "%y/%m/%d %H:%M:%S'",
+    6: "%y%m%d%H%M",
+}
+
+
+class Time(BaseSubComponent):
     """Time specification in SWAN.
 
     .. code-block:: text
@@ -41,20 +52,20 @@ class TIME(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import TIME
+        from rompy.swan.subcomponents.time import Time
         from datetime import datetime
-        time = TIME(time=datetime(1990, 1, 1))
+        time = Time(time=datetime(1990, 1, 1))
         print(time.render())
-        time = TIME(time="2012-01-01T00:00:00", tfmt=2)
+        time = Time(time="2012-01-01T00:00:00", tfmt=2)
         print(time.render())
 
     """
 
-    model_type: Literal["time", "TIME"] = Field(
+    model_type: Literal["time", "Time", "TIME"] = Field(
         default="time", description="Model type discriminator"
     )
     time: datetime = Field(description="Datetime specification")
-    tfmt: Literal[1, 2, 3, 4, 5, 6] = Field(
+    tfmt: Union[Literal[1, 2, 3, 4, 5, 6], str] = Field(
         default=1,
         description="Format to render time specification",
         validate_default=True,
@@ -62,24 +73,18 @@ class TIME(BaseSubComponent):
 
     @field_validator("tfmt")
     @classmethod
-    def set_time_format(cls, v: int) -> str:
+    def set_time_format(cls, v: int | str) -> str:
         """Set the time format to render."""
-        time_format = {
-            1: "%Y%m%d.%H%M%S",
-            2: "'%d-%b-%y %H:%M:%S'",
-            3: "%m/%d/%y.%H:%M:%S",
-            4: "%H:%M:%S",
-            5: "%y/%m/%d %H:%M:%S'",
-            6: "%y%m%d%H%M",
-        }
-        return time_format[v]
+        if isinstance(v, str):
+            return v
+        return TIME_FORMAT[v]
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
         return f"{self.time.strftime(self.tfmt)}"
 
 
-class DELT(BaseSubComponent):
+class Delt(BaseSubComponent):
     """Time interval specification in SWAN.
 
     .. code-block:: text
@@ -103,16 +108,16 @@ class DELT(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import DELT
+        from rompy.swan.subcomponents.time import Delt
         from datetime import timedelta
-        delt = DELT(delt=timedelta(minutes=30))
+        delt = Delt(delt=timedelta(minutes=30))
         print(delt.render())
-        delt = DELT(delt="PT1H", dfmt="hr")
+        delt = Delt(delt="PT1H", dfmt="hr")
         print(delt.render())
 
     """
 
-    model_type: Literal["tdelt", "DELT"] = Field(
+    model_type: Literal["delt", "Delt", "DELT"] = Field(
         default="tdelt", description="Model type discriminator"
     )
     delt: timedelta = Field(description="Time interval")
@@ -121,17 +126,146 @@ class DELT(BaseSubComponent):
         description="Format to render time interval specification",
     )
 
-    @model_validator(mode="after")
-    def to_time_unit(self) -> "DELT":
-        """Convert interval value to the time unit specified."""
-        if isinstance(self.delt, timedelta):
-            delt_scaling = {"sec": 1, "min": 60, "hr": 3600, "day": 86400}
-            self.delt = self.delt.total_seconds() / delt_scaling[self.dfmt]
-        return self
+    @property
+    def delt_float(self):
+        delt_scaling = {"sec": 1, "min": 60, "hr": 3600, "day": 86400}
+        return self.delt.total_seconds() / delt_scaling[self.dfmt]
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
-        return f"{self.delt} {self.dfmt.upper()}"
+        return f"{self.delt_float} {self.dfmt.upper()}"
+
+
+class TimeRangeOpen(BaseSubComponent):
+    """Regular times with an open boundary.
+
+    .. code-block:: text
+
+        [tbeg] [delt] SEC|MIN|HR|DAY
+
+    Time is rendered in one of the following formats:
+
+    * 1: ISO-notation 19870530.153000
+    * 2: (as in HP compiler) '30-May-87 15:30:00'
+    * 3: (as in Lahey compiler) 05/30/87.15:30:00
+    * 4: 15:30:00
+    * 5: 87/05/30 15:30:00'
+    * 6: as in WAM 8705301530
+
+    Note
+    ----
+    The `tbeg` field can be specified as:
+
+    * existing datetime object
+    * int or float, assumed as Unix time, i.e. seconds (if >= -2e10 or <= 2e10) or
+      milliseconds (if < -2e10 or > 2e10) since 1 January 1970.
+    * ISO 8601 time string.
+
+    Note
+    ----
+    The `tdelta` field can be specified as:
+
+    * existing timedelta object
+    * int or float, assumed as seconds
+    * ISO 8601 duration string, following formats work:
+
+        * `[-][DD ][HH:MM]SS[.ffffff]`
+        * `[±]P[DD]DT[HH]H[MM]M[SS]S` (ISO 8601 format for timedelta)
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.time import TimeRangeOpen
+        from datetime import datetime, timedelta
+        times = TimeRangeOpen(
+            tbeg=datetime(1990, 1, 1), delt=timedelta(minutes=30), dfmt="min"
+        )
+        print(times.render())
+        times = TimeRangeOpen(
+            tbeg="2012-01-01T00:00:00", delt="PT1H", tfmt=2, dfmt="hr", suffix="blk"
+        )
+        print(times.render())
+
+    """
+
+    model_type: Literal["open", "OPEN"] = Field(
+        default="open", description="Model type discriminator"
+    )
+    tbeg: datetime = Field(description="Begining datetime specification")
+    delt: timedelta = Field(description="Time interval")
+    tfmt: Union[Literal[1, 2, 3, 4, 5, 6], str] = Field(
+        default=1, description="Format to render time specification",
+    )
+    dfmt: Literal["sec", "min", "hr", "day"] = Field(
+        default="sec", description="Format to render time interval specification",
+    )
+    suffix: str = Field(
+        default="", description="Suffix to prepend to argument names when rendering",
+    )
+
+    def cmd(self) -> str:
+        """Render subcomponent cmd."""
+        repr = f"tbeg{self.suffix}={Time(time=self.tbeg, tfmt=self.tfmt).render()}"
+        repr += f" delt{self.suffix}={Delt(delt=self.delt, dfmt=self.dfmt).render()}"
+        return repr
+
+
+class TimeRangeClosed(TimeRangeOpen):
+    """Regular times with a closed boundary.
+
+    .. code-block:: text
+
+        [tbeg] [delt] SEC|MIN|HR|DAY [tend]
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.time import TimeRangeClosed
+        from datetime import datetime, timedelta
+        times = TimeRangeClosed(
+            tbeg=datetime(1990, 1, 1),
+            tend=datetime(1990, 1, 7),
+            delt=timedelta(minutes=30),
+            dfmt="min",
+        )
+        print(times.render())
+        times = TimeRangeClosed(
+            tbeg="2012-01-01T00:00:00",
+            tend="2012-02-01T00:00:00",
+            delt="PT1H",
+            tfmt=2,
+            dfmt="hr",
+            suffix="blk",
+        )
+        print(times.render())
+
+    """
+
+    model_type: Literal["closed", "CLOSED"] = Field(
+        default="closed", description="Model type discriminator"
+    )
+    tend: datetime = Field(description="End datetime specification")
+
+    def __call__(self) -> list[Time]:
+        """Returns the list of Time objects."""
+        times = pd.date_range(start=self.tbeg, end=self.tend, freq=self.delt)
+        return [Time(time=time, tfmt=self.tfmt) for time in times]
+
+    def __getitem__(self, index) -> Time | list[Time]:
+        """Slicing from the times array."""
+        return self.__call__()[index]
+
+    def cmd(self) -> str:
+        """Render subcomponent cmd."""
+        repr = super().cmd()
+        repr += f" tend{self.suffix}={Time(time=self.tend, tfmt=self.tfmt).render()}"
+        return repr
 
 
 class TIMERANGE(BaseSubComponent):
@@ -167,9 +301,9 @@ class TIMERANGE(BaseSubComponent):
     model_type: Literal["timerange", "TIMERANGE"] = Field(
         default="timerange", description="Model type discriminator"
     )
-    tbeg: TIME = Field(description="Begin time of the first field of the variable")
-    delt: DELT = Field(description="Time interval between fields")
-    tend: Optional[TIME] = Field(
+    tbeg: Time = Field(description="Begin time of the first field of the variable")
+    delt: Delt = Field(description="Time interval between fields")
+    tend: Optional[Time] = Field(
         default=None,
         description="End time of the last field of the variable",
     )
@@ -177,6 +311,21 @@ class TIMERANGE(BaseSubComponent):
         default="",
         description="Suffix to prepend to argument names when rendering",
     )
+
+    def __call__(self):
+        """Returns the list of datetime objects."""
+        if self.tend is None:
+            raise ValueError("`tend` must be defined to construct a list of times")
+        times = pd.date_range(
+            start=self.tbeg.time,
+            end=self.tend.time,
+            freq=self.delt.delt,
+        )
+        return [Time(time=time, tfmt=self.tbeg.tfmt) for time in times]
+
+    def __getitem__(self, index):
+        """Slicing from the times array."""
+        return self.__call__()[index]
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
@@ -187,7 +336,7 @@ class TIMERANGE(BaseSubComponent):
         return repr
 
 
-class NONSTATIONARY(TIMERANGE):
+class NONSTATIONARY(TimeRangeClosed):
     """Nonstationary time specification.
 
     .. code-block:: text
@@ -202,16 +351,19 @@ class NONSTATIONARY(TIMERANGE):
 
         from rompy.swan.subcomponents.time import NONSTATIONARY
         nonstat = NONSTATIONARY(
-            tbeg=dict(time="2012-01-01T00:00:00"),
-            tend=dict(time="2012-02-01T00:00:00"),
-            delt=dict(delt="PT1H", dfmt="hr"),
+            tbeg="2012-01-01T00:00:00",
+            tend="2012-02-01T00:00:00",
+            delt="PT1H",
+            dfmt="hr",
         )
         print(nonstat.render())
         from datetime import datetime, timedelta
         nonstat = NONSTATIONARY(
-            tbeg=dict(time=datetime(1990, 1, 1)),
-            tend=dict(time=datetime(1990, 1, 7)),
-            delt=dict(delt=timedelta(minutes=30), dfmt="min"),
+            tbeg=datetime(1990, 1, 1),
+            tend=datetime(1990, 1, 7),
+            delt=timedelta(minutes=30),
+            tfmt=1,
+            dfmt="min",
             suffix="tbl",
         )
         print(nonstat.render())
@@ -242,7 +394,7 @@ class STATIONARY(BaseSubComponent):
         :okwarning:
 
         from rompy.swan.subcomponents.time import STATIONARY
-        stat = STATIONARY(time=dict(time="2012-01-01T00:00:00"))
+        stat = STATIONARY(time="2012-01-01T00:00:00")
         print(stat.render())
 
     """
@@ -250,8 +402,60 @@ class STATIONARY(BaseSubComponent):
     model_type: Literal["stationary", "STATIONARY"] = Field(
         default="stationary", description="Model type discriminator"
     )
-    time: TIME = Field(description="Time to which stationary run is to be made")
+    time: datetime = Field(description="Time to which stationary run is to be made")
+    tfmt: Union[Literal[1, 2, 3, 4, 5, 6], str] = Field(
+        default=1, description="Format to render time specification",
+    )
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
-        return f"STATIONARY time={self.time.render()}"
+        return f"STATIONARY time={Time(time=self.time, tfmt=self.tfmt).render()}"
+
+
+class STATIONARIES(BaseSubComponent):
+    """Multiple stationary time specifications.
+
+    .. code-block:: text
+
+        STATIONARY [time]
+        STATIONARY [time]
+        STATIONARY [time]
+        .
+        .
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.time import STATIONARIES
+        stats = STATIONARIES(
+            times=dict(
+                tbeg="2012-01-01T00:00:00", tend="2012-02-01T00:00:00", delt="PT1H"
+            ),
+        )
+        print(stats.render())
+
+    """
+
+    model_type: Literal["stationaries", "STATIONARIES"] = Field(
+        default="stationaries", description="Model type discriminator"
+    )
+    times: TimeRangeClosed = Field(
+        description="Times to which stationary runs are to be made"
+    )
+
+    @field_validator("times")
+    @classmethod
+    def tend_must_be_defined(cls, times: TIMERANGE) -> TIMERANGE:
+        if times.tend is None:
+            raise ValueError("`tend` must be defined for `STATIONARIES`")
+        return times
+
+    def cmd(self) -> str:
+        """Render subcomponent cmd."""
+        repr = ""
+        for time in self.times():
+            repr +=f"\nSTATIONARY {time.render()}"        
+        return repr

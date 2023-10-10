@@ -66,18 +66,17 @@ class COMPUTE(BaseComponent):
         comp = COMPUTE()
         print(comp.render())
         comp = COMPUTE(
-            times=dict(
-                model_type="stationary",
-                time=dict(time="1990-01-01T00:00:00", tfmt=2),
-            ),
+            times=dict(model_type="stationary", time="1990-01-01T00:00:00", tfmt=2)
         )
         print(comp.render())
         comp = COMPUTE(
             times=dict(
                 model_type="nonstationary",
-                tbeg=dict(time="1990-01-01T00:00:00", tfmt=1),
-                tend=dict(time="1990-02-01T00:00:00", tfmt=1),
-                delt=dict(delt="PT1H", dfmt="hr"),
+                tbeg="1990-01-01T00:00:00",
+                tend="1990-02-01T00:00:00",
+                delt="PT1H",
+                tfmt=1,
+                dfmt="hr",
             ),
         )
         print(comp.render())
@@ -92,6 +91,14 @@ class COMPUTE(BaseComponent):
         description="Times for the stationary or nonstationary computation",
         discriminator="model_type",
     )
+    i0: Optional[int] = Field(
+        default=None,
+        description="Time index of the initial time step",
+    )
+    i1: Optional[int] = Field(
+        default=None,
+        description="Time index of the final time step",
+    )
 
     @field_validator("times")
     @classmethod
@@ -99,6 +106,16 @@ class COMPUTE(BaseComponent):
         if isinstance(times, NONSTATIONARY):
             times.suffix="c"
         return times
+
+    # @model_validator(mode="after")
+    # def validate_times_index(self) -> "COMPUTE":
+    #     """Compute over a subset of the times."""
+    #     import ipdb; ipdb.set_trace()
+    #     if isinstance(self.times, STATIONARY) and self.i0 is not None:
+    #         t = self.times.time.time
+    #         self.times.tbeg.time = self.times.tbeg.time[self.i0]
+    #         self.times.tend.time = self.times.tend.time[self.i1]
+    #     return self
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -205,9 +222,11 @@ class COMPUTE_HOTFILE(COMPUTE, HOTFILE):
             fname="./hotfile",
             times=dict(
                 model_type="nonstationary",
-                tbeg=dict(time="1990-01-01T00:00:00", tfmt=1),
-                tend=dict(time="1990-02-01T00:00:00", tfmt=1),
-                delt=dict(delt="PT1H", dfmt="hr"),
+                tbeg="1990-01-01T00:00:00",
+                tend="1990-02-01T00:00:00",
+                delt="PT1H",
+                tfmt=1,
+                dfmt="hr",
             ),
             format="free",
         )
@@ -230,7 +249,7 @@ class COMPUTE_HOTFILE(COMPUTE, HOTFILE):
             timestamp = self.times.time.strftime(self.tfmt)
         except AttributeError:
             try:
-                timestamp = self.times.tend.time.strftime(self.tfmt)
+                timestamp = self.times.tend.strftime(self.tfmt)
             except AttributeError:
                 timestamp = ""
         self.fname = (

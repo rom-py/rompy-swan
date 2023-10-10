@@ -10,9 +10,11 @@ from rompy.swan.components.group import LOCKUP
 @pytest.fixture(scope="module")
 def times():
     yield NONSTATIONARY(
-        tbeg=dict(time="1990-01-01T00:00:00", tfmt=1),
-        tend=dict(time="1990-02-01T00:00:00", tfmt=1),
-        delt=dict(delt="PT1H", dfmt="hr"),
+        tbeg="1990-01-01T00:00:00",
+        tend="1990-02-01T00:00:00",
+        delt="PT1H",
+        tfmt=1,
+        dfmt="hr",
     )
 
 
@@ -22,9 +24,7 @@ def test_compute():
 
 
 def test_compute_stationary():
-    comp = COMPUTE(
-        times=dict(model_type="stationary", time=dict(time="1990-01-01T00:00:00")),
-    )
+    comp = COMPUTE(times=dict(model_type="stationary", time="1990-01-01T00:00:00"))
     assert comp.render() == "COMPUTE STATIONARY time=19900101.000000"
 
 

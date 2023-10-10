@@ -108,9 +108,10 @@ class REGULAR(INPGRID):
             dyinp=0.005,
             readinp=dict(fname1="wind.txt"),
             nonstationary=dict(
-                tbeg=dict(time="2019-01-01T00:00:00"),
-                tend=dict(time="2019-01-07 00:00:00"),
-                delt=dict(delt=3600, dfmt="hr"),
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                dfmt="hr",
             ),
         )
         print(inpgrid.render())
@@ -216,9 +217,10 @@ class CURVILINEAR(INPGRID):
             excval=-99.0,
             readinp=dict(fname1="wind.txt"),
             nonstationary=dict(
-                tbeg=dict(time="2019-01-01T00:00:00"),
-                tend=dict(time="2019-01-07 00:00:00"),
-                delt=dict(delt=3600, dfmt="hr"),
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                dfmt="hr",
             ),
         )
         print(inpgrid.render())
@@ -298,9 +300,10 @@ class UNSTRUCTURED(INPGRID):
             excval=-99.0,
             readinp=dict(fname1="bottom.txt"),
             nonstationary=dict(
-                tbeg=dict(time="2019-01-01T00:00:00"),
-                tend=dict(time="2019-01-07 00:00:00"),
-                delt=dict(delt=3600, dfmt="hr"),
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                dfmt="hr",
             ),
         )
         print(inpgrid.render())
@@ -374,9 +377,10 @@ class INPGRIDS(BaseComponent):
             dyinp=0.005,
             readinp=dict(fname1="wind.txt"),
             nonstationary=dict(
-                tbeg=dict(time="2019-01-01T00:00:00"),
-                tend=dict(time="2019-01-07 00:00:00"),
-                delt=dict(delt=3600, dfmt="hr"),
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                dfmt="hr",
             ),
         )
         inpgrids = INPGRIDS(inpgrids=[inpgrid_bottom, inpgrid_wind])

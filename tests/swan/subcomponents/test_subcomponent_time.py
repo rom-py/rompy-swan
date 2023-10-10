@@ -3,9 +3,10 @@ import pytest
 from datetime import datetime, timedelta
 
 from rompy.swan.subcomponents.time import (
-    TIME,
-    DELT,
-    TIMERANGE,
+    Time,
+    Delt,
+    TimeRangeOpen,
+    TimeRangeClosed,
     STATIONARY,
     NONSTATIONARY,
 )
@@ -24,7 +25,7 @@ from rompy.swan.subcomponents.time import (
 )
 def test_time(tfmt, tmpl):
     t = datetime(1990, 1, 1, 0, 0, 0)
-    time = TIME(time=t, tfmt=tfmt)
+    time = Time(time=t, tfmt=tfmt)
     assert time.render() == t.strftime(tmpl)
 
 
@@ -37,24 +38,32 @@ def test_time(tfmt, tmpl):
     ],
 )
 def test_delt(delt, dfmt, rendered):
-    delta = DELT(delt=delt, dfmt=dfmt)
+    delta = Delt(delt=delt, dfmt=dfmt)
     assert delta.render() == rendered
 
 
-def test_timerange():
-    tr = TIMERANGE(
-        tbeg=dict(time="2023-01-01T00:00:00"),
-        delt=dict(delt="PT30M", dfmt="min"),
-        tend=dict(time="2023-02-01T00:00:00"),
+def test_timerange_open():
+    tr = TimeRangeOpen(tbeg="2023-01-01T00:00:00", delt="PT30M", dfmt="min")
+    assert tr.render() == "tbeg=20230101.000000 delt=30.0 MIN"
+
+
+def test_timerange_closed():
+    tr = TimeRangeClosed(
+        tbeg="2023-01-01T00:00:00",
+        tend="2023-02-01T00:00:00",
+        delt="PT30M",
+        dfmt="min",
     )
     assert tr.render() == "tbeg=20230101.000000 delt=30.0 MIN tend=20230201.000000"
 
 
 def test_nonstationary():
     tr = NONSTATIONARY(
-        tbeg=dict(time="2023-01-01T00:00:00", tfmt=6),
-        delt=dict(delt="PT30M", dfmt="sec"),
-        tend=dict(time="2023-02-01T00:00:00", tfmt=6),
+        tbeg="2023-01-01T00:00:00",
+        tend="2023-02-01T00:00:00",
+        delt="PT30M",
+        tfmt=6,
+        dfmt="sec",
         suffix="tbl",
     )
     assert tr.render() == (
@@ -63,5 +72,5 @@ def test_nonstationary():
 
 
 def test_stationary():
-    stat = STATIONARY(time=dict(time="2023-01-01T00:00:00", tfmt=1))
+    stat = STATIONARY(time="2023-01-01T00:00:00", tfmt=1)
     assert stat.render() == "STATIONARY time=20230101.000000"
