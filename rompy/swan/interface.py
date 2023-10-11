@@ -1,4 +1,4 @@
-"""SWAN Forcing data."""
+"""SWAN interface objects."""
 import logging
 from typing import Union, Annotated, Optional, Literal, Any
 from pathlib import Path
@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 
 
 class ForcingData(RompyBaseModel):
-    """SWAN forcing data.
+    """SWAN forcing data interface.
 
     Examples
     --------
@@ -25,8 +25,6 @@ class ForcingData(RompyBaseModel):
         :okwarning:
 
         from rompy.swan.forcing import ForcingData
-
-    TODO: Should we simplify it and have one single list field?
 
     """
     model_type: Literal["forcing", "FORCING"] = Field(
@@ -70,17 +68,11 @@ class ForcingData(RompyBaseModel):
         return ret
 
 
-class GroupComponentTimeInterface(RompyBaseModel):
+class TimeInterface(RompyBaseModel):
     """Base interface to pass time to group components.
 
     This class is used to set consistent time parameters in a group component by
     redefining existing `times` component attribute based on the `period` field.
-
-    Note
-    ----
-    The time unit `tfmt` and time interval `dfmt` are taken for existing time
-    attributes if available in the output components, otherwise from the fields `dfmt`
-    and `tfmt` of this class.
 
     """
 
@@ -89,16 +81,25 @@ class GroupComponentTimeInterface(RompyBaseModel):
     )
     group: Any = Field(description="Group component to set times to")
     period: TimeRange = Field(description="Time period to write the output over")
-    tfmt: Literal[1, 2, 3, 4, 5, 6] = Field(
-        default=1,
-        description="Format to render time specification, see the `Time` component",
-    )
-    dfmt: Literal["sec", "min", "hr", "day"] = Field(
-        default="min",
-        description="Format to render time interval specification",
+
+
+class OutputInterface(TimeInterface):
+    """Output group component with consistent times."""
+
+    model_type: Literal["outputinterface", "OUTPUTINTERFACE"] = Field(
+        default="outputinterface", description="Model type discriminator"
     )
 
-    def timerange(self, tfmt: int, dfmt: str, suffix: str = "") -> TimeRangeOpen:
+    @model_validator(mode="after")
+    def time_interface(self) -> "OutputInterface":
+        """Set the time parameter for all WRITE components."""
+        for component in self.group._write_fields:
+            obj = getattr(self.group, component)
+            if obj is not None:
+                times = obj.times or TimeRangeOpen()
+                obj.times = self._timerange(times.tfmt, times.dfmt, obj.suffix)
+
+    def _timerange(self, tfmt: int, dfmt: str, suffix: str) -> TimeRangeOpen:
         """Convert generic TimeRange into the Swan TimeRangeOpen subcomponent."""
         return TimeRangeOpen(
             tbeg=self.period.start,
@@ -109,46 +110,34 @@ class GroupComponentTimeInterface(RompyBaseModel):
         )
 
 
-class OutputTime(GroupComponentTimeInterface):
-    """Output group component with consistent times."""
-
-    model_type: Literal["outputtime", "OUTPUTTIME"] = Field(
-        default="outputtime", description="Model type discriminator"
-    )
-
-    @model_validator(mode="after")
-    def time_interface(self) -> "OutputTime":
-        """Set the time parameter for all WRITE components."""
-        for component in self.group._write_fields:
-            obj = getattr(self.group, component)
-            if obj is not None:
-                tfmt = obj.times.tfmt if obj.times is not None else self.tfmt
-                dfmt = obj.times.dfmt if obj.times is not None else self.dfmt
-                setattr(obj, "times", self.timerange(tfmt, dfmt, obj.suffix))
-
-
-class LockupTime(GroupComponentTimeInterface):
+class LockupInterface(TimeInterface):
     """Lockup group component with consistent times."""
 
-    model_type: Literal["lockuptime", "LOCKUPTIME"] = Field(
-        default="lockuptime", description="Model type discriminator"
+    model_type: Literal["lockupinterface", "LOCKUPINTERFACE"] = Field(
+        default="lockupinterface", description="Model type discriminator"
     )
 
+    def _nonstationary(self, tfmt: str, dfmt: str) -> NONSTATIONARY:
+        return NONSTATIONARY(
+            tbeg=self.period.start,
+            tend=self.period.end,
+            delt=self.period.interval,
+            tfmt=tfmt,
+            dfmt=dfmt,
+            suffix="c",
+        )
+
+    def _stationary(self, tfmt: str) -> STATIONARY:
+        return STATIONARY(time=self.period.start, tfmt=tfmt)
+
     @model_validator(mode="after")
-    def time_interface(self) -> "LockupTime":
+    def time_interface(self) -> "LockupInterface":
         """Set the time parameter for COMPUTE components."""
         times = self.group.compute.times or NONSTATIONARY()
         if isinstance(times, NONSTATIONARY):
-            times = NONSTATIONARY(
-                tbeg=self.period.start,
-                tend=self.period.end,
-                delt=self.period.interval,
-                tfmt=times.tfmt,
-                dfmt=times.dfmt,
-                suffix="c",
-            )
+            times = self._nonstationary(times.tfmt, times.dfmt)
         elif isinstance(times, STATIONARY):
-            times = STATIONARY(time=self.period.start, tfmt=times.tfmt)
+            times = self._stationary(times.tfmt)
         else:
             raise ValueError(f"Unknown time type {type(times)}")
-        setattr(self.group.compute, "times", times)
+        self.group.compute.times = times

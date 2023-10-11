@@ -7,8 +7,8 @@ from pydantic import field_validator, Field, model_validator
 
 from rompy.core import BaseConfig, RompyBaseModel, TimeRange
 
-from rompy.swan.forcing import ForcingData as ForcingDataNew
-from rompy.swan.forcing import OutputTime, LockupTime
+from rompy.swan.interface import ForcingData as ForcingDataNew
+from rompy.swan.interface import OutputInterface, LockupInterface
 
 from rompy.swan.legacy import ForcingData, SwanSpectrum, SwanPhysics, Outputs
 
@@ -111,9 +111,8 @@ class SwanConfigComponents(BaseConfig):
     """SWAN config class.
 
     TODO: Turn inpgrid/readgrid into group component.
-    TODO: Think of a way to integrate ouptut so time can be passed dynamically.
     TODO: Merge `grid` and `cgrid` into a single input type.
-    TODO: Pass to and use `period` in: output, lockup
+    TODO: Combine boundary and inpgrid into a single input type.
 
     """
 
@@ -204,14 +203,23 @@ class SwanConfigComponents(BaseConfig):
         period = runtime.period
         staging_dir = runtime.staging_dir
 
+        # Interface the runtime with components that require times
+        if self.output:
+            self.output = OutputInterface(group=self.output, period=period).group
+        if self.lockup:
+            self.lockup = LockupInterface(group=self.lockup, period=period).group
+
+        # Render each group component before passing to template
         ret = {}
+
+        # The inpgrid component may use the ForcingData api
+        if self.inpgrid:
+            ret["inpgrid"] = self.inpgrid.render(grid, period, staging_dir)
 
         if self.startup:
             ret["startup"] = self.startup.render()
         if self.cgrid:
             ret["cgrid"] = self.cgrid.render()
-        if self.inpgrid:
-            ret["inpgrid"] = self.inpgrid.render(grid, period, staging_dir)
         if self.boundary:
             ret["boundary"] = self.boundary.render()
         if self.initial:
@@ -222,11 +230,8 @@ class SwanConfigComponents(BaseConfig):
             ret["prop"] = self.prop.render()
         if self.numeric:
             ret["numeric"] = self.numeric.render()
-        # Ensure times are passed to output and lockup
         if self.output:
-            self.output = OutputTime(group=deepcopy(self.output), period=period).group
             ret["output"] = self.output.render()
         if self.lockup:
-            self.lockup = LockupTime(group=deepcopy(self.lockup), period=period).group
             ret["lockup"] = self.lockup.render()
         return ret

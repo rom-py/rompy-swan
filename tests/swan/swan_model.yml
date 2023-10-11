@@ -282,15 +282,14 @@ output:
     fname: ./swangrid.nc
     output: [depth, hsign, tps, dir]
     times:
-      tbeg: '2023-01-01T00:00:00'
-      delt: PT30M
-      tfmt: 1
       dfmt: min
   table:
     sname: outpts
     format: noheader
     fname: ./swantable.nc
     output: [hsign, hswell, dir, tps, tm01, watlev, qp]
+    times:
+      dfmt: min
 
 lockup:
   compute:
