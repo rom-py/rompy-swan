@@ -255,12 +255,15 @@ class TimeRangeClosed(TimeRangeOpen):
     def __call__(self) -> list[Time]:
         """Returns the list of Time objects."""
         times = pd.date_range(start=self.tbeg, end=self.tend, freq=self.delt)
-        # return [Time(time=time, tfmt=self.tfmt) for time in times]
         return [time.to_pydatetime() for time in times]
 
     def __getitem__(self, index) -> Time | list[Time]:
         """Slicing from the times array."""
         return self.__call__()[index]
+
+    def __len__(self):
+        """Returns the length of the times array."""
+        return len(self())
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
@@ -339,6 +342,18 @@ class STATIONARY(BaseSubComponent):
     tfmt: Union[Literal[1, 2, 3, 4, 5, 6], str] = Field(
         default=1, description="Format to render time specification",
     )
+
+    def __call__(self) -> list[Time]:
+        """Returns the list of Time object for consistency with NONSTATIONARY."""
+        return [self.time]
+
+    def __getitem__(self, index) -> Time | list[Time]:
+        """Slicing from the times array."""
+        return self.__call__()[index]
+
+    def __len__(self):
+        """Returns the length of the times array."""
+        return len(self())
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
