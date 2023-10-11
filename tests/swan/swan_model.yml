@@ -51,7 +51,7 @@ inpgrid:
     var: bottom
     source:
       model_type: intake
-      catalog_uri: ../tests/data/catalog.yaml
+      catalog_uri: ${ROMPY_PATH}/tests/data/catalog.yaml
       dataset_id: gebco
     fac: -1.0
     z1: elevation
@@ -62,7 +62,7 @@ inpgrid:
     - var: wind
       source:
         model_type: intake
-        catalog_uri: ../tests/data/catalog.yaml
+        catalog_uri: ${ROMPY_PATH}/tests/data/catalog.yaml
         dataset_id: era5
       filter:
         sort:
