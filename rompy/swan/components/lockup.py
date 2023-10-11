@@ -5,6 +5,7 @@ from typing import Literal, Optional, Union
 from pydantic import field_validator, model_validator, Field
 from datetime import datetime
 from pandas import Timestamp
+from numpy import inf
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.subcomponents.time import STATIONARY, NONSTATIONARY
@@ -14,6 +15,11 @@ logger = logging.getLogger(__name__)
 
 
 TIMES_TYPE = Union[STATIONARY, NONSTATIONARY]
+HOTTIMES_TYPE = Union[list[datetime], list[int]]
+
+DEFAULT_TIME = datetime(1970, 1, 1, 0, 0, 0)
+DEFAULT_STAT_TIME = STATIONARY(time=DEFAULT_TIME)
+DEFAULT_NONSTAT_TIME = NONSTATIONARY(tbeg=DEFAULT_TIME, tend=DEFAULT_TIME, delt="PT1H")
 
 
 class COMPUTE(BaseComponent):
@@ -201,6 +207,11 @@ class COMPUTE_STAT(BaseComponent):
     This component can be used to define multiple stationary compute commands and
     write intermediate results as hotfiles between then.
 
+    Note
+    ----
+    The field `times` is optional to allow for the case where the user wants to set
+    times dynamically after instantiating this component.
+
     Examples
     --------
 
@@ -231,14 +242,15 @@ class COMPUTE_STAT(BaseComponent):
     model_type: Literal["stat", "STAT"] = Field(
         default="stat", description="Model type discriminator"
     )
-    times: Union[STATIONARY, NONSTATIONARY] = Field(
+    times: TIMES_TYPE = Field(
+        default=DEFAULT_STAT_TIME,
         description="Compute times",
         discriminator="model_type",
     )
     hotfile: Optional[HOTFILE] = Field(
         default=None, description="Write results to restart files",
     )
-    hottimes: Union[list[datetime], list[int]] = Field(
+    hottimes: HOTTIMES_TYPE = Field(
         default=[],
         description=(
             "Times to write hotfiles, can be a list of datetimes or times indices"
@@ -265,8 +277,9 @@ class COMPUTE_STAT(BaseComponent):
             logger.warning("hottimes not specified, hotfile will be ignored")
         return self
 
-    @model_validator(mode="after")
-    def hottimes_to_ids(self) -> "COMPUTE_NONSTAT":
+    @property
+    def hotids(self) -> list:
+        """List time ids at which to write hotfiles."""
         if self.hottimes and isinstance(self.hottimes[0], datetime):
             ids = []
             for t in self.hottimes:
@@ -274,9 +287,9 @@ class COMPUTE_STAT(BaseComponent):
                     ids.append(self.times().index(t))
                 except ValueError as e:
                     raise ValueError(f"hottime {t} not in times {self.times}") from e
-            self.hottimes = ids
-        self.hottimes = [i if i >= 0 else i + len(self.times) for i in self.hottimes]
-        return self
+        else:
+            ids = [i if i >= 0 else i + len(self.times) for i in self.hottimes]
+        return ids
 
     def _hotfile(self, time):
         """Set timestamp to hotfile fname."""
@@ -292,7 +305,7 @@ class COMPUTE_STAT(BaseComponent):
         repr = []
         for ind, time in enumerate(self.times()):
             repr += [f"COMPUTE {STATIONARY(time=time, tfmt=self.times.tfmt).render()}"]
-            if ind in self.hottimes and self.hotfile is not None:
+            if ind in self.hotids and self.hotfile is not None:
                 repr += [f"{self._hotfile(time).render()}"]
         return repr
 
@@ -311,6 +324,11 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
 
     This component can be used to define multiple nonstationary compute commands and
     write intermediate results as hotfiles between then.
+
+    Note
+    ----
+    The field `times` is optional to allow for the case where the user wants to set
+    times dynamically after instantiating this component.
 
     Examples
     --------
@@ -347,7 +365,9 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
     model_type: Literal["nonstat", "NONSTAT"] = Field(
         default="nonstat", description="Model type discriminator"
     )
-    times: NONSTATIONARY = Field(description="Compute times")
+    times: NONSTATIONARY = Field(
+        default=DEFAULT_NONSTAT_TIME, description="Compute times"
+    )
     initstat: bool = Field(
         default=False,
         description=(
@@ -375,18 +395,18 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
     def cmd(self) -> list:
         """Command file string for this component."""
         repr = []
-        ind = 0
+        ind = -inf
         tbeg = self.times.tbeg
         if self.initstat:
             repr += [f"COMPUTE {STATIONARY(time=tbeg, tfmt=self.times.tfmt).render()}"]
-        for ind in self.hottimes:
+        for ind in self.hotids:
             tend = self.times()[ind]
             times = self._times(tbeg, tend)
             repr += [f"COMPUTE {times.render()}"]
             if self.hotfile is not None:
                 repr += [f"{self._hotfile(tend).render()}"]
             tbeg = tend
-        if ind < len(self.times()) - 1 and ind != -1:
+        if ind < len(self.times) - 1:
             times = self._times(tbeg, self.times.tend)
             repr += [f"COMPUTE {times.render()}"]
         return repr
