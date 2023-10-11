@@ -52,13 +52,11 @@ from rompy.swan.components.output import (
     GROUP,
     RAY,
     ISOLINE,
-    CURVE,
     CURVES,
     POINTS,
     POINTS_FILE,
     NGRID,
     NGRID_UNSTRUCTURED,
-    QUANTITY,
     QUANTITIES,
     OUTPUT_OPTIONS,
     BLOCK,
@@ -68,7 +66,7 @@ from rompy.swan.components.output import (
     TEST,
     SPECIAL_NAMES,
 )
-from rompy.swan.components.lockup import COMPUTE, HOTFILE, COMPUTE_HOTFILE, STOP
+from rompy.swan.components.lockup import COMPUTE_STAT, COMPUTE_NONSTAT, STOP
 
 
 logger = logging.getLogger(__name__)
@@ -598,10 +596,9 @@ class OUTPUT(BaseGroupComponent):
 # Lockup
 # =====================================================================================
 COMPUTE_TYPES = Annotated[
-    Union[COMPUTE, COMPUTE_HOTFILE],
+    Union[COMPUTE_STAT, COMPUTE_NONSTAT],
     Field(description="Compute components", discriminator="model_type"),
 ]
-HOTFILE_TYPE = Annotated[HOTFILE, Field(description="Hotfile components")]
 
 
 class LOCKUP(BaseComponent):
@@ -618,12 +615,7 @@ class LOCKUP(BaseComponent):
 
     This is a group component to specify SWAN "Lockup" commands including multiple
     `COMPUTE` commands that may or may not be interleaved with `HOTFILE` commands,
-    single `HOTFILE` commands, and a final `STOP` command.
-
-    Hotfile components can be specified in one (and only one) of two ways: either as a
-    `COMPUTE_HOTFILE` component instance in the `compute` field, or as a `HOTFILE`
-    component instance in the `hotfile` field (which case `compute` field must be
-    defined by a `COMPUTE` component instance).
+    and a final `STOP` command.
 
     Examples
     --------
@@ -632,19 +624,20 @@ class LOCKUP(BaseComponent):
         :okwarning:
 
         from rompy.swan.components.group import LOCKUP
-        comp = dict(
-            model_type="compute_hotfile",
-            fname="./hotfile",
-            times=dict(
-                model_type="nonstationary",
-                tbeg="1990-01-01T00:00:00",
-                tend="1990-02-01T00:00:00",
-                delt="PT1H",
-                tfmt=1,
-                dfmt="hr",
+        lockup = LOCKUP(
+            compute=dict(
+                model_type="stat",
+                times=dict(
+                    model_type="nonstationary",
+                    tbeg="1990-01-01T00:00:00",
+                    tend="1990-01-01T03:00:00",
+                    delt="PT1H",
+                    dfmt="hr",
+                ),
+                hotfile=dict(fname="hotfile"),
+                hottimes=[-1],
             ),
         )
-        lockup = LOCKUP(compute=[comp])
         print(lockup.render())
 
     """
@@ -652,29 +645,8 @@ class LOCKUP(BaseComponent):
     model_type: Literal["lockup", "LOCKUP"] = Field(
         default="lockup", description="Model type discriminator"
     )
-    compute: list[COMPUTE_TYPES] = Field(description="List of Compute components")
-    hotfile: Optional[HOTFILE_TYPE] = Field(default=None)
-
-    @model_validator(mode="after")
-    def hotfile_specified_once(self) -> "LOCKUP":
-        """Ensure hotfile is specified only once."""
-        if isinstance(self.compute[0], COMPUTE_HOTFILE) and self.hotfile is not None:
-            raise ValueError(
-                "Hotfile specified both with COMPUTE_HOTFILE and HOTFILE components, "
-                "please ensure it is only specified once"
-            )
-        return self
+    compute: COMPUTE_TYPES = Field(description="Compute components")
 
     def cmd(self) -> list:
         """Command file strings for this component."""
-        repr = []
-        for compute in self.compute:
-            # COMPUTE returns a string while COMPUTE_HOTFILE returns a list
-            if compute.model_type.upper() == "COMPUTE":
-                repr += [compute.cmd()]
-            elif compute.model_type.upper() == "COMPUTE_HOTFILE":
-                repr += compute.cmd()
-        if self.hotfile is not None:
-            repr += [self.hotfile.render()]
-        repr += [STOP().render()]
-        return repr
+        return self.compute.cmd() + [STOP().render()]

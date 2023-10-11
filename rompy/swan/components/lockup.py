@@ -1,13 +1,13 @@
 """Model lockup components."""
 import logging
 from pathlib import Path
-from typing import Literal, Optional, Union, Annotated
+from typing import Literal, Optional, Union
 from pydantic import field_validator, model_validator, Field
 from datetime import datetime
 from pandas import Timestamp
 
 from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.time import STATIONARY, NONSTATIONARY, TimeRangeClosed
+from rompy.swan.subcomponents.time import STATIONARY, NONSTATIONARY
 
 
 logger = logging.getLogger(__name__)
@@ -104,7 +104,7 @@ class COMPUTE(BaseComponent):
 
     @field_validator("times")
     @classmethod
-    def validate_times(cls, times: TIMES_TYPE) -> TIMES_TYPE:
+    def times_suffix(cls, times: TIMES_TYPE) -> TIMES_TYPE:
         if isinstance(times, NONSTATIONARY):
             times.suffix="c"
         return times
@@ -185,23 +185,21 @@ class HOTFILE(BaseComponent):
         return repr
 
 
-class COMPUTE_HOTFILE(COMPUTE, HOTFILE):
-    """Compute and Hotstart group component.
+class COMPUTE_STAT(BaseComponent):
+    """Multiple SWAN stationary computations.
 
     .. code-block:: text
 
-        COMPUTE STATIONARY|NONSTATIONARY
+        COMPUTE STATIONARY [time]
         HOTFILE 'fname' ->FREE|UNFORMATTED
+        COMPUTE STATIONARY [time]
+        COMPUTE STATIONARY [time]
+        HOTFILE 'fname' ->FREE|UNFORMATTED
+        .
+        .
 
-    This is a group component that combines a `COMPUTE` and a `HOTFILE` component and
-    uses the timestamp from the `COMPUTE` component (if available) to set the timestamp
-    of the hotfile filename in the `HOTFILE` component.
-
-    Note
-    ----
-    The stationary time or the last time of a nonstationary `COMPUTE` component is used
-    (when available) to set the timestamp of the hotfile `fname` so multiple sequences
-    of associated `COMPUTE` and `HOTFILE` commands can specified.
+    This component can be used to define multiple stationary compute commands and
+    write intermediate results as hotfiles between then.
 
     Examples
     --------
@@ -209,58 +207,97 @@ class COMPUTE_HOTFILE(COMPUTE, HOTFILE):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.lockup import COMPUTE_HOTFILE
-        comp = COMPUTE_HOTFILE(
-            fname="./hotfile",
-            times=dict(
-                model_type="nonstationary",
-                tbeg="1990-01-01T00:00:00",
-                tend="1990-02-01T00:00:00",
-                delt="PT1H",
-                tfmt=1,
-                dfmt="hr",
-            ),
-            format="free",
+        from rompy.swan.subcomponents.time import STATIONARY, NONSTATIONARY
+        from rompy.swan.components.lockup import COMPUTE_STAT
+        time = STATIONARY(time="1990-01-01T00:00:00")
+        comp = COMPUTE_STAT(times=time)
+        print(comp.render())
+        times = NONSTATIONARY(
+            tbeg="1990-01-01T00:00:00",
+            tend="1990-01-01T03:00:00",
+            delt="PT1H",
         )
+        comp = COMPUTE_STAT(times=times)
+        print(comp.render())
+        hotfile = dict(fname="./hotfile.swn")
+        hottimes=["1990-01-01T03:00:00"]
+        comp = COMPUTE_STAT(times=times, hotfile=hotfile, hottimes=hottimes)
+        print(comp.render())
+        comp = COMPUTE_STAT(times=times, hotfile=hotfile, hottimes=[2, -1])
         print(comp.render())
 
     """
 
-    model_type: Literal["compute_hotfile", "COMPUTE_HOTFILE"] = Field(
-        default="compute", description="Model type discriminator"
+    model_type: Literal["stat", "STAT"] = Field(
+        default="stat", description="Model type discriminator"
     )
-    tfmt: str = Field(
-        default="%Y%m%dT%H%M%S",
-        description=("Format to render the timestamp specification to fname"),
+    times: Union[STATIONARY, NONSTATIONARY] = Field(
+        description="Compute times",
+        discriminator="model_type",
     )
+    hotfile: Optional[HOTFILE] = Field(
+        default=None, description="Write results to restart files",
+    )
+    hottimes: Union[list[datetime], list[int]] = Field(
+        default=[],
+        description=(
+            "Times to write hotfiles, can be a list of datetimes or times indices"
+        )
+    )
+    suffix: str = Field(
+        default="_%Y%m%dT%H%M%S",
+        description=("Time-template suffix to add to hotfile fname"),
+    )
+
+    @field_validator("hottimes")
+    @classmethod
+    def timestamp_to_datetime(cls, hottimes: TIMES_TYPE) -> TIMES_TYPE:
+        """Ensure pandas.Timestamp entries are coerced into datatime."""
+        if hottimes and isinstance(hottimes[0], Timestamp):
+            hottimes = [t.to_pydatetime() for t in hottimes]
+        return hottimes
 
     @model_validator(mode="after")
-    def set_timestamp(self) -> "COMPUTE_HOTFILE":
-        """Set timestamp to fname."""
-        try:
-            timestamp = self.times.time.strftime(self.tfmt)
-        except AttributeError:
-            try:
-                timestamp = self.times.tend.strftime(self.tfmt)
-            except AttributeError:
-                timestamp = ""
-        self.fname = (
-            self.fname.parent / f"{self.fname.stem}-{timestamp}{self.fname.suffix}"
-        )
+    def hotfile_with_hottimes(self) -> "COMPUTE_NONSTAT":
+        if self.hottimes and self.hotfile is None:
+            logger.warning("hotfile not specified, hottimes will be ignored")
+        elif self.hotfile is not None and not self.hottimes:
+            logger.warning("hottimes not specified, hotfile will be ignored")
         return self
 
-    def cmd(self) -> str:
+    @model_validator(mode="after")
+    def hottimes_to_ids(self) -> "COMPUTE_NONSTAT":
+        if self.hottimes and isinstance(self.hottimes[0], datetime):
+            ids = []
+            for t in self.hottimes:
+                try:
+                    ids.append(self.times().index(t))
+                except ValueError as e:
+                    raise ValueError(f"hottime {t} not in times {self.times}") from e
+            self.hottimes = ids
+        self.hottimes = [i if i >= 0 else i + len(self.times) for i in self.hottimes]
+        return self
+
+    def _hotfile(self, time):
+        """Set timestamp to hotfile fname."""
+        timestamp = time.strftime(self.suffix)
+        fname = self.hotfile.fname.parent / (
+            f"{self.hotfile.fname.stem}{timestamp}"
+            f"{self.hotfile.fname.suffix}"
+        )
+        return HOTFILE(fname=fname, format=self.hotfile.format)
+
+    def cmd(self) -> list:
         """Command file string for this component."""
-        repr = [super().cmd()]
-        repr += [f"HOTFILE fname='{self.fname}'"]    
-        if self.format is not None:
-            repr[-1] += f" {self.format.upper()}"    
+        repr = []
+        for ind, time in enumerate(self.times()):
+            repr += [f"COMPUTE {STATIONARY(time=time, tfmt=self.times.tfmt).render()}"]
+            if ind in self.hottimes and self.hotfile is not None:
+                repr += [f"{self._hotfile(time).render()}"]
         return repr
 
 
-HOTTIMES_TYPE = Union[list[datetime], list[int]]
-
-class COMPUTE_NONSTAT(BaseComponent):
+class COMPUTE_NONSTAT(COMPUTE_STAT):
     """Multiple SWAN nonstationary computations.
 
     .. code-block:: text
@@ -281,7 +318,8 @@ class COMPUTE_NONSTAT(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.lockup import COMPUTE_NONSTAT, NONSTATIONARY
+        from rompy.swan.subcomponents.time import NONSTATIONARY
+        from rompy.swan.components.lockup import COMPUTE_NONSTAT
         times = NONSTATIONARY(
             tbeg="1990-01-01T00:00:00",
             tend="1990-02-01T00:00:00",
@@ -306,14 +344,10 @@ class COMPUTE_NONSTAT(BaseComponent):
 
     """
 
-    model_type: Literal["nonstationary", "NONSTATIONARY"] = Field(
-        default="nonstationary", description="Model type discriminator"
+    model_type: Literal["nonstat", "NONSTAT"] = Field(
+        default="nonstat", description="Model type discriminator"
     )
-    times: Optional[NONSTATIONARY] = Field(
-        default=None,
-        description="Times for the stationary or nonstationary computation",
-        strict=True,
-    )
+    times: NONSTATIONARY = Field(description="Compute times")
     initstat: bool = Field(
         default=False,
         description=(
@@ -321,54 +355,12 @@ class COMPUTE_NONSTAT(BaseComponent):
             "NONSTATIONARY computation(s) to prescribe initial conditions"
         ),
     )
-    hotfile: Optional[HOTFILE] = Field(
-        default=None, description="Write results to restart files",
-    )
-    hottimes: HOTTIMES_TYPE = Field(
-        default=[],
-        description=(
-            "Times to write restart files, can be a list of datetimes or time indices"
-        )
-    )
-    tfmt: str = Field(
-        default="_%Y%m%dT%H%M%S",
-        description=("Time-based suffix to add to hotfile fname"),
-    )
 
     @field_validator("times")
     @classmethod
-    def validate_times(cls, times: NONSTATIONARY) -> NONSTATIONARY:
+    def times_suffix(cls, times: NONSTATIONARY) -> NONSTATIONARY:
         times.suffix="c"
         return times
-
-    @field_validator("hottimes")
-    @classmethod
-    def timestamp_to_datetime(cls, hottimes: TIMES_TYPE) -> TIMES_TYPE:
-        if hottimes and isinstance(hottimes[0], Timestamp):
-            hottimes = [t.to_pydatetime() for t in hottimes]
-        return hottimes
-
-    @model_validator(mode="after")
-    def ensure_hotfile_specified(self) -> "COMPUTE_NONSTAT":
-        if self.hottimes and self.hotfile is None:
-            logger.warning(
-                "hotfile not specified, hottimes will be ignored"
-            )
-        return self
-
-    @model_validator(mode="after")
-    def validate_hottimes(self) -> "COMPUTE_NONSTAT":
-        if self.hottimes and isinstance(self.hottimes[0], datetime):
-            ids = []
-            for time in self.hottimes:
-                try:
-                    ids.append(self.times().index(time))
-                except ValueError as e:
-                    raise ValueError(
-                        f"hottime {time} not in times {self.times}"
-                    ) from e
-            self.hottimes = ids
-        return self
 
     def _times(self, tbeg, tend):
         return NONSTATIONARY(
@@ -380,16 +372,7 @@ class COMPUTE_NONSTAT(BaseComponent):
             suffix=self.times.suffix,
         )
 
-    def _hotfile(self, time):
-        """Set timestamp to hotfile fname."""
-        timestamp = time.strftime(self.tfmt)
-        fname = self.hotfile.fname.parent / (
-            f"{self.hotfile.fname.stem}{timestamp}"
-            f"{self.hotfile.fname.suffix}"
-        )
-        return HOTFILE(fname=fname, format=self.hotfile.format)
-
-    def cmd(self) -> str:
+    def cmd(self) -> list:
         """Command file string for this component."""
         repr = []
         ind = 0
@@ -404,145 +387,6 @@ class COMPUTE_NONSTAT(BaseComponent):
                 repr += [f"{self._hotfile(tend).render()}"]
             tbeg = tend
         if ind < len(self.times()) - 1 and ind != -1:
-            times = self._times(tbeg, self.times.tend)
-            repr += [f"COMPUTE {times.render()}"]
-        return repr
-
-
-class COMPUTE_STATIONARY(BaseComponent):
-    """Multiple SWAN nonstationary computations.
-
-    .. code-block:: text
-
-        COMPUTE NONSTATIONARY [tbegc] [deltc] SEC|MIN|HR|DAY [tendc]
-        HOTFILE 'fname' ->FREE|UNFORMATTED
-        COMPUTE NONSTATIONARY [tbegc] [deltc] SEC|MIN|HR|DAY [tendc]
-        HOTFILE 'fname' ->FREE|UNFORMATTED
-        .
-        .
-
-    This component can be used to define multiple nonstationary compute commands and
-    write intermediate results as hotfiles between then.
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-
-        from rompy.swan.components.lockup import COMPUTE
-        comp = COMPUTE()
-        print(comp.render())
-        comp = COMPUTE(
-            times=dict(model_type="stationary", time="1990-01-01T00:00:00", tfmt=2)
-        )
-        print(comp.render())
-        comp = COMPUTE(
-            times=dict(
-                model_type="nonstationary",
-                tbeg="1990-01-01T00:00:00",
-                tend="1990-02-01T00:00:00",
-                delt="PT1H",
-                tfmt=1,
-                dfmt="hr",
-            ),
-            initstat=True,
-            hotfile=dict(fname="hotfile", format="free"),
-            hottimes=[6, 12, 18, -1],
-        )
-        print(comp.render())
-
-    """
-
-    model_type: Literal["nonstationary", "NONSTATIONARY"] = Field(
-        default="nonstationary", description="Model type discriminator"
-    )
-    times: Optional[NONSTATIONARY] = Field(
-        default=None,
-        description="Times for the stationary or nonstationary computation",
-        strict=True,
-    )
-    initstat: bool = Field(
-        default=False,
-        description=(
-            "Run a STATIONARY computation at the initial time prior to the "
-            "NONSTATIONARY computation(s) to prescribe initial conditions"
-        ),
-    )
-    hotfile: Optional[HOTFILE] = Field(
-        default=None, description="Write results to restart files",
-    )
-    hottimes: HOTTIMES_TYPE = Field(
-        default=[-1],
-        description=(
-            "Times to write restart files, can be a list of datetimes or time indices"
-        )
-    )
-    tfmt: str = Field(
-        default="_%Y%m%dT%H%M%S",
-        description=("Time-based suffix to add to hotfile fname"),
-    )
-
-    @field_validator("times")
-    @classmethod
-    def validate_times(cls, times: NONSTATIONARY) -> NONSTATIONARY:
-        times.suffix="c"
-        return times
-
-    @field_validator("hottimes")
-    @classmethod
-    def timestamp_to_datetime(cls, hottimes: TIMES_TYPE) -> TIMES_TYPE:
-        if isinstance(hottimes[0], Timestamp):
-            hottimes = [t.to_pydatetime() for t in hottimes]
-        return hottimes
-
-    @model_validator(mode="after")
-    def validate_hottimes(self) -> "COMPUTES_NONSTATIONARY":
-        if isinstance(self.hottimes[0], datetime):
-            ids = []
-            for time in self.hottimes:
-                try:
-                    ids.append(self.times().index(time))
-                except ValueError as e:
-                    raise ValueError(
-                        f"hottime {time} not in times {self.times}"
-                    ) from e
-            self.hottimes = ids
-        return self
-
-    def _times(self, tbeg, tend):
-        return NONSTATIONARY(
-            tbeg=tbeg,
-            tend=tend,
-            delt=self.times.delt,
-            tfmt=self.times.tfmt,
-            dfmt=self.times.dfmt,
-            suffix=self.times.suffix,
-        )
-
-    def _hotfile(self, time):
-        """Set timestamp to hotfile fname."""
-        timestamp = time.strftime(self.tfmt)
-        fname = self.hotfile.fname.parent / (
-            f"{self.hotfile.fname.stem}{timestamp}"
-            f"{self.hotfile.fname.suffix}"
-        )
-        return HOTFILE(fname=fname, format=self.hotfile.format)
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        repr = []
-        tbeg = self.times.tbeg
-        if self.initstat:
-            repr += [f"COMPUTE {STATIONARY(time=tbeg, tfmt=self.times.tfmt).render()}"]
-        for ind in self.hottimes:
-            tend = self.times()[ind]
-            times = self._times(tbeg, tend)
-            repr += [f"COMPUTE {times.render()}"]
-            if self.hotfile is not None:
-                repr += [f"{self._hotfile(tend).render()}"]
-            tbeg = tend
-        if ind < len(self.times()) - 1:
             times = self._times(tbeg, self.times.tend)
             repr += [f"COMPUTE {times.render()}"]
         return repr

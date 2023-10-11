@@ -1,11 +1,14 @@
 import logging
+from copy import deepcopy
 from pathlib import Path
 from typing import Annotated, Literal, Optional, Union
 
 from pydantic import field_validator, Field, model_validator
 
 from rompy.core import BaseConfig, RompyBaseModel, TimeRange
+
 from rompy.swan.forcing import ForcingData as ForcingDataNew
+from rompy.swan.forcing import OutputTime
 
 from rompy.swan.legacy import ForcingData, SwanSpectrum, SwanPhysics, Outputs
 
@@ -219,8 +222,11 @@ class SwanConfigComponents(BaseConfig):
             ret["prop"] = self.prop.render()
         if self.numeric:
             ret["numeric"] = self.numeric.render()
+        # Ensure times are passed to output and lockup
         if self.output:
+            self.output = OutputTime(group=deepcopy(self.output), period=period).group
             ret["output"] = self.output.render()
         if self.lockup:
+            import ipdb; ipdb.set_trace()
             ret["lockup"] = self.lockup.render()
         return ret
