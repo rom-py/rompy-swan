@@ -8,7 +8,7 @@ from pydantic import field_validator, Field, model_validator
 from rompy.core import BaseConfig, RompyBaseModel, TimeRange
 
 from rompy.swan.forcing import ForcingData as ForcingDataNew
-from rompy.swan.forcing import OutputTime
+from rompy.swan.forcing import OutputTime, LockupTime
 
 from rompy.swan.legacy import ForcingData, SwanSpectrum, SwanPhysics, Outputs
 
@@ -227,6 +227,6 @@ class SwanConfigComponents(BaseConfig):
             self.output = OutputTime(group=deepcopy(self.output), period=period).group
             ret["output"] = self.output.render()
         if self.lockup:
-            import ipdb; ipdb.set_trace()
+            self.lockup = LockupTime(group=deepcopy(self.lockup), period=period).group
             ret["lockup"] = self.lockup.render()
         return ret
