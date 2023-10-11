@@ -13,13 +13,8 @@ from rompy.swan.subcomponents.time import STATIONARY, NONSTATIONARY
 
 logger = logging.getLogger(__name__)
 
-
 TIMES_TYPE = Union[STATIONARY, NONSTATIONARY]
 HOTTIMES_TYPE = Union[list[datetime], list[int]]
-
-DEFAULT_TIME = datetime(1970, 1, 1, 0, 0, 0)
-DEFAULT_STAT_TIME = STATIONARY(time=DEFAULT_TIME)
-DEFAULT_NONSTAT_TIME = NONSTATIONARY(tbeg=DEFAULT_TIME, tend=DEFAULT_TIME, delt="PT1H")
 
 
 class COMPUTE(BaseComponent):
@@ -243,7 +238,7 @@ class COMPUTE_STAT(BaseComponent):
         default="stat", description="Model type discriminator"
     )
     times: TIMES_TYPE = Field(
-        default=DEFAULT_STAT_TIME,
+        default_factory=STATIONARY,
         description="Compute times",
         discriminator="model_type",
     )
@@ -366,7 +361,7 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
         default="nonstat", description="Model type discriminator"
     )
     times: NONSTATIONARY = Field(
-        default=DEFAULT_NONSTAT_TIME, description="Compute times"
+        default_factory=NONSTATIONARY, description="Compute times"
     )
     initstat: bool = Field(
         default=False,
