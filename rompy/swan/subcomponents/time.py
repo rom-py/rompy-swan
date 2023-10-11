@@ -10,7 +10,8 @@ from rompy.swan.subcomponents.base import BaseSubComponent
 
 logger = logging.getLogger(__name__)
 
-
+DEFAULT_TIME = datetime(1970, 1, 1, 0, 0, 0)
+DEFAULT_DELT = timedelta(hours=1)
 TIME_FORMAT = {
     1: "%Y%m%d.%H%M%S",
     2: "'%d-%b-%y %H:%M:%S'",
@@ -279,6 +280,11 @@ class NONSTATIONARY(TimeRangeClosed):
 
         NONSTATIONARY [tbeg] [delt] SEC|MIN|HR|DAY [tend]
 
+    Note
+    ----
+    Default values for the time specification fields are provided for the case where
+    the user wants to set times dynamically after instantiating this subcomponent.
+
     Examples
     --------
 
@@ -309,6 +315,9 @@ class NONSTATIONARY(TimeRangeClosed):
     model_type: Literal["nonstationary", "NONSTATIONARY"] = Field(
         default="nonstationary", description="Model type discriminator"
     )
+    tbeg: datetime = Field(default=DEFAULT_TIME, description="Start time")
+    tend: datetime = Field(default=DEFAULT_TIME, description="End time")
+    delt: timedelta = Field(default=DEFAULT_DELT, description="Time interval")
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
@@ -322,6 +331,11 @@ class STATIONARY(BaseSubComponent):
     .. code-block:: text
 
         STATIONARY [time]
+
+    Note
+    ----
+    The field `time` is optional to allow for the case where the user wants to set the
+    time dynamically after instantiating this component.
 
     Examples
     --------
@@ -338,7 +352,7 @@ class STATIONARY(BaseSubComponent):
     model_type: Literal["stationary", "STATIONARY"] = Field(
         default="stationary", description="Model type discriminator"
     )
-    time: datetime = Field(description="Time to which stationary run is to be made")
+    time: datetime = Field(default=DEFAULT_TIME, description="Stationary time")
     tfmt: Union[Literal[1, 2, 3, 4, 5, 6], str] = Field(
         default=1, description="Format to render time specification",
     )
@@ -358,45 +372,3 @@ class STATIONARY(BaseSubComponent):
     def cmd(self) -> str:
         """Render subcomponent cmd."""
         return f"STATIONARY time={Time(time=self.time, tfmt=self.tfmt).render()}"
-
-
-# class STATIONARIES(BaseSubComponent):
-#     """Multiple stationary time specifications.
-
-#     .. code-block:: text
-
-#         STATIONARY [time]
-#         STATIONARY [time]
-#         STATIONARY [time]
-#         .
-#         .
-
-#     Examples
-#     --------
-
-#     .. ipython:: python
-#         :okwarning:
-
-#         from rompy.swan.subcomponents.time import STATIONARIES
-#         stats = STATIONARIES(
-#             times=dict(
-#                 tbeg="2012-01-01T00:00:00", tend="2012-02-01T00:00:00", delt="PT1H"
-#             ),
-#         )
-#         print(stats.render())
-
-#     """
-
-#     model_type: Literal["stationaries", "STATIONARIES"] = Field(
-#         default="stationaries", description="Model type discriminator"
-#     )
-#     times: TimeRangeClosed = Field(
-#         description="Times to which stationary runs are to be made"
-#     )
-
-#     def cmd(self) -> str:
-#         """Render subcomponent cmd."""
-#         repr = ""
-#         for time in self.times():
-#             repr +=f"\nSTATIONARY {time.render()}"        
-#         return repr
