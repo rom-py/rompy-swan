@@ -137,7 +137,7 @@ class LockupTime(GroupComponentTimeInterface):
     @model_validator(mode="after")
     def time_interface(self) -> "LockupTime":
         """Set the time parameter for COMPUTE components."""
-        times = self.group.compute.times
+        times = self.group.compute.times or NONSTATIONARY()
         if isinstance(times, NONSTATIONARY):
             times = NONSTATIONARY(
                 tbeg=self.period.start,
@@ -145,7 +145,7 @@ class LockupTime(GroupComponentTimeInterface):
                 delt=self.period.interval,
                 tfmt=times.tfmt,
                 dfmt=times.dfmt,
-                suffix=times.suffix
+                suffix="c",
             )
         elif isinstance(times, STATIONARY):
             times = STATIONARY(time=self.period.start, tfmt=times.tfmt)
