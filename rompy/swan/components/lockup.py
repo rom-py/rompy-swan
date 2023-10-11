@@ -284,6 +284,12 @@ class COMPUTE_STAT(BaseComponent):
                     raise ValueError(f"hottime {t} not in times {self.times}") from e
         else:
             ids = [i if i >= 0 else i + len(self.times) for i in self.hottimes]
+            for i in ids:
+                if i >= len(self.times):
+                    raise ValueError(
+                        f"Hotfile requested for time {i} but times have "
+                        f"only {len(self.times)} values: {self.times} "
+                    )
         return ids
 
     def _hotfile(self, time):
