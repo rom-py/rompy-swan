@@ -1,19 +1,18 @@
 import logging
-from copy import deepcopy
 from pathlib import Path
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import field_validator, Field, model_validator
+from pydantic import Field, model_validator
 
-from rompy.core import BaseConfig, RompyBaseModel, TimeRange
+from rompy.core import BaseConfig
 
 from rompy.swan.interface import ForcingData as ForcingDataNew
 from rompy.swan.interface import OutputInterface, LockupInterface
 
 from rompy.swan.legacy import ForcingData, SwanSpectrum, SwanPhysics, Outputs
 
-from rompy.swan.components import boundary, cgrid, inpgrid, numerics
-from rompy.swan.components.group import STARTUP, PHYSICS, OUTPUT, LOCKUP
+from rompy.swan.components import boundary, cgrid, numerics
+from rompy.swan.components.group import STARTUP, INPGRIDS, PHYSICS, OUTPUT, LOCKUP
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 
 from rompy.swan.grid import SwanGrid
@@ -93,7 +92,7 @@ CGRID_TYPES = Annotated[
     Field(description="Cgrid component", discriminator="model_type"),
 ]
 INPGRID_TYPES = Annotated[
-    Union[inpgrid.INPGRIDS, ForcingDataNew],
+    Union[INPGRIDS, ForcingDataNew],
     Field(description="Input grid components", discriminator="model_type")
 ]
 BOUNDARY_TYPES = Annotated[

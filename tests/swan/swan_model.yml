@@ -45,73 +45,69 @@ cgrid:
     mx: 199
     my: 199
 
-inpgrid:
-  model_type: forcing
-  bottom:
-    var: bottom
-    source:
-      model_type: intake
-      catalog_uri: ${ROMPY_PATH}/tests/data/catalog.yaml
-      dataset_id: gebco
-    fac: -1.0
-    z1: elevation
-    coords:
-      x: lon
-      y: lat
-  input:
-    - var: wind
-      source:
-        model_type: intake
-        catalog_uri: ${ROMPY_PATH}/tests/data/catalog.yaml
-        dataset_id: era5
-      filter:
-        sort:
-          coords: [latitude]
-      z1: u10
-      z2: v10
-      coords:
-        x: longitude
-        y: latitude
-
 # inpgrid:
-#   model_type: inpgrids
-#   inpgrids:
-#   - model_type: regular
-#     grid_type: bottom
-#     xpinp: 0.0
-#     ypinp: 0.0
-#     alpinp: 0.0
-#     mxinp: 10
-#     myinp: 10
-#     dxinp: 0.1
-#     dyinp: 0.1
-#     excval: -999.0
-#     readinp:
-#       model_type: readinp
-#       fname1: bottom.txt
-#   - model_type: regular
-#     grid_type: wind
-#     xpinp: 0.0
-#     ypinp: 0.0
-#     alpinp: 0.0
-#     mxinp: 10
-#     myinp: 10
-#     dxinp: 0.1
-#     dyinp: 0.1
-#     excval: -999.0
-#     readinp:
-#       model_type: readinp
-#       fname1: wind.txt
-#     nonstationary:
-#       tbeg:
-#         time: '2023-01-01T00:00:00'
-#         tfmt: 1
-#       delt:
-#         delt: PT30M
-#         dfmt: min
-#       tend:
-#         time: '2023-02-01T00:00:00'
-#         tfmt: 1
+#   model_type: forcing
+#   bottom:
+#     var: bottom
+#     source:
+#       model_type: intake
+#       catalog_uri: ${ROMPY_PATH}/tests/data/catalog.yaml
+#       dataset_id: gebco
+#     fac: -1.0
+#     z1: elevation
+#     coords:
+#       x: lon
+#       y: lat
+#   input:
+#     - var: wind
+#       source:
+#         model_type: intake
+#         catalog_uri: ${ROMPY_PATH}/tests/data/catalog.yaml
+#         dataset_id: era5
+#       filter:
+#         sort:
+#           coords: [latitude]
+#       z1: u10
+#       z2: v10
+#       coords:
+#         x: longitude
+#         y: latitude
+
+inpgrid:
+  model_type: inpgrids
+  inpgrids:
+  - model_type: regular
+    grid_type: bottom
+    xpinp: 0.0
+    ypinp: 0.0
+    alpinp: 0.0
+    mxinp: 10
+    myinp: 10
+    dxinp: 0.1
+    dyinp: 0.1
+    excval: -999.0
+    readinp:
+      model_type: readinp
+      fname1: bottom.txt
+  - model_type: regular
+    grid_type: wind
+    xpinp: 0.0
+    ypinp: 0.0
+    alpinp: 0.0
+    mxinp: 10
+    myinp: 10
+    dxinp: 0.1
+    dyinp: 0.1
+    excval: -999.0
+    readinp:
+      model_type: readinp
+      fname1: wind.txt
+    nonstationary:
+      tbeg: '2023-01-01T00:00:00'
+      tend: '2023-02-01T00:00:00'
+      delt: PT30M
+      tfmt: 1
+      dfmt: min
 
 boundary:
   model_type: boundspec
