@@ -6,6 +6,7 @@ from pydantic import Field, model_validator, field_validator
 from rompy.swan.types import PhysicsOff
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.components.startup import PROJECT, SET, MODE, COORDINATES
+from rompy.swan.components.inpgrid import REGULAR, CURVILINEAR, UNSTRUCTURED
 from rompy.swan.components.physics import (
     GEN1,
     GEN2,
@@ -156,6 +157,89 @@ class STARTUP(BaseGroupComponent):
             repr += [f"{self.mode.cmd()}"]
         if self.coordinates is not None:
             repr += [f"{self.coordinates.cmd()}"]
+        return repr
+
+
+# =====================================================================================
+# Inpgrid
+# =====================================================================================
+INPGRID_TYPES = Annotated[
+    Union[REGULAR, CURVILINEAR, UNSTRUCTURED],
+    Field(discriminator="model_type"),
+]
+
+
+class INPGRIDS(BaseGroupComponent):
+    """SWAN input grids group component.
+
+    .. code-block:: text
+
+        INPGRID ...
+        READGRID ...
+
+        INPGRID ...
+        READGRID ...
+
+        ...
+
+    This group component is a convenience to allow defining and rendering
+    a list of input grid components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.components.inpgrid import REGULAR
+        from rompy.swan.components.group import INPGRIDS
+        inpgrid_bottom = REGULAR(
+            grid_type="bottom",
+            excval=-99.0,
+            xpinp=172.0,
+            ypinp=-41.0,
+            alpinp=0.0,
+            mxinp=99,
+            myinp=99,
+            dxinp=0.005,
+            dyinp=0.005,
+            readinp=dict(fname1="bottom.txt"),
+        )
+        inpgrid_wind = REGULAR(
+            grid_type="wind",
+            excval=-99.0,
+            xpinp=172.0,
+            ypinp=-41.0,
+            alpinp=0.0,
+            mxinp=99,
+            myinp=99,
+            dxinp=0.005,
+            dyinp=0.005,
+            readinp=dict(fname1="wind.txt"),
+            nonstationary=dict(
+                tbeg="2019-01-01T00:00:00",
+                tend="2019-01-07 00:00:00",
+                delt=3600,
+                dfmt="hr",
+            ),
+        )
+        inpgrids = INPGRIDS(inpgrids=[inpgrid_bottom, inpgrid_wind])
+        print(inpgrids.render())
+
+    """
+
+    model_type: Literal["inpgrids"] = Field(
+        default="inpgrids", description="Model type discriminator"
+    )
+    inpgrids: list[INPGRID_TYPES] = Field(
+        min_length=1,
+        description="List of input grid components",
+    )
+
+    def cmd(self) -> str | list:
+        repr = []
+        for inpgrid in self.inpgrids:
+            repr += [inpgrid.cmd()]
         return repr
 
 

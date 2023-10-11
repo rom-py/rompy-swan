@@ -1,6 +1,6 @@
 """SWAN interface objects."""
 import logging
-from typing import Union, Annotated, Optional, Literal, Any
+from typing import Optional, Literal, Any
 from pathlib import Path
 from pydantic import Field, model_validator
 
@@ -24,7 +24,7 @@ class ForcingData(RompyBaseModel):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.forcing import ForcingData
+        from rompy.swan.interface import ForcingData
 
     """
     model_type: Literal["forcing", "FORCING"] = Field(
