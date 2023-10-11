@@ -173,6 +173,11 @@ class TimeRangeOpen(BaseSubComponent):
         * `[-][DD ][HH:MM]SS[.ffffff]`
         * `[±]P[DD]DT[HH]H[MM]M[SS]S` (ISO 8601 format for timedelta)
 
+    Note
+    ----
+    Default values for the time specification fields are provided for the case where
+    the user wants to set times dynamically after instantiating this subcomponent.
+
     Examples
     --------
 
@@ -195,8 +200,8 @@ class TimeRangeOpen(BaseSubComponent):
     model_type: Literal["open", "OPEN"] = Field(
         default="open", description="Model type discriminator"
     )
-    tbeg: datetime = Field(description="Begining datetime specification")
-    delt: timedelta = Field(description="Time interval")
+    tbeg: datetime = Field(default=DEFAULT_TIME, description="Start time")
+    delt: timedelta = Field(default=DEFAULT_DELT, description="Time interval")
     tfmt: Union[Literal[1, 2, 3, 4, 5, 6], str] = Field(
         default=1, description="Format to render time specification",
     )
@@ -220,6 +225,11 @@ class TimeRangeClosed(TimeRangeOpen):
     .. code-block:: text
 
         [tbeg] [delt] SEC|MIN|HR|DAY [tend]
+
+    Note
+    ----
+    Default values for the time specification fields are provided for the case where
+    the user wants to set times dynamically after instantiating this subcomponent.
 
     Examples
     --------
@@ -251,7 +261,7 @@ class TimeRangeClosed(TimeRangeOpen):
     model_type: Literal["closed", "CLOSED"] = Field(
         default="closed", description="Model type discriminator"
     )
-    tend: datetime = Field(description="End datetime specification")
+    tend: datetime = Field(default=DEFAULT_TIME, description="End time")
 
     def __call__(self) -> list[Time]:
         """Returns the list of Time objects."""
