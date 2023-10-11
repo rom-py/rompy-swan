@@ -143,3 +143,13 @@ def test_lockup_compute_nonstat(times):
     lockup = LOCKUP(compute=dict(model_type="nonstat", times=times))
     assert lockup.compute.model_type == "nonstat"
     assert "STOP" in lockup.render()
+
+
+def test_compute_stationary_no_times_passed():
+    compute = COMPUTE_STAT()
+    assert compute.render() == "COMPUTE STATIONARY time=19700101.000000"
+
+
+def test_compute_nonstationary_no_times_passed():
+    compute = COMPUTE_NONSTAT()
+    assert compute.render() == f"COMPUTE {compute.times.render()}"
