@@ -295,14 +295,15 @@ output:
 lockup:
   compute:
     model_type: nonstat
-    # times:
-    #   model_type: nonstationary
-    #   tbeg: '2023-01-01T00:00:00'
-    #   tend: '2023-02-01T00:00:00'
-    #   delt: PT30M
-    #   tfmt: 1
-    #   dfmt: min
+    initstat: True
+    times:
+      model_type: nonstationary
+      # tbeg: '2023-01-01T00:00:00'
+      # tend: '2023-02-01T00:00:00'
+      # delt: PT30M
+      tfmt: 1
+      dfmt: min
     hotfile:
       fname: ./hotfile.txt
       format: free
-    hottimes: [6, 12, 18, -1]
+    hottimes: [6, -1]

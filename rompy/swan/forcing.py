@@ -9,7 +9,7 @@ from rompy.swan.grid import SwanGrid
 from rompy.swan.data import SwanDataGrid
 from rompy.swan.boundary import DataBoundary
 
-from rompy.swan.subcomponents.time import TimeRangeOpen, Time, Delt
+from rompy.swan.subcomponents.time import TimeRangeOpen, STATIONARY, NONSTATIONARY
 
 
 logger = logging.getLogger(__name__)
@@ -127,22 +127,28 @@ class OutputTime(GroupComponentTimeInterface):
                 setattr(obj, "times", self.timerange(tfmt, dfmt, obj.suffix))
 
 
-class LockupTime(RompyBaseModel):
+class LockupTime(GroupComponentTimeInterface):
     """Lockup group component with consistent times."""
 
     model_type: Literal["lockuptime", "LOCKUPTIME"] = Field(
         default="lockuptime", description="Model type discriminator"
     )
 
-    # @model_validator(mode="after")
-    # def time_interface(self) -> "OutputTime":
-    #     """Set the time parameter for all WRITE components."""
-    #     for component in self.compute:
-    #         if component.times is not None:
-
-    #     for component in self.group._write_fields:
-    #         obj = getattr(self.group, component)
-    #         if obj is not None:
-    #             tfmt = obj.times.tbeg.tfmt if obj.times is not None else self.tfmt
-    #             dfmt = obj.times.delt.dfmt if obj.times is not None else self.dfmt
-    #             setattr(obj, "times", self.timerange(tfmt, dfmt, obj.suffix))
+    @model_validator(mode="after")
+    def time_interface(self) -> "LockupTime":
+        """Set the time parameter for COMPUTE components."""
+        times = self.group.compute.times
+        if isinstance(times, NONSTATIONARY):
+            times = NONSTATIONARY(
+                tbeg=self.period.start,
+                tend=self.period.end,
+                delt=self.period.interval,
+                tfmt=times.tfmt,
+                dfmt=times.dfmt,
+                suffix=times.suffix
+            )
+        elif isinstance(times, STATIONARY):
+            times = STATIONARY(time=self.period.start, tfmt=times.tfmt)
+        else:
+            raise ValueError(f"Unknown time type {type(times)}")
+        setattr(self.group.compute, "times", times)
