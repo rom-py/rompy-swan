@@ -268,7 +268,7 @@ class TimeRangeClosed(TimeRangeOpen):
         times = pd.date_range(start=self.tbeg, end=self.tend, freq=self.delt)
         return [time.to_pydatetime() for time in times]
 
-    def __getitem__(self, index) -> Time | list[Time]:
+    def __getitem__(self, index) -> datetime | list[datetime]:
         """Slicing from the times array."""
         return self.__call__()[index]
 
