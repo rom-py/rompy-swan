@@ -79,9 +79,9 @@ class SwanDataGrid(DataGrid):
             written to the SWAN input file.
 
         """
-        output_file = os.path.join(staging_dir, f"{self.var}.grd")
-        logger.info(f"\tWriting {self.var} to {output_file}")
-        if self.var == "bottom":
+        output_file = os.path.join(staging_dir, f"{self.var.value}.grd")
+        logger.info(f"\tWriting {self.var.value} to {output_file}")
+        if self.var.value == "bottom":
             inpgrid, readgrid = self.ds.swan.to_bottom_grid(
                 output_file,
                 fmt="%4.2f",
