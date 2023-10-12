@@ -110,8 +110,12 @@ class SwanConfigComponents(BaseConfig):
     """SWAN config class.
 
     TODO: Turn inpgrid/readgrid into group component.
-    TODO: Merge `grid` and `cgrid` into a single input type.
     TODO: Combine boundary and inpgrid into a single input type.
+
+    Note
+    ----
+    The `cgrid` is the only required field since it is used to define the swan grid
+    object which is passed to other components.
 
     """
 
@@ -122,9 +126,8 @@ class SwanConfigComponents(BaseConfig):
         default=str(HERE.parent / "templates" / "swancomp"),
         description="The template for SWAN.",
     )
-    grid: SwanGrid = Field(description="The model grid for the SWAN run")
+    cgrid: CGRID_TYPES
     startup: Optional[STARTUP_TYPE] = Field(default=None)
-    cgrid: Optional[CGRID_TYPES] = Field(default=None)
     inpgrid: Optional[INPGRID_TYPES] = Field(default=None)
     boundary: Optional[BOUNDARY_TYPES] = Field(default=None)
     initial: Optional[INITIAL_TYPE] = Field(default=None)
@@ -182,23 +185,20 @@ class SwanConfigComponents(BaseConfig):
         """Ensure bottom and water level grids are not curvilinear for RAY."""
         return self
 
-    @model_validator(mode="after")
-    def set_cgrid_from_grid(self) -> "SwanConfigComponents":
-        """Temporary hack to adjust cgrid parameters from grid."""
-        self.cgrid.grid = GRIDREGULAR(
-            xp=self.grid.x0,
-            yp=self.grid.y0,
-            alp=self.grid.rot,
-            xlen=self.grid.xlen,
-            ylen=self.grid.ylen,
-            mx=self.grid.nx - 1,
-            my=self.grid.ny - 1,
-            suffix="c",
+    @property
+    def grid(self):
+        """Define a SwanGrid from the cgrid field."""
+        return SwanGrid(
+            x0=self.cgrid.grid.xp,
+            y0=self.cgrid.grid.yp,
+            rot=self.cgrid.grid.alp,
+            dx=self.cgrid.grid.dx,
+            dy=self.cgrid.grid.dy,
+            nx=self.cgrid.grid.mx + 1,
+            ny=self.cgrid.grid.my + 1,
         )
-        return self
 
     def __call__(self, runtime) -> str:
-        grid = self.grid
         period = runtime.period
         staging_dir = runtime.staging_dir
 
@@ -211,14 +211,13 @@ class SwanConfigComponents(BaseConfig):
         # Render each group component before passing to template
         ret = {}
 
-        # The inpgrid component may use the ForcingData api
+        # The inpgrid component may use the ForcingData api so we need passing args
         if self.inpgrid:
-            ret["inpgrid"] = self.inpgrid.render(grid, period, staging_dir)
+            ret["inpgrid"] = self.inpgrid.render(self.grid, period, staging_dir)
 
+        ret["cgrid"] = self.cgrid.render()
         if self.startup:
             ret["startup"] = self.startup.render()
-        if self.cgrid:
-            ret["cgrid"] = self.cgrid.render()
         if self.boundary:
             ret["boundary"] = self.boundary.render()
         if self.initial:
