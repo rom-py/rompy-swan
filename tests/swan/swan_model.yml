@@ -37,7 +37,7 @@ cgrid:
     my: 24
 
 inpgrid:
-  model_type: forcing
+  model_type: data_interface
   bottom:
     var: bottom
     source:
