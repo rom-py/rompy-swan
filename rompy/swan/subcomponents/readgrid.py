@@ -77,6 +77,16 @@ class GRIDREGULAR(BaseSubComponent):
         description="Suffix for rendering with each output grid parameter."
     )
 
+    @property
+    def dx(self):
+        """Grid spacing in x-direction."""
+        return self.xlen / (self.mx + 1)
+
+    @property
+    def dy(self):
+        """Grid spacing in y-direction."""
+        return self.ylen / (self.my + 1)
+
     def cmd(self) -> str:
         """Command file string for this subcomponent."""
         repr = f"xp{self.suffix}={self.xp}"
