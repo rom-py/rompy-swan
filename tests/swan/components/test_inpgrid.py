@@ -4,9 +4,9 @@ import logging
 from pydantic import ValidationError
 
 from rompy.swan.types import GridOptions
+from rompy.swan.components.group import INPGRIDS
 from rompy.swan.components.inpgrid import (
     INPGRID,
-    INPGRIDS,
     REGULAR,
     CURVILINEAR,
     UNSTRUCTURED,

@@ -15,7 +15,7 @@ from rompy.swan.subcomponents.time import TimeRangeOpen, STATIONARY, NONSTATIONA
 logger = logging.getLogger(__name__)
 
 
-class ForcingData(RompyBaseModel):
+class DataInterface(RompyBaseModel):
     """SWAN forcing data interface.
 
     Examples
@@ -24,48 +24,57 @@ class ForcingData(RompyBaseModel):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.interface import ForcingData
+        from rompy.swan.interface import DataInterface
 
     """
-    model_type: Literal["forcing", "FORCING"] = Field(
-        default="forcing", description="Model type discriminator"
+    model_type: Literal["data_interface", "DATA_INTERFACE"] = Field(
+        default="data_interface", description="Model type discriminator"
     )
     bottom: Optional[SwanDataGrid] = Field(default=None, description="Bathymetry data")
     input: list[SwanDataGrid] = Field(default=[], description="Input grid data")
-    boundary: Optional[DataBoundary] = Field(default=None, description="Boundary data")
 
     def get(self, grid: SwanGrid, period: TimeRange, staging_dir: Path):
-        cmds = []
-        # Bottom grid
+        inputs = []
         if self.bottom is not None:
-            self.bottom._filter_grid(grid)
-            self.bottom._filter_time(period)
-            cmds.append(self.bottom.get(staging_dir, grid))
-        # Input grids
-        for input in self.input:
+            inputs.append(self.bottom)
+        inputs.extend(self.input)
+        cmds = []
+        for input in inputs:
             input._filter_grid(grid)
             input._filter_time(period)
             cmds.append(input.get(staging_dir, grid))
-        # Boundary data
-        if self.boundary is not None:
-            self.boundary._filter_grid(grid)
-            self.boundary._filter_time(period)
-            cmds.append(self.boundary.get(staging_dir, grid))
         return "\n".join(cmds)
 
     def render(self, *args, **kwargs):
         """Make this class consistent with the components API."""
         return self.get(*args, **kwargs)
 
-    def __str__(self):
-        ret = ""
-        if self.bottom:
-            ret += self.bottom.source
-        for input in self.input:
-            ret += input.source
-        if self.boundary:
-            ret += self.boundary.source
-        return ret
+
+class BoundaryInterface(RompyBaseModel):
+    """SWAN forcing boundary interface.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.interface import BoundaryInterface
+
+    """
+    model_type: Literal["boundary_interface", "BOUNDARY_INTERFACE"] = Field(
+        default="boundary_interface", description="Model type discriminator"
+    )
+    kind: DataBoundary = Field(default=None, description="Boundary data object")
+
+    def get(self, grid: SwanGrid, period: TimeRange, staging_dir: Path):
+        self.kind._filter_grid(grid)
+        self.kind._filter_time(period)
+        return self.kind.get(staging_dir, grid)
+
+    def render(self, *args, **kwargs):
+        """Make this class consistent with the components API."""
+        return self.get(*args, **kwargs)
 
 
 class TimeInterface(RompyBaseModel):

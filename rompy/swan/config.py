@@ -6,14 +6,17 @@ from pydantic import Field, model_validator
 
 from rompy.core import BaseConfig
 
-from rompy.swan.interface import ForcingData as ForcingDataNew
-from rompy.swan.interface import OutputInterface, LockupInterface
+from rompy.swan.interface import (
+    DataInterface,
+    BoundaryInterface,
+    OutputInterface,
+    LockupInterface,
+)
 
 from rompy.swan.legacy import ForcingData, SwanSpectrum, SwanPhysics, Outputs
 
 from rompy.swan.components import boundary, cgrid, numerics
 from rompy.swan.components.group import STARTUP, INPGRIDS, PHYSICS, OUTPUT, LOCKUP
-from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 
 from rompy.swan.grid import SwanGrid
 
@@ -79,7 +82,6 @@ class SwanConfig(BaseConfig):
         return ret
 
 
-
 STARTUP_TYPE = Annotated[STARTUP, Field(description="Startup components")]
 INITIAL_TYPE = Annotated[boundary.INITIAL, Field(description="Initial component")]
 PHYSICS_TYPE = Annotated[PHYSICS, Field(description="Physics components")]
@@ -92,7 +94,7 @@ CGRID_TYPES = Annotated[
     Field(description="Cgrid component", discriminator="model_type"),
 ]
 INPGRID_TYPES = Annotated[
-    Union[INPGRIDS, ForcingDataNew],
+    Union[INPGRIDS, DataInterface],
     Field(description="Input grid components", discriminator="model_type")
 ]
 BOUNDARY_TYPES = Annotated[
@@ -101,6 +103,7 @@ BOUNDARY_TYPES = Annotated[
         boundary.BOUNDNEST1,
         boundary.BOUNDNEST2,
         boundary.BOUNDNEST3,
+        BoundaryInterface,
     ],
     Field(description="Boundary component", discriminator="model_type"),
 ]
@@ -109,7 +112,6 @@ BOUNDARY_TYPES = Annotated[
 class SwanConfigComponents(BaseConfig):
     """SWAN config class.
 
-    TODO: Turn inpgrid/readgrid into group component.
     TODO: Combine boundary and inpgrid into a single input type.
 
     Note
@@ -209,17 +211,9 @@ class SwanConfigComponents(BaseConfig):
             self.lockup = LockupInterface(group=self.lockup, period=period).group
 
         # Render each group component before passing to template
-        ret = {}
-
-        # The inpgrid component may use the ForcingData api so we need passing args
-        if self.inpgrid:
-            ret["inpgrid"] = self.inpgrid.render(self.grid, period, staging_dir)
-
-        ret["cgrid"] = self.cgrid.render()
+        ret = {"cgrid": self.cgrid.render()}
         if self.startup:
             ret["startup"] = self.startup.render()
-        if self.boundary:
-            ret["boundary"] = self.boundary.render()
         if self.initial:
             ret["initial"] = self.initial.render()
         if self.physics:
@@ -232,4 +226,15 @@ class SwanConfigComponents(BaseConfig):
             ret["output"] = self.output.render()
         if self.lockup:
             ret["lockup"] = self.lockup.render()
+
+        # inpgrid / boundary may use the Interface api so we need passing the args
+        if self.inpgrid and isinstance(self.inpgrid, DataInterface):
+            ret["inpgrid"] = self.inpgrid.render(self.grid, period, staging_dir)
+        elif self.inpgrid:
+            ret["inpgrid"] = self.inpgrid.render()
+        if self.boundary and isinstance(self.boundary, BoundaryInterface):
+            ret["boundary"] = self.boundary.render(self.grid, period, staging_dir)
+        elif self.boundary:
+            ret["boundary"] = self.boundary.render()
+
         return ret

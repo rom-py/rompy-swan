@@ -128,7 +128,8 @@ components and define consistent parameters to the config after instantiating th
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.interface.ForcingData
+    rompy.swan.interface.DataInterface
+    rompy.swan.interface.BoundaryInterface
     rompy.swan.interface.OutputInterface
     rompy.swan.interface.LockupInterface
 
