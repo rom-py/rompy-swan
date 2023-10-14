@@ -1,7 +1,7 @@
 import logging
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -9,6 +9,7 @@ import xarray as xr
 from pydantic import field_validator, Field, model_validator
 
 from rompy.core import DataGrid
+from rompy.core.time import TimeRange
 
 from rompy.swan.grid import SwanGrid
 from rompy.swan.types import GridOptions
@@ -56,21 +57,21 @@ class SwanDataGrid(DataGrid):
         self.variables = data_vars
         return self
 
-    def get(self, staging_dir: str, grid: SwanGrid = None):
-        """Write the data to a SWAN grid file.
+    def get(
+            self, destdir: str | Path,
+            grid: Optional[SwanGrid] = None,
+            time: Optional[TimeRange] = None,
+        ) -> Path:
+        """Write the data source to a new location.
 
         Parameters
         ----------
-        staging_dir : str
-            The directory to write the grid file to.
-        grid: SwanGrid
-            The SwanGrid object representing the data, obsolete and may get removed.
-
-        Notes
-        -----
-        The data are assumed to not have been rotated. We cannot use the grid.rot attr
-        as this is the rotation from the model grid object which is not necessarily the
-        same as the rotation of the data.
+        destdir : str | Path
+            The destination directory to write the netcdf data to.
+        grid: SwanGrid, optional
+            The grid to filter the data to, only used if `self.filter_grid` is True.
+        time: TimeRange, optional
+            The times to filter the data to, only used if `self.filter_time` is True.
 
         Returns
         -------
@@ -78,8 +79,19 @@ class SwanDataGrid(DataGrid):
             The command line string with the INPGRID/READINP commands ready to be
             written to the SWAN input file.
 
+        Note
+        ----
+        The data are assumed to not have been rotated. We cannot use the grid.rot attr
+        as this is the rotation from the model grid object which is not necessarily the
+        same as the rotation of the data.
+
         """
-        output_file = os.path.join(staging_dir, f"{self.var.value}.grd")
+        if grid is not None and self.filter_grid:
+            self._filter_grid(grid)
+        if time is not None and self.filter_time:
+            self._filter_time(time)
+
+        output_file = os.path.join(destdir, f"{self.var.value}.grd")
         logger.info(f"\tWriting {self.var.value} to {output_file}")
         if self.var.value == "bottom":
             inpgrid, readgrid = self.ds.swan.to_bottom_grid(
