@@ -33,16 +33,14 @@ class DataInterface(RompyBaseModel):
     bottom: Optional[SwanDataGrid] = Field(default=None, description="Bathymetry data")
     input: list[SwanDataGrid] = Field(default=[], description="Input grid data")
 
-    def get(self, grid: SwanGrid, period: TimeRange, staging_dir: Path):
+    def get(self, staging_dir: Path, grid: SwanGrid, period: TimeRange):
         inputs = []
         if self.bottom is not None:
             inputs.append(self.bottom)
         inputs.extend(self.input)
         cmds = []
         for input in inputs:
-            input._filter_grid(grid)
-            input._filter_time(period)
-            cmds.append(input.get(staging_dir, grid))
+            cmds.append(input.get(destdir=staging_dir, grid=grid, time=period))
         return "\n".join(cmds)
 
     def render(self, *args, **kwargs):
