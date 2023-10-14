@@ -229,11 +229,11 @@ class SwanConfigComponents(BaseConfig):
 
         # inpgrid / boundary may use the Interface api so we need passing the args
         if self.inpgrid and isinstance(self.inpgrid, DataInterface):
-            ret["inpgrid"] = self.inpgrid.render(self.grid, period, staging_dir)
+            ret["inpgrid"] = self.inpgrid.render(staging_dir, self.grid, period)
         elif self.inpgrid:
             ret["inpgrid"] = self.inpgrid.render()
         if self.boundary and isinstance(self.boundary, BoundaryInterface):
-            ret["boundary"] = self.boundary.render(self.grid, period, staging_dir)
+            ret["boundary"] = self.boundary.render(staging_dir, self.grid, period)
         elif self.boundary:
             ret["boundary"] = self.boundary.render()
 
