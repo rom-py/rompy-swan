@@ -1148,6 +1148,10 @@ class TRIAD_DCTA(TRIAD):
     approximation in SWAN. In Proceedings Of Coastal Dynamics 2009: Impacts of Human
     Activities on Dynamic Coastal Processes (With CD-ROM) (pp. 1-10).
 
+    Note
+    ----
+    This is the default method to compute the triad interactions in SWAN.
+
     Examples
     --------
 

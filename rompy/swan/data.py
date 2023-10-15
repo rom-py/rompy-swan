@@ -58,7 +58,8 @@ class SwanDataGrid(DataGrid):
         return self
 
     def get(
-            self, destdir: str | Path,
+            self,
+            destdir: str | Path,
             grid: Optional[SwanGrid] = None,
             time: Optional[TimeRange] = None,
         ) -> Path:
@@ -358,7 +359,7 @@ class Swan_accessor(object):
         grid = self.grid(x=x, y=y, rot=rot)
 
         inpgrid = f"INPGRID {var} {grid.inpgrid} NONSTATION {inptimes[0]} {dt} HR"
-        readinp = f"READINP {var} {fac} '{os.path.basename(output_file)}' 3 0 1 0 FREE"
+        readinp = f"READINP {var} {fac} '{Path(output_file).name}' 3 0 1 0 FREE"
 
         return inpgrid, readinp
 
