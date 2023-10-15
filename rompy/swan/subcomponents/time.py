@@ -11,6 +11,7 @@ from rompy.swan.subcomponents.base import BaseSubComponent
 logger = logging.getLogger(__name__)
 
 DEFAULT_TIME = datetime(1970, 1, 1, 0, 0, 0)
+DEFAULT_TEND = DEFAULT_TIME + timedelta(days=1)
 DEFAULT_DELT = timedelta(hours=1)
 TIME_FORMAT = {
     1: "%Y%m%d.%H%M%S",
@@ -261,7 +262,7 @@ class TimeRangeClosed(TimeRangeOpen):
     model_type: Literal["closed", "CLOSED"] = Field(
         default="closed", description="Model type discriminator"
     )
-    tend: datetime = Field(default=DEFAULT_TIME, description="End time")
+    tend: datetime = Field(default=DEFAULT_TEND, description="End time")
 
     def __call__(self) -> list[Time]:
         """Returns the list of Time objects."""
@@ -326,7 +327,7 @@ class NONSTATIONARY(TimeRangeClosed):
         default="nonstationary", description="Model type discriminator"
     )
     tbeg: datetime = Field(default=DEFAULT_TIME, description="Start time")
-    tend: datetime = Field(default=DEFAULT_TIME, description="End time")
+    tend: datetime = Field(default=DEFAULT_TEND, description="End time")
     delt: timedelta = Field(default=DEFAULT_DELT, description="Time interval")
 
     def cmd(self) -> str:
