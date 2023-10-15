@@ -25,6 +25,7 @@ class ForcingData(RompyBaseModel):
         from rompy.swan.forcing import ForcingData
 
     """
+
     bottom: Optional[SwanDataGrid] = Field(default=None, description="Bathymetry data")
     wind: Optional[SwanDataGrid] = Field(default=None, description="Wind input data")
     current: Optional[SwanDataGrid] = Field(
@@ -155,6 +156,7 @@ class GridOutput(RompyBaseModel):
 
 class SpecOutput(RompyBaseModel):
     """Spectral outputs for SWAN"""
+
     period: Optional[TimeRange] = Field(
         None, description="Time range for which the spectral outputs are requested"
     )

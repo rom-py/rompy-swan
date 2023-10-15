@@ -27,6 +27,7 @@ class DataInterface(RompyBaseModel):
         from rompy.swan.interface import DataInterface
 
     """
+
     model_type: Literal["data_interface", "DATA_INTERFACE"] = Field(
         default="data_interface", description="Model type discriminator"
     )
@@ -60,6 +61,7 @@ class BoundaryInterface(RompyBaseModel):
         from rompy.swan.interface import BoundaryInterface
 
     """
+
     model_type: Literal["boundary_interface", "BOUNDARY_INTERFACE"] = Field(
         default="boundary_interface", description="Model type discriminator"
     )

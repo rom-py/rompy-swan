@@ -23,6 +23,7 @@ class SPEC1D(BaseSubComponent):
         print(spec.render())
 
     """
+
     model_type: Literal["spec1d", "SPEC1D"] = Field(
         default="spec1d", description="Model type discriminator"
     )
@@ -50,6 +51,7 @@ class SPEC2D(BaseSubComponent):
         print(spec.render())
 
     """
+
     model_type: Literal["spec2d", "SPEC2D"] = Field(
         default="spec2d", description="Model type discriminator"
     )
@@ -80,6 +82,7 @@ class ABS(BaseSubComponent):
         print(freq.render())
 
     """
+
     model_type: Literal["abs", "ABS"] = Field(
         default="abs", description="Model type discriminator"
     )
@@ -110,6 +113,7 @@ class REL(BaseSubComponent):
         print(freq.render())
 
     """
+
     model_type: Literal["rel", "REL"] = Field(
         default="rel", description="Model type discriminator"
     )

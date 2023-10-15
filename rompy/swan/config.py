@@ -95,7 +95,7 @@ CGRID_TYPES = Annotated[
 ]
 INPGRID_TYPES = Annotated[
     Union[INPGRIDS, DataInterface],
-    Field(description="Input grid components", discriminator="model_type")
+    Field(description="Input grid components", discriminator="model_type"),
 ]
 BOUNDARY_TYPES = Annotated[
     Union[
@@ -122,7 +122,8 @@ class SwanConfigComponents(BaseConfig):
     """
 
     model_type: Literal["swanconfig", "SWANCONFIG"] = Field(
-        default="swanconfig", description="Model type discriminator",
+        default="swanconfig",
+        description="Model type discriminator",
     )
     template: str = Field(
         default=str(HERE.parent / "templates" / "swancomp"),
@@ -165,6 +166,7 @@ class SwanConfigComponents(BaseConfig):
         return self
 
     model_validator(mode="after")
+
     def transm_msc_mdc(self) -> "SwanConfigComponents":
         """Ensure the number of transmission coefficients match msc and mdc."""
         return self

@@ -71,6 +71,7 @@ class PROP(BaseComponent):
         print(prop.render())
 
     """
+
     model_type: Literal["prop", "PROP"] = Field(
         default="prop", description="Model type discriminator"
     )
@@ -118,26 +119,33 @@ class NUMERIC(BaseComponent):
         print(numeric.render())
 
     """
+
     model_type: Literal["numeric", "NUMERIC"] = Field(
         default="numeric", description="Model type discriminator"
     )
     stopc: Optional[STOPC] = Field(
-        default=None, description="Iteration termination criteria",
+        default=None,
+        description="Iteration termination criteria",
     )
     dirimpl: Optional[DIRIMPL] = Field(
-        default=None, description="Numerical scheme for refraction",
+        default=None,
+        description="Numerical scheme for refraction",
     )
     sigimpl: Optional[SIGIMPL] = Field(
-        default=None, description="Frequency shifting accuracy",
+        default=None,
+        description="Frequency shifting accuracy",
     )
     ctheta: Optional[CTHETA] = Field(
-        default=None, description="Prevents excessive directional turning",
+        default=None,
+        description="Prevents excessive directional turning",
     )
     csigma: Optional[CSIGMA] = Field(
-        default=None, description="Prevents excessive frequency shifting",
+        default=None,
+        description="Prevents excessive frequency shifting",
     )
     setup: Optional[SETUP] = Field(
-        default=None, description="Stop criteria in the computation of wave setup",
+        default=None,
+        description="Stop criteria in the computation of wave setup",
     )
 
     def cmd(self) -> str:

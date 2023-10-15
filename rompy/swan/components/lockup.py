@@ -107,7 +107,7 @@ class COMPUTE(BaseComponent):
     @classmethod
     def times_suffix(cls, times: TIMES_TYPE) -> TIMES_TYPE:
         if isinstance(times, NONSTATIONARY):
-            times.suffix="c"
+            times.suffix = "c"
         return times
 
     def cmd(self) -> str:
@@ -173,9 +173,7 @@ class HOTFILE(BaseComponent):
     )
     format: Optional[Literal["free", "unformatted"]] = Field(
         default=None,
-        description=(
-            "Choose between free (SWAN ASCII) or unformatted (binary) format"
-        ),
+        description=("Choose between free (SWAN ASCII) or unformatted (binary) format"),
     )
 
     def cmd(self) -> str:
@@ -243,13 +241,14 @@ class COMPUTE_STAT(BaseComponent):
         discriminator="model_type",
     )
     hotfile: Optional[HOTFILE] = Field(
-        default=None, description="Write results to restart files",
+        default=None,
+        description="Write results to restart files",
     )
     hottimes: HOTTIMES_TYPE = Field(
         default=[],
         description=(
             "Times to write hotfiles, can be a list of datetimes or times indices"
-        )
+        ),
     )
     suffix: str = Field(
         default="_%Y%m%dT%H%M%S",
@@ -296,8 +295,7 @@ class COMPUTE_STAT(BaseComponent):
         """Set timestamp to hotfile fname."""
         timestamp = time.strftime(self.suffix)
         fname = self.hotfile.fname.parent / (
-            f"{self.hotfile.fname.stem}{timestamp}"
-            f"{self.hotfile.fname.suffix}"
+            f"{self.hotfile.fname.stem}{timestamp}" f"{self.hotfile.fname.suffix}"
         )
         return HOTFILE(fname=fname, format=self.hotfile.format)
 
@@ -380,7 +378,7 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
     @field_validator("times")
     @classmethod
     def times_suffix(cls, times: NONSTATIONARY) -> NONSTATIONARY:
-        times.suffix="c"
+        times.suffix = "c"
         return times
 
     def _times(self, tbeg, tend):
@@ -418,7 +416,7 @@ class STOP(BaseComponent):
 
     .. code-block:: text
 
-        STOP 
+        STOP
 
     This required command marks the end of the commands in the command file. Note that
     the command `STOP` may be the last command in the input file; any information in

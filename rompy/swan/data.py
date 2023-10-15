@@ -58,11 +58,11 @@ class SwanDataGrid(DataGrid):
         return self
 
     def get(
-            self,
-            destdir: str | Path,
-            grid: Optional[SwanGrid] = None,
-            time: Optional[TimeRange] = None,
-        ) -> Path:
+        self,
+        destdir: str | Path,
+        grid: Optional[SwanGrid] = None,
+        time: Optional[TimeRange] = None,
+    ) -> Path:
         """Write the data source to a new location.
 
         Parameters
