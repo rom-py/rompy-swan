@@ -86,10 +86,11 @@ class SwanDataGrid(DataGrid):
         same as the rotation of the data.
 
         """
-        if grid is not None and self.filter_grid:
-            self._filter_grid(grid)
-        if time is not None and self.filter_time:
-            self._filter_time(time)
+        if self.crop_data:
+            if grid is not None:
+                self._filter_grid(grid)
+            if time is not None:
+                self._filter_time(time)
 
         output_file = os.path.join(destdir, f"{self.var.value}.grd")
         logger.info(f"\tWriting {self.var.value} to {output_file}")
