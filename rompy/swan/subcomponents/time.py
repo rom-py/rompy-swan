@@ -204,13 +204,16 @@ class TimeRangeOpen(BaseSubComponent):
     tbeg: datetime = Field(default=DEFAULT_TIME, description="Start time")
     delt: timedelta = Field(default=DEFAULT_DELT, description="Time interval")
     tfmt: Union[Literal[1, 2, 3, 4, 5, 6], str] = Field(
-        default=1, description="Format to render time specification",
+        default=1,
+        description="Format to render time specification",
     )
     dfmt: Literal["sec", "min", "hr", "day"] = Field(
-        default="sec", description="Format to render time interval specification",
+        default="sec",
+        description="Format to render time interval specification",
     )
     suffix: str = Field(
-        default="", description="Suffix to prepend to argument names when rendering",
+        default="",
+        description="Suffix to prepend to argument names when rendering",
     )
 
     def cmd(self) -> str:
@@ -365,7 +368,8 @@ class STATIONARY(BaseSubComponent):
     )
     time: datetime = Field(default=DEFAULT_TIME, description="Stationary time")
     tfmt: Union[Literal[1, 2, 3, 4, 5, 6], str] = Field(
-        default=1, description="Format to render time specification",
+        default=1,
+        description="Format to render time specification",
     )
 
     def __call__(self) -> list[Time]:

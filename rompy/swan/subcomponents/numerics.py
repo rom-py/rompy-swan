@@ -179,6 +179,7 @@ class STOPC(BaseSubComponent):
         print(stop.render())
 
     """
+
     model_type: Literal["stopc", "STOPC"] = Field(
         default="stopc", description="Model type discriminator"
     )
@@ -261,6 +262,7 @@ class DIRIMPL(BaseSubComponent):
         print(dirimpl.render())
 
     """
+
     model_type: Literal["dirimpl", "DIRIMPL"] = Field(
         default="dirimpl", description="Model type discriminator"
     )
@@ -306,6 +308,7 @@ class SIGIMPL(BaseSubComponent):
         print(sigimpl.render())
 
     """
+
     model_type: Literal["sigimpl", "SIGIMPL"] = Field(
         default="sigimpl", description="Model type discriminator"
     )
@@ -382,6 +385,7 @@ class CTHETA(BaseSubComponent):
         print(ctheta.render())
 
     """
+
     model_type: Literal["ctheta", "CTHETA"] = Field(
         default="ctheta", description="Model type discriminator"
     )
@@ -426,6 +430,7 @@ class CSIGMA(BaseSubComponent):
         print(csigma.render())
 
     """
+
     model_type: Literal["ctheta", "CTHETA"] = Field(
         default="ctheta", description="Model type discriminator"
     )
@@ -467,6 +472,7 @@ class SETUP(BaseSubComponent):
         print(setup.render())
 
     """
+
     model_type: Literal["setup", "SETUP"] = Field(
         default="setup", description="Model type discriminator"
     )

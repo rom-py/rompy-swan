@@ -42,6 +42,7 @@ class GRIDREGULAR(BaseSubComponent):
         print(grid.render())
 
     """
+
     model_type: Literal["gridregular", "GRIDREGULAR"] = Field(
         default="gridregular", description="Model type discriminator"
     )
@@ -52,7 +53,8 @@ class GRIDREGULAR(BaseSubComponent):
         description="The y-coordinate of the origin in problem coordinates",
     )
     alp: Optional[float] = Field(
-        default=0.0, description="Direction of the xaxis in degrees",
+        default=0.0,
+        description="Direction of the xaxis in degrees",
     )
     xlen: float = Field(
         description="Length of the computational grid in the x-direction"
@@ -73,8 +75,7 @@ class GRIDREGULAR(BaseSubComponent):
         ),
     )
     suffix: Optional[str] = Field(
-        default="",
-        description="Suffix for rendering with each output grid parameter."
+        default="", description="Suffix for rendering with each output grid parameter."
     )
 
     @property

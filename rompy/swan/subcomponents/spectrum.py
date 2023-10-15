@@ -315,13 +315,16 @@ class SHAPESPEC(BaseSubComponent):
         default="shapespec", description="Model type discriminator"
     )
     shape: JONSWAP | PM | GAUSS | BIN | TMA = Field(
-        default_factory=JONSWAP, description="The spectral shape",
+        default_factory=JONSWAP,
+        description="The spectral shape",
     )
     per_type: Literal["peak", "mean"] = Field(
-        default="peak", description="The type of characteristic wave period",
+        default="peak",
+        description="The type of characteristic wave period",
     )
     dspr_type: Literal["power", "degrees"] = Field(
-        default="power", description="The type of directional spreading",
+        default="power",
+        description="The type of directional spreading",
     )
 
     def cmd(self) -> str:

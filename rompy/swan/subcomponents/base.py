@@ -57,12 +57,14 @@ class XY(BaseSubComponent):
     """
 
     model_type: Literal["xy", "XY"] = Field(
-        default="xy", description="Model type discriminator",
+        default="xy",
+        description="Model type discriminator",
     )
     x: list[float] = Field(description="Problem x-coordinate values")
     y: list[float] = Field(description="Problem y-coordinate values")
     fmt: str = Field(
-        default="0.8f", description="The format to render floats values",
+        default="0.8f",
+        description="The format to render floats values",
     )
 
     @model_validator(mode="after")
@@ -107,7 +109,8 @@ class IJ(BaseSubComponent):
     """
 
     model_type: Literal["ij", "IJ"] = Field(
-        default="ij", description="Model type discriminator",
+        default="ij",
+        description="Model type discriminator",
     )
     i: list[int] = Field(description="i-index values")
     j: list[int] = Field(description="j-index values")

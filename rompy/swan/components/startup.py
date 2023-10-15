@@ -40,7 +40,8 @@ class PROJECT(BaseComponent):
     """
 
     model_type: Literal["project", "PROJECT"] = Field(
-        default="project", description="Model type discriminator",
+        default="project",
+        description="Model type discriminator",
     )
     name: Optional[str] = Field(
         default=None,
@@ -388,10 +389,12 @@ class COORDINATES(BaseComponent):
     """
 
     model_type: Literal["coordinates", "COORDINATES"] = Field(
-        default="coordinates", description="Model type discriminator",
+        default="coordinates",
+        description="Model type discriminator",
     )
     kind: CARTESIAN | SPHERICAL = Field(
-        default_factory=CARTESIAN, description="Coordinates kind",
+        default_factory=CARTESIAN,
+        description="Coordinates kind",
     )
     reapeating: bool = Field(
         default=False,

@@ -53,10 +53,12 @@ class INITIAL(BaseComponent):
     """
 
     model_type: Literal["initial", "INITIAL"] = Field(
-        default="initial", description="Model type discriminator",
+        default="initial",
+        description="Model type discriminator",
     )
     kind: DEFAULT | ZERO | PAR | HOTSINGLE | HOTMULTIPLE = Field(
-        default_factory=DEFAULT, description="Initial condition type",
+        default_factory=DEFAULT,
+        description="Initial condition type",
     )
 
     def cmd(self) -> str:
@@ -107,10 +109,12 @@ class BOUNDSPEC(BaseComponent):
     """
 
     model_type: Literal["boundspec", "BOUNDSPEC"] = Field(
-        default="boundspec", description="Model type discriminator",
+        default="boundspec",
+        description="Model type discriminator",
     )
     shapespec: SHAPESPEC = Field(
-        default_factory=SHAPESPEC, description="Spectral shape specification",
+        default_factory=SHAPESPEC,
+        description="Spectral shape specification",
     )
     location: SIDE | SEGMENT = Field(
         description="Location to apply the boundary",
@@ -159,7 +163,8 @@ class BOUNDNEST1(BaseComponent):
     """
 
     model_type: Literal["boundnest1", "BOUNDNEST1"] = Field(
-        default="boundnest1", description="Model type discriminator",
+        default="boundnest1",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description=(
@@ -234,7 +239,8 @@ class BOUNDNEST2(BaseComponent):
     """
 
     model_type: Literal["boundnest2", "BOUNDNEST2"] = Field(
-        default="boundnest2", description="Model type discriminator",
+        default="boundnest2",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description=(
@@ -349,7 +355,8 @@ class BOUNDNEST3(BaseComponent):
     """
 
     model_type: Literal["boundnest3", "BOUNDNEST3"] = Field(
-        default="boundnest3", description="Model type discriminator",
+        default="boundnest3",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description=(

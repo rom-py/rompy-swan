@@ -435,7 +435,7 @@ POINTS_TYPES = Annotated[
 ]
 NGRID_TYPES = Annotated[
     Union[NGRID, NGRID_UNSTRUCTURED],
-    Field(description="Ngrid locations component", discriminator="model_type")
+    Field(description="Ngrid locations component", discriminator="model_type"),
 ]
 
 
@@ -552,7 +552,7 @@ class OUTPUT(BaseGroupComponent):
     def locations_sname_unique(self) -> "OUTPUT":
         """Ensure same `sname` isn't used in more than one set of output locations."""
         duplicates = {x for x in self.snames if self.snames.count(x) > 1}
-        if duplicates:            
+        if duplicates:
             raise ValueError(
                 "The following snames are used to define more than one set of output "
                 f"components: {duplicates}, please ensure each location component has "
@@ -650,7 +650,7 @@ class OUTPUT(BaseGroupComponent):
         if self.group is not None:
             repr += [f"{self.group.cmd()}"]
         if self.curve is not None:
-            repr += self.curve.cmd() # Component renders a list
+            repr += self.curve.cmd()  # Component renders a list
         if self.ray is not None:
             repr += [f"{self.ray.cmd()}"]
         if self.isoline is not None:
@@ -660,7 +660,7 @@ class OUTPUT(BaseGroupComponent):
         if self.ngrid is not None:
             repr += [f"{self.ngrid.cmd()}"]
         if self.quantity is not None:
-            repr += self.quantity.cmd() # Component renders a list
+            repr += self.quantity.cmd()  # Component renders a list
         if self.output_options is not None:
             repr += [f"{self.output_options.cmd()}"]
         if self.block is not None:

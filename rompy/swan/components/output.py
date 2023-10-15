@@ -1582,9 +1582,7 @@ class TEST(BaseComponent):
     @classmethod
     def validate_points(cls, points: Union[XY, IJ]) -> Union[XY, IJ]:
         if points.size > 50:
-            raise ValueError(
-                f"Maximum of 50 points allowed in TEST, got {points.size}"
-            )
+            raise ValueError(f"Maximum of 50 points allowed in TEST, got {points.size}")
         return points
 
     @model_validator(mode="after")
