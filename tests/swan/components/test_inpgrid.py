@@ -119,3 +119,36 @@ def test_inpgrids(nonstat, readinp):
         inpgrids=[bottom, wind]
     )
     logger.info(inpgrids.render())
+
+
+def test_inpgrids_unique_var(nonstat, readinp):
+    bottom = REGULAR(
+        grid_type=GridOptions.BOTTOM,
+        xpinp=0.0,
+        ypinp=0.0,
+        alpinp=0.0,
+        mxinp=10,
+        myinp=10,
+        dxinp=0.1,
+        dyinp=0.1,
+        excval=-999.0,
+        readinp=readinp,
+    )
+    wind = REGULAR(
+        grid_type=GridOptions.BOTTOM,
+        xpinp=0.0,
+        ypinp=0.0,
+        alpinp=0.0,
+        mxinp=10,
+        myinp=10,
+        dxinp=0.1,
+        dyinp=0.1,
+        excval=-999.0,
+        nonstationary=nonstat,
+        readinp=readinp,
+    )
+
+    with pytest.raises(ValidationError):
+        inpgrids = INPGRIDS(
+            inpgrids=[bottom, wind]
+        )
