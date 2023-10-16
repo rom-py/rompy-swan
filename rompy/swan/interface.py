@@ -2,7 +2,7 @@
 import logging
 from typing import Optional, Literal, Any
 from pathlib import Path
-from pydantic import Field, model_validator
+from pydantic import Field, model_validator, field_validator, ValidationInfo
 
 from rompy.core import RompyBaseModel, TimeRange
 from rompy.swan.grid import SwanGrid
@@ -33,6 +33,20 @@ class DataInterface(RompyBaseModel):
     )
     bottom: Optional[SwanDataGrid] = Field(default=None, description="Bathymetry data")
     input: list[SwanDataGrid] = Field(default=[], description="Input grid data")
+
+    @field_validator("input")
+    @classmethod
+    def ensure_unique_var(
+        cls, input: list[SwanDataGrid], info: ValidationInfo
+    ) -> list[SwanDataGrid]:
+        """Ensure that each input var is unique."""
+        vars = []
+        if info.data["bottom"] is not None:
+            vars.append(info.data["bottom"].var)
+        vars.extend([inp.var for inp in input])
+        if len(vars) != len(set(vars)):
+            raise ValueError("Each var must be unique in input")
+        return input
 
     def get(self, staging_dir: Path, grid: SwanGrid, period: TimeRange):
         inputs = []
