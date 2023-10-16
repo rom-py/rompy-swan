@@ -67,7 +67,7 @@ class BoundaryInterface(RompyBaseModel):
     )
     kind: DataBoundary = Field(default=None, description="Boundary data object")
 
-    def get(self, grid: SwanGrid, period: TimeRange, staging_dir: Path):
+    def get(self, staging_dir: Path, grid: SwanGrid, period: TimeRange):
         self.kind._filter_grid(grid)
         self.kind._filter_time(period)
         return self.kind.get(staging_dir, grid)
