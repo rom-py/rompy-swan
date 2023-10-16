@@ -1,27 +1,25 @@
-project: # null
-  model_type: project
-  name: Test rompy setup
-  nr: '0001'
-
-set:
-  model_type: set
-  level: 0.0
-  depmin: 0.05
-  maxerr: 1
-  grav: 9.81
-  rho: 1025.0
-  cdcap: 0.0025
-  direction_convention: nautical
-
-mode:
-  model_type: mode
-  kind: nonstationary
-  dim: twodimensional
-
-coordinates:
-  model_type: coordinates
-  kind:
-    model_type: spherical
+startup:
+  project:
+    model_type: project
+    name: Test rompy setup
+    nr: '0001'
+  set:
+    model_type: set
+    level: 0.0
+    depmin: 0.05
+    maxerr: 1
+    grav: 9.81
+    rho: 1025.0
+    cdcap: 0.0025
+    direction_convention: nautical
+  mode:
+    model_type: mode
+    kind: nonstationary
+    dim: twodimensional
+  coordinates:
+    model_type: coordinates
+    kind:
+      model_type: spherical
 
 cgrid:
   model_type: regular
@@ -29,44 +27,78 @@ cgrid:
     mdc: 36
     flow: 0.04
     fhigh: 0.4
-  xlenc: 100.0
-  ylenc: 100.0
-  mxc: 10
-  myc: 10
+  grid:
+    xp: 110
+    yp: -35.2
+    alp: 4.0
+    xlen: 7.5
+    ylen: 12.5
+    mx: 14
+    my: 24
 
 inpgrid:
-  inpgrids:
-  - model_type: regular
-    grid_type: bottom
-    xpinp: 0.0
-    ypinp: 0.0
-    alpinp: 0.0
-    mxinp: 10
-    myinp: 10
-    dxinp: 0.1
-    dyinp: 0.1
-    excval: -999.0
-    readinp:
-      model_type: readinp
-      fname1: bottom.txt
-  - model_type: regular
-    grid_type: wind
-    xpinp: 0.0
-    ypinp: 0.0
-    alpinp: 0.0
-    mxinp: 10
-    myinp: 10
-    dxinp: 0.1
-    dyinp: 0.1
-    excval: -999.0
-    readinp:
-      model_type: readinp
-      fname1: wind.txt
-    nonstationary:
-      tbeg: '2023-01-01T00:00:00'
-      delt: PT30M
-      tend: '2023-02-01T00:00:00'
-      deltfmt: hr
+  model_type: data_interface
+  bottom:
+    var: bottom
+    source:
+      model_type: intake
+      catalog_uri: ${ROMPY_PATH}/tests/data/catalog.yaml
+      dataset_id: gebco
+    fac: -1.0
+    z1: elevation
+    coords:
+      x: lon
+      y: lat
+  input:
+    - var: wind
+      source:
+        model_type: intake
+        catalog_uri: ${ROMPY_PATH}/tests/data/catalog.yaml
+        dataset_id: era5
+      filter:
+        sort:
+          coords: [latitude]
+      z1: u10
+      z2: v10
+      coords:
+        x: longitude
+        y: latitude
+
+# inpgrid:
+#   model_type: inpgrids
+#   inpgrids:
+#   - model_type: regular
+#     grid_type: bottom
+#     xpinp: 0.0
+#     ypinp: 0.0
+#     alpinp: 0.0
+#     mxinp: 10
+#     myinp: 10
+#     dxinp: 0.1
+#     dyinp: 0.1
+#     excval: -999.0
+#     readinp:
+#       model_type: readinp
+#       fname1: bottom.txt
+#   - model_type: regular
+#     grid_type: wind
+#     xpinp: 0.0
+#     ypinp: 0.0
+#     alpinp: 0.0
+#     mxinp: 10
+#     myinp: 10
+#     dxinp: 0.1
+#     dyinp: 0.1
+#     excval: -999.0
+#     readinp:
+#       model_type: readinp
+#       fname1: wind.txt
+#     nonstationary:
+#       tbeg: '2023-01-01T00:00:00'
+#       tend: '2023-02-01T00:00:00'
+#       delt: PT30M
+#       tfmt: 1
+#       dfmt: min
 
 boundary:
   model_type: boundspec
@@ -181,6 +213,83 @@ physics:
   scat:
     model_type: scat
   deactivate:
-    physics:
+    model_type: offs
+    offs:
       - physics: wcapping
       - physics: breaking
+
+prop:
+  scheme:
+    model_type: gse
+    waveage:
+      delt: 86400
+      dfmt: day
+
+numeric:
+  stopc:
+    dabs: 0.05
+    drel: 0.01
+    curvat: 0.05
+    npnts: 99.5
+    mode:
+      model_type: nonstat
+      mxitst: 3
+    limiter: 0.1
+  dirimpl:
+    cdd: 0.5
+  sigimpl:
+    css: 0.5
+    eps2: 1e-4
+    outp: 0
+    niter: 20
+  ctheta: 
+    cfl: 0.9
+  csigma: 
+    cfl: 0.9
+  setup: 
+    eps2: 1e-4
+    outp: 0
+    niter: 20
+
+output:
+  points:
+    model_type: points
+    sname: outpts
+    xp: [172.3, 172.4]
+    yp: [-39, -39]
+  quantity:
+    model_type: quantities
+    quantities:
+      - output: [depth, hsign, tps, dir, tm01]
+        excv: -9
+      - output: [hswell]
+        fswell: 0.125
+  block:
+    sname: COMPGRID
+    fname: ./swangrid.nc
+    output: [depth, hsign, tps, dir]
+    times:
+      dfmt: min
+  table:
+    sname: outpts
+    format: noheader
+    fname: ./swantable.nc
+    output: [hsign, hswell, dir, tps, tm01, watlev, qp]
+    times:
+      dfmt: min
+
+lockup:
+  compute:
+    model_type: nonstat
+    initstat: True
+    times:
+      model_type: nonstationary
+      # tbeg: '2023-01-01T00:00:00'
+      # tend: '2023-02-01T00:00:00'
+      # delt: PT30M
+      tfmt: 1
+      dfmt: min
+    hotfile:
+      fname: ./hotfile.txt
+      format: free
+    hottimes: [6, -1]

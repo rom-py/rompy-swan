@@ -4,15 +4,15 @@ import logging
 from pydantic import ValidationError
 
 from rompy.swan.types import GridOptions
+from rompy.swan.components.group import INPGRIDS
 from rompy.swan.components.inpgrid import (
     INPGRID,
-    INPGRIDS,
     REGULAR,
     CURVILINEAR,
     UNSTRUCTURED,
     READINP,
 )
-from rompy.swan.subcomponents.time import NONSTATIONARY
+from rompy.swan.subcomponents.time import NONSTATIONARY, Time, Delt
 
 
 logger = logging.getLogger(__name__)
@@ -25,13 +25,9 @@ def readinp():
 
 @pytest.fixture(scope="module")
 def nonstat():
-    inst = NONSTATIONARY(
-        tbeg="2023-01-01T00:00:00",
-        delt="PT30M",
-        tend="2023-02-01T00:00:00",
-        deltfmt="hr",
+    yield NONSTATIONARY(
+        tbeg="2023-01-01T00:00:00", tend="2023-02-01T00:00:00", delt="PT30M",
     )
-    yield inst
 
 
 def test_valid_inpgrid_options(readinp):

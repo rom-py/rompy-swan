@@ -1,11 +1,9 @@
 """SWAN numerics subcomponents."""
-from typing import Annotated, Literal, Optional, Union
-from pydantic import field_validator, Field, model_validator
-from abc import ABC
-from pydantic_numpy.typing import Np2DArray
-import numpy as np
+from typing import Literal, Optional, Union
+from pydantic import Field
 
 from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy.swan.subcomponents.time import Delt
 
 
 class BSBT(BaseSubComponent):
@@ -20,7 +18,6 @@ class BSBT(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import BSBT
         scheme = BSBT()
@@ -54,10 +51,9 @@ class GSE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import GSE
-        scheme = GSE(waveage=1, units="day")
+        scheme = GSE(waveage=dict(delt=86400, dfmt="day"))
         print(scheme.render())
 
     """
@@ -65,7 +61,7 @@ class GSE(BaseSubComponent):
     model_type: Literal["gse", "GSE"] = Field(
         default="gse", description="Model type discriminator"
     )
-    waveage: Optional[float] = Field(
+    waveage: Optional[Delt] = Field(
         default=None,
         description=(
             "The time interval used to determine the diffusion which counteracts the "
@@ -74,46 +70,26 @@ class GSE(BaseSubComponent):
             "to the travel time of the waves over the computational region."
         ),
     )
-    units: Literal["sec", "min", "hr", "day"] = Field(
-        default="hr", description="Units for waveage",
-    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "GSE"
         if self.waveage is not None:
-            repr += f" waveage={self.waveage} {self.units.upper()}"
+            repr += f" waveage={self.waveage.render()}"
         return repr
 
 
 class STAT(BaseSubComponent):
-    """Iteration termination for stationary computations.
+    """Computation parameters in stationary computation."""
 
-    .. code-block:: text
-
-        STAT [mxitst] [alfa]
-
-    Examples
-    --------
-    .. ipython:: python
-        :okwarning:
-        :okexcept:
-
-        from rompy.swan.subcomponents.numerics import STAT
-        stat = STAT()
-        print(stat.render())
-        stat = STAT(mxitst=10, alfa=0.1)
-        print(stat.render())
-
-    """
     model_type: Literal["stat", "STAT"] = Field(
         default="stat", description="Model type discriminator"
     )
     mxitst: Optional[int] = Field(
         default=None,
         description=(
-            "Maximum number of iterations for stationary computations, the "
-            "computation stops when this number is exceeded (SWAN default: 50)"
+            "The maximum number of iterations for stationary computations. The "
+            "computation stops when this number is exceeded (SWAN default:  50)"
         ),
     )
     alfa: Optional[float] = Field(
@@ -128,7 +104,7 @@ class STAT(BaseSubComponent):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "STAT"
+        repr = "STATIONARY"
         if self.mxitst is not None:
             repr += f" mxitst={self.mxitst}"
         if self.alfa is not None:
@@ -137,40 +113,23 @@ class STAT(BaseSubComponent):
 
 
 class NONSTAT(BaseSubComponent):
-    """Iteration termination for nonstationary computations.
+    """Computation parameters in nonstationary computation."""
 
-    .. code-block:: text
-
-        NONSTAT [mxitst]
-
-    Examples
-    --------
-    .. ipython:: python
-        :okwarning:
-        :okexcept:
-
-        from rompy.swan.subcomponents.numerics import NONSTAT
-        nonstat = NONSTAT()
-        print(nonstat.render())
-        nonstat = NONSTAT(mxitst=3)
-        print(nonstat.render())
-
-    """
     model_type: Literal["nonstat", "NONSTAT"] = Field(
         default="nonstat", description="Model type discriminator"
     )
     mxitst: Optional[int] = Field(
         default=None,
         description=(
-            "Maximum number of iterations for stationary computations, the "
-            "computation moves to the next time step when this number is exceeded "
-            "(SWAN default: 1)"
+            "The maximum number of iterations per time step for nonstationary "
+            "computations. The computation moves to the next time step when this "
+            "number is exceeded (SWAN default: `mxitns = 1`"
         ),
     )
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = "NONSTAT"
+        repr = "NONSTATIONARY"
         if self.mxitst is not None:
             repr += f" mxitst={self.mxitst}"
         return repr
@@ -206,7 +165,6 @@ class STOPC(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import STOPC
         stop = STOPC()
@@ -221,6 +179,7 @@ class STOPC(BaseSubComponent):
         print(stop.render())
 
     """
+
     model_type: Literal["stopc", "STOPC"] = Field(
         default="stopc", description="Model type discriminator"
     )
@@ -254,9 +213,7 @@ class STOPC(BaseSubComponent):
     )
     mode: Optional[Union[STAT, NONSTAT]] = Field(
         default=None,
-        description=(
-            "Iteration termination criteria for stationary or nonstationary runs"
-        ),
+        description="Termination criteria for stationary or nonstationary runs",
         discriminator="model_type",
     )
     limiter: Optional[float] = Field(
@@ -297,7 +254,6 @@ class DIRIMPL(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import DIRIMPL
         dirimpl = DIRIMPL()
@@ -306,6 +262,7 @@ class DIRIMPL(BaseSubComponent):
         print(dirimpl.render())
 
     """
+
     model_type: Literal["dirimpl", "DIRIMPL"] = Field(
         default="dirimpl", description="Model type discriminator"
     )
@@ -343,7 +300,6 @@ class SIGIMPL(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import SIGIMPL
         sigimpl = SIGIMPL()
@@ -352,6 +308,7 @@ class SIGIMPL(BaseSubComponent):
         print(sigimpl.render())
 
     """
+
     model_type: Literal["sigimpl", "SIGIMPL"] = Field(
         default="sigimpl", description="Model type discriminator"
     )
@@ -420,7 +377,6 @@ class CTHETA(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import CTHETA
         ctheta = CTHETA()
@@ -429,6 +385,7 @@ class CTHETA(BaseSubComponent):
         print(ctheta.render())
 
     """
+
     model_type: Literal["ctheta", "CTHETA"] = Field(
         default="ctheta", description="Model type discriminator"
     )
@@ -465,7 +422,6 @@ class CSIGMA(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import CSIGMA
         csigma = CSIGMA()
@@ -474,6 +430,7 @@ class CSIGMA(BaseSubComponent):
         print(csigma.render())
 
     """
+
     model_type: Literal["ctheta", "CTHETA"] = Field(
         default="ctheta", description="Model type discriminator"
     )
@@ -507,7 +464,6 @@ class SETUP(BaseSubComponent):
     --------
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.numerics import SETUP
         setup = SETUP()
@@ -516,6 +472,7 @@ class SETUP(BaseSubComponent):
         print(setup.render())
 
     """
+
     model_type: Literal["setup", "SETUP"] = Field(
         default="setup", description="Model type discriminator"
     )

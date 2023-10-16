@@ -1,6 +1,6 @@
 """Readgrid subcomponents."""
 import logging
-from typing import Literal, Optional
+from typing import Literal, Optional, Union
 from abc import ABC
 
 from pydantic import Field, model_validator, field_validator
@@ -10,6 +10,94 @@ from rompy.swan.subcomponents.base import BaseSubComponent
 
 
 logger = logging.getLogger(__name__)
+
+
+class GRIDREGULAR(BaseSubComponent):
+    """SWAN Regular Grid subcomponent.
+
+    .. code-block:: text
+
+        xp yp alp xlen ylen mx my
+
+    Note
+    ----
+    The direction of the x-axis `alp` must be 0 in case of spherical coordinates
+
+    Note
+    ----
+    All coordinates and distances should be given in m when Cartesian coordinates are
+    used or degrees when Spherical coordinates are used (see command COORD).
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.readgrid import GRIDREGULAR
+        kwargs = dict(xp=173, yp=-40, alp=0, xlen=2, ylen=2, mx=199, my=199)
+        grid = GRIDREGULAR(suffix="c", **kwargs)
+        print(grid.render())
+        grid = GRIDREGULAR(suffix="inp", **kwargs)
+        print(grid.render())
+
+    """
+
+    model_type: Literal["gridregular", "GRIDREGULAR"] = Field(
+        default="gridregular", description="Model type discriminator"
+    )
+    xp: float = Field(
+        description="The x-coordinate of the origin in problem coordinates",
+    )
+    yp: float = Field(
+        description="The y-coordinate of the origin in problem coordinates",
+    )
+    alp: Optional[float] = Field(
+        default=0.0,
+        description="Direction of the xaxis in degrees",
+    )
+    xlen: float = Field(
+        description="Length of the computational grid in the x-direction"
+    )
+    ylen: float = Field(
+        description="Length of the computational grid in the y-direction"
+    )
+    mx: int = Field(
+        description=(
+            "Number of meshes in computational grid in x-direction (this number is "
+            "one less than the number of grid points in this domain)"
+        ),
+    )
+    my: int = Field(
+        description=(
+            "Number of meshes in computational grid in y-direction (this number is "
+            "one less than the number of grid points in this domain)"
+        ),
+    )
+    suffix: Optional[str] = Field(
+        default="", description="Suffix for rendering with each output grid parameter."
+    )
+
+    @property
+    def dx(self):
+        """Grid spacing in x-direction."""
+        return self.xlen / (self.mx + 1)
+
+    @property
+    def dy(self):
+        """Grid spacing in y-direction."""
+        return self.ylen / (self.my + 1)
+
+    def cmd(self) -> str:
+        """Command file string for this subcomponent."""
+        repr = f"xp{self.suffix}={self.xp}"
+        repr += f" yp{self.suffix}={self.yp}"
+        repr += f" alp{self.suffix}={self.alp}"
+        repr += f" xlen{self.suffix}={self.xlen}"
+        repr += f" ylen{self.suffix}={self.ylen}"
+        repr += f" mx{self.suffix}={self.mx}"
+        repr += f" my{self.suffix}={self.my}"
+        return repr
 
 
 class READGRID(BaseSubComponent, ABC):
@@ -22,11 +110,10 @@ class READGRID(BaseSubComponent, ABC):
 
     This is the base class for all input grids. It is not meant to be used directly.
 
-    Notes
-    -----
+    Note
+    ----
 
-    File format identifier
-    ~~~~~~~~~~~~~~~~~~~~~~
+    File format identifier:
 
     * 1: Format according to BODKAR convention (a standard of the Ministry of
       Transport and Public Works in the Netherlands). Format string: (10X,12F5.0)
@@ -39,7 +126,7 @@ class READGRID(BaseSubComponent, ABC):
     model_type: Literal["readgrid", "READGRID"] = Field(
         default="readgrid", description="Model type discriminator"
     )
-    grid_type: GridOptions | Literal["coordinates"] = Field(
+    grid_type: Union[GridOptions, Literal["coordinates"]] = Field(
         description="Type of the SWAN grid file",
     )
     fac: float = Field(
@@ -142,7 +229,6 @@ class READCOORD(READGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.readgrid import READCOORD
         readcoord = READCOORD(
@@ -185,7 +271,6 @@ class READINP(READGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.readgrid import READINP
         readinp = READINP(

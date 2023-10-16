@@ -72,7 +72,10 @@ rompy = "rompy.cli:main"
 "rompy_data" = "rompy:cat"
 
 [project.optional-dependencies]
-test = ["pytest"]
+test = [
+  "pytest",
+  "envyaml",
+]
 extra = [
     "gcsfs",
     "zarr",
