@@ -11,8 +11,7 @@ from rompy.swan.subcomponents.boundary import (
     HOTSINGLE,
     HOTMULTIPLE,
     SIDE,
-    SEGMENTXY,
-    SEGMENTIJ,
+    SEGMENT,
     PAR,
     CONSTANTPAR,
     VARIABLEPAR,
@@ -42,7 +41,6 @@ class INITIAL(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import INITIAL
         init = INITIAL()
@@ -55,10 +53,12 @@ class INITIAL(BaseComponent):
     """
 
     model_type: Literal["initial", "INITIAL"] = Field(
-        default="initial", description="Model type discriminator",
+        default="initial",
+        description="Model type discriminator",
     )
     kind: DEFAULT | ZERO | PAR | HOTSINGLE | HOTMULTIPLE = Field(
-        default_factory=DEFAULT, description="Initial condition type",
+        default_factory=DEFAULT,
+        description="Initial condition type",
     )
 
     def cmd(self) -> str:
@@ -67,7 +67,7 @@ class INITIAL(BaseComponent):
 
 
 class BOUNDSPEC(BaseComponent):
-    """Parametric or spectra boundary along sides or segments.
+    """Boundary along sides or segment.
 
     .. code-block:: text
 
@@ -88,7 +88,6 @@ class BOUNDSPEC(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import BOUNDSPEC
         boundary = BOUNDSPEC(
@@ -97,16 +96,27 @@ class BOUNDSPEC(BaseComponent):
             data=dict(model_type="constantpar", hs=2, per=8, dir=270, dd=30),
         )
         print(boundary.render())
+        boundary = BOUNDSPEC(
+            shapespec=dict(model_type="shapespec", shape=dict(model_type="pm")),
+            location=dict(
+                model_type="segment",
+                points=dict(model_type="ij", i=[0, 0], j=[0, 3])
+            ),
+            data=dict(model_type="constantpar", hs=2, per=8, dir=270, dd=30),
+        )
+        print(boundary.render())
 
     """
 
     model_type: Literal["boundspec", "BOUNDSPEC"] = Field(
-        default="boundspec", description="Model type discriminator",
+        default="boundspec",
+        description="Model type discriminator",
     )
     shapespec: SHAPESPEC = Field(
-        default_factory=SHAPESPEC, description="Spectral shape specification",
+        default_factory=SHAPESPEC,
+        description="Spectral shape specification",
     )
-    location: SIDE | SEGMENTXY | SEGMENTIJ = Field(
+    location: SIDE | SEGMENT = Field(
         description="Location to apply the boundary",
     )
     data: CONSTANTPAR | CONSTANTFILE | VARIABLEPAR | VARIABLEFILE = Field(
@@ -145,7 +155,6 @@ class BOUNDNEST1(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import BOUNDNEST1
         boundary = BOUNDNEST1(fname="boundary.swn", rectangle="closed")
@@ -154,7 +163,8 @@ class BOUNDNEST1(BaseComponent):
     """
 
     model_type: Literal["boundnest1", "BOUNDNEST1"] = Field(
-        default="boundnest1", description="Model type discriminator",
+        default="boundnest1",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description=(
@@ -163,7 +173,7 @@ class BOUNDNEST1(BaseComponent):
             "according to the rules given in Appendix D for 2D spectra"
         ),
         min_length=1,
-        max_length=98,
+        max_length=36,
     )
     rectangle: Literal["closed", "open"] = Field(
         default="closed",
@@ -221,7 +231,6 @@ class BOUNDNEST2(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import BOUNDNEST2
         boundary = BOUNDNEST2(fname="boundary.wam", format="cray", lwdate=12)
@@ -230,7 +239,8 @@ class BOUNDNEST2(BaseComponent):
     """
 
     model_type: Literal["boundnest2", "BOUNDNEST2"] = Field(
-        default="boundnest2", description="Model type discriminator",
+        default="boundnest2",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description=(
@@ -238,7 +248,7 @@ class BOUNDNEST2(BaseComponent):
             "nested boundary conditions in time-sequence (usually one file per day)"
         ),
         min_length=1,
-        max_length=48,
+        max_length=36,
     )
     format: Literal["cray", "wkstat", "free"] = Field(
         description=(
@@ -333,7 +343,6 @@ class BOUNDNEST3(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.boundary import BOUNDNEST3
         boundary = BOUNDNEST3(
@@ -346,14 +355,15 @@ class BOUNDNEST3(BaseComponent):
     """
 
     model_type: Literal["boundnest3", "BOUNDNEST3"] = Field(
-        default="boundnest3", description="Model type discriminator",
+        default="boundnest3",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description=(
             "The name of the file that contains the spectra computed by WAVEWATCH III"
         ),
         min_length=1,
-        max_length=62,
+        max_length=36,
     )
     format: Literal["unformatted", "free"] = Field(
         description=(

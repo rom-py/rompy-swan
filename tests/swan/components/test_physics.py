@@ -1,7 +1,8 @@
-"""Test startup components."""
+"""Test physics components."""
 import pytest
 from pydantic import ValidationError
 
+from rompy.swan.components.group import PHYSICS
 from rompy.swan.components.physics import (
     GEN1,
     GEN2,
@@ -22,6 +23,14 @@ from rompy.swan.components.physics import (
     BRAGG_FILE,
     LIMITER,
     OBSTACLE,
+    OBSTACLE_FIG,
+    OBSTACLES,
+    SETUP,
+    DIFFRACTION,
+    SURFBEAT,
+    SCAT,
+    OFF,
+    OFFS,
 )
 
 
@@ -281,3 +290,27 @@ def test_obstacle_minimum():
         ),
     )
     assert obs.render() == "OBSTACLE LINE 174.1 -39.1 174.2 -39.1 174.3 -39.1"
+
+
+# =====================================================================================
+# OFF
+# =====================================================================================
+def test_off():
+    off = OFF(physics="windgrowth")
+    assert off.render() == "OFF WINDGROWTH"
+
+
+def test_offs():
+    offs = OFFS(offs=[OFF(physics="windgrowth"), OFF(physics="breaking")])
+    print(offs.render())
+    # assert offs.render() == ["OFF WINDGROWTH", "OFF BREAKING"]
+
+
+def test_physics():
+    phys = PHYSICS(
+        # deactivate=OFF(physics="windgrowth")
+        deactivate=OFFS(offs=[OFF(physics="windgrowth"), OFF(physics="breaking")]),
+    )
+    print()
+    print(phys.render())
+    print()

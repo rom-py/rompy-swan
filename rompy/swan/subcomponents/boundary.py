@@ -1,9 +1,9 @@
 """SWAN boundary subcomponents."""
 import logging
-from typing import Annotated, Optional, Literal
+from typing import Annotated, Optional, Literal, Union
 from pydantic import Field, model_validator
 
-from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy.swan.subcomponents.base import BaseSubComponent, XY, IJ
 
 
 logger = logging.getLogger(__name__)
@@ -28,7 +28,6 @@ class SIDE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import SIDE
         side = SIDE(side="west", direction="ccw")
@@ -37,13 +36,15 @@ class SIDE(BaseSubComponent):
     """
 
     model_type: Literal["side", "SIDE"] = Field(
-        default="side", description="Model type discriminator",
+        default="side",
+        description="Model type discriminator",
     )
     side: Literal["north", "nw", "west", "sw", "south", "se", "east", "ne"] = Field(
         description="The side of the grid to apply the boundary to",
     )
     direction: Literal["ccw", "clockwise"] = Field(
-        default="ccw", description="The direction to apply the boundary in",
+        default="ccw",
+        description="The direction to apply the boundary in",
     )
 
     def cmd(self) -> str:
@@ -51,90 +52,56 @@ class SIDE(BaseSubComponent):
         return repr
 
 
-class SEGMENTXY(BaseSubComponent):
-    """Boundary over a segment defined from point coordinates.
+class SEGMENT(BaseSubComponent):
+    """Boundary over a segment defined from points.
 
     .. code-block:: text
 
         SEGMENT XY < [x] [y] >
+        SEGMENT IJ < [i] [j] >
 
-    The segment is defined by means of a series of points in terms of problem
-    coordinates; these points do not have to coincide with grid points. The (straight)
-    line connecting two points must be close to grid lines of the computational grid
-    (the maximum distance is one hundredth of the length of the straight line).
+    The segment is defined either by means of a series of points in terms of problem
+    coordinates (`XY`) or by means of a series of points in terms of grid indices
+    (`IJ`). The points do not have to include all or coincide with actual grid points.
 
     Examples
     --------
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
-        from rompy.swan.subcomponents.boundary import SEGMENTXY
-        seg = SEGMENTXY(
-            points=[(172, -41), (172, -40.5), (172, -40), (172.5, -40), (173, -40)],
-            float_format="0.2f",
+        from rompy.swan.subcomponents.boundary import SEGMENT
+        seg = SEGMENT(
+            points=dict(
+                model_type="xy",
+                x=[172, 172, 172, 172.5, 173],
+                y=[-41, -40.5, -40, -40, -40],
+                fmt="0.2f",
+            ),
+        )
+        print(seg.render())
+        seg = SEGMENT(
+            points=dict(
+                model_type="ij",
+                i=[0, 0, 5],
+                j=[0, 19, 19],
+            ),
         )
         print(seg.render())
 
     """
 
-    model_type: Literal["segmentxy", "SEGMENTXY"] = Field(
-        default="segmentxy", description="Model type discriminator",
+    model_type: Literal["segment", "SEGMENT"] = Field(
+        default="segment",
+        description="Model type discriminator",
     )
-    points: list[tuple[float, float]] = Field(
-        description="Pairs of (x, y) values to define the segment",
-    )
-    float_format: str = Field(
-        default="0.8f", description="The format to use for the floats in the points",
-    )
-
-    def cmd(self) -> str:
-        repr = f"SEGMENT XY &"
-        for point in self.points:
-            repr += (
-                f"\n\t{point[0]:{self.float_format}} {point[1]:{self.float_format}} &"
-            )
-        return repr + "\n\t"
-
-
-class SEGMENTIJ(BaseSubComponent):
-    """Boundary over a segment defined from grid indices.
-
-    .. code-block:: text
-
-        SEGMENT IJ < [i] [j] >
-
-    The segment is defined by means of a series of computational grid points given in
-    terms of grid indices (origin at 0,0); not all grid points on the segment have to
-    be mentioned. If two points are on the same grid line, intermediate points are
-    assumed to be on the segment as well.
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-        :okexcept:
-
-        from rompy.swan.subcomponents.boundary import SEGMENTIJ
-        seg = SEGMENTIJ(points=[(0, 0), (0, 19), (5, 19)])
-        print(seg.render())
-
-    """
-
-    model_type: Literal["segmentij", "SEGMENTIJ"] = Field(
-        default="segmentij", description="Model type discriminator",
-    )
-    points: list[tuple[int, int]] = Field(
-        description="Pairs of (i, j) values to define the segment",
+    points: Union[XY, IJ] = Field(
+        description="Points to define the segment",
+        discriminator="model_type",
     )
 
     def cmd(self) -> str:
-        repr = f"SEGMENT IJ &"
-        for point in self.points:
-            repr += f"\n\t{point[0]} {point[1]} &"
-        return repr + "\n\t"
+        return f"SEGMENT {self.points.model_type.upper()} {self.points.render()}"
 
 
 class PAR(BaseSubComponent):
@@ -149,7 +116,6 @@ class PAR(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import PAR
         par = PAR(hs=1.5, per=8.1, dir=225)
@@ -215,7 +181,6 @@ class CONSTANTPAR(PAR):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import CONSTANTPAR
         par = CONSTANTPAR(hs=1.5, per=8.1, dir=225)
@@ -224,7 +189,8 @@ class CONSTANTPAR(PAR):
     """
 
     model_type: Literal["constantpar", "CONSTANTPAR"] = Field(
-        default="constantpar", description="Model type discriminator",
+        default="constantpar",
+        description="Model type discriminator",
     )
 
     def cmd(self) -> str:
@@ -244,7 +210,6 @@ class VARIABLEPAR(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import VARIABLEPAR
         par = VARIABLEPAR(
@@ -259,7 +224,8 @@ class VARIABLEPAR(BaseSubComponent):
     """
 
     model_type: Literal["variablepar", "VARIABLEPAR"] = Field(
-        default="variablepar", description="Model type discriminator",
+        default="variablepar",
+        description="Model type discriminator",
     )
     hs: list[Annotated[float, Field(ge=0.0)]] = Field(
         description="The significant wave height (m)",
@@ -359,7 +325,6 @@ class CONSTANTFILE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import CONSTANTFILE
         par = CONSTANTFILE(fname="tpar.txt")
@@ -368,11 +333,12 @@ class CONSTANTFILE(BaseSubComponent):
     """
 
     model_type: Literal["constantfile", "CONSTANTFILE"] = Field(
-        default="constantfile", description="Model type discriminator",
+        default="constantfile",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description="Name of the file containing the boundary condition.",
-        max_length=40,
+        max_length=36,
     )
     seq: Optional[int] = Field(
         default=None,
@@ -433,7 +399,6 @@ class VARIABLEFILE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import VARIABLEFILE
         par = VARIABLEFILE(
@@ -448,7 +413,7 @@ class VARIABLEFILE(BaseSubComponent):
         default="variablefile",
         description="Model type discriminator",
     )
-    fname: list[Annotated[str, Field(max_length=40)]] = Field(
+    fname: list[Annotated[str, Field(max_length=36)]] = Field(
         description="Names of the files containing the boundary condition",
     )
     seq: Optional[list[Annotated[int, Field(ge=1)]]] = Field(
@@ -513,7 +478,6 @@ class DEFAULT(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import DEFAULT
         init = DEFAULT()
@@ -522,7 +486,8 @@ class DEFAULT(BaseSubComponent):
     """
 
     model_type: Literal["default", "DEFAULT"] = Field(
-        default="default", description="Model type discriminator",
+        default="default",
+        description="Model type discriminator",
     )
 
 
@@ -542,7 +507,6 @@ class ZERO(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import ZERO
         init = ZERO()
@@ -551,7 +515,8 @@ class ZERO(BaseSubComponent):
     """
 
     model_type: Literal["zero", "ZERO"] = Field(
-        default="zero", description="Model type discriminator",
+        default="zero",
+        description="Model type discriminator",
     )
 
 
@@ -578,7 +543,6 @@ class HOTSINGLE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import HOTSINGLE
         init = HOTSINGLE(fname="hotstart.swn", format="free")
@@ -587,11 +551,12 @@ class HOTSINGLE(BaseSubComponent):
     """
 
     model_type: Literal["hotsingle", "HOTSINGLE"] = Field(
-        default="hotsingle", description="Model type discriminator",
+        default="hotsingle",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",
-        max_length=85,
+        max_length=36,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",
@@ -629,7 +594,6 @@ class HOTMULTIPLE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.boundary import HOTMULTIPLE
         init = HOTMULTIPLE(fname="hotstart.swn", format="free")
@@ -638,11 +602,12 @@ class HOTMULTIPLE(BaseSubComponent):
     """
 
     model_type: Literal["hotmultiple", "HOTMULTIPLE"] = Field(
-        default="hotmultiple", description="Model type discriminator",
+        default="hotmultiple",
+        description="Model type discriminator",
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",
-        max_length=85,
+        max_length=36,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",

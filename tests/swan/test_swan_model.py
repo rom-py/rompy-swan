@@ -1,41 +1,43 @@
 """Test swan_config class."""
 import logging
 from pathlib import Path
-from typing import Literal
-from pydantic import Field
 import pytest
-import yaml
+import os
+from envyaml import EnvYAML
 
 from rompy.model import ModelRun
 from rompy.swan.config import SwanConfigComponents
-from rompy.swan.subcomponents.physics import SourceTerms
 
 
 logger = logging.getLogger(__name__)
 
 HERE = Path(__file__).parent
 
+os.environ["ROMPY_PATH"] = str(HERE.parent.parent)
+
 
 @pytest.fixture(scope="module")
 def config_dict():
-    yield yaml.load((HERE / "swan_model.yml").read_text(), Loader=yaml.Loader)
+    yield EnvYAML(HERE / "swan_model.yml")
 
 
 def test_swan_model(tmpdir, config_dict):
     config = SwanConfigComponents(
         template=str(HERE / "../../rompy/templates/swancomp"),
-        project=config_dict["project"],
-        set=config_dict["set"],
-        mode=config_dict["mode"],
-        coordinates=config_dict["coordinates"],
+        startup=config_dict["startup"],
         cgrid=config_dict["cgrid"],
         inpgrid=config_dict["inpgrid"],
         boundary=config_dict["boundary"],
         initial=config_dict["initial"],
         physics=config_dict["physics"],
+        prop=config_dict["prop"],
+        numeric=config_dict["numeric"],
+        output=config_dict["output"],
+        lockup=config_dict["lockup"],
     )
     model = ModelRun(
         run_id="test",
+        period=dict(start="20230101T00", duration="12h", interval="1h"),
         output_dir=str(tmpdir),
         config=config,
     )

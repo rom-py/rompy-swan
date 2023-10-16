@@ -10,6 +10,8 @@ from rompy.swan.subcomponents.readgrid import READINP
 from rompy.swan.types import GridOptions
 
 
+# TODO: Components are a bit mixed up here, define them a bit better.
+
 HERE = Path(__file__).parent
 
 
@@ -79,7 +81,6 @@ class REGULAR(INPGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.inpgrid import REGULAR
         inpgrid = REGULAR(
@@ -110,10 +111,12 @@ class REGULAR(INPGRID):
                 tbeg="2019-01-01T00:00:00",
                 tend="2019-01-07 00:00:00",
                 delt=3600,
-                deltfmt="hr",
+                dfmt="hr",
             ),
         )
         print(inpgrid.render())
+
+    TODO: Use grid object, requires different grid parameters to be allowed.
 
     """
 
@@ -203,7 +206,6 @@ class CURVILINEAR(INPGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.inpgrid import CURVILINEAR
         inpgrid = CURVILINEAR(
@@ -218,7 +220,7 @@ class CURVILINEAR(INPGRID):
                 tbeg="2019-01-01T00:00:00",
                 tend="2019-01-07 00:00:00",
                 delt=3600,
-                deltfmt="hr",
+                dfmt="hr",
             ),
         )
         print(inpgrid.render())
@@ -291,7 +293,6 @@ class UNSTRUCTURED(INPGRID):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.inpgrid import UNSTRUCTURED
         inpgrid = UNSTRUCTURED(
@@ -302,7 +303,7 @@ class UNSTRUCTURED(INPGRID):
                 tbeg="2019-01-01T00:00:00",
                 tend="2019-01-07 00:00:00",
                 delt=3600,
-                deltfmt="hr",
+                dfmt="hr",
             ),
         )
         print(inpgrid.render())
@@ -321,90 +322,3 @@ class UNSTRUCTURED(INPGRID):
             repr += f" {self.nonstationary.render()}"
         repr = [repr] + [self.readinp.render()]
         return repr
-
-
-INPGRID_TYPES = Annotated[
-    Union[REGULAR, CURVILINEAR, UNSTRUCTURED],
-    Field(discriminator="model_type"),
-]
-
-
-class INPGRIDS(BaseComponent):
-    """SWAN input grids group component.
-
-    .. code-block:: text
-
-        INPGRID ...
-        READGRID ...
-
-        INPGRID ...
-        READGRID ...
-
-        ...
-
-    This group component is a convenience to allow defining and rendering
-    a list of input grid components.
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-        :okexcept:
-
-        from rompy.swan.components.inpgrid import REGULAR, INPGRIDS
-        inpgrid_bottom = REGULAR(
-            grid_type="bottom",
-            excval=-99.0,
-            xpinp=172.0,
-            ypinp=-41.0,
-            alpinp=0.0,
-            mxinp=99,
-            myinp=99,
-            dxinp=0.005,
-            dyinp=0.005,
-            readinp=dict(fname1="bottom.txt"),
-        )
-        inpgrid_wind = REGULAR(
-            grid_type="wind",
-            excval=-99.0,
-            xpinp=172.0,
-            ypinp=-41.0,
-            alpinp=0.0,
-            mxinp=99,
-            myinp=99,
-            dxinp=0.005,
-            dyinp=0.005,
-            readinp=dict(fname1="wind.txt"),
-            nonstationary=dict(
-                tbeg="2019-01-01T00:00:00",
-                tend="2019-01-07 00:00:00",
-                delt=3600,
-                deltfmt="hr",
-            ),
-        )
-        inpgrids = INPGRIDS(inpgrids=[inpgrid_bottom, inpgrid_wind])
-        print(inpgrids.render())
-
-    """
-
-    model_type: Literal["inpgrids"] = Field(
-        default="inpgrids", description="Model type discriminator"
-    )
-    inpgrids: list[INPGRID_TYPES] = Field(
-        min_length=1,
-        description="List of input grid components",
-    )
-
-    def cmd(self) -> str | list:
-        repr = []
-        for inpgrid in self.inpgrids:
-            repr += [inpgrid.cmd()]
-        return repr
-
-    def render(self) -> str:
-        """Override base class to allow rendering list of components."""
-        cmds = []
-        for cmd in self.cmd():
-            cmds.append(super().render(cmd))
-        return "\n\n".join(cmds)

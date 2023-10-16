@@ -25,7 +25,6 @@ class PROJECT(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import PROJECT
         proj = PROJECT(nr="01")
@@ -41,7 +40,8 @@ class PROJECT(BaseComponent):
     """
 
     model_type: Literal["project", "PROJECT"] = Field(
-        default="project", description="Model type discriminator",
+        default="project",
+        description="Model type discriminator",
     )
     name: Optional[str] = Field(
         default=None,
@@ -117,7 +117,6 @@ class SET(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import SET
         set = SET(level=0.5, direction_convention="nautical")
@@ -334,7 +333,6 @@ class MODE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import MODE
         mode = MODE()
@@ -378,7 +376,6 @@ class COORDINATES(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import COORDINATES
         coords = COORDINATES()
@@ -392,10 +389,12 @@ class COORDINATES(BaseComponent):
     """
 
     model_type: Literal["coordinates", "COORDINATES"] = Field(
-        default="coordinates", description="Model type discriminator",
+        default="coordinates",
+        description="Model type discriminator",
     )
     kind: CARTESIAN | SPHERICAL = Field(
-        default_factory=CARTESIAN, description="Coordinates kind",
+        default_factory=CARTESIAN,
+        description="Coordinates kind",
     )
     reapeating: bool = Field(
         default=False,

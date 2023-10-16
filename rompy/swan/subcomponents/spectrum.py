@@ -32,7 +32,6 @@ class SPECTRUM(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.spectrum import SPECTRUM
         spec = SPECTRUM(mdc=36, flow=0.04, fhigh=1.0)
@@ -145,7 +144,6 @@ class JONSWAP(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.spectrum import JONSWAP
         shape = JONSWAP(gamma=3.3)
@@ -178,7 +176,6 @@ class TMA(JONSWAP):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.spectrum import TMA
         shape = TMA(gamma=2.0, d=18)
@@ -210,7 +207,6 @@ class GAUSS(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.spectrum import GAUSS
         shape = GAUSS(sigfr=0.02)
@@ -245,7 +241,6 @@ class PM(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.spectrum import PM
         shape = PM()
@@ -270,7 +265,6 @@ class BIN(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.spectrum import BIN
         shape = BIN()
@@ -304,7 +298,6 @@ class SHAPESPEC(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.spectrum import SHAPESPEC
         shapespec = SHAPESPEC()
@@ -322,13 +315,16 @@ class SHAPESPEC(BaseSubComponent):
         default="shapespec", description="Model type discriminator"
     )
     shape: JONSWAP | PM | GAUSS | BIN | TMA = Field(
-        default_factory=JONSWAP, description="The spectral shape",
+        default_factory=JONSWAP,
+        description="The spectral shape",
     )
     per_type: Literal["peak", "mean"] = Field(
-        default="peak", description="The type of characteristic wave period",
+        default="peak",
+        description="The type of characteristic wave period",
     )
     dspr_type: Literal["power", "degrees"] = Field(
-        default="power", description="The type of directional spreading",
+        default="power",
+        description="The type of directional spreading",
     )
 
     def cmd(self) -> str:

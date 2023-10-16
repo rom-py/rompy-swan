@@ -3,7 +3,6 @@ from typing import Annotated, Literal, Optional
 from pydantic import field_validator, Field, model_validator
 from abc import ABC
 from pydantic_numpy.typing import Np2DArray
-import numpy as np
 
 from rompy.swan.subcomponents.base import BaseSubComponent
 
@@ -55,7 +54,6 @@ class JANSSEN(SourceTerms):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import JANSSEN
         janssen = JANSSEN()
@@ -114,7 +112,6 @@ class KOMEN(SourceTerms):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import KOMEN
         komen = KOMEN()
@@ -182,7 +179,6 @@ class WESTHUYSEN(SourceTerms):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import WESTHUYSEN
         westhuysen = WESTHUYSEN()
@@ -252,7 +248,6 @@ class ST6(SourceTerms):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import ST6
         st6 = ST6(a1sds=4.7e-7, a2sds=6.6e-6)
@@ -382,7 +377,6 @@ class ST6C1(ST6):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import ST6C1
         st6 = ST6C1()
@@ -411,7 +405,6 @@ class ST6C2(ST6C1):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import ST6C2
         st6 = ST6C2()
@@ -437,7 +430,6 @@ class ST6C3(ST6C1):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import ST6C3
         st6 = ST6C3()
@@ -463,7 +455,6 @@ class ST6C4(ST6C3):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import ST6C4
         st6 = ST6C4()
@@ -487,7 +478,6 @@ class ST6C5(ST6C1):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import ST6C5
         st6 = ST6C5()
@@ -533,7 +523,6 @@ class ELDEBERKY(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import ELDEBERKY
         biphase = ELDEBERKY()
@@ -583,7 +572,6 @@ class DEWIT(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import DEWIT
         biphase = DEWIT()
@@ -627,7 +615,6 @@ class TRANSM(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import TRANSM
         transm = TRANSM()
@@ -671,7 +658,6 @@ class TRANS1D(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import TRANS1D
         transm = TRANS1D(trcoef=[0.0, 0.0, 0.2, 0.5, 0.2, 0.0, 0.0])
@@ -707,7 +693,6 @@ class TRANS2D(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import TRANS2D
         trcoef = np.array([[0.0, 0.0], [0.1, 0.1], [0.2, 0.2]])
@@ -767,7 +752,6 @@ class GODA(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import GODA
         transm = GODA(hgt=3.0)
@@ -832,7 +816,6 @@ class DANGREMOND(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import DANGREMOND
         transm = DANGREMOND(hgt=3.0, slope=60, Bk=10.0)
@@ -874,7 +857,6 @@ class REFL(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import REFL
         refl = REFL()
@@ -915,7 +897,6 @@ class RSPEC(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import RSPEC
         refl = RSPEC()
@@ -946,7 +927,6 @@ class RDIFF(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import RDIFF
         refl = RDIFF()
@@ -997,7 +977,6 @@ class FREEBOARD(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import FREEBOARD
         freeboard = FREEBOARD(hgt=2.0)
@@ -1086,7 +1065,6 @@ class LINE(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.subcomponents.physics import LINE
         line = LINE(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1])

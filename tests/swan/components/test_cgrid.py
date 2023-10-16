@@ -1,6 +1,7 @@
 """Test cgrid component."""
 import pytest
 
+from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 from rompy.swan.components.cgrid import (
     SPECTRUM,
     CGRID,
@@ -65,13 +66,15 @@ def test_regular():
             flow=0.04,
             fhigh=0.4,
         ),
-        xpc=0.0,
-        ypc=0.0,
-        alpc=0.0,
-        xlenc=100.0,
-        ylenc=100.0,
-        mxc=10,
-        myc=10,
+        grid=GRIDREGULAR(
+            xp=0.0,
+            yp=0.0,
+            alp=0.0,
+            xlen=100.0,
+            ylen=100.0,
+            mx=10,
+            my=10,
+        ),
     )
 
 

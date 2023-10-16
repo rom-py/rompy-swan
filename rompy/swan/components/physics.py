@@ -64,7 +64,6 @@ class GEN1(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import GEN1
         gen = GEN1()
@@ -168,7 +167,6 @@ class GEN2(GEN1):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import GEN2
         gen = GEN2()
@@ -249,7 +247,6 @@ class GEN3(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import GEN3
         gen = GEN3(
@@ -313,7 +310,6 @@ class NEGATINP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import NEGATINP
         negatinp = NEGATINP()
@@ -360,7 +356,6 @@ class SSWELL_ROGERS(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SSWELL_ROGERS
         sswell = SSWELL_ROGERS()
@@ -414,7 +409,6 @@ class SSWELL_ARDHUIN(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SSWELL_ARDHUIN
         sswell = SSWELL_ARDHUIN()
@@ -470,7 +464,6 @@ class SSWELL_ZIEGER(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SSWELL_ZIEGER
         sswell = SSWELL_ZIEGER()
@@ -524,7 +517,6 @@ class WCAPPING_KOMEN(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import WCAPPING_KOMEN
         wcapping = WCAPPING_KOMEN()
@@ -607,7 +599,6 @@ class WCAPPING_AB(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import WCAPPING_AB
         wcapping = WCAPPING_AB()
@@ -684,7 +675,6 @@ class QUADRUPL(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import QUADRUPL
         quadrupl = QUADRUPL()
@@ -781,7 +771,6 @@ class BREAKING_CONSTANT(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BREAKING_CONSTANT
         breaking = BREAKING_CONSTANT()
@@ -834,7 +823,6 @@ class BREAKING_BKD(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BREAKING_BKD
         breaking = BREAKING_BKD()
@@ -920,7 +908,6 @@ class FRICTION_JONSWAP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import FRICTION_JONSWAP
         friction = FRICTION_JONSWAP()
@@ -971,7 +958,6 @@ class FRICTION_COLLINS(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import FRICTION_COLLINS
         friction = FRICTION_COLLINS()
@@ -1023,7 +1009,6 @@ class FRICTION_MADSEN(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import FRICTION_MADSEN
         friction = FRICTION_MADSEN()
@@ -1074,7 +1059,6 @@ class FRICTION_RIPPLES(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import FRICTION_RIPPLES
         friction = FRICTION_RIPPLES()
@@ -1123,7 +1107,6 @@ class TRIAD(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TRIAD
         triad = TRIAD()
@@ -1165,12 +1148,15 @@ class TRIAD_DCTA(TRIAD):
     approximation in SWAN. In Proceedings Of Coastal Dynamics 2009: Impacts of Human
     Activities on Dynamic Coastal Processes (With CD-ROM) (pp. 1-10).
 
+    Note
+    ----
+    This is the default method to compute the triad interactions in SWAN.
+
     Examples
     --------
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TRIAD_DCTA
         triad = TRIAD_DCTA()
@@ -1243,7 +1229,6 @@ class TRIAD_LTA(TRIAD):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TRIAD_LTA
         triad = TRIAD_LTA()
@@ -1306,7 +1291,6 @@ class TRIAD_SPB(TRIAD):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TRIAD_SPB
         triad = TRIAD_SPB()
@@ -1411,7 +1395,6 @@ class VEGETATION(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import VEGETATION
         # Single layer
@@ -1523,7 +1506,6 @@ class MUD(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import MUD
         mud = MUD()
@@ -1619,7 +1601,6 @@ class SICE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE
         sice = SICE()
@@ -1683,7 +1664,6 @@ class SICE_R19(SICE):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE_R19
         sice = SICE_R19()
@@ -1794,7 +1774,6 @@ class SICE_D15(SICE):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE_D15
         sice = SICE_D15()
@@ -1838,7 +1817,6 @@ class SICE_M18(SICE):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE_M18
         sice = SICE_M18()
@@ -1882,7 +1860,6 @@ class SICE_R21B(SICE):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SICE_R21B
         sice = SICE_R21B()
@@ -1938,7 +1915,6 @@ class TURBULENCE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import TURBULENCE
         turbulence = TURBULENCE(current=False)
@@ -2041,7 +2017,6 @@ class BRAGG(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BRAGG
         bragg = BRAGG(nreg=200)
@@ -2114,7 +2089,6 @@ class BRAGG_FT(BRAGG):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BRAGG_FT
         bragg = BRAGG_FT(nreg=350)
@@ -2151,7 +2125,6 @@ class BRAGG_FILE(BRAGG):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import BRAGG_FILE
         bragg = BRAGG_FILE(fname="bottom_spectrum.txt", nreg=500, mkx=99, dkx=0.1)
@@ -2176,7 +2149,7 @@ class BRAGG_FILE(BRAGG):
     )
     fname: str = Field(
         description="Name of file containing the bottom spectrum",
-        max_length=40,
+        max_length=36,
     )
     idla: Optional[IDLA] = Field(
         default=None,
@@ -2244,7 +2217,6 @@ class LIMITER(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import LIMITER
         limiter = LIMITER()
@@ -2322,7 +2294,6 @@ class OBSTACLE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import OBSTACLE
         obs = OBSTACLE(
@@ -2413,7 +2384,6 @@ class OBSTACLE_FIG(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import OBSTACLE_FIG
         obs = OBSTACLE_FIG(
@@ -2491,7 +2461,6 @@ class OBSTACLES(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import OBSTACLES, OBSTACLE, OBSTACLE_FIG
         obst1 = dict(
@@ -2564,7 +2533,6 @@ class SETUP(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.physics import SETUP
         setup = SETUP()
@@ -2920,10 +2888,7 @@ class OFF(BaseComponent):
         return f"OFF {self.physics.value.upper()}"
 
 
-OFF_TYPES = Annotated[list[OFF], Field(description="Deactivate physics")]
-
-
-class DEACTIVATE(BaseComponent):
+class OFFS(BaseComponent):
     """Deactivate multiple physics commands.
 
     .. code-block:: text
@@ -2940,212 +2905,24 @@ class DEACTIVATE(BaseComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
-        from rompy.swan.components.physics import DEACTIVATE
+        from rompy.swan.components.physics import OFFS
         off1 = dict(physics="windgrowth")
         off2 = dict(physics="wcapping")
-        deactivate = DEACTIVATE(physics=[off1, off2])
-        for off in deactivate.render():
+        offs = OFFS(offs=[off1, off2])
+        for off in offs.render():
             print(off)
 
     """
 
-    model_type: Literal["deactivate", "DEACTIVATE"] = Field(
-        default="deactivate", description="Model type discriminator"
+    model_type: Literal["offs", "OFFS"] = Field(
+        default="offs", description="Model type discriminator"
     )
-    physics: OFF_TYPES
+    offs: list[OFF] = Field(description="Physics commands to deactivate")
 
     def cmd(self) -> list:
         """Command file strings for this component."""
         repr = []
-        for physics in self.physics:
-            repr += [physics.cmd()]
-        return repr
-
-    def render(self) -> str:
-        """Override base class to allow rendering list of components."""
-        cmds = []
-        for cmd in self.cmd():
-            cmds.append(super().render(cmd))
-        return cmds
-
-
-# =====================================================================================
-# Physics group component
-# =====================================================================================
-GEN_TYPE = Annotated[
-    Union[GEN1, GEN2, GEN3],
-    Field(description="Wave generation component", discriminator="model_type"),
-]
-SSWELL_TYPE = Annotated[
-    Union[SSWELL_ROGERS, SSWELL_ARDHUIN, SSWELL_ZIEGER],
-    Field(description="Swell dissipation component", discriminator="model_type"),
-]
-NEGATINP_TYPE = Annotated[NEGATINP, Field(description="Negative wind input component")]
-WCAPPING_TYPE = Annotated[
-    Union[WCAPPING_KOMEN, WCAPPING_AB],
-    Field(description="Whitecapping component", discriminator="model_type"),
-]
-QUADRUPL_TYPE = Annotated[
-    QUADRUPL,
-    Field(description="Quadruplet interactions component"),
-]
-BREAKING_TYPE = Annotated[
-    Union[BREAKING_CONSTANT, BREAKING_BKD],
-    Field(description="Wave breaking component", discriminator="model_type"),
-]
-FRICTION_TYPE = Annotated[
-    Union[FRICTION_JONSWAP, FRICTION_COLLINS, FRICTION_MADSEN, FRICTION_RIPPLES],
-    Field(description="Bottom friction component", discriminator="model_type"),
-]
-TRIAD_TYPE = Annotated[
-    Union[TRIAD, TRIAD_DCTA, TRIAD_LTA, TRIAD_SPB],
-    Field(description="Triad interactions component", discriminator="model_type"),
-]
-VEGETATION_TYPE = Annotated[VEGETATION, Field(description="Vegetation component")]
-MUD_TYPE = Annotated[MUD, Field(description="Mud component")]
-SICE_TYPE = Annotated[
-    Union[SICE, SICE_R19, SICE_D15, SICE_M18, SICE_R21B],
-    Field(description="Sea ice component", discriminator="model_type"),
-]
-TURBULENCE_TYPE = Annotated[
-    TURBULENCE,
-    Field(description="Turbulent dissipation component"),
-]
-BRAGG_TYPE = Annotated[
-    Union[BRAGG, BRAGG_FT, BRAGG_FILE],
-    Field(description="Bragg scattering component", discriminator="model_type"),
-]
-LIMITER_TYPE = Annotated[LIMITER, Field(description="Limiter component")]
-OBSTACLE_TYPE = Annotated[OBSTACLES, Field(description="Obstacle group component")]
-SETUP_TYPE = Annotated[SETUP, Field(description="Setup component")]
-DIFFRACTION_TYPE = Annotated[DIFFRACTION, Field(description="Diffraction component")]
-SURFBEAT_TYPE = Annotated[SURFBEAT, Field(description="Surfbeat component")]
-SCAT_TYPE = Annotated[SCAT, Field(description="Scattering component")]
-DEACTIVATE_TYPE = Annotated[DEACTIVATE, Field(description="Deactivate group component")]
-
-
-class PHYSICS(BaseComponent):
-    """Physics group component.
-
-    The physics group component is a convenience to allow specifying several individual
-    components in a single command and check for consistency between them.
-
-    Exemples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-        :okexcept:
-
-        from rompy.swan.components.physics import PHYSICS
-        gen = {"model_type": "gen3", "source_terms": {"model_type": "komen"}}
-        phys = PHYSICS(gen=gen)
-        print(phys.render())
-        phys = PHYSICS(
-            gen=dict(model_type="gen3", source_terms={"model_type": "st6c1"}),
-            negatinp={"model_type": "negatinp", "rdcoef": 0.04},
-            sswell={"model_type": "zieger"},
-            breaking={"model_type": "constant", "alpha": 1.0, "gamma": 0.73},
-            friction={"model_type": "jonswap", "cfjon": 0.038},
-        )
-        print(phys.render())
-
-    """
-
-    model_type: Literal["physics", "PHYSICS"] = Field(
-        default="physics", description="Model type discriminator"
-    )
-    gen: Optional[GEN_TYPE] = Field(default=None)
-    sswell: Optional[SSWELL_TYPE] = Field(default=None)
-    negatinp: Optional[NEGATINP_TYPE] = Field(default=None)
-    wcapping: Optional[WCAPPING_TYPE] = Field(default=None)
-    quadrupl: Optional[QUADRUPL_TYPE] = Field(default=None)
-    breaking: Optional[BREAKING_TYPE] = Field(default=None)
-    friction: Optional[FRICTION_TYPE] = Field(default=None)
-    triad: Optional[TRIAD_TYPE] = Field(default=None)
-    vegetation: Optional[VEGETATION_TYPE] = Field(default=None)
-    mud: Optional[MUD_TYPE] = Field(default=None)
-    sice: Optional[SICE_TYPE] = Field(default=None)
-    turbulence: Optional[TURBULENCE_TYPE] = Field(default=None)
-    bragg: Optional[BRAGG_TYPE] = Field(default=None)
-    limiter: Optional[LIMITER_TYPE] = Field(default=None)
-    obstacle: Optional[OBSTACLE_TYPE] = Field(default=None)
-    setup: Optional[SETUP_TYPE] = Field(default=None)
-    diffraction: Optional[DIFFRACTION_TYPE] = Field(default=None)
-    surfbeat: Optional[SURFBEAT_TYPE] = Field(default=None)
-    scat: Optional[SCAT_TYPE] = Field(default=None)
-    deactivate: Optional[DEACTIVATE_TYPE] = Field(default=None)
-
-    # @validator("off")
-    # def deactivate_physics(cls, value, values):
-    #     if "windgrowth" in value:
-    #         logger.info("Switching off WINDGROWTH")
-    #     if "quadrupl" in value and values.get("quadrupl") is not None:
-    #         logger.warning("Switching off QUADRUPL")
-    #     if "wcapping" in value:
-    #         logger.info("Switching off WCAPPING")
-    #     if "breaking" in value:
-    #         logger.info("Switching off BREAKING")
-    #     return values
-
-    @model_validator(mode="after")
-    def negatinp_only_with_zieger(self) -> "PHYSICS":
-        """Log a warning if NEGATINP is used with a non-ZIEGER SSWELL."""
-        if self.negatinp is None:
-            return self
-        elif self.sswell is None:
-            logger.warning(
-                "The negative wind input NEGATINP is only intended to use with the "
-                "swell dissipation SSWELL ZIEGER but no SSWELL has been specified."
-            )
-        elif self.sswell.model_type != "zieger":
-            logger.warning(
-                "The negative wind input NEGATINP is only intended to use with the "
-                "swell dissipation SSWELL ZIEGER but the SSWELL "
-                f"{self.sswell.model_type.upper()} has been specified."
-            )
-        return self
-
-    def cmd(self):
-        repr = [self.gen.render()]
-        if self.sswell is not None:
-            repr += [f"{self.sswell.render()}"]
-        if self.negatinp is not None:
-            repr += [self.negatinp.render()]
-        if self.wcapping is not None:
-            repr += [self.wcapping.render()]
-        if self.quadrupl is not None:
-            repr += [self.quadrupl.render()]
-        if self.breaking is not None:
-            repr += [self.breaking.render()]
-        if self.friction is not None:
-            repr += [self.friction.render()]
-        if self.triad is not None:
-            repr += [self.triad.render()]
-        if self.vegetation is not None:
-            repr += [self.vegetation.render()]
-        if self.mud is not None:
-            repr += [self.mud.render()]
-        if self.sice is not None:
-            repr += [self.sice.render()]
-        if self.turbulence is not None:
-            repr += [self.turbulence.render()]
-        if self.bragg is not None:
-            repr += [self.bragg.render()]
-        if self.limiter is not None:
-            repr += [self.limiter.render()]
-        if self.obstacle is not None:
-            repr += self.obstacle.render()  # Object returns a list of components
-        if self.setup is not None:
-            repr += [self.setup.render()]
-        if self.diffraction is not None:
-            repr += [self.diffraction.render()]
-        if self.surfbeat is not None:
-            repr += [self.surfbeat.render()]
-        if self.scat is not None:
-            repr += [self.scat.render()]
-        if self.deactivate is not None:
-            repr += self.deactivate.render()  # Object returns a list of components
+        for off in self.offs:
+            repr += [off.cmd()]
         return repr

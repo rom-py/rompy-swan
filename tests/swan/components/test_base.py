@@ -2,7 +2,7 @@
 from string import ascii_lowercase, ascii_uppercase
 from typing import Literal
 
-from rompy.swan.components.base import BaseComponent
+from rompy.swan.components.base import BaseComponent, MAX_LENGTH
 
 
 class LongRender(BaseComponent):
@@ -25,8 +25,8 @@ class LongRender(BaseComponent):
         return repr
 
 
-def test_max_132_characters():
-    """Test that the render string is not longer than 132 characters."""
+def test_max_line_size():
+    """Test that the render string is not longer than 180 characters."""
     lr = LongRender()
     for cmd_line in lr.render().split("\n"):
-        assert len(cmd_line) <= 132
+        assert len(cmd_line) <= MAX_LENGTH

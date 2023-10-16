@@ -20,7 +20,6 @@ class CARTESIAN(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import CARTESIAN
         coords = CARTESIAN()
@@ -70,7 +69,6 @@ class SPHERICAL(BaseSubComponent):
 
     .. ipython:: python
         :okwarning:
-        :okexcept:
 
         from rompy.swan.components.startup import SPHERICAL
         coords = SPHERICAL()
