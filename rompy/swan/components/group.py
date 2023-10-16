@@ -164,7 +164,7 @@ class STARTUP(BaseGroupComponent):
 # Inpgrid
 # =====================================================================================
 INPGRID_TYPES = Annotated[
-    Union[REGULAR, CURVILINEAR, UNSTRUCTURED],
+    list[Union[REGULAR, CURVILINEAR, UNSTRUCTURED]],
     Field(discriminator="model_type"),
 ]
 
@@ -231,10 +231,19 @@ class INPGRIDS(BaseGroupComponent):
     model_type: Literal["inpgrids"] = Field(
         default="inpgrids", description="Model type discriminator"
     )
-    inpgrids: list[INPGRID_TYPES] = Field(
+    inpgrids: INPGRID_TYPES = Field(
         min_length=1,
         description="List of input grid components",
     )
+
+    @field_validator("inpgrids")
+    @classmethod
+    def ensure_unique_grid_type(cls, inpgrids: INPGRID_TYPES) -> INPGRID_TYPES:
+        """Ensure that each grid type is unique."""
+        grid_types = [inpgrid.grid_type for inpgrid in inpgrids]
+        if len(grid_types) != len(set(grid_types)):
+            raise ValueError("Each grid type must be unique")
+        return inpgrids
 
     def cmd(self) -> str | list:
         repr = []
