@@ -8,8 +8,7 @@ from rompy.swan.subcomponents.boundary import (
     CONSTANTFILE,
     VARIABLEFILE,
     SIDE,
-    SEGMENTXY,
-    SEGMENTIJ,
+    SEGMENT,
 )
 
 
@@ -21,16 +20,13 @@ def test_side():
 
 
 def test_segment_xy():
-    seg = SEGMENTXY(points=((0, 0), (1, 1), (2, 2)))
+    seg = SEGMENT(points=dict(model_type="xy", x=[0, 1, 2], y=[0, 1, 2]))
     assert seg.render().startswith("SEGMENT XY")
-    with pytest.raises(ValidationError):
-        SEGMENTXY(points=((0, 0, 0), (1, 1, 1), (2, 2, 2)))
 
 
 def test_segment_ij():
-    seg = SEGMENTIJ(points=((0, 0), (1, 1), (2, 2)))
-    with pytest.raises(ValidationError):
-        SEGMENTIJ(points=((0, 0, 0), (1, 1, 1), (2, 2, 2)))
+    seg = SEGMENT(points=dict(model_type="ij", i=[0, 1, 2], j=[0, 1, 2]))
+    assert seg.render().startswith("SEGMENT IJ")
 
 
 def test_par_constant():

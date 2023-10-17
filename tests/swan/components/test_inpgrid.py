@@ -4,15 +4,15 @@ import logging
 from pydantic import ValidationError
 
 from rompy.swan.types import GridOptions
+from rompy.swan.components.group import INPGRIDS
 from rompy.swan.components.inpgrid import (
     INPGRID,
-    INPGRIDS,
     REGULAR,
     CURVILINEAR,
     UNSTRUCTURED,
     READINP,
 )
-from rompy.swan.subcomponents.time import NONSTATIONARY
+from rompy.swan.subcomponents.time import NONSTATIONARY, Time, Delt
 
 
 logger = logging.getLogger(__name__)
@@ -25,13 +25,9 @@ def readinp():
 
 @pytest.fixture(scope="module")
 def nonstat():
-    inst = NONSTATIONARY(
-        tbeg="2023-01-01T00:00:00",
-        delt="PT30M",
-        tend="2023-02-01T00:00:00",
-        deltfmt="hr",
+    yield NONSTATIONARY(
+        tbeg="2023-01-01T00:00:00", tend="2023-02-01T00:00:00", delt="PT30M",
     )
-    yield inst
 
 
 def test_valid_inpgrid_options(readinp):
@@ -123,3 +119,36 @@ def test_inpgrids(nonstat, readinp):
         inpgrids=[bottom, wind]
     )
     logger.info(inpgrids.render())
+
+
+def test_inpgrids_unique_var(nonstat, readinp):
+    bottom = REGULAR(
+        grid_type=GridOptions.BOTTOM,
+        xpinp=0.0,
+        ypinp=0.0,
+        alpinp=0.0,
+        mxinp=10,
+        myinp=10,
+        dxinp=0.1,
+        dyinp=0.1,
+        excval=-999.0,
+        readinp=readinp,
+    )
+    wind = REGULAR(
+        grid_type=GridOptions.BOTTOM,
+        xpinp=0.0,
+        ypinp=0.0,
+        alpinp=0.0,
+        mxinp=10,
+        myinp=10,
+        dxinp=0.1,
+        dyinp=0.1,
+        excval=-999.0,
+        nonstationary=nonstat,
+        readinp=readinp,
+    )
+
+    with pytest.raises(ValidationError):
+        inpgrids = INPGRIDS(
+            inpgrids=[bottom, wind]
+        )
