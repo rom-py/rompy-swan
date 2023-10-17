@@ -25,7 +25,9 @@ class Boundnest1(BoundaryWaveStation):
         ),
     )
 
-    def get(self, destdir: str, grid: SwanGrid, time: Optional[TimeRange] = None) -> str:
+    def get(
+        self, destdir: str, grid: SwanGrid, time: Optional[TimeRange] = None
+    ) -> str:
         """Write the data source to a new location.
 
         Parameters
