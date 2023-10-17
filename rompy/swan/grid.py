@@ -7,17 +7,14 @@ from rompy.core.grid import RegularGrid
 
 
 class SwanGrid(RegularGrid):
-    """
-    An object which provides an abstract representation of a regular SWAN
-    grid in some geographic space
-    """
+    """Regular SWAN grid in geographic space."""
 
     grid_type: Literal["REG", "CURV"] = Field(
         "REG", description="Type of grid (REG=regular, CURV=curvilinear)"
     )
     exc: Optional[float] = Field(None, description="Missing value")
     gridfile: Optional[str] = Field(
-        None, description="Name of grid file to load", max_length=100
+        None, description="Name of grid file to load", max_length=36
     )
 
     @field_validator("grid_type")
@@ -88,7 +85,7 @@ class SwanGrid(RegularGrid):
     @property
     def cgrid(self):
         if self.grid_type == "REG":
-            return f"REG {self.x0} {self.y0} {self.rot} {self.dx*self.nx} {self.dy*self.ny} {self.nx-1:0.0f} {self.ny-1:0.0f}"
+            return f"REG {self.x0} {self.y0} {self.rot} {self.xlen} {self.ylen} {self.nx-1:0.0f} {self.ny-1:0.0f}"
         elif self.grid_type == "CURV":
             raise NotImplementedError("Curvilinear grids not supported yet")
             # return (f'CURVilinear {self.nx-1:0.0f} {self.ny-1:0.0f}',f'READGRID COOR 1 \'{os.path.basename(self.gridpath)}\' 1 0 1 FREE')

@@ -1,9 +1,9 @@
-"""Subcomponents to be rendered inside of components."""
+"""SWAN boundary subcomponents."""
 import logging
-from typing import Annotated, Optional, Literal
+from typing import Annotated, Optional, Literal, Union
 from pydantic import Field, model_validator
 
-from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy.swan.subcomponents.base import BaseSubComponent, XY, IJ
 
 
 logger = logging.getLogger(__name__)
@@ -12,14 +12,30 @@ logger = logging.getLogger(__name__)
 class SIDE(BaseSubComponent):
     """Boundary over one side of computational domain.
 
-    `SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE`
+    .. code-block:: text
+
+        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
 
     The boundary is one full side of the computational grid (in 1D cases either of the
-    two ends of the 1D-grid). SHOULD NOT BE USED IN CASE OF CURVILINEAR GRIDS!
+    two ends of the 1D-grid).
+
+    Note
+    ----
+    Should not be used in case of CURVILINEAR grids.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import SIDE
+        side = SIDE(side="west", direction="ccw")
+        print(side.render())
 
     """
 
-    model_type: Literal["side"] = Field(
+    model_type: Literal["side", "SIDE"] = Field(
         default="side",
         description="Model type discriminator",
     )
@@ -36,70 +52,74 @@ class SIDE(BaseSubComponent):
         return repr
 
 
-class SEGMENTXY(BaseSubComponent):
-    """Boundary over a segment defined from point coordinates.
+class SEGMENT(BaseSubComponent):
+    """Boundary over a segment defined from points.
 
-    `SEGMENT XY < [x] [y] >`
+    .. code-block:: text
 
-    The segment is defined by means of a series of points in terms of problem
-    coordinates; these points do not have to coincide with grid points. The (straight)
-    line connecting two points must be close to grid lines of the computational grid
-    (the maximum distance is one hundredth of the length of the straight line).
+        SEGMENT XY < [x] [y] >
+        SEGMENT IJ < [i] [j] >
 
-    """
+    The segment is defined either by means of a series of points in terms of problem
+    coordinates (`XY`) or by means of a series of points in terms of grid indices
+    (`IJ`). The points do not have to include all or coincide with actual grid points.
 
-    model_type: Literal["segmentxy"] = Field(
-        default="segmentxy",
-        description="Model type discriminator",
-    )
-    points: list[tuple[float, float]] = Field(
-        description="Pairs of (x, y) values to define the segment",
-    )
-    float_format: str = Field(
-        default="0.8f",
-        description="The format to use for the floats in the points",
-    )
+    Examples
+    --------
 
-    def cmd(self) -> str:
-        repr = f"SEGMENT XY &"
-        for point in self.points:
-            repr += (
-                f"\n\t{point[0]:{self.float_format}} {point[1]:{self.float_format}} &"
-            )
-        return repr + "\n\t"
+    .. ipython:: python
+        :okwarning:
 
-
-class SEGMENTIJ(BaseSubComponent):
-    """Boundary over a segment defined from grid indices.
-
-    `SEGMENT IJ < [i] [j] >`
-
-    The segment is defined by means of a series of computational grid points given in
-    terms of grid indices (origin at 0,0); not all grid points on the segment have to
-    be mentioned. If two points are on the same grid line, intermediate points are
-    assumed to be on the segment as well.
+        from rompy.swan.subcomponents.boundary import SEGMENT
+        seg = SEGMENT(
+            points=dict(
+                model_type="xy",
+                x=[172, 172, 172, 172.5, 173],
+                y=[-41, -40.5, -40, -40, -40],
+                fmt="0.2f",
+            ),
+        )
+        print(seg.render())
+        seg = SEGMENT(
+            points=dict(
+                model_type="ij",
+                i=[0, 0, 5],
+                j=[0, 19, 19],
+            ),
+        )
+        print(seg.render())
 
     """
 
-    model_type: Literal["segmentij"] = Field(
-        default="segmentij",
+    model_type: Literal["segment", "SEGMENT"] = Field(
+        default="segment",
         description="Model type discriminator",
     )
-    points: list[tuple[int, int]] = Field(
-        description="Pairs of (i, j) values to define the segment",
+    points: Union[XY, IJ] = Field(
+        description="Points to define the segment",
+        discriminator="model_type",
     )
 
     def cmd(self) -> str:
-        repr = f"SEGMENT IJ &"
-        for point in self.points:
-            repr += f"\n\t{point[0]} {point[1]} &"
-        return repr + "\n\t"
+        return f"SEGMENT {self.points.model_type.upper()} {self.points.render()}"
 
 
 class PAR(BaseSubComponent):
     """Spectral parameters.
 
-    `PAR [hs] [per] [dir] [dd]`
+    .. code-block:: text
+
+        PAR [hs] [per] [dir] [dd]
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import PAR
+        par = PAR(hs=1.5, per=8.1, dir=225)
+        print(par.render())
 
     """
 
@@ -122,17 +142,20 @@ class PAR(BaseSubComponent):
         gt=0.0,
     )
     dir: float = Field(
-        description="The peak wave direction θpeak (degree), constant over frequencies",
+        description=(
+            "The peak wave direction thetapeak (degree), constant over frequencies"
+        ),
         ge=-360.0,
         le=360.0,
     )
-    dd: float = Field(
+    dd: Optional[float] = Field(
+        default=None,
         description=(
-            "Coefficient of directional spreading; a $cos^m(θ)$ distribution is "
+            "Coefficient of directional spreading; a `cos^m(θ)` distribution is "
             "assumed. `dd` is interpreted as the directional standard deviation in "
-            "degrees, if the option DEGREES is chosen in the command BOUND SHAPE. "
-            "Default: `dd=30`. `dd` is interpreted as the power `m`, if the option "
-            "POWER is chosen in the command BOUND SHAPE. Default: `dd=2`."
+            "degrees, if the option DEGREES is chosen in the command BOUND SHAPE "
+            "(SWAN default: 30). `dd` is interpreted as the power `m`, if the option "
+            "POWER is chosen in the command BOUND SHAPE (SWAN default: 2)"
         ),
         ge=0.0,
         le=360.0,
@@ -140,17 +163,32 @@ class PAR(BaseSubComponent):
 
     def cmd(self) -> str:
         """Render subcomponent cmd."""
-        return f"PAR hs={self.hs} per={self.per} dir={self.dir} dd={self.dd}"
+        repr = f"PAR hs={self.hs} per={self.per} dir={self.dir}"
+        if self.dd is not None:
+            repr += f" dd={self.dd}"
+        return repr
 
 
 class CONSTANTPAR(PAR):
     """Constant spectral parameters.
 
-    `CONSTANT PAR [hs] [per] [dir] [dd]`
+    .. code-block:: text
+
+        CONSTANT PAR [hs] [per] [dir] ([dd])
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import CONSTANTPAR
+        par = CONSTANTPAR(hs=1.5, per=8.1, dir=225)
+        print(par.render())
 
     """
 
-    model_type: Literal["constantpar"] = Field(
+    model_type: Literal["constantpar", "CONSTANTPAR"] = Field(
         default="constantpar",
         description="Model type discriminator",
     )
@@ -163,11 +201,29 @@ class CONSTANTPAR(PAR):
 class VARIABLEPAR(BaseSubComponent):
     """Variable spectral parameter.
 
-    `VARIABLE PAR < [len] [hs] [per] [dir] [dd] >`
+    .. code-block:: text
+
+        VARIABLE PAR < [len] [hs] [per] [dir] [dd] >
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import VARIABLEPAR
+        par = VARIABLEPAR(
+            hs=[1.5, 1.4, 1.1],
+            per=[8.1, 8.0, 8.1],
+            dir=[225, 226, 228],
+            dd=[25, 22, 23],
+            len=[0, 0.5, 1.0],
+        )
+        print(par.render())
 
     """
 
-    model_type: Literal["variablepar"] = Field(
+    model_type: Literal["variablepar", "VARIABLEPAR"] = Field(
         default="variablepar",
         description="Model type discriminator",
     )
@@ -180,19 +236,21 @@ class VARIABLEPAR(BaseSubComponent):
             "frequency; which is equal to absolute frequency in the absence of "
             "currents); `per` is the value of the peak period if option PEAK is "
             "chosen in command BOUND SHAPE or `per` is the value of the mean period, "
-            "if option MEAN was chosen in command BOUND SHAPE."
+            "if option MEAN was chosen in command BOUND SHAPE"
         ),
     )
     dir: list[Annotated[float, Field(ge=-360.0, le=360.0)]] = Field(
-        description="The peak wave direction θpeak (degrees), constant over frequencies"
+        description=(
+            "The peak wave direction thetapeak (degrees), constant over frequencies"
+        ),
     )
     dd: list[Annotated[float, Field(ge=0.0, le=360.0)]] = Field(
         description=(
             "Coefficient of directional spreading; a $cos^m(θ)$ distribution is "
             "assumed. `dd` is interpreted as the directional standard deviation in "
-            "degrees, if the option DEGREES is chosen in the command BOUND SHAPE. "
-            "Default: `dd=30`. `dd` is interpreted as the power `m`, if the option "
-            "POWER is chosen in the command BOUND SHAPE (SWAN default: `dd=2`)."
+            "degrees, if the option DEGREES is chosen in the command BOUND SHAPE "
+            "(SWAN default: 30). `dd` is interpreted as the power `m`, if the option "
+            "POWER is chosen in the command BOUND SHAPE (SWAN default: 2)"
         ),
     )
     dist: list[Annotated[float, Field(ge=0)]] = Field(
@@ -206,7 +264,7 @@ class VARIABLEPAR(BaseSubComponent):
             "be given in ascending order. The length along a SIDE is measured in "
             "clockwise or counterclockwise direction, depending on the options CCW or "
             "CLOCKWISE (see above). The option CCW is default. In case of a SEGMENT "
-            "the length is measured from the indicated begin point of the segment."
+            "the length is measured from the indicated begin point of the segment"
         ),
     )
 
@@ -223,24 +281,24 @@ class VARIABLEPAR(BaseSubComponent):
         for dist, hs, per, dir, dd in zip(
             self.dist, self.hs, self.per, self.dir, self.dd
         ):
-            repr += f" &\n\t\tlen={dist} hs={hs} per={per} dir={dir} dd={dd}"
+            repr += f" &\n\tlen={dist} hs={hs} per={per} dir={dir} dd={dd}"
         return repr
 
 
 class CONSTANTFILE(BaseSubComponent):
     """Constant file specification.
 
-    `CONSTANT FILE 'fname' [seq]`
+    .. code-block:: text
 
-    Note
-    ----
+        CONSTANT FILE 'fname' [seq]
+
     There are three types of files:
 
-    - TPAR files containing nonstationary wave parameters.
+    - TPAR files containing nonstationary wave parameters
     - files containing stationary or nonstationary 1D spectra
-      (usually from measurements).
+      (usually from measurements)
     - files containing stationary or nonstationary 2D spectra
-      (from other computer programs or other SWAN runs).
+      (from other computer programs or other SWAN runs)
 
     A TPAR file is for only one location; it has the string TPAR on the first
     line of the file and a number of lines which each contain 5 numbers, i.e.:
@@ -249,24 +307,38 @@ class CONSTANTFILE(BaseSubComponent):
     depending on command SET), Directional spread (in degrees or as power of cos
     depending on the choice given in command BOUND SHAPE).
 
-    Example of a TPAR file
-    ----------------------
-    TPAR
-    19920516.130000 4.2 12. -110. 22.
-    19920516.180000 4.2 12. -110. 22.
-    19920517.000000 1.2 8. -110. 22.
-    19920517.120000 1.4 8.5 -80. 26
-    19920517.200000 0.9 6.5 -95. 28
+    Note
+    ----
+    Example of a TPAR file:
+
+    .. code-block:: text
+
+        TPAR
+        19920516.130000 4.2 12. -110. 22.
+        19920516.180000 4.2 12. -110. 22.
+        19920517.000000 1.2 8. -110. 22.
+        19920517.120000 1.4 8.5 -80. 26
+        19920517.200000 0.9 6.5 -95. 28
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import CONSTANTFILE
+        par = CONSTANTFILE(fname="tpar.txt")
+        print(par.render())
 
     """
 
-    model_type: Literal["constantfile"] = Field(
+    model_type: Literal["constantfile", "CONSTANTFILE"] = Field(
         default="constantfile",
         description="Model type discriminator",
     )
     fname: str = Field(
         description="Name of the file containing the boundary condition.",
-        max_length=40,
+        max_length=36,
     )
     seq: Optional[int] = Field(
         default=None,
@@ -274,7 +346,7 @@ class CONSTANTFILE(BaseSubComponent):
             "sequence number of geographic location in the file (see Appendix D); "
             "useful for files which contain spectra for more than one location. "
             "Note: a TPAR file always contains only one location so in this case "
-            "[seq] must always be 1."
+            "`seq` must always be 1"
         ),
         ge=1,
     )
@@ -290,17 +362,17 @@ class CONSTANTFILE(BaseSubComponent):
 class VARIABLEFILE(BaseSubComponent):
     """Variable file specification.
 
-    `VARIABLE FILE < [len] 'fname' [seq] >`
+    .. code-block:: text
 
-    Note
-    ----
+        VARIABLE FILE < [len] 'fname' [seq] >
+
     There are three types of files:
 
-    - TPAR files containing nonstationary wave parameters.
+    - TPAR files containing nonstationary wave parameters
     - files containing stationary or nonstationary 1D spectra
-      (usually from measurements).
+      (usually from measurements)
     - files containing stationary or nonstationary 2D spectra
-      (from other computer programs or other SWAN runs).
+      (from other computer programs or other SWAN runs)
 
     A TPAR file is for only one location; it has the string TPAR on the first
     line of the file and a number of lines which each contain 5 numbers, i.e.:
@@ -309,23 +381,40 @@ class VARIABLEFILE(BaseSubComponent):
     depending on command SET), Directional spread (in degrees or as power of cos
     depending on the choice given in command BOUND SHAPE).
 
-    Example of a TPAR file
-    ----------------------
-    TPAR
-    19920516.130000 4.2 12. -110. 22.
-    19920516.180000 4.2 12. -110. 22.
-    19920517.000000 1.2 8. -110. 22.
-    19920517.120000 1.4 8.5 -80. 26
-    19920517.200000 0.9 6.5 -95. 28
+    Note
+    ----
+    Example of a TPAR file:
+
+    .. code-block:: text
+
+        TPAR
+        19920516.130000 4.2 12. -110. 22.
+        19920516.180000 4.2 12. -110. 22.
+        19920517.000000 1.2 8. -110. 22.
+        19920517.120000 1.4 8.5 -80. 26
+        19920517.200000 0.9 6.5 -95. 28
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import VARIABLEFILE
+        par = VARIABLEFILE(
+            fname=["tpar1.txt", "tpar2.txt", "tpar3.txt"],
+            len=[0.0, 0.5, 1.0],
+        )
+        print(par.render())
 
     """
 
-    model_type: Literal["variablefile"] = Field(
+    model_type: Literal["variablefile", "VARIABLEFILE"] = Field(
         default="variablefile",
         description="Model type discriminator",
     )
-    fname: list[Annotated[str, Field(max_length=40)]] = Field(
-        description="Names of the file containing the boundary condition",
+    fname: list[Annotated[str, Field(max_length=36)]] = Field(
+        description="Names of the files containing the boundary condition",
     )
     seq: Optional[list[Annotated[int, Field(ge=1)]]] = Field(
         default=None,
@@ -366,14 +455,16 @@ class VARIABLEFILE(BaseSubComponent):
         """Render subcomponent cmd."""
         repr = "VARIABLE FILE"
         for dist, fname, seq in zip(self.dist, self.fname, self.seq):
-            repr += f" &\n\t\tlen={dist} fname='{fname}' seq={seq}"
+            repr += f" &\n\tlen={dist} fname='{fname}' seq={seq}"
         return repr
 
 
 class DEFAULT(BaseSubComponent):
     """Default initial conditions.
 
-    `DEFAULT`
+    .. code-block:: text
+
+        DEFAULT
 
     The initial spectra are computed from the local wind velocities, using the
     deep-water growth curve of Kahma and Calkoen (1992), cut off at values of
@@ -382,9 +473,19 @@ class DEFAULT(BaseSubComponent):
     wind. The shape of the spectrum is default JONSWAP with a cos2-directional
     distribution (options are available: see command BOUND SHAPE).
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import DEFAULT
+        init = DEFAULT()
+        print(init.render())
+
     """
 
-    model_type: Literal["default"] = Field(
+    model_type: Literal["default", "DEFAULT"] = Field(
         default="default",
         description="Model type discriminator",
     )
@@ -393,15 +494,27 @@ class DEFAULT(BaseSubComponent):
 class ZERO(BaseSubComponent):
     """Zero initial conditions.
 
-    `ZERO`
+    .. code-block:: text
+
+        ZERO
 
     The initial spectral densities are all 0; note that if waves are generated in the
     model only by wind, waves can become non-zero only by the presence of the
     ”A” term in the growth model; see the keyword AGROW in command GEN3.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import ZERO
+        init = ZERO()
+        print(init.render())
+
     """
 
-    model_type: Literal["zero"] = Field(
+    model_type: Literal["zero", "ZERO"] = Field(
         default="zero",
         description="Model type discriminator",
     )
@@ -410,7 +523,9 @@ class ZERO(BaseSubComponent):
 class HOTSINGLE(BaseSubComponent):
     """Hotstart single initial conditions.
 
-    `HOTSTART SINGLE fname='fname' FREE|UNFORMATTED`
+    .. code-block:: text
+
+        HOTSTART SINGLE fname='fname' FREE|UNFORMATTED
 
     Initial wave field is read from file; this file was generated in a previous SWAN
     run by means of the HOTFILE command. If the previous run was nonstationary,
@@ -423,15 +538,25 @@ class HOTSINGLE(BaseSubComponent):
     parallel MPI run, the concatenated hotfile can be created from a set of multiple
     hotfiles using the program hcat.exe, see Implementation Manual.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import HOTSINGLE
+        init = HOTSINGLE(fname="hotstart.swn", format="free")
+        print(init.render())
+
     """
 
-    model_type: Literal["hotsingle"] = Field(
+    model_type: Literal["hotsingle", "HOTSINGLE"] = Field(
         default="hotsingle",
         description="Model type discriminator",
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",
-        max_length=85,
+        max_length=36,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",
@@ -449,6 +574,10 @@ class HOTSINGLE(BaseSubComponent):
 class HOTMULTIPLE(BaseSubComponent):
     """Hotstart multiple initial conditions.
 
+    .. code-block:: text
+
+        HOTSTART MULTIPLE fname='fname' FREE|UNFORMATTED
+
     Initial wave field is read from file; this file was generated in a previous SWAN
     run by means of the HOTFILE command. If the previous run was nonstationary,
     the time found on the file will be assumed to be the initial time of computation. It
@@ -460,15 +589,25 @@ class HOTMULTIPLE(BaseSubComponent):
     The number of files equals the number of processors. Hence, for the present run the
     same number of processors must be chosen.
 
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import HOTMULTIPLE
+        init = HOTMULTIPLE(fname="hotstart.swn", format="free")
+        print(init.render())
+
     """
 
-    model_type: Literal["hotmultiple"] = Field(
+    model_type: Literal["hotmultiple", "HOTMULTIPLE"] = Field(
         default="hotmultiple",
         description="Model type discriminator",
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",
-        max_length=85,
+        max_length=36,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",

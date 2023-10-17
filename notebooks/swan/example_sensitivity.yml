@@ -1,0 +1,156 @@
+
+model_type: swanconfig
+startup:
+  project:
+    model_type: project
+    name: Test declarative
+    nr: run1
+    title1: Friction sensitivity testing
+  set:
+    model_type: set
+    level: 0.0
+    depmin: 0.05
+    direction_convention: nautical
+  mode:
+    model_type: mode
+    kind: nonstationary
+    dim: twodimensional
+  coordinates:
+    model_type: coordinates
+    kind:
+      model_type: spherical
+
+cgrid:
+  model_type: regular
+  spectrum:
+    mdc: 36
+    flow: 0.04
+    fhigh: 1.0
+  grid:
+    xp: 110.0
+    yp: -35.2
+    alp: 4.0
+    xlen: 7.5
+    ylen: 12.5
+    mx: 14
+    my: 24
+
+inpgrid:
+  model_type: data_interface
+  bottom:
+    var: bottom
+    source:
+      model_type: intake
+      catalog_uri: ../../tests/data/catalog.yaml
+      dataset_id: gebco
+    fac: -1.0
+    buffer: 1.0
+    z1: elevation
+    coords:
+      x: lon
+      y: lat
+  input:
+    - var: wind
+      source:
+        model_type: intake
+        catalog_uri: ../../tests/data/catalog.yaml
+        dataset_id: era5
+      buffer: 2.0
+      filter:
+        sort:
+          coords: [latitude]
+      z1: u10
+      z2: v10
+      coords:
+        x: longitude
+        y: latitude
+
+boundary:
+  model_type: boundspec
+  shapespec:
+    model_type: shapespec
+    per_type: peak
+    dspr_type: degrees
+    shape:
+      model_type: tma
+      gamma: 3.3
+      d: 12.0
+  location:
+    model_type: side
+    side: west
+  data:
+    model_type: constantpar
+    hs: 2.0
+    per: 12.0
+    dir: 255.0
+    dd: 25.0
+
+initial:
+  model_type: initial
+  kind:
+    model_type: default
+
+physics:
+  gen:
+    model_type: gen3
+    source_terms:
+      model_type: komen
+      cds2: 2.3e-5
+      stpm: 3.02e-3
+  friction:
+    model_type: jonswap
+    cfjon: 0.038
+
+prop:
+  scheme:
+    model_type: bsbt
+
+numeric:
+  stopc:
+    dabs: 0.05
+    drel: 0.01
+    curvat: 0.05
+    npnts: 99.5
+    mode:
+      model_type: nonstat
+      mxitst: 3
+    limiter: 0.1
+
+output:
+  points:
+    model_type: points
+    sname: pts
+    xp: [114.0, 112.5, 115.0]
+    yp: [-34.0, -26.0, -30.0]
+  quantity:
+    model_type: quantities
+    quantities:
+      - output: [depth, hsign, tps, dir, tm01]
+        excv: -9
+      - output: [hswell]
+        fswell: 0.125
+  block:
+    sname: COMPGRID
+    fname: swangrid.nc
+    output: [depth, hsign, tps, dir]
+    times:
+      dfmt: sec
+  table:
+    sname: pts
+    format: noheader
+    fname: swantable.nc
+    output: [hsign, hswell, dir, tps, tm01, watlev, qp]
+    times:
+      dfmt: sec
+
+lockup:
+  compute:
+    model_type: stat
+    times:
+      model_type: nonstationary
+      tfmt: 1
+      dfmt: sec
+    hotfile:
+      fname: hotfile.txt
+      format: free
+    hottimes: [1, -1]

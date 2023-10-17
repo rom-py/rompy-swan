@@ -3,7 +3,7 @@ import pytest
 import logging
 from pydantic import ValidationError
 
-from rompy.swan.subcomponents.readgrid import READGRID, READCOORD, READINP
+from rompy.swan.subcomponents.readgrid import READGRID, READCOORD, READINP, GRIDREGULAR
 
 
 logger = logging.getLogger(__name__)
@@ -68,3 +68,20 @@ def test_readgrid_fixed_idfm():
 def test_coord():
     readcoord = READCOORD(fname="grid_coords.txt")
     logger.info(readcoord.render())
+
+
+def test_grid_regular():
+    grid = GRIDREGULAR(
+        xp=120.0,
+        yp=-30.0,
+        alp=0.0,
+        xlen=10,
+        ylen=10,
+        mx=19,
+        my=19,
+        suffix="c",
+    )
+    assert grid.dx == 0.5 and grid.dy == 0.5
+    assert grid.render() == (
+        "xpc=120.0 ypc=-30.0 alpc=0.0 xlenc=10.0 ylenc=10.0 mxc=19 myc=19"
+    )
