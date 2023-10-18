@@ -7,7 +7,7 @@ from pydantic import Field, model_validator, field_validator, ValidationInfo
 from rompy.core import RompyBaseModel, TimeRange
 from rompy.swan.grid import SwanGrid
 from rompy.swan.data import SwanDataGrid
-from rompy.swan.boundary import DataBoundary
+from rompy.swan.boundary import Boundnest1
 
 from rompy.swan.subcomponents.time import TimeRangeOpen, STATIONARY, NONSTATIONARY
 
@@ -79,12 +79,10 @@ class BoundaryInterface(RompyBaseModel):
     model_type: Literal["boundary_interface", "BOUNDARY_INTERFACE"] = Field(
         default="boundary_interface", description="Model type discriminator"
     )
-    kind: DataBoundary = Field(default=None, description="Boundary data object")
+    kind: Boundnest1 = Field(default=None, description="Boundary data object")
 
     def get(self, staging_dir: Path, grid: SwanGrid, period: TimeRange):
-        self.kind._filter_grid(grid)
-        self.kind._filter_time(period)
-        return self.kind.get(staging_dir, grid)
+        return self.kind.get(destdir=staging_dir, grid=grid, time=period)
 
     def render(self, *args, **kwargs):
         """Make this class consistent with the components API."""
