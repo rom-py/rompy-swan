@@ -7,7 +7,7 @@ from pydantic import Field, field_validator
 from rompy.core import RompyBaseModel, TimeRange, Coordinate, Spectrum
 from rompy.swan.grid import SwanGrid
 from rompy.swan.data import SwanDataGrid
-from rompy.swan.boundary import DataBoundary
+from rompy.swan.boundary import Boundnest1
 
 
 logger = logging.getLogger(__name__)
@@ -31,7 +31,7 @@ class ForcingData(RompyBaseModel):
     current: Optional[SwanDataGrid] = Field(
         default=None, description="Current input data"
     )
-    boundary: Optional[DataBoundary] = Field(
+    boundary: Optional[Boundnest1] = Field(
         default=None, description="Boundary input data"
     )
 
