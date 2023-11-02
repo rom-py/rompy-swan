@@ -158,6 +158,8 @@ config:
         model_type: spec2d
       freq:
         model_type: abs
+      times:
+        dfmt: hr
 
   lockup:
     compute:
