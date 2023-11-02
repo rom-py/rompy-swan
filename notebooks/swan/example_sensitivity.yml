@@ -3,9 +3,9 @@ model_type: swanconfig
 startup:
   project:
     model_type: project
-    name: Test declarative
+    name: Test sensitivity
     nr: run1
-    title1: Friction sensitivity testing
+    title1: Source terms sensitivity testing
   set:
     model_type: set
     level: 0.0
@@ -107,14 +107,13 @@ prop:
 
 numeric:
   stopc:
-    dabs: 0.05
-    drel: 0.01
-    curvat: 0.05
-    npnts: 99.5
+    dabs: 0.02
+    drel: 0.02
+    curvat: 0.02
+    npnts: 98
     mode:
-      model_type: nonstat
+      model_type: stat
       mxitst: 3
-    limiter: 0.1
 
 output:
   points:
@@ -132,16 +131,25 @@ output:
   block:
     sname: COMPGRID
     fname: swangrid.nc
-    output: [depth, hsign, tps, dir]
+    output: [depth, wind, hsign, tps, dir]
     times:
-      dfmt: sec
+      dfmt: hr
   table:
     sname: pts
-    format: noheader
-    fname: swantable.nc
-    output: [hsign, hswell, dir, tps, tm01, watlev, qp]
+    format: header
+    fname: swantable.txt
+    output: [time, hsign, hswell, dir, tps, tm01]
     times:
-      dfmt: sec
+      dfmt: hr
+  specout:
+    sname: pts
+    fname: swanspec.nc
+    dim:
+      model_type: spec2d
+    freq:
+      model_type: abs
+    times:
+      dfmt: hr
 
 lockup:
   compute:
