@@ -654,7 +654,7 @@ class QUADRUPL(BaseComponent):
 
     .. code-block:: text
 
-        QUADRUPL [iquad] [lambda] [Cnl4] [Csh1] [Csh2] [Csh3]
+        QUADRUPL [iquad] [lambda] [cnl4] [Csh1] [Csh2] [Csh3]
 
     With this option the user can influence the computation of nonlinear quadruplet
     wave interactions which are usually included in the computations. Can be
@@ -680,7 +680,7 @@ class QUADRUPL(BaseComponent):
         quadrupl = QUADRUPL()
         print(quadrupl.render())
         kwargs = dict(
-            iquad=3, lambd=0.25, cn14=3.0e7, csh1=5.5, csh2=0.833333, csh3=-1.25
+            iquad=3, lambd=0.25, cnl4=3.0e7, csh1=5.5, csh2=0.833333, csh3=-1.25
         )
         quadrupl = QUADRUPL(**kwargs)
         print(quadrupl.render())
@@ -708,7 +708,7 @@ class QUADRUPL(BaseComponent):
             "(SWAN default: 0.25)"
         ),
     )
-    cn14: Optional[float] = Field(
+    cnl4: Optional[float] = Field(
         default=None,
         description=(
             "Proportionality coefficient for quadruplet interactions in case of DIA "
@@ -743,14 +743,14 @@ class QUADRUPL(BaseComponent):
             repr += f" iquad={self.iquad}"
         if self.lambd is not None:
             repr += f" lambda={self.lambd}"
-        if self.cn14 is not None:
-            repr += f" Cn14={self.cn14}"
+        if self.cnl4 is not None:
+            repr += f" cnl4={self.cnl4}"
         if self.csh1 is not None:
-            repr += f" Csh1={self.csh1}"
+            repr += f" csh1={self.csh1}"
         if self.csh2 is not None:
-            repr += f" Csh2={self.csh2}"
+            repr += f" csh2={self.csh2}"
         if self.csh3 is not None:
-            repr += f" Csh3={self.csh3}"
+            repr += f" csh3={self.csh3}"
         return repr
 
 
