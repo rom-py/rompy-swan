@@ -1097,10 +1097,14 @@ class TRIAD(BaseComponent):
 
     .. code-block:: text
 
-        TRIAD
+        TRIAD [itriad] [trfac] [cutfr] [a] [b] [urcrit] [urslim]
 
     With this command the user can activate the triad wave-wave interactions. If this
     command is not used, SWAN will not account for triads.
+
+    Note
+    ----
+    This is the TRIAD specification in SWAN < 41.45.
 
     Examples
     --------
@@ -1111,7 +1115,15 @@ class TRIAD(BaseComponent):
         from rompy.swan.components.physics import TRIAD
         triad = TRIAD()
         print(triad.render())
-        triad = TRIAD(biphase=dict(model_type="eldeberky", urcrit=0.63))
+        triad = TRIAD(
+            itriad=1,
+            trfac=0.8,
+            cutfr=2.5,
+            a=0.95,
+            b=-0.75,
+            ucrit=0.2,
+            urslim=0.01,
+        )
         print(triad.render())
 
     """
@@ -1119,23 +1131,81 @@ class TRIAD(BaseComponent):
     model_type: Literal["triad", "TRIAD"] = Field(
         default="triad", description="Model type discriminator"
     )
-    biphase: Optional[Union[ELDEBERKY, DEWIT]] = Field(
+    itriad: Optional[Literal[1, 2]] = Field(
         default=None,
         description=(
-            "Defines the parameterization of biphase (self-self interaction) "
-            "(SWAN default: ELDEBERKY)"
+            "Approximation method for the triad computation: \n\n* 1: the LTA method "
+            "of Eldeberky (1996) \n* 2: the SPB method of Becq-Girard et al. (1999) "
+            "(SWAN default: 1)"
+        ),
+    )
+    trfac: Optional[float] = Field(
+        default=None,
+        description=(
+            "Proportionality coefficient (SWAN default: 0.8 in case of LTA method, "
+            "0.9 in case of SPB method)"
+        ),
+    )
+    cutfr: Optional[float] = Field(
+        default=None,
+        description=(
+            "Controls the maximum frequency that is considered in the LTA "
+            "computation. The value of `cutfr` is the ratio of this maximum "
+            "frequency over the mean frequency (SWAN default: 2.5)"
+        ),
+    )
+    a: Optional[float] = Field(
+        default=None,
+        description=(
+            "First calibration parameter for tuning K in Eq. (5.1) of Becq-Girard et "
+            "al. (1999). This parameter is associated with broadening of the "
+            "resonance condition (SWAN default: 0.95)"
+        ),
+    )
+    b: Optional[float] = Field(
+        default=None,
+        description=(
+            "Second calibration parameter for tuning K in Eq. (5.1) of Becq-Girard "
+            "et al. (1999). This parameter is associated with broadening of the "
+            "resonance condition (SWAN default: -0.75 for 1D, 0.0 for 2D"
+        ),
+    )
+    ucrit: Optional[float] = Field(
+        default=None,
+        description=(
+            "The critical Ursell number appearing in the expression for the biphase "
+            "(SWAN default: 0.2)"
+        ),
+    )
+    urslim: Optional[float] = Field(
+        default=None,
+        description=(
+            "The lower threshold for Ursell number, if the actual Ursell number is "
+            "below this value triad interactions are be computed (SWAN default: 0.01)"
         ),
     )
 
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "TRIAD"
-        if self.biphase is not None:
-            repr += f" {self.biphase.render()}"
+        if self.itriad is not None:
+            repr += f" itriad={self.itriad}"
+        if self.trfac is not None:
+            repr += f" trfac={self.trfac}"
+        if self.cutfr is not None:
+            repr += f" cutfr={self.cutfr}"
+        if self.a is not None:
+            repr += f" a={self.a}"
+        if self.b is not None:
+            repr += f" b={self.b}"
+        if self.ucrit is not None:
+            repr += f" urcrit={self.ucrit}"
+        if self.urslim is not None:
+            repr += f" urslim={self.urslim}"
         return repr
 
 
-class TRIAD_DCTA(TRIAD):
+class TRIAD_DCTA(BaseComponent):
     """Triad interactions with the DCTA method of Booij et al. (2009).
 
     .. code-block:: text
@@ -1150,7 +1220,8 @@ class TRIAD_DCTA(TRIAD):
 
     Note
     ----
-    This is the default method to compute the triad interactions in SWAN.
+    This is the default method to compute the triad interactions in SWAN >= 41.45, it
+    is not supported in earlier versions of the model.
 
     Examples
     --------
@@ -1194,6 +1265,13 @@ class TRIAD_DCTA(TRIAD):
             "with the DCTA framework are accounted for"
         ),
     )
+    biphase: Optional[Union[ELDEBERKY, DEWIT]] = Field(
+        default=None,
+        description=(
+            "Defines the parameterization of biphase (self-self interaction) "
+            "(SWAN default: ELDEBERKY)"
+        ),
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -1211,7 +1289,7 @@ class TRIAD_DCTA(TRIAD):
         return repr
 
 
-class TRIAD_LTA(TRIAD):
+class TRIAD_LTA(BaseComponent):
     """Triad interactions with the LTA method of Eldeberky (1996).
 
     .. code-block:: text
@@ -1223,6 +1301,10 @@ class TRIAD_LTA(TRIAD):
     Eldeberky, Y., Polnikov, V. and Battjes, J.A., 1996. A statistical approach for
     modeling triad interactions in dispersive waves. In Coastal Engineering 1996
     (pp. 1088-1101).
+
+    Note
+    ----
+    This method to compute the triad interactions is only supported in SWAN >= 41.45.
 
     Examples
     --------
@@ -1260,6 +1342,13 @@ class TRIAD_LTA(TRIAD):
             "frequency over the mean frequency (SWAN default: 2.5)"
         ),
     )
+    biphase: Optional[Union[ELDEBERKY, DEWIT]] = Field(
+        default=None,
+        description=(
+            "Defines the parameterization of biphase (self-self interaction) "
+            "(SWAN default: ELDEBERKY)"
+        ),
+    )
 
     def cmd(self) -> str:
         """Command file string for this component."""
@@ -1273,7 +1362,7 @@ class TRIAD_LTA(TRIAD):
         return repr
 
 
-class TRIAD_SPB(TRIAD):
+class TRIAD_SPB(BaseComponent):
     """Triad interactions with the SPB method of Becq-Girard et al. (1999).
 
     .. code-block:: text
@@ -1285,6 +1374,10 @@ class TRIAD_SPB(TRIAD):
     Becq-Girard, F., Forget, P. and Benoit, M., 1999. Non-linear propagation of
     unidirectional wave fields over varying topography. Coastal Engineering, 38(2),
     pp.91-113.
+
+    Note
+    ----
+    This method to compute the triad interactions is only supported in SWAN >= 41.45.
 
     Examples
     --------
@@ -1333,6 +1426,13 @@ class TRIAD_SPB(TRIAD):
             "by means of laboratory experiments. However, it may not be appropriate "
             "for true 2D field cases as it does not scale with the wave field "
             "characteristics. Hence, this parameter is set to zero (SWAN default: 0.0)"
+        ),
+    )
+    biphase: Optional[Union[ELDEBERKY, DEWIT]] = Field(
+        default=None,
+        description=(
+            "Defines the parameterization of biphase (self-self interaction) "
+            "(SWAN default: ELDEBERKY)"
         ),
     )
 
