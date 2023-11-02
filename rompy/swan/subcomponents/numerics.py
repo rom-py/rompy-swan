@@ -118,7 +118,7 @@ class NONSTAT(BaseSubComponent):
     model_type: Literal["nonstat", "NONSTAT"] = Field(
         default="nonstat", description="Model type discriminator"
     )
-    mxitst: Optional[int] = Field(
+    mxitns: Optional[int] = Field(
         default=None,
         description=(
             "The maximum number of iterations per time step for nonstationary "
@@ -130,8 +130,8 @@ class NONSTAT(BaseSubComponent):
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "NONSTATIONARY"
-        if self.mxitst is not None:
-            repr += f" mxitst={self.mxitst}"
+        if self.mxitns is not None:
+            repr += f" mxitns={self.mxitns}"
         return repr
 
 
@@ -174,7 +174,7 @@ class STOPC(BaseSubComponent):
             drel=0.01,
             curvat=0.005,
             npnts=99.5,
-            mode=dict(model_type="nonstat", mxitst=1),
+            mode=dict(model_type="nonstat", mxitns=1),
         )
         print(stop.render())
 
