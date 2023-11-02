@@ -16,10 +16,6 @@ config:
       model_type: set
       level: 0.0
       depmin: 0.05
-      maxerr: 1
-      grav: 9.81
-      rho: 1025.0
-      cdcap: 0.0025
       direction_convention: nautical
     mode:
       model_type: mode
@@ -75,199 +71,59 @@ config:
           x: longitude
           y: latitude
 
-  ## ----------------------------------------------------------------------------------
-  ## To avoid DataInterface smarts and fully prescribe inpgrid, comment out the
-  ## inpgrid section above and uncomment / adapt the inpgrid section below
-  ## ----------------------------------------------------------------------------------
-
-  # inpgrid:
-  #   model_type: inpgrids
-  #   inpgrids:
-  #   - model_type: regular
-  #     grid_type: bottom
-  #     xpinp: 0.0
-  #     ypinp: 0.0
-  #     alpinp: 0.0
-  #     mxinp: 10
-  #     myinp: 10
-  #     dxinp: 0.1
-  #     dyinp: 0.1
-  #     excval: -999.0
-  #     readinp:
-  #       model_type: readinp
-  #       fname1: bottom.txt
-  #   - model_type: regular
-  #     grid_type: wind
-  #     xpinp: 0.0
-  #     ypinp: 0.0
-  #     alpinp: 0.0
-  #     mxinp: 10
-  #     myinp: 10
-  #     dxinp: 0.1
-  #     dyinp: 0.1
-  #     excval: -999.0
-  #     readinp:
-  #       model_type: readinp
-  #       fname1: wind.txt
-  #     nonstationary:
-  #       tbeg: '2023-01-01T00:00:00'
-  #       tend: '2023-01-02T00:00:00'
-  #       delt: PT6H
-  #       tfmt: 1
-  #       dfmt: hr
-
-  boundary:
-    model_type: boundspec
-    shapespec:
-      model_type: shapespec
-      per_type: peak
-      dspr_type: degrees
-      shape:
-        model_type: tma
-        gamma: 3.3
-        d: 12.0
-    location:
-      model_type: side
-      side: west
-    data:
-      model_type: constantpar
-      hs: 2.0
-      per: 12.0
-      dir: 255.0
-      dd: 25.0
+  # boundary:
+  #   model_type: boundspec
+  #   shapespec:
+  #     model_type: shapespec
+  #     per_type: peak
+  #     dspr_type: degrees
+  #     shape:
+  #       model_type: tma
+  #       gamma: 3.3
+  #       d: 12.0
+  #   location:
+  #     model_type: side
+  #     side: west
+  #   data:
+  #     model_type: constantpar
+  #     hs: 2.0
+  #     per: 12.0
+  #     dir: 255.0
+  #     dd: 25.0
 
   initial:
-    model_type: initial
     kind:
-      model_type: hotsingle
-      fname: hotfile.txt
-      format: free
+      model_type: default
 
   physics:
     gen:
       model_type: gen3
       source_terms:
-        model_type: st6c1
-    sswell:
-      model_type: zieger
-    negatinp:
-      model_type: negatinp
-      rdcoef: 0.1
-    wcapping:
-      model_type: ab
-      cds2: 5.0e-5
-      br: 1.75e-3
-      current: True
-      cds3: 0.8
+        model_type: westhuysen
     quadrupl:
       iquad: 2
-      lambd: 0.25
     breaking:
       model_type: constant
-      alpha: 1.0
       gamma: 0.73
     friction:
-      model_type: collins
-      cfw: 0.015
+      model_type: madsen
+      kn: 0.05
     triad:
-      model_type: dcta
-      trfac: 4.4
-    vegetation:
-      model_type: vegetation
-      height: 1.0
-      diamtr: 0.1
-      nstems: 1
-      drag: 0.1
-    mud:
-      model_type: mud
-      layer: 2.0
-      rhom: 1300.0
-      viscm: 0.0076
-    sice:
-      model_type: R19
-    turbulence:
-      ctb: 0.01
-      current: True
-      tbcur: 0.004
-    bragg:
-      model_type: ft
-      ibrag: 1
-      nreg: 200
-      cutoff: 5.0
-    limiter:
-      model_type: limiter
-      ursell: 10.0
-      qb: 1.0
-    obstacle:
-      model_type: obstacles
-      obstacles:
-        - model_type: obstacle
-          transmission:
-            model_type: transm
-            trcoef: 0.5
-          reflection:
-            reflc: 0.5
-          line:
-            xp: [174.1, 174.2, 174.3]
-            yp: [-39.1, -39.1, -39.1]
-        - model_type: obstacle
-          reflection:
-            reflc: 1.0
-          line:
-            xp: [174.3, 174.3]
-            yp: [-39.1, -39.3]
-        - model_type: fig
-          alpha1: 5e-4
-          hss: 2.1
-          tss: 12.0
-          line:
-            xp: [174.1, 174.2, 174.3]
-            yp: [-39.1, -39.1, -39.1]
-    setup:
-      supcor: 0.0
-    diffraction:
-      idiffr: 1
-    surfbeat:
-      spacing: uniform
-    scat:
-      model_type: scat
-    deactivate:
-      model_type: offs
-      offs:
-        - physics: bndchk
+      model_type: triad
 
   prop:
     scheme:
-      model_type: gse
-      waveage:
-        delt: 86400
-        dfmt: day
+      model_type: bsbt
 
   numeric:
     stopc:
       dabs: 0.05
-      drel: 0.01
+      drel: 0.05
       curvat: 0.05
-      npnts: 99.5
+      npnts: 95
       mode:
         model_type: nonstat
-        mxitst: 3
-      limiter: 0.1
-    dirimpl:
-      cdd: 0.5
-    sigimpl:
-      css: 0.5
-      eps2: 1e-4
-      outp: 0
-      niter: 20
-    ctheta: 
-      cfl: 0.9
-    csigma: 
-      cfl: 0.9
-    setup: 
-      eps2: 1e-4
-      outp: 0
-      niter: 20
+        mxitns: 3
 
   output:
     points:
@@ -285,16 +141,23 @@ config:
     block:
       sname: COMPGRID
       fname: swangrid.nc
-      output: [depth, hsign, tps, dir]
+      output: [depth, wind, hsign, tps, dir]
       times:
         dfmt: hr
     table:
       sname: pts
-      format: noheader
-      fname: swantable.nc
-      output: [hsign, hswell, dir, tps, tm01, watlev, qp]
+      format: header
+      fname: swantable.txt
+      output: [time, hsign, hswell, dir, tps, tm01]
       times:
         dfmt: hr
+    specout:
+      sname: pts
+      fname: swanspec.nc
+      dim:
+        model_type: spec2d
+      freq:
+        model_type: abs
 
   lockup:
     compute:
@@ -307,4 +170,4 @@ config:
       hotfile:
         fname: hotfile.txt
         format: free
-      hottimes: [1, -1]
+      hottimes: [-1]
