@@ -81,12 +81,12 @@ class GRIDREGULAR(BaseSubComponent):
     @property
     def dx(self):
         """Grid spacing in x-direction."""
-        return self.xlen / (self.mx + 1)
+        return self.xlen / self.mx
 
     @property
     def dy(self):
         """Grid spacing in y-direction."""
-        return self.ylen / (self.my + 1)
+        return self.ylen / self.my
 
     def cmd(self) -> str:
         """Command file string for this subcomponent."""
