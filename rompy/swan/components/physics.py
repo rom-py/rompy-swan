@@ -1,7 +1,7 @@
 """Model physics components."""
 import logging
 from typing import Any, Literal, Optional, Union, Annotated
-from pydantic import field_validator, model_validator, Field, FieldValidationInfo
+from pydantic import field_validator, model_validator, Field, ValidationInfo
 
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.types import IDLA, PhysicsOff
@@ -1552,7 +1552,7 @@ class VEGETATION(BaseComponent):
 
     @field_validator("height", "diamtr", "drag", "nstems")
     @classmethod
-    def number_of_layers(cls, v: Any, info: FieldValidationInfo) -> Any:
+    def number_of_layers(cls, v: Any, info: ValidationInfo) -> Any:
         if v is None:
             return v
         elif not isinstance(v, list):

@@ -233,7 +233,7 @@ numeric:
     npnts: 99.5
     mode:
       model_type: nonstat
-      mxitst: 3
+      mxitns: 3
     limiter: 0.1
   dirimpl:
     cdd: 0.5
