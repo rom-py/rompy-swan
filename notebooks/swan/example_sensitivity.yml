@@ -106,7 +106,8 @@ prop:
     model_type: bsbt
 
 numeric:
-  stopc:
+  stop:
+    model_type: stopc
     dabs: 0.02
     drel: 0.02
     curvat: 0.02
