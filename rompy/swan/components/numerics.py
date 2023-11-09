@@ -8,6 +8,7 @@ from rompy.swan.subcomponents.numerics import (
     BSBT,
     GSE,
     STOPC,
+    ACCUR,
     DIRIMPL,
     SIGIMPL,
     CTHETA,
@@ -109,7 +110,7 @@ class NUMERIC(BaseComponent):
         numeric = NUMERIC()
         print(numeric.render())
         numeric = NUMERIC(
-            stopc=dict(dabs=0.05, drel=0.01, curvat=0.05, npnts=99.5),
+            stop=dict(dabs=0.05, drel=0.01, curvat=0.05, npnts=99.5),
             dirimpl=dict(cdd=0.5),
             sigimpl=dict(css=0.5, eps2=1e-4, outp=0, niter=20),
             ctheta=dict(cfl=0.9),
@@ -123,9 +124,10 @@ class NUMERIC(BaseComponent):
     model_type: Literal["numeric", "NUMERIC"] = Field(
         default="numeric", description="Model type discriminator"
     )
-    stopc: Optional[STOPC] = Field(
+    stop: Optional[Union[STOPC, ACCUR]] = Field(
         default=None,
         description="Iteration termination criteria",
+        discriminator="model_type",
     )
     dirimpl: Optional[DIRIMPL] = Field(
         default=None,
@@ -151,8 +153,8 @@ class NUMERIC(BaseComponent):
     def cmd(self) -> str:
         """Command file string for this component."""
         repr = "NUMERIC"
-        if self.stopc is not None:
-            repr += f" {self.stopc.render()}"
+        if self.stop is not None:
+            repr += f" {self.stop.render()}"
         if self.dirimpl is not None:
             repr += f" {self.dirimpl.render()}"
         if self.sigimpl is not None:

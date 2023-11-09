@@ -116,7 +116,8 @@ config:
       model_type: bsbt
 
   numeric:
-    stopc:
+    stop:
+      model_type: stopc
       dabs: 0.05
       drel: 0.05
       curvat: 0.05

@@ -136,7 +136,7 @@ class NONSTAT(BaseSubComponent):
 
 
 class STOPC(BaseSubComponent):
-    """Stop the iterative procedure.
+    """Stopping criteria of  Zijlema and Van der Westhuysen (2005).
 
     .. code-block:: text
 
@@ -160,6 +160,12 @@ class STOPC(BaseSubComponent):
     is less than `drel`. These criteria must be fulfilled in more than `npnts`
     percent of all active, well-defined points.
 
+    References
+    ----------
+    - Zijlema, M. and Van der Westhuysen, A. (2005). On convergence behaviour and
+      numerical accuracy in stationary SWAN simulations of nearshore wind wave spectra,
+      Coastal Engineering, 52(3), p. 337-256.
+
     Examples
     --------
 
@@ -169,12 +175,13 @@ class STOPC(BaseSubComponent):
         from rompy.swan.subcomponents.numerics import STOPC
         stop = STOPC()
         print(stop.render())
-        stop=STOPC(
+        stop = STOPC(
             dabs=0.005,
             drel=0.01,
             curvat=0.005,
             npnts=99.5,
             mode=dict(model_type="nonstat", mxitns=1),
+            limiter=0.1,
         )
         print(stop.render())
 
@@ -234,6 +241,116 @@ class STOPC(BaseSubComponent):
             repr += f" drel={self.drel}"
         if self.curvat is not None:
             repr += f" curvat={self.curvat}"
+        if self.npnts is not None:
+            repr += f" npnts={self.npnts}"
+        if self.mode is not None:
+            repr += f" {self.mode.render()}"
+        if self.limiter is not None:
+            repr += f" limiter={self.limiter}"
+        return repr
+
+
+class ACCUR(BaseSubComponent):
+    """Stop the iterative procedure.
+
+    .. code-block:: text
+
+        ACCUR [drel] [dhoval] [dtoval] [npnts] ->STAT|NONSTAT [limiter]
+
+    With this option the user can influence the criterion for terminating the iterative
+    procedure in the SWAN computations (both stationary and non-stationary modes).
+    SWAN stops the iterations if (a), (b) and (c) are all satisfied:
+
+    a) The change in the local significant wave height Hs from one iteration to the
+       next is less than (1) fraction `drel` of that height or (2) fraction `dhoval`
+       of the average Hs over all grid points.
+
+    b) The change in the local mean wave period Tm01 from one iteration to the next is
+       less than (1) fraction `drel` of that period or (2) fraction `dtoval` of the
+       average mean wave period over all wet grid points.
+
+    c) Conditions (a) and (b) are fulfilled in more than fraction `npnts%` of all wet
+       grid points.
+
+    Note
+    ----
+    This command has become obsolete in SWAN 41.01. The command STOPC should be used.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.numerics import ACCUR
+        accur = ACCUR()
+        print(accur.render())
+        accur = ACCUR(
+            drel=0.01,
+            dhoval=0.02,
+            dtoval=0.02,
+            npnts=98.0,
+            mode=dict(model_type="nonstat", mxitns=1),
+            limiter=0.1,
+        )
+        print(accur.render())
+
+    """
+
+    model_type: Literal["accur", "ACCUR"] = Field(
+        default="accur", description="Model type discriminator"
+    )
+    drel: Optional[float] = Field(
+        default=None,
+        description=(
+            "Maximum relative change in Hs or Tm01 from one iteration to the next "
+            "(SWAN default: 0.02)"
+        ),
+    )
+    dhoval: Optional[float] = Field(
+        default=None,
+        description=(
+            "Fraction of the average Hs over all wet grid points below which the "
+            "the stopping criteria needs to be satisfied (SWAN default: 0.02)"
+        ),
+    )
+    dtoval: Optional[float] = Field(
+        default=None,
+        description=(
+            "Fraction of the average Tm01 over all wet grid points below which the "
+            "the stopping criteria needs to be satisfied (SWAN default: 0.02)"
+        ),
+    )
+    npnts: Optional[float] = Field(
+        default=None,
+        description=(
+            "Percentage of points in the computational grid above which the stopping "
+            "criteria needs to be satisfied (SWAN default: 98)"
+        ),
+    )
+    mode: Optional[Union[STAT, NONSTAT]] = Field(
+        default=None,
+        description="Termination criteria for stationary or nonstationary runs",
+        discriminator="model_type",
+    )
+    limiter: Optional[float] = Field(
+        default=None,
+        description=(
+            "Determines the maximum change per iteration of the energy density per "
+            "spectral-bin given in terms of a fraction of the omni-directional "
+            "Phillips level (SWAN default: 0.1)"
+        ),
+    )
+
+    def cmd(self) -> str:
+        """Command file string for this component."""
+        repr = "ACCUR"
+        if self.drel is not None:
+            repr += f" drel={self.drel}"
+        if self.dhoval is not None:
+            repr += f" dhoval={self.dhoval}"
+        if self.dtoval is not None:
+            repr += f" dtoval={self.dtoval}"
         if self.npnts is not None:
             repr += f" npnts={self.npnts}"
         if self.mode is not None:

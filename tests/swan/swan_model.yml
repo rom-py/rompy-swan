@@ -226,7 +226,8 @@ prop:
       dfmt: day
 
 numeric:
-  stopc:
+  stop:
+    model_type: stopc
     dabs: 0.05
     drel: 0.01
     curvat: 0.05
