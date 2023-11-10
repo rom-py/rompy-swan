@@ -77,11 +77,11 @@ def test_grid_regular():
         alp=0.0,
         xlen=10,
         ylen=10,
-        mx=19,
-        my=19,
+        mx=20,
+        my=20,
         suffix="c",
     )
     assert grid.dx == 0.5 and grid.dy == 0.5
     assert grid.render() == (
-        "xpc=120.0 ypc=-30.0 alpc=0.0 xlenc=10.0 ylenc=10.0 mxc=19 myc=19"
+        "xpc=120.0 ypc=-30.0 alpc=0.0 xlenc=10.0 ylenc=10.0 mxc=20 myc=20"
     )

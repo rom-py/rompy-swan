@@ -4,7 +4,7 @@ import numpy as np
 from pydantic import field_validator, Field, model_validator
 
 from rompy.core.grid import RegularGrid
-
+from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 
 class SwanGrid(RegularGrid):
     """Regular SWAN grid in geographic space."""
@@ -97,6 +97,22 @@ class SwanGrid(RegularGrid):
         elif self.grid_type == "CURV":
             raise NotImplementedError("Curvilinear grids not supported yet")
             # return f'READGRID COOR 1 \'{os.path.basename(self.gridpath)}\' 1 0 1 FREE'
+
+    @property
+    def component(self):
+        """Return the respective SWAN component for this grid."""
+        if self.grid_type == "REG":
+            return GRIDREGULAR(
+                xp=self.x0,
+                yp=self.y0,
+                alp=self.rot,
+                xlen=self.xlen,
+                ylen=self.ylen,
+                mx=self.nx - 1,
+                my=self.ny - 1,
+            )
+        else:
+            raise NotImplementedError("Only regular grid is currently supported")
 
     def __call__(self):
         output = f"CGRID {self.cgrid} CIRCLE 36 0.0464 1. 31\n"
@@ -214,3 +230,28 @@ class SwanGrid(RegularGrid):
 
     def __str__(self):
         return f"SwanGrid: {self.grid_type}, {self.nx}x{self.ny}"
+
+    @classmethod
+    def from_component(cls, component: GRIDREGULAR) -> "SwanGrid":
+        """Swan grid from an existing component.
+
+        Parameters
+        ----------
+        component: GRIDREGULAR
+            A GRIDREGULAR SWAN component.
+
+        Returns
+        -------
+        SwanGrid
+            A SwanGrid object.
+
+        """
+        return cls(
+            x0=component.xp,
+            y0=component.yp,
+            rot=component.alp,
+            dx=component.dx,
+            dy=component.dy,
+            nx=component.mx + 1,
+            ny=component.my + 1,
+        )
