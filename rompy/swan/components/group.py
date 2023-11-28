@@ -545,7 +545,10 @@ class OUTPUT(BaseGroupComponent):
     def write_locations_exists(self) -> "OUTPUT":
         """Ensure the location component requested by a write component exists."""
         for write in self.write_set:
-            sname = getattr(self, write).sname
+            obj = getattr(self, write)
+            if obj is None:
+                continue
+            sname = obj.sname
             if sname in SPECIAL_NAMES:
                 return self
             try:
@@ -635,7 +638,10 @@ class OUTPUT(BaseGroupComponent):
         """List of snames from specified location components."""
         snames = []
         for field in self.locations_set:
-            sname = getattr(self, field).sname
+            obj = getattr(self, field)
+            if obj is None:
+                continue
+            sname = obj.sname
             if isinstance(sname, str):
                 sname = [sname]
             snames.extend(sname)
@@ -645,6 +651,8 @@ class OUTPUT(BaseGroupComponent):
         """Filter the location component defined with the specified sname."""
         for field in self.locations_set:
             obj = getattr(self, field)
+            if obj is None:
+                continue
             obj_snames = obj.sname if isinstance(obj.sname, list) else [obj.sname]
             for obj_sname in obj_snames:
                 if obj_sname == sname:
