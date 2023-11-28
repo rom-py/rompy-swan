@@ -47,7 +47,7 @@ class Boundnest1(BoundaryWaveStation):
         """
         if self.crop_data and time is not None:
             self._filter_time(time)
-        ds = self._sel_boundary(grid)
+        ds = self._sel_boundary(grid).sortby("dir")
         filename = Path(destdir) / f"{self.id}.bnd"
         ds.spec.to_swan(filename)
         cmd = f"BOUNDNEST1 NEST '{filename.name}' {self.rectangle.upper()}"
