@@ -110,7 +110,13 @@ class NUMERIC(BaseComponent):
         numeric = NUMERIC()
         print(numeric.render())
         numeric = NUMERIC(
-            stop=dict(dabs=0.05, drel=0.01, curvat=0.05, npnts=99.5),
+            stop=dict(
+                model_type="stopc",
+                dabs=0.05,
+                drel=0.01,
+                curvat=0.05,
+                npnts=99.5,
+            ),
             dirimpl=dict(cdd=0.5),
             sigimpl=dict(css=0.5, eps2=1e-4, outp=0, niter=20),
             ctheta=dict(cfl=0.9),
