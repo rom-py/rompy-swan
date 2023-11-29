@@ -6,7 +6,13 @@ from pydantic import Field, model_validator, field_validator
 from rompy.swan.types import PhysicsOff
 from rompy.swan.components.base import BaseComponent
 from rompy.swan.components.startup import PROJECT, SET, MODE, COORDINATES
-from rompy.swan.components.inpgrid import REGULAR, CURVILINEAR, UNSTRUCTURED
+from rompy.swan.components.inpgrid import (
+    REGULAR,
+    CURVILINEAR,
+    UNSTRUCTURED,
+    WIND,
+    ICE,
+)
 from rompy.swan.components.physics import (
     GEN1,
     GEN2,
@@ -164,7 +170,7 @@ class STARTUP(BaseGroupComponent):
 # Inpgrid
 # =====================================================================================
 INPGRID_TYPES = Annotated[
-    list[Union[REGULAR, CURVILINEAR, UNSTRUCTURED]],
+    list[Union[REGULAR, CURVILINEAR, UNSTRUCTURED, WIND, ICE]],
     Field(discriminator="model_type"),
 ]
 
@@ -191,7 +197,7 @@ class INPGRIDS(BaseGroupComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.inpgrid import REGULAR
+        from rompy.swan.components.inpgrid import REGULAR, ICE
         from rompy.swan.components.group import INPGRIDS
         inpgrid_bottom = REGULAR(
             grid_type="bottom",
@@ -223,7 +229,8 @@ class INPGRIDS(BaseGroupComponent):
                 dfmt="hr",
             ),
         )
-        inpgrids = INPGRIDS(inpgrids=[inpgrid_bottom, inpgrid_wind])
+        inpgrid_ice_cte = ICE(aice=0.8, hice=2.0)
+        inpgrids = INPGRIDS(inpgrids=[inpgrid_bottom, inpgrid_wind, inpgrid_ice_cte])
         print(inpgrids.render())
 
     """
@@ -240,7 +247,7 @@ class INPGRIDS(BaseGroupComponent):
     @classmethod
     def ensure_unique_grid_type(cls, inpgrids: INPGRID_TYPES) -> INPGRID_TYPES:
         """Ensure that each grid type is unique."""
-        grid_types = [inpgrid.grid_type for inpgrid in inpgrids]
+        grid_types = [inp.grid_type for inp in inpgrids if hasattr(inp, "grid_type")]
         if len(grid_types) != len(set(grid_types)):
             raise ValueError("Each grid type must be unique")
         return inpgrids
