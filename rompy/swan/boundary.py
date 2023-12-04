@@ -32,6 +32,7 @@ def write_tpar(df: pd.DataFrame, filename: str | Path):
         df.to_csv(
             stream,
             sep=" ",
+            na_rep=0.0,
             header=False,
             float_format="%0.2f",
             date_format="%Y%m%d.%H%M%S",
