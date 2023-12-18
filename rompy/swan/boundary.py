@@ -1,16 +1,18 @@
 """SWAN boundary classes."""
 import logging
 from pathlib import Path
-from typing import Literal, Optional, Union
+from typing import Literal, Optional, Union, Annotated
 import pandas as pd
 import numpy as np
+from abc import ABC
 from pydantic import Field, field_validator
 
 from rompy.core.time import TimeRange
 from rompy.core.boundary import BoundaryWaveStation
 from rompy.swan.grid import SwanGrid
 from rompy.swan.components.boundary import BOUNDSPEC
-from rompy.swan.subcomponents.boundary  import SIDE, SEGMENT, VARIABLEFILE, VARIABLEPAR, CONSTANTFILE, CONSTANTPAR
+from rompy.swan.subcomponents.base import BaseSubComponent, XY, IJ
+from rompy.swan.subcomponents.boundary  import SIDE, SIDES, SEGMENT, VARIABLEFILE, VARIABLEPAR, CONSTANTFILE, CONSTANTPAR
 from rompy.swan.subcomponents.spectrum import SHAPESPEC
 
 logger = logging.getLogger(__name__)
@@ -81,24 +83,11 @@ class Boundnest1(BoundaryWaveStation):
         return cmd
 
 
-class BoundspecSide(BoundaryWaveStation):
-    """SWAN BOUNDNEST1 NEST data class.
-
-    TODO: Handle side definition on a rotated grid.
-    TODO: Should SIDE VARIABE be supported?
-    TODO: Support option to choose between mid-point or averaging?
-    TODO: Does PAR need to be supported? Guess not as nonstationary isn't supported
-
-    Note
-    ----
-    The 'spec1d' file type is not supported yet.
-
-    """
-
-    model_type: Literal["boundspecside", "BOUNDSPECSIDE"] = Field(
-        default="boundspecside", description="Model type discriminator"
+class BoundspecBase(BoundaryWaveStation, ABC):
+    """Base class for SWAN BOUNDSPEC data classes."""
+    model_type: Literal["boundspecbase", "BOUNDSPECBASE"] = Field(
+        default="boundspecbase", description="Model type discriminator"
     )
-    location: SIDE = Field(description="The side of the grid to apply the boundary to")
     shapespec: SHAPESPEC = Field(
         description="Spectral shape specification",
         default=SHAPESPEC(dspr_type="degrees"),
@@ -118,30 +107,6 @@ class BoundspecSide(BoundaryWaveStation):
             raise NotImplementedError("Variable spectra not implemented yet")
         return v
 
-    def _boundary_points(self, grid):
-        """Coordinates of boundary points based on grid bbox and dataset resolution."""
-        if self.location.side == "west":
-            slc = np.s_[:, 0]
-        elif self.location.side == "east":
-            slc = np.s_[:, -1]
-        elif self.location.side == "south":
-            slc = np.s_[0, :]
-        elif self.location.side == "north":
-            slc = np.s_[-1, :]
-        elif self.location.side == "sw":
-            slc = np.s_[0, 0]
-        elif self.location.side == "se":
-            slc = np.s_[0, -1]
-        elif self.location.side == "nw":
-            slc = np.s_[-1, 0]
-        elif self.location.side == "ne":
-            slc = np.s_[-1, -1]
-
-        xbnd = [grid.x[slc].mean()]
-        ybnd = [grid.y[slc].mean()]
-
-        return xbnd, ybnd
-
     @property
     def per(self) -> str:
         if self.shapespec.per_type == "peak":
@@ -160,6 +125,51 @@ class BoundspecSide(BoundaryWaveStation):
     def tpar(self) -> pd.DataFrame:
         """TPAR dataframe for the _ds attr."""
         return self._ds.spec.stats(["hs", self.per, "dpm", self.dspr]).to_pandas()
+
+    def _boundary_points_side(self, grid, side):
+        """Coordinates of boundary points on a grid side."""
+        if side == "west":
+            slc = np.s_[:, 0]
+        elif side == "east":
+            slc = np.s_[:, -1]
+        elif side == "south":
+            slc = np.s_[0, :]
+        elif side == "north":
+            slc = np.s_[-1, :]
+        elif side == "sw":
+            slc = np.s_[0, 0]
+        elif side == "se":
+            slc = np.s_[0, -1]
+        elif side == "nw":
+            slc = np.s_[-1, 0]
+        elif side == "ne":
+            slc = np.s_[-1, -1]
+        return grid.x[slc], grid.y[slc]
+
+
+class BoundspecSide(BoundspecBase):
+    """SWAN BOUNDSPEC SIDE data class.
+
+    TODO: Handle side definition on a rotated grid.
+    TODO: Should SIDE VARIABE be supported?
+    TODO: Support option to choose between mid-point or averaging?
+    TODO: Does PAR need to be supported? Guess not as nonstationary isn't supported
+
+    Note
+    ----
+    The 'spec1d' file type is not supported yet.
+
+    """
+
+    model_type: Literal["boundspecside", "BOUNDSPECSIDE"] = Field(
+        default="boundspecside", description="Model type discriminator"
+    )
+    location: SIDE = Field(description="The side of the grid to apply the boundary to")
+
+    def _boundary_points(self, grid):
+        """Coordinates of boundary points at midpoint of a grid side."""
+        xbnd, ybnd = self._boundary_points_side(grid, self.location.side)
+        return [xbnd.mean()], [ybnd.mean()]
 
     def get(
         self, destdir: str, grid: SwanGrid, time: Optional[TimeRange] = None
@@ -198,78 +208,42 @@ class BoundspecSide(BoundaryWaveStation):
         return "\n".join(cmds)
 
 
-class BoundspecSegment(BoundaryWaveStation):
-    """SWAN BOUNDNEST1 NEST data class.
+class BoundspecSegmentXY(BoundspecBase):
+    """SWAN BOUNDSPEC SEGMENT data class.
 
     TODO: Handle side definition on a rotated grid.
     TODO: Should SIDE VARIABE be supported?
     TODO: Support option to choose between mid-point or averaging?
     TODO: Does PAR need to be supported? Guess not as nonstationary isn't supported
+    TODO: If SIDES, ensure continuous
+
+    Note
+    ----
+    The 'spec1d' file type is not supported yet.
 
     """
 
     model_type: Literal["boundspecside", "BOUNDSPECSIDE"] = Field(
         default="boundspecside", description="Model type discriminator"
     )
-    location: SIDE = Field(description="The side of the grid to apply the boundary to")
-    shapespec: SHAPESPEC = Field(
-        description="Spectral shape specification",
-        default=SHAPESPEC(dspr_type="degrees"),
+    location: Union[SIDE, SIDES, XY] = Field(
+        description="The side of the grid to apply the boundary to",
+        discriminator="model_type",
     )
-    variable: bool = Field(
-        description="Whether the spectra can vary along the side", default=False
-    )
-    _ds: None
-
-    @field_validator("variable")
-    @classmethod
-    def variable_not_implemented(cls, v, values):
-        if v is True:
-            raise NotImplementedError("Variable spectra not implemented yet")
-        return v
 
     def _boundary_points(self, grid):
-        """Coordinates of boundary points based on grid bbox and dataset resolution."""
-        if self.location.side == "west":
-            slc = np.s_[:, 0]
-        elif self.location.side == "east":
-            slc = np.s_[:, -1]
-        elif self.location.side == "south":
-            slc = np.s_[0, :]
-        elif self.location.side == "north":
-            slc = np.s_[-1, :]
-        elif self.location.side == "sw":
-            slc = np.s_[0, 0]
-        elif self.location.side == "se":
-            slc = np.s_[0, -1]
-        elif self.location.side == "nw":
-            slc = np.s_[-1, 0]
-        elif self.location.side == "ne":
-            slc = np.s_[-1, -1]
-
-        xbnd = [grid.x[slc].mean()]
-        ybnd = [grid.y[slc].mean()]
-
+        """Coordinates of boundary points along the segment."""
+        if isinstance(self.location, XY):
+            xbnd, ybnd = self.location.x, self.location.y
+        elif isinstance(self.location, SIDE):
+            xbnd, ybnd = self._boundary_points_side(grid, self.location.side)
+        elif isinstance(self.location, SIDES):
+            xbnd, ybnd = [], []
+            for side in self.location.sides:
+                xb, yb = self._boundary_points_side(grid, side)
+                xbnd.extend(xb)
+                ybnd.extend(yb)
         return xbnd, ybnd
-
-    @property
-    def per(self) -> str:
-        if self.shapespec.per_type == "peak":
-            return "tp"
-        elif self.shapespec.per_type == "mean":
-            return "tm01"
-
-    @property
-    def dspr(self) -> str:
-        if self.shapespec.dspr_type == "degrees":
-            return "dspr"
-        elif self.shapespec.dspr_type == "power":
-            raise NotImplementedError("Power of cos not supported yet")
-
-    @property
-    def tpar(self) -> pd.DataFrame:
-        """TPAR dataframe for the _ds attr."""
-        return self._ds.spec.stats(["hs", self.per, "dpm", self.dspr]).to_pandas()
 
     def get(
         self, destdir: str, grid: SwanGrid, time: Optional[TimeRange] = None
@@ -296,10 +270,17 @@ class BoundspecSegment(BoundaryWaveStation):
         ds = self._sel_boundary(grid).sortby("dir")
 
         cmds = []
-        for ind, (lon, lat) in enumerate(zip(ds.lon.values, ds.lat.values)):
-            self._ds = ds.isel(site=ind, drop=True)
-            filename = Path(destdir) / f"bnd_{self.id}_{self.location.side}_{ind:03d}.tpar"
-            write_tpar(self.tpar, filename)
-            comp = CONSTANTFILE(fname=filename.name, seq=1)
-            cmds.append(f"BOUNDSPEC {self.location.render()}{comp.render()}")
+        for ind in range(ds.lon.size - 1):
+            ds_seg = ds.isel(site=slice(ind, ind+2))
+            # TODO: Ensure points in segment are different
+            self._ds = ds_seg.mean("site")
+            filename = f"{self.id}_{self.file_type}_{ind:03d}.bnd"
+            if self.file_type == "tpar":
+                write_tpar(self.tpar, Path(destdir) / filename)
+            elif self.file_type == "spec2d":
+                self._ds.spec.to_swan(Path(destdir) / filename)
+            file = CONSTANTFILE(fname=filename, seq=1)
+            location = SEGMENT(points=XY(x=ds_seg.lon.values, y=ds_seg.lat.values))
+            location = location.render().replace("\n", " ")
+            cmds.append(f"BOUNDSPEC {location}{file.render()}")
         return "\n".join(cmds)
