@@ -80,6 +80,9 @@ extra = [
     "gcsfs",
     "zarr",
 ]
+schism = [
+    "pyschism",
+]
 docs = [
     "autodoc_pydantic",
     "ipython",
