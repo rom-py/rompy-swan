@@ -239,8 +239,8 @@ class BoundspecSegmentXY(BoundspecBase):
             xbnd, ybnd = self._boundary_points_side(grid, self.location.side)
         elif isinstance(self.location, SIDES):
             xbnd, ybnd = [], []
-            for side in self.location.sides:
-                xb, yb = self._boundary_points_side(grid, side)
+            for location in self.location.sides:
+                xb, yb = self._boundary_points_side(grid, location.side)
                 xbnd.extend(xb)
                 ybnd.extend(yb)
         return xbnd, ybnd
@@ -281,6 +281,6 @@ class BoundspecSegmentXY(BoundspecBase):
                 self._ds.spec.to_swan(Path(destdir) / filename)
             file = CONSTANTFILE(fname=filename, seq=1)
             location = SEGMENT(points=XY(x=ds_seg.lon.values, y=ds_seg.lat.values))
-            location = location.render().replace("\n", " ")
+            location = location.render().replace("\n", " ").replace("  ", " ")
             cmds.append(f"BOUNDSPEC {location}{file.render()}")
         return "\n".join(cmds)
