@@ -64,7 +64,7 @@ class INPGRID(BaseComponent, ABC):
 
 
 class REGULAR(INPGRID):
-    """SWAN regular input grid group component.
+    """SWAN regular input grid.
 
     .. code-block:: text
 
@@ -189,7 +189,7 @@ class REGULAR(INPGRID):
 
 
 class CURVILINEAR(INPGRID):
-    """SWAN curvilinear input grid group component.
+    """SWAN curvilinear input grid.
 
     .. code-block:: text
 
@@ -277,7 +277,7 @@ class CURVILINEAR(INPGRID):
 
 
 class UNSTRUCTURED(INPGRID):
-    """SWAN unstructured input grid group component.
+    """SWAN unstructured input grid.
 
     .. code-block:: text
 
@@ -322,3 +322,76 @@ class UNSTRUCTURED(INPGRID):
             repr += f" {self.nonstationary.render()}"
         repr = [repr] + [self.readinp.render()]
         return repr
+
+
+class WIND(BaseComponent):
+    """Constant wind input field.
+
+    .. code-block:: text
+
+        WIND [vel] [dir]
+
+    With this optional command, the user indicates that the wind field is constant.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.components.inpgrid import WIND
+        wind = WIND(vel=10.0, dir=270.0)
+        print(wind.render())
+
+    """
+
+    model_type: Literal["wind", "WIND"] = Field(
+        default="wind", description="Model type discriminator"
+    )
+    vel: float = Field(description="Wind velocity at 10 m elevation (m/s)", ge=0.0)
+    dir: float = Field(
+        description=(
+            "Wind direction at 10 m elevation (in degrees, Cartesian or Nautical "
+            "convention, see command SET)"
+        ),
+        ge=-180.0,
+        le=360.0,
+    )
+
+    def cmd(self):
+        return f"WIND vel={self.vel} dir={self.dir}"
+
+
+class ICE(BaseComponent):
+    """Constant wind input field.
+
+    .. code-block:: text
+
+        ICE [aice] [hice]
+
+    With this optional command, the user indicates that one or more ice fields are
+    constant.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.components.inpgrid import ICE
+        ice = ICE(aice=0.1, hice=0.1)
+        print(ice.render())
+
+    """
+
+    model_type: Literal["ice", "ICE"] = Field(
+        default="ice", description="Model type discriminator"
+    )
+    aice: float = Field(
+        description="Areal ice fraction, a number from 0 to 1", ge=0.0, le=1.0
+    )
+    hice: float = Field(description="Ice thickness (m)", ge=0.0)
+
+    def cmd(self):
+        return f"ICE aice={self.aice} hice={self.hice}"
+
