@@ -166,7 +166,7 @@ class BoundspecSide(BoundspecBase):
     )
     location: SIDE = Field(description="The side of the grid to apply the boundary to")
 
-    def _boundary_points(self, grid):
+    def _boundary_points(self, grid) -> tuple:
         """Coordinates of boundary points at midpoint of a grid side."""
         xbnd, ybnd = self._boundary_points_side(grid, self.location.side)
         return [xbnd.mean()], [ybnd.mean()]
@@ -231,7 +231,7 @@ class BoundspecSegmentXY(BoundspecBase):
         discriminator="model_type",
     )
 
-    def _boundary_points(self, grid):
+    def _boundary_points(self, grid) -> tuple:
         """Coordinates of boundary points along the segment."""
         if isinstance(self.location, XY):
             xbnd, ybnd = self.location.x, self.location.y
