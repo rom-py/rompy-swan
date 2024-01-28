@@ -5,6 +5,7 @@ from typing import Literal, Optional, Union, Annotated
 import xarray as xr
 import pandas as pd
 import numpy as np
+from shapely.geometry import LineString
 from abc import ABC
 from pydantic import Field, field_validator
 
@@ -101,6 +102,17 @@ class BoundspecBase(BoundaryWaveStation, ABC):
     )
     _ds: None
 
+    @field_validator("sel_method_kwargs")
+    @classmethod
+    def unique_not_supported(cls, kwargs: dict) -> dict:
+        if kwargs.get("unique", False):
+            raise NotImplementedError(
+                "The unique sel option is not support because it will result in a "
+                "mismatch between the number of boundary points and the number of "
+                "points selected by wavespectra from the dataset."
+            )
+        return kwargs
+
     @field_validator("variable")
     @classmethod
     def variable_not_implemented(cls, v, values):
@@ -127,9 +139,46 @@ class BoundspecBase(BoundaryWaveStation, ABC):
         """TPAR dataframe for the _ds attr."""
         return self._ds.spec.stats(["hs", self.per, "dpm", self.dspr]).to_pandas()
 
+    def _interpolate_side(self, xbnd, ybnd, spacing) -> tuple:
+        """Interpolate points along side at user-defined spacing.
+
+        Parameters
+        ----------
+        xbnd: array-like
+            The x coordinates of the boundary points.
+        ybnd: array-like
+            The y coordinates of the boundary points.
+        spacing: float
+            The spacing between interpolated points.
+
+        Returns
+        -------
+        xbnd : array-like
+            The x coordinates of the boundary points interpolated at spacing.
+        ybnd : array-like
+            The y coordinates of the boundary points interpolated at spacing.
+
+        Note
+        ----
+        The last point is adjusted to ensure the the length of the boundary is not
+        exceeded.
+
+        """
+        line = LineString(zip(xbnd, ybnd))
+        if line.length < spacing:
+            raise ValueError(f"Spacing = {spacing} > side length = {line.length}")
+        npts = int(np.ceil(line.length / spacing))
+        points = [line.interpolate(i * spacing) for i in range(npts + 1)]
+        xi = np.array([point.x for point in points])
+        yi = np.array([point.y for point in points])
+        # Ensure last point does not go beyond the line length
+        xi[-1] = xbnd[-1]
+        yi[-1] = ybnd[-1]
+        return xi, yi
+
     def _boundary_points_side(self, grid, side):
         """Coordinates of boundary points on a grid side."""
-        # Return the boundary points in CCW orderf
+        # Boundary points for grid side in CCW order
         if side.side == "south":
             slc = np.s_[0, :]
         elif side.side == "east":
@@ -148,10 +197,16 @@ class BoundspecBase(BoundaryWaveStation, ABC):
             slc = np.s_[-1, -1]
         xbnd = grid.x[slc]
         ybnd = grid.y[slc]
+
         # Reverse if order is clockwise
         if side.direction == "clockwise":
             xbnd = np.flip(xbnd)
             ybnd = np.flip(ybnd)
+
+        # Interpolate at user-defined spacing
+        if self.spacing is not None:
+            xbnd, ybnd = self._interpolate_side(xbnd, ybnd, self._set_spacing(grid))
+
         return xbnd, ybnd
 
 
@@ -224,8 +279,6 @@ class BoundspecSegmentXY(BoundspecBase):
     TODO: Support option to choose between mid-point or averaging?
     TODO: Does PAR need to be supported? Guess not as nonstationary isn't supported
     TODO: If SIDES, ensure continuous
-    TODO: Option to close each side
-    TODO: Avoid duplicate points from SIDES
 
     Note
     ----
@@ -258,6 +311,10 @@ class BoundspecSegmentXY(BoundspecBase):
             xbnd, ybnd = [], []
             for location in self.location.sides:
                 xb, yb = self._boundary_points_side(grid, location)
+                # Avoid duplicate points at segment intersection
+                if xbnd:
+                    xb = xb[1:]
+                    yb = yb[1:]
                 xbnd.extend(xb)
                 ybnd.extend(yb)
         return xbnd, ybnd
