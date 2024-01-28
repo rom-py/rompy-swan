@@ -231,7 +231,7 @@ class BoundspecSide(BoundspecBase):
 
     def _boundary_points(self, grid) -> tuple:
         """Coordinates of boundary points at midpoint of a grid side."""
-        xbnd, ybnd = self._boundary_points_side(grid, self.location.side)
+        xbnd, ybnd = self._boundary_points_side(grid, self.location)
         return [xbnd.mean()], [ybnd.mean()]
 
     def get(
