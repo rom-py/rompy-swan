@@ -2,6 +2,7 @@
 import logging
 from pathlib import Path
 from typing import Literal, Optional, Union, Annotated
+import xarray as xr
 import pandas as pd
 import numpy as np
 from abc import ABC
@@ -128,23 +129,30 @@ class BoundspecBase(BoundaryWaveStation, ABC):
 
     def _boundary_points_side(self, grid, side):
         """Coordinates of boundary points on a grid side."""
-        if side == "west":
-            slc = np.s_[:, 0]
-        elif side == "east":
-            slc = np.s_[:, -1]
-        elif side == "south":
+        # Return the boundary points in CCW orderf
+        if side.side == "south":
             slc = np.s_[0, :]
-        elif side == "north":
-            slc = np.s_[-1, :]
-        elif side == "sw":
+        elif side.side == "east":
+            slc = np.s_[:, -1]
+        elif side.side == "north":
+            slc = np.s_[-1, ::-1]
+        elif side.side == "west":
+            slc = np.s_[::-1, 0]
+        elif side.side == "sw":
             slc = np.s_[0, 0]
-        elif side == "se":
+        elif side.side == "se":
             slc = np.s_[0, -1]
-        elif side == "nw":
+        elif side.side == "nw":
             slc = np.s_[-1, 0]
-        elif side == "ne":
+        elif side.side == "ne":
             slc = np.s_[-1, -1]
-        return grid.x[slc], grid.y[slc]
+        xbnd = grid.x[slc]
+        ybnd = grid.y[slc]
+        # Reverse if order is clockwise
+        if side.direction == "clockwise":
+            xbnd = np.flip(xbnd)
+            ybnd = np.flip(ybnd)
+        return xbnd, ybnd
 
 
 class BoundspecSide(BoundspecBase):
@@ -216,6 +224,15 @@ class BoundspecSegmentXY(BoundspecBase):
     TODO: Support option to choose between mid-point or averaging?
     TODO: Does PAR need to be supported? Guess not as nonstationary isn't supported
     TODO: If SIDES, ensure continuous
+    TODO: Option to close each side
+    TODO: Avoid duplicate points from SIDES
+
+    Note
+    ----
+    Segments are defined from adjacent point locations so the order in which the points
+    are defined is important. When using SIDES, please ensure SIDES are adjacent to
+    each other and have correct directions (ccw or clockwise) accordint to the order in
+    which each side is prescribed.
 
     Note
     ----
@@ -236,11 +253,11 @@ class BoundspecSegmentXY(BoundspecBase):
         if isinstance(self.location, XY):
             xbnd, ybnd = self.location.x, self.location.y
         elif isinstance(self.location, SIDE):
-            xbnd, ybnd = self._boundary_points_side(grid, self.location.side)
+            xbnd, ybnd = self._boundary_points_side(grid, self.location)
         elif isinstance(self.location, SIDES):
             xbnd, ybnd = [], []
             for location in self.location.sides:
-                xb, yb = self._boundary_points_side(grid, location.side)
+                xb, yb = self._boundary_points_side(grid, location)
                 xbnd.extend(xb)
                 ybnd.extend(yb)
         return xbnd, ybnd
@@ -268,6 +285,12 @@ class BoundspecSegmentXY(BoundspecBase):
         if self.crop_data and time is not None:
             self._filter_time(time)
         ds = self._sel_boundary(grid).sortby("dir")
+
+        # If nearest, ensure points are returned at the requested positions
+        if self.sel_method == "nearest":
+            xbnd, ybnd = self._boundary_points(grid=grid)
+            ds["lon"].values = xbnd
+            ds["lat"].values = ybnd
 
         cmds = []
         for ind in range(ds.lon.size - 1):
