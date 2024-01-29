@@ -1,10 +1,15 @@
 from typing import Literal, Optional
-
+import logging
 import numpy as np
+from shapely.geometry import Polygon
 from pydantic import field_validator, Field, model_validator
 
 from rompy.core.grid import RegularGrid
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR
+
+
+logger = logging.getLogger(__name__)
+
 
 class SwanGrid(RegularGrid):
     """Regular SWAN grid in geographic space."""
@@ -118,6 +123,21 @@ class SwanGrid(RegularGrid):
         output = f"CGRID {self.cgrid} CIRCLE 36 0.0464 1. 31\n"
         output += f"{self.cgrid_read}\n"
         return output
+
+    def boundary(self, *args, **kwargs) -> tuple:
+        """Returns the grid boundary polygon.
+
+        Override the parent method to use the actual points from the regular grid
+        boundary instead of the convex hull which is not always the boundary.
+
+        """
+        x = np.concatenate(
+            [self.x[0, :], self.x[1:, -1], self.x[-1, -2::-1], self.x[-2::-1, 0]]
+        )
+        y = np.concatenate(
+            [self.y[0, :], self.y[1:, -1], self.y[-1, -2::-1], self.y[-2::-1, 0]]
+        )
+        return Polygon(zip(x, y))
 
     def nearby_spectra(self, ds_spec, dist_thres=0.05, plot=True):
         """Find points nearby and project to the boundary
