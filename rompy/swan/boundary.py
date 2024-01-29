@@ -78,7 +78,15 @@ class Boundnest1(BoundaryWaveStation):
         """
         if self.crop_data and time is not None:
             self._filter_time(time)
+
         ds = self._sel_boundary(grid).sortby("dir")
+
+        # If nearest, ensure points are returned at the requested positions
+        if self.sel_method == "nearest":
+            xbnd, ybnd = self._boundary_points(grid=grid)
+            ds["lon"].values = xbnd
+            ds["lat"].values = ybnd
+
         filename = Path(destdir) / f"{self.id}.bnd"
         ds.spec.to_swan(filename)
         cmd = f"BOUNDNEST1 NEST '{filename.name}' {self.rectangle.upper()}"
