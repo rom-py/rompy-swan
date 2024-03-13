@@ -1,13 +1,13 @@
 """SWAN interface objects."""
 import logging
-from typing import Optional, Literal, Any
+from typing import Optional, Literal, Any, Union
 from pathlib import Path
 from pydantic import Field, model_validator, field_validator, ValidationInfo
 
 from rompy.core import RompyBaseModel, TimeRange
 from rompy.swan.grid import SwanGrid
 from rompy.swan.data import SwanDataGrid
-from rompy.swan.boundary import Boundnest1
+from rompy.swan.boundary import Boundnest1, BoundspecSide, BoundspecSegmentXY
 
 from rompy.swan.subcomponents.time import TimeRangeOpen, STATIONARY, NONSTATIONARY
 
@@ -79,7 +79,9 @@ class BoundaryInterface(RompyBaseModel):
     model_type: Literal["boundary_interface", "BOUNDARY_INTERFACE"] = Field(
         default="boundary_interface", description="Model type discriminator"
     )
-    kind: Boundnest1 = Field(default=None, description="Boundary data object")
+    kind: Union[Boundnest1, BoundspecSide, BoundspecSegmentXY] = Field(
+        default=None, description="Boundary data object"
+    )
 
     def get(self, staging_dir: Path, grid: SwanGrid, period: TimeRange):
         return self.kind.get(destdir=staging_dir, grid=grid, time=period)
