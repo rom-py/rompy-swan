@@ -52,6 +52,48 @@ class SIDE(BaseSubComponent):
         return repr
 
 
+class SIDES(BaseSubComponent):
+    """Boundary over multiple side of computational domain.
+
+    .. code-block:: text
+
+        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
+        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
+        ...
+
+    Note
+    ----
+    Should not be used in case of CURVILINEAR grids.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.subcomponents.boundary import SIDE, SIDES
+        side1 = SIDE(side="west", direction="ccw")
+        side2 = SIDE(side="north", direction="ccw")
+        sides = SIDES(sides=[side1, side2])
+        print(sides.render())
+
+    """
+
+    model_type: Literal["sides", "SIDES"] = Field(
+        default="sides",
+        description="Model type discriminator",
+    )
+    sides: list[SIDE] = Field(
+        description="The sides of the grid to apply the boundary to",
+    )
+
+    def cmd(self) -> str:
+        repr = []
+        for side in self.sides:
+            repr += f"SIDE {side.side.upper()} {side.direction.upper()} "
+        return repr
+
+
 class SEGMENT(BaseSubComponent):
     """Boundary over a segment defined from points.
 

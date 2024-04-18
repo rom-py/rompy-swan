@@ -192,15 +192,7 @@ class SwanConfigComponents(BaseConfig):
     @property
     def grid(self):
         """Define a SwanGrid from the cgrid field."""
-        return SwanGrid(
-            x0=self.cgrid.grid.xp,
-            y0=self.cgrid.grid.yp,
-            rot=self.cgrid.grid.alp,
-            dx=self.cgrid.grid.dx,
-            dy=self.cgrid.grid.dy,
-            nx=self.cgrid.grid.mx + 1,
-            ny=self.cgrid.grid.my + 1,
-        )
+        return SwanGrid.from_component(self.cgrid.grid)
 
     def __call__(self, runtime) -> str:
         period = runtime.period
