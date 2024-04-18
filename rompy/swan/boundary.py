@@ -72,6 +72,8 @@ class Boundnest1(BoundaryWaveStation):
 
         Returns
         -------
+        filename: Path
+            The filename of the written boundary file.
         cmd : str
             Boundary command string to render in the SWAN INPUT file
 
@@ -90,7 +92,7 @@ class Boundnest1(BoundaryWaveStation):
         filename = Path(destdir) / f"{self.id}.bnd"
         ds.spec.to_swan(filename)
         cmd = f"BOUNDNEST1 NEST '{filename.name}' {self.rectangle.upper()}"
-        return cmd
+        return filename, cmd
 
 
 class BoundspecBase(BoundaryWaveStation, ABC):
@@ -258,6 +260,8 @@ class BoundspecSide(BoundspecBase):
 
         Returns
         -------
+        filename: Path
+            The filename of the written boundary file.
         cmd : str
             Boundary command string to render in the SWAN INPUT file
 
@@ -276,7 +280,7 @@ class BoundspecSide(BoundspecBase):
                 self._ds.spec.to_swan(Path(destdir) / filename)
             comp = CONSTANTFILE(fname=filename, seq=1)
             cmds.append(f"BOUNDSPEC {self.location.render()}{comp.render()}")
-        return "\n".join(cmds)
+        return filename, "\n".join(cmds)
 
 
 class BoundspecSegmentXY(BoundspecBase):
@@ -343,6 +347,8 @@ class BoundspecSegmentXY(BoundspecBase):
 
         Returns
         -------
+        filename: Path
+            The filename of the written boundary file.
         cmd : str
             Boundary command string to render in the SWAN INPUT file
 
@@ -371,4 +377,4 @@ class BoundspecSegmentXY(BoundspecBase):
             location = SEGMENT(points=XY(x=ds_seg.lon.values, y=ds_seg.lat.values))
             location = location.render().replace("\n", " ").replace("  ", " ")
             cmds.append(f"BOUNDSPEC {location}{file.render()}")
-        return "\n".join(cmds)
+        return filename, "\n".join(cmds)
