@@ -53,6 +53,7 @@ dependencies = [
     "tqdm",
     "xarray",
     "wavespectra",
+    "envyaml",
 ]
 dynamic = ["version"]
 
