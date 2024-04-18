@@ -84,7 +84,9 @@ class BoundaryInterface(RompyBaseModel):
     )
 
     def get(self, staging_dir: Path, grid: SwanGrid, period: TimeRange):
-        return self.kind.get(destdir=staging_dir, grid=grid, time=period)
+        filename, cmd = self.kind.get(destdir=staging_dir, grid=grid, time=period)
+        logger.info(f"Generating boundary file: {filename}")
+        return cmd
 
     def render(self, *args, **kwargs):
         """Make this class consistent with the components API."""
