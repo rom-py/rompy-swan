@@ -271,15 +271,18 @@ class BoundspecSide(BoundspecBase):
         ds = self._sel_boundary(grid).sortby("dir")
 
         cmds = []
+        filenames = []
+        # Code below allows for multiple sides but only one side is currently supported
         for ind in range(ds.lon.size):
             self._ds = ds.isel(site=ind, drop=True)
-            filename = f"{self.id}_{self.file_type}_{self.location.side}_{ind:03d}.bnd"
+            filename = Path(destdir) / f"{self.id}_{self.file_type}_{self.location.side}_{ind:03d}.bnd"
             if self.file_type == "tpar":
-                write_tpar(self.tpar, Path(destdir) / filename)
+                write_tpar(self.tpar, filename)
             elif self.file_type == "spec2d":
-                self._ds.spec.to_swan(Path(destdir) / filename)
-            comp = CONSTANTFILE(fname=filename, seq=1)
+                self._ds.spec.to_swan(filename)
+            comp = CONSTANTFILE(fname=filename.name, seq=1)
             cmds.append(f"BOUNDSPEC {self.location.render()}{comp.render()}")
+            filenames.append(filename)
         return filename, "\n".join(cmds)
 
 
@@ -347,8 +350,8 @@ class BoundspecSegmentXY(BoundspecBase):
 
         Returns
         -------
-        filename: Path
-            The filename of the written boundary file.
+        filenames: list
+            The filenames of the written boundary files.
         cmd : str
             Boundary command string to render in the SWAN INPUT file
 
@@ -364,17 +367,19 @@ class BoundspecSegmentXY(BoundspecBase):
             ds["lat"].values = ybnd
 
         cmds = []
+        filenames = []
         for ind in range(ds.lon.size - 1):
             ds_seg = ds.isel(site=slice(ind, ind+2))
             # TODO: Ensure points in segment are different
             self._ds = ds_seg.mean("site")
-            filename = f"{self.id}_{self.file_type}_{ind:03d}.bnd"
+            filename = Path(destdir) / f"{self.id}_{self.file_type}_{ind:03d}.bnd"
             if self.file_type == "tpar":
-                write_tpar(self.tpar, Path(destdir) / filename)
+                write_tpar(self.tpar, filename)
             elif self.file_type == "spec2d":
-                self._ds.spec.to_swan(Path(destdir) / filename)
-            file = CONSTANTFILE(fname=filename, seq=1)
+                self._ds.spec.to_swan(filename)
+            file = CONSTANTFILE(fname=filename.name, seq=1)
             location = SEGMENT(points=XY(x=ds_seg.lon.values, y=ds_seg.lat.values))
             location = location.render().replace("\n", " ").replace("  ", " ")
             cmds.append(f"BOUNDSPEC {location}{file.render()}")
-        return filename, "\n".join(cmds)
+            filenames.append(filename)
+        return filenames, "\n".join(cmds)
