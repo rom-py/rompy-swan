@@ -33,7 +33,7 @@ dependencies = [
     "cartopy",
     "click",
     "cloudpathlib",
-    "cookiecutter",
+    "cookiecutter>=2.6",
     "dask",
     "fsspec",
     "geopandas",
