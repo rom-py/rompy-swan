@@ -81,7 +81,7 @@ extra = [
     "zarr",
 ]
 schism = [
-    "pyschism",
+    "pyschism @ git+https://github.com/oceanum/pyschism.git"
 ]
 docs = [
     "autodoc_pydantic",
