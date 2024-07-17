@@ -82,7 +82,7 @@ extra = [
 ]
 schism = [
     "pyschism @ git+https://github.com/oceanum/pyschism.git",
-    "fiona", * missing pyschism dependency
+    "fiona", # missing pyschism dependency
 ]
 docs = [
     "autodoc_pydantic",
