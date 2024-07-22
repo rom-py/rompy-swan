@@ -327,7 +327,7 @@ class Swan_accessor(object):
         ds = self._obj
 
         # ds = ds.transpose((time,) + ds[x].dims)
-        dt = np.diff(ds[time].values).mean() / pd.to_timedelta(1, "H")
+        dt = np.diff(ds[time].values).mean() / pd.to_timedelta(1, "h")
 
         inptimes = []
         with open(output_file, "wt") as f:
