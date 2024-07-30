@@ -270,6 +270,8 @@ class BoundspecSide(BoundspecBase):
         """
         if self.crop_data and time is not None:
             self._filter_time(time)
+        if self.crop_data and grid is not None:
+            self._filter_grid(grid)
         ds = self._sel_boundary(grid).sortby("dir")
 
         cmds = []
@@ -360,6 +362,8 @@ class BoundspecSegmentXY(BoundspecBase):
         """
         if self.crop_data and time is not None:
             self._filter_time(time)
+        if self.crop_data and grid is not None:
+            self._filter_grid(grid)
         ds = self._sel_boundary(grid).sortby("dir")
 
         # If nearest, ensure points are returned at the requested positions
