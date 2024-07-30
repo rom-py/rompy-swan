@@ -80,6 +80,8 @@ class Boundnest1(BoundaryWaveStation):
         """
         if self.crop_data and time is not None:
             self._filter_time(time)
+        if self.crop_data and grid is not None:
+            self._filter_grid(grid)
 
         ds = self._sel_boundary(grid).sortby("dir")
 
