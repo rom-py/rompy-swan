@@ -68,6 +68,11 @@ rompy = "rompy.cli:main"
 [project.entry-points."intake.drivers"]
 "netcdf_fcstack" = "rompy.intake:NetCDFFCStackSource"
 
+[project.entry-points."rompy.config"]
+swan = "rompy.swan.config:SwanConfig"
+swan_components = "rompy.swan.config:SwanConfigComponents"
+schism = "rompy.schism.config:SchismCSIROConfig"
+
 [project.entry-points."intake.catalogs"]
 "rompy_data" = "rompy:cat"
 
