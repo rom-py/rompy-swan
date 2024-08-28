@@ -73,6 +73,9 @@ swan = "rompy.swan.config:SwanConfig"
 swan_components = "rompy.swan.config:SwanConfigComponents"
 schism = "rompy.schism.config:SchismCSIROConfig"
 
+[project.entry-points."rompy.data_source"]
+
+
 [project.entry-points."intake.catalogs"]
 "rompy_data" = "rompy:cat"
 
