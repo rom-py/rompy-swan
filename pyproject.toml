@@ -78,6 +78,7 @@ dataset = "rompy.core.source:SourceDataset"
 file = "rompy.core.source:SourceFile"
 intake = "rompy.core.source:SourceIntake"
 datamesh = "rompy.core.source:SourceDatamesh"
+wavespectra = "rompy.core.source:SourceWavespectra"
 
 [project.entry-points."intake.catalogs"]
 "rompy_data" = "rompy:cat"
