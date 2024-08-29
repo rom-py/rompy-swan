@@ -1,16 +1,16 @@
 """SWAN interface objects."""
+
 import logging
-from typing import Optional, Literal, Any, Union
 from pathlib import Path
-from pydantic import Field, model_validator, field_validator, ValidationInfo
+from typing import Any, Literal, Optional, Union
+
+from pydantic import Field, ValidationInfo, field_validator, model_validator
 
 from rompy.core import RompyBaseModel, TimeRange
-from rompy.swan.grid import SwanGrid
+from rompy.swan.boundary import Boundnest1, BoundspecSegmentXY, BoundspecSide
 from rompy.swan.data import SwanDataGrid
-from rompy.swan.boundary import Boundnest1, BoundspecSide, BoundspecSegmentXY
-
-from rompy.swan.subcomponents.time import TimeRangeOpen, STATIONARY, NONSTATIONARY
-
+from rompy.swan.grid import SwanGrid
+from rompy.swan.subcomponents.time import NONSTATIONARY, STATIONARY, TimeRangeOpen
 
 logger = logging.getLogger(__name__)
 
