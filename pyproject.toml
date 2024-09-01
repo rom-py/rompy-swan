@@ -69,6 +69,7 @@ rompy = "rompy.cli:main"
 "netcdf_fcstack" = "rompy.intake:NetCDFFCStackSource"
 
 [project.entry-points."rompy.config"]
+base = "rompy.core.config:BaseConfig"
 swan = "rompy.swan.config:SwanConfig"
 swan_components = "rompy.swan.config:SwanConfigComponents"
 schism = "rompy.schism.config:SchismCSIROConfig"
