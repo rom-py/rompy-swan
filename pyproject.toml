@@ -68,6 +68,19 @@ rompy = "rompy.cli:main"
 [project.entry-points."intake.drivers"]
 "netcdf_fcstack" = "rompy.intake:NetCDFFCStackSource"
 
+[project.entry-points."rompy.config"]
+base = "rompy.core.config:BaseConfig"
+swan = "rompy.swan.config:SwanConfig"
+swan_components = "rompy.swan.config:SwanConfigComponents"
+schism = "rompy.schism.config:SchismCSIROConfig"
+
+[project.entry-points."rompy.source"]
+dataset = "rompy.core.source:SourceDataset"
+file = "rompy.core.source:SourceFile"
+intake = "rompy.core.source:SourceIntake"
+datamesh = "rompy.core.source:SourceDatamesh"
+wavespectra = "rompy.core.source:SourceWavespectra"
+
 [project.entry-points."intake.catalogs"]
 "rompy_data" = "rompy:cat"
 
