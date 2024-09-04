@@ -5,7 +5,7 @@ import pytest
 import os
 from envyaml import EnvYAML
 
-from rompy.core import SourceIntake
+from rompy.core.source import SourceIntake
 from rompy.model import ModelRun
 from rompy.swan.config import SwanConfigComponents
 from rompy.swan import Boundnest1
