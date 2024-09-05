@@ -72,7 +72,9 @@ rompy = "rompy.cli:main"
 base = "rompy.core.config:BaseConfig"
 swan = "rompy.swan.config:SwanConfig"
 swan_components = "rompy.swan.config:SwanConfigComponents"
-schism = "rompy.schism.config:SchismCSIROConfig"
+schismcsiro = "rompy.schism.config:SchismCSIROConfig"
+schism = "rompy.schism.config:SCHISMConfig"
+schismcsiromigration = "rompy.schism.config:SchismCSIROMigrationConfig"
 
 [project.entry-points."rompy.source"]
 dataset = "rompy.core.source:SourceDataset"
