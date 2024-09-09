@@ -169,9 +169,9 @@ class STARTUP(BaseGroupComponent):
 # =====================================================================================
 # Inpgrid
 # =====================================================================================
-INPGRID_TYPES = Annotated[
-    list[Union[REGULAR, CURVILINEAR, UNSTRUCTURED, WIND, ICE]],
-    Field(discriminator="model_type"),
+INPGRID_TYPE = Annotated[
+    Union[REGULAR, CURVILINEAR, UNSTRUCTURED, WIND, ICE],
+    Field(discriminator="model_type")
 ]
 
 
@@ -238,14 +238,14 @@ class INPGRIDS(BaseGroupComponent):
     model_type: Literal["inpgrids"] = Field(
         default="inpgrids", description="Model type discriminator"
     )
-    inpgrids: INPGRID_TYPES = Field(
+    inpgrids: list[INPGRID_TYPE] = Field(
         min_length=1,
         description="List of input grid components",
     )
 
     @field_validator("inpgrids")
     @classmethod
-    def ensure_unique_grid_type(cls, inpgrids: INPGRID_TYPES) -> INPGRID_TYPES:
+    def ensure_unique_grid_type(cls, inpgrids: INPGRID_TYPE) -> INPGRID_TYPE:
         """Ensure that each grid type is unique."""
         grid_types = [inp.grid_type for inp in inpgrids if hasattr(inp, "grid_type")]
         if len(grid_types) != len(set(grid_types)):
@@ -274,35 +274,35 @@ DIFFRACTION_TYPE = Annotated[DIFFRACTION, Field(description="Diffraction compone
 SURFBEAT_TYPE = Annotated[SURFBEAT, Field(description="Surfbeat component")]
 SCAT_TYPE = Annotated[SCAT, Field(description="Scattering component")]
 OFF_TYPE = Annotated[OFFS, Field(description="Deactivate components")]
-GEN_TYPES = Annotated[
+GEN_TYPE = Annotated[
     Union[GEN1, GEN2, GEN3],
     Field(description="Wave generation component", discriminator="model_type"),
 ]
-SSWELL_TYPES = Annotated[
+SSWELL_TYPE = Annotated[
     Union[SSWELL_ROGERS, SSWELL_ARDHUIN, SSWELL_ZIEGER],
     Field(description="Swell dissipation component", discriminator="model_type"),
 ]
-WCAPPING_TYPES = Annotated[
+WCAPPING_TYPE = Annotated[
     Union[WCAPPING_KOMEN, WCAPPING_AB],
     Field(description="Whitecapping component", discriminator="model_type"),
 ]
-BREAKING_TYPES = Annotated[
+BREAKING_TYPE = Annotated[
     Union[BREAKING_CONSTANT, BREAKING_BKD],
     Field(description="Wave breaking component", discriminator="model_type"),
 ]
-FRICTION_TYPES = Annotated[
+FRICTION_TYPE = Annotated[
     Union[FRICTION_JONSWAP, FRICTION_COLLINS, FRICTION_MADSEN, FRICTION_RIPPLES],
     Field(description="Bottom friction component", discriminator="model_type"),
 ]
-TRIAD_TYPES = Annotated[
+TRIAD_TYPE = Annotated[
     Union[TRIAD, TRIAD_DCTA, TRIAD_LTA, TRIAD_SPB],
     Field(description="Triad interactions component", discriminator="model_type"),
 ]
-SICE_TYPES = Annotated[
+SICE_TYPE = Annotated[
     Union[SICE, SICE_R19, SICE_D15, SICE_M18, SICE_R21B],
     Field(description="Sea ice component", discriminator="model_type"),
 ]
-BRAGG_TYPES = Annotated[
+BRAGG_TYPE = Annotated[
     Union[BRAGG, BRAGG_FT, BRAGG_FILE],
     Field(description="Bragg scattering component", discriminator="model_type"),
 ]
@@ -338,19 +338,19 @@ class PHYSICS(BaseGroupComponent):
     model_type: Literal["physics", "PHYSICS"] = Field(
         default="physics", description="Model type discriminator"
     )
-    gen: Optional[GEN_TYPES] = Field(default=None)
-    sswell: Optional[SSWELL_TYPES] = Field(default=None)
+    gen: Optional[GEN_TYPE] = Field(default=None)
+    sswell: Optional[SSWELL_TYPE] = Field(default=None)
     negatinp: Optional[NEGATINP_TYPE] = Field(default=None)
-    wcapping: Optional[WCAPPING_TYPES] = Field(default=None)
+    wcapping: Optional[WCAPPING_TYPE] = Field(default=None)
     quadrupl: Optional[QUADRUPL_TYPE] = Field(default=None)
-    breaking: Optional[BREAKING_TYPES] = Field(default=None)
-    friction: Optional[FRICTION_TYPES] = Field(default=None)
-    triad: Optional[TRIAD_TYPES] = Field(default=None)
+    breaking: Optional[BREAKING_TYPE] = Field(default=None)
+    friction: Optional[FRICTION_TYPE] = Field(default=None)
+    triad: Optional[TRIAD_TYPE] = Field(default=None)
     vegetation: Optional[VEGETATION_TYPE] = Field(default=None)
     mud: Optional[MUD_TYPE] = Field(default=None)
-    sice: Optional[SICE_TYPES] = Field(default=None)
+    sice: Optional[SICE_TYPE] = Field(default=None)
     turbulence: Optional[TURBULENCE_TYPE] = Field(default=None)
-    bragg: Optional[BRAGG_TYPES] = Field(default=None)
+    bragg: Optional[BRAGG_TYPE] = Field(default=None)
     limiter: Optional[LIMITER_TYPE] = Field(default=None)
     obstacle: Optional[OBSTACLE_TYPE] = Field(default=None)
     setup: Optional[SETUP_TYPE] = Field(default=None)
@@ -445,11 +445,11 @@ TABLE_TYPE = Annotated[TABLE, Field(description="Table write component")]
 SPECOUT_TYPE = Annotated[SPECOUT, Field(description="Spectra write component")]
 NESTOUT_TYPE = Annotated[NESTOUT, Field(description="Nest write component")]
 TEST_TYPE = Annotated[TEST, Field(description="Intermediate write component")]
-POINTS_TYPES = Annotated[
+POINTS_TYPE = Annotated[
     Union[POINTS, POINTS_FILE],
     Field(description="Points locations component", discriminator="model_type"),
 ]
-NGRID_TYPES = Annotated[
+NGRID_TYPE = Annotated[
     Union[NGRID, NGRID_UNSTRUCTURED],
     Field(description="Ngrid locations component", discriminator="model_type"),
 ]
@@ -536,8 +536,8 @@ class OUTPUT(BaseGroupComponent):
     curve: Optional[CURVE_TYPE] = Field(default=None)
     ray: Optional[RAY_TYPE] = Field(default=None)
     isoline: Optional[ISOLINE_TYPE] = Field(default=None)
-    points: Optional[POINTS_TYPES] = Field(default=None)
-    ngrid: Optional[NGRID_TYPES] = Field(default=None)
+    points: Optional[POINTS_TYPE] = Field(default=None)
+    ngrid: Optional[NGRID_TYPE] = Field(default=None)
     quantity: Optional[QUANTITY_TYPE] = Field(default=None)
     output_options: Optional[OUTOPT_TYPE] = Field(default=None)
     block: Optional[BLOCK_TYPE] = Field(default=None)
@@ -703,7 +703,7 @@ class OUTPUT(BaseGroupComponent):
 # =====================================================================================
 # Lockup
 # =====================================================================================
-COMPUTE_TYPES = Annotated[
+COMPUTE_TYPE = Annotated[
     Union[COMPUTE_STAT, COMPUTE_NONSTAT],
     Field(description="Compute components", discriminator="model_type"),
 ]
@@ -753,7 +753,7 @@ class LOCKUP(BaseComponent):
     model_type: Literal["lockup", "LOCKUP"] = Field(
         default="lockup", description="Model type discriminator"
     )
-    compute: COMPUTE_TYPES = Field(description="Compute components")
+    compute: COMPUTE_TYPE = Field(description="Compute components")
 
     def cmd(self) -> list:
         """Command file strings for this component."""
