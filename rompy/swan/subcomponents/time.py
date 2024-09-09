@@ -119,8 +119,8 @@ class Delt(BaseSubComponent):
 
     """
 
-    model_type: Literal["delt", "Delt", "DELT"] = Field(
-        default="tdelt", description="Model type discriminator"
+    model_type: Literal["delt"] = Field(
+        default="delt", description="Model type discriminator"
     )
     delt: timedelta = Field(description="Time interval")
     dfmt: Literal["sec", "min", "hr", "day"] = Field(
