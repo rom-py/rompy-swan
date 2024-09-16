@@ -2534,15 +2534,10 @@ class OBSTACLE_FIG(BaseComponent):
         return repr
 
 
-OBSTACLES_TYPES = Annotated[
+OBSTACLES_TYPE = Annotated[
     Union[OBSTACLE, OBSTACLE_FIG],
     Field(discriminator="model_type"),
 ]
-
-OBSTACLES_TYPE = Annotated[
-    list[OBSTACLES_TYPES], Field(description="Obstacle component")
-]
-
 
 class OBSTACLES(BaseComponent):
     """List of swan obstacles.
@@ -2587,7 +2582,7 @@ class OBSTACLES(BaseComponent):
     model_type: Literal["obstacles", "OBSTACLES"] = Field(
         default="obstacles", description="Model type discriminator"
     )
-    obstacles: OBSTACLES_TYPE
+    obstacles: list[OBSTACLES_TYPE] = Field(description="List of obstacles")
 
     def cmd(self) -> list:
         """Command file strings for this component."""

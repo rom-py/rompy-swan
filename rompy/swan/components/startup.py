@@ -148,6 +148,7 @@ class SET(BaseComponent):
             "variable water level reference is made to the commands "
             "INPGRID and READINP (SWAN default: 0)"
         ),
+        examples=[0],
     )
     nor: Optional[float] = Field(
         default=None,
