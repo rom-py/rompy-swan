@@ -67,6 +67,7 @@ from rompy.swan.components.output import (
     QUANTITIES,
     OUTPUT_OPTIONS,
     BLOCK,
+    BLOCKS,
     TABLE,
     SPECOUT,
     NESTOUT,
@@ -440,11 +441,14 @@ RAY_TYPE = Annotated[RAY, Field(description="Ray locations component")]
 ISOLINE_TYPE = Annotated[ISOLINE, Field(description="Isoline locations component")]
 QUANTITY_TYPE = Annotated[QUANTITIES, Field(description="Quantity component")]
 OUTOPT_TYPE = Annotated[OUTPUT_OPTIONS, Field(description="Output options component")]
-BLOCK_TYPE = Annotated[BLOCK, Field(description="Block write component")]
 TABLE_TYPE = Annotated[TABLE, Field(description="Table write component")]
 SPECOUT_TYPE = Annotated[SPECOUT, Field(description="Spectra write component")]
 NESTOUT_TYPE = Annotated[NESTOUT, Field(description="Nest write component")]
 TEST_TYPE = Annotated[TEST, Field(description="Intermediate write component")]
+BLOCK_TYPE = Annotated[
+    Union[BLOCK, BLOCKS],
+    Field(description="Block write component", discriminator="model_type"),
+]
 POINTS_TYPE = Annotated[
     Union[POINTS, POINTS_FILE],
     Field(description="Points locations component", discriminator="model_type"),
