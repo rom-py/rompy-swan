@@ -23,6 +23,7 @@ from rompy.swan.components.output import (
     QUANTITIES,
     OUTPUT_OPTIONS,
     BLOCK,
+    BLOCKS,
     TABLE,
     SPECOUT,
     NESTOUT,
@@ -267,6 +268,18 @@ def test_output_options(output_options):
 def test_block():
     block = BLOCK(sname="outgrid", fname="./depth-frame.nc", output=["depth"])
     block.render() == "BLOCK sname='outgrid' fname='./depth-frame.nc' DEPTH"
+
+
+def test_blocks():
+    block1 = BLOCK(sname="outgrid", fname="./depth.txt", output=["depth"])
+    block2 = BLOCK(
+        sname="outgrid",
+        fname="./output.nc",
+        output=["hsign", "hswell", "tm01", "tps", "vel", "wind"],
+    )
+    blocks = BLOCKS(components=[block1, block2])
+    assert len(blocks.components) == 2
+    assert isinstance(blocks.components[0], BLOCK)
 
 
 def test_block_nonstationary(block):
