@@ -1127,12 +1127,14 @@ class BaseWrite(BaseComponent, ABC):
     @model_validator(mode="after")
     def validate_special_names(self) -> "BaseWrite":
         special_names = ("COMPGRID", "BOTTGRID")
-        if self.sname in special_names and self.model_type.upper() != "BLOCK":
-            raise ValueError(f"Special name {self.sname} is only supported with BLOCK")
+        snames = self.sname if isinstance(self.sname, list) else [self.sname]
+        for sname in snames:
+            if sname in special_names and self.model_type.upper() != "BLOCK":
+                raise ValueError(f"Special name {sname} is only supported with BLOCK")
         return self
 
     @model_validator(mode="after")
-    def validate_times(self) -> "BLOCK":
+    def validate_times(self) -> "BaseWrite":
         if self.times is not None:
             self.times.suffix = self.suffix
         return self
@@ -1306,6 +1308,10 @@ class BLOCKS(MultiComponents):
         default="blocks", description="Model type discriminator"
     )
     components: list[BLOCK] = Field(description="BLOCK components")
+
+    @property
+    def sname(self) -> list[str]:
+        return [component.sname for component in self.components]
 
 
 class TABLE(BaseWrite):
