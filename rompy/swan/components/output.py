@@ -5,7 +5,7 @@ from abc import ABC
 from pydantic import field_validator, model_validator, Field
 
 from rompy.swan.types import BlockOptions, IDLA
-from rompy.swan.components.base import BaseComponent
+from rompy.swan.components.base import BaseComponent, MultiComponents
 from rompy.swan.subcomponents.base import XY, IJ
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR
 from rompy.swan.subcomponents.time import TimeRangeOpen
@@ -1127,12 +1127,14 @@ class BaseWrite(BaseComponent, ABC):
     @model_validator(mode="after")
     def validate_special_names(self) -> "BaseWrite":
         special_names = ("COMPGRID", "BOTTGRID")
-        if self.sname in special_names and self.model_type.upper() != "BLOCK":
-            raise ValueError(f"Special name {self.sname} is only supported with BLOCK")
+        snames = self.sname if isinstance(self.sname, list) else [self.sname]
+        for sname in snames:
+            if sname in special_names and self.model_type.upper() != "BLOCK":
+                raise ValueError(f"Special name {sname} is only supported with BLOCK")
         return self
 
     @model_validator(mode="after")
-    def validate_times(self) -> "BLOCK":
+    def validate_times(self) -> "BaseWrite":
         if self.times is not None:
             self.times.suffix = self.suffix
         return self
@@ -1273,6 +1275,43 @@ class BLOCK(BaseWrite):
         if self.times is not None:
             repr += f"\nOUTPUT {self.times.render()}"
         return repr
+
+
+class BLOCKS(MultiComponents):
+    """Write multiple spatial distributions.
+
+    .. code-block:: text
+
+        BLOCK 'sname' ->HEADER|NOHEADER 'fname1' (LAYOUT [idla]) < output > &
+            [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+        BLOCK 'sname' ->HEADER|NOHEADER 'fname2' (LAYOUT [idla]) < output > &
+            [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+        ..
+
+    This component can be used to prescribe and render multiple BLOCK components.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy.swan.components.output import BLOCK, BLOCKS
+        block1 = BLOCK(sname="outgrid", fname="./depth.txt", output=["depth"])
+        block2 = BLOCK(sname="outgrid", fname="./output.nc", output=["hsign", "hswell"])
+        blocks = BLOCKS(components=[block1, block2])
+        print(blocks.render())
+
+    """
+
+    model_type: Literal["blocks"] = Field(
+        default="blocks", description="Model type discriminator"
+    )
+    components: list[BLOCK] = Field(description="BLOCK components")
+
+    @property
+    def sname(self) -> list[str]:
+        return [component.sname for component in self.components]
 
 
 class TABLE(BaseWrite):
