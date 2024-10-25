@@ -668,7 +668,7 @@ class OUTPUT(BaseGroupComponent):
             obj = getattr(self, field)
             if obj is None:
                 continue
-            obj_snames = obj.sname
+            obj_snames = obj.sname if isinstance(obj.sname, list) else [obj.sname]
             for obj_sname in obj_snames:
                 if obj_sname == sname:
                     return obj
