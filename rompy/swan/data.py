@@ -210,7 +210,7 @@ class Swan_accessor(object):
 
         """
         return SwanGrid(
-            gridtype="REG",
+            grid_type="REG",
             x0=float(self._obj[x].min()),
             y0=float(self._obj[y].min()),
             dx=float(np.diff(self._obj[x]).mean()),
