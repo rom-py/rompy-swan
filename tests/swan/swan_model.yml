@@ -266,6 +266,7 @@ output:
       - output: [hswell]
         fswell: 0.125
   block:
+    model_type: block
     sname: COMPGRID
     fname: ./swangrid.nc
     output: [depth, hsign, tps, dir]
