@@ -67,6 +67,7 @@ from rompy.swan.components.output import (
     QUANTITIES,
     OUTPUT_OPTIONS,
     BLOCK,
+    BLOCKS,
     TABLE,
     SPECOUT,
     NESTOUT,
@@ -440,11 +441,14 @@ RAY_TYPE = Annotated[RAY, Field(description="Ray locations component")]
 ISOLINE_TYPE = Annotated[ISOLINE, Field(description="Isoline locations component")]
 QUANTITY_TYPE = Annotated[QUANTITIES, Field(description="Quantity component")]
 OUTOPT_TYPE = Annotated[OUTPUT_OPTIONS, Field(description="Output options component")]
-BLOCK_TYPE = Annotated[BLOCK, Field(description="Block write component")]
 TABLE_TYPE = Annotated[TABLE, Field(description="Table write component")]
 SPECOUT_TYPE = Annotated[SPECOUT, Field(description="Spectra write component")]
 NESTOUT_TYPE = Annotated[NESTOUT, Field(description="Nest write component")]
 TEST_TYPE = Annotated[TEST, Field(description="Intermediate write component")]
+BLOCK_TYPE = Annotated[
+    Union[BLOCK, BLOCKS],
+    Field(description="Block write component", discriminator="model_type"),
+]
 POINTS_TYPE = Annotated[
     Union[POINTS, POINTS_FILE],
     Field(description="Points locations component", discriminator="model_type"),
@@ -555,16 +559,17 @@ class OUTPUT(BaseGroupComponent):
             obj = getattr(self, write)
             if obj is None:
                 continue
-            sname = obj.sname
-            if sname in SPECIAL_NAMES:
-                return self
-            try:
-                self._filter_location(sname)
-            except ValueError as err:
-                raise ValueError(
-                    f"Write component '{write}' specified with sname='{sname}' but no "
-                    f"location component with sname='{sname}' has been defined"
-                ) from err
+            snames = obj.sname if isinstance(obj.sname, list) else [obj.sname]
+            for sname in snames:
+                if sname in SPECIAL_NAMES:
+                    return self
+                try:
+                    self._filter_location(sname)
+                except ValueError as err:
+                    raise ValueError(
+                        f"Write component '{write}' specified with sname='{sname}' but "
+                        f"no location component with sname='{sname}' has been defined"
+                    ) from err
         return self
 
     @model_validator(mode="after")
@@ -583,16 +588,19 @@ class OUTPUT(BaseGroupComponent):
     def block_with_frame_or_group(self) -> "OUTPUT":
         """Ensure Block is only defined for FRAME or GROUP locations."""
         if self.block is not None:
-            sname = self.block.sname
-            if sname in ["BOTTGRID", "COMPGRID"]:
-                return self
-            location = self._filter_location(sname)
-            component = location.model_type.upper().split("_")[0]
-            if component not in ["FRAME", "GROUP"]:
-                raise ValueError(
-                    f"Block sname='{sname}' specified with {component} Location "
-                    "component but only only FRAME or GROUP components are supported"
-                )
+            snames = self.block.sname
+            if isinstance(snames, str):
+                snames = [self.block.sname]
+            for sname in snames:
+                if sname not in ["BOTTGRID", "COMPGRID"]:
+                    location = self._filter_location(sname)
+                    component = location.model_type.upper().split("_")[0]
+                    if component not in ["FRAME", "GROUP"]:
+                        raise ValueError(
+                            f"Block sname='{sname}' specified with {component} "
+                            "location component but only only FRAME or GROUP "
+                            "components are supported"
+                        )
         return self
 
     @model_validator(mode="after")
@@ -674,7 +682,8 @@ class OUTPUT(BaseGroupComponent):
         if self.group is not None:
             repr += [f"{self.group.cmd()}"]
         if self.curve is not None:
-            repr += self.curve.cmd()  # Component renders a list
+            # Component renders a list
+            repr += self.curve.cmd()
         if self.ray is not None:
             repr += [f"{self.ray.cmd()}"]
         if self.isoline is not None:
@@ -684,11 +693,17 @@ class OUTPUT(BaseGroupComponent):
         if self.ngrid is not None:
             repr += [f"{self.ngrid.cmd()}"]
         if self.quantity is not None:
-            repr += self.quantity.cmd()  # Component renders a list
+            # Component renders a list
+            repr += self.quantity.cmd()
         if self.output_options is not None:
             repr += [f"{self.output_options.cmd()}"]
         if self.block is not None:
-            repr += [f"{self.block.cmd()}"]
+            # Component may or may not render a list, handles both
+            cmds = self.block.cmd()
+            if not isinstance(cmds, list):
+                cmds = [cmds]
+            for cmd in cmds:
+                repr += [f"{cmd}"]
         if self.table is not None:
             repr += [f"{self.table.cmd()}"]
         if self.specout is not None:

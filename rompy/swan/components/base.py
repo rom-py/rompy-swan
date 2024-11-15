@@ -115,3 +115,15 @@ class BaseComponent(RompyBaseModel):
             cmd_lines = [cmd_lines]
         cmd_lines = [self._render_split_cmd(cmd_line) for cmd_line in cmd_lines]
         return "\n".join(cmd_lines)
+
+
+class MultiComponents(BaseComponent):
+    """Mixin for components that can have multiple components."""
+
+    components: list = Field(description="The components to render")
+
+    def cmd(self) -> list[str]:
+        repr = []
+        for component in self.components:
+            repr += [component.cmd()]
+        return repr
