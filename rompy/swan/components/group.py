@@ -1,4 +1,5 @@
 """SWAN group components."""
+
 import logging
 from typing import Annotated, Literal, Optional, Union, Any
 from pydantic import Field, model_validator, field_validator
@@ -172,7 +173,7 @@ class STARTUP(BaseGroupComponent):
 # =====================================================================================
 INPGRID_TYPE = Annotated[
     Union[REGULAR, CURVILINEAR, UNSTRUCTURED, WIND, ICE],
-    Field(discriminator="model_type")
+    Field(discriminator="model_type"),
 ]
 
 

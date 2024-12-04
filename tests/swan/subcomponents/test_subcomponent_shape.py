@@ -1,4 +1,5 @@
 """Test SWAN subcomponents."""
+
 from rompy.swan.subcomponents.spectrum import JONSWAP, TMA, PM, GAUSS, BIN, SHAPESPEC
 
 

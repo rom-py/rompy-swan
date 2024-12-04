@@ -7,6 +7,7 @@ How to subclass
 * Overwrite the `cmd` method to return the SWAN input file string
 
 """
+
 import logging
 from typing import Literal, Optional
 from abc import abstractmethod

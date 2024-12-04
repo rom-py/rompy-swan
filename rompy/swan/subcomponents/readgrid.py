@@ -1,4 +1,5 @@
 """Readgrid subcomponents."""
+
 import logging
 from typing import Literal, Optional, Union
 from abc import ABC

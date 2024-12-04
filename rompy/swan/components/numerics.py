@@ -1,4 +1,5 @@
 """Model numerics components."""
+
 import logging
 from typing import Literal, Optional, Union, Annotated
 from pydantic import Field

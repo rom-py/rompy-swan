@@ -1,4 +1,5 @@
 """Test lockup components."""
+
 import pytest
 from copy import deepcopy
 from pydantic import ValidationError
@@ -12,6 +13,7 @@ from rompy.swan.components.lockup import (
     COMPUTE_NONSTAT,
     STOP,
 )
+
 
 @pytest.fixture(scope="module")
 def times():
@@ -72,7 +74,9 @@ def test_compute_nonstationary_single_with_hotfile(times):
 def test_compute_nonstationary_multiple_with_hotfiles(times):
     hottimes = ["1990-01-01T06:00:00", "1990-01-01T12:00:00", "1990-01-01T18:00:00"]
     compute = COMPUTE_NONSTAT(
-        times=times, hotfile={"fname": "hotfile"}, hottimes=hottimes,
+        times=times,
+        hotfile={"fname": "hotfile"},
+        hottimes=hottimes,
     )
     cmds = compute.render().split("\n")
     assert len(cmds) == 7

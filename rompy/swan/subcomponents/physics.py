@@ -1,4 +1,5 @@
 """SWAN physics subcomponents."""
+
 from typing import Annotated, Literal, Optional
 from pydantic import field_validator, Field, model_validator
 from abc import ABC

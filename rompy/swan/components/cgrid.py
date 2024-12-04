@@ -1,4 +1,5 @@
 """Computational grid for SWAN."""
+
 import logging
 from pydantic import Field, model_validator
 from typing import Literal, Optional

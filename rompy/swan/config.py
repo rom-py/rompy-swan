@@ -46,9 +46,9 @@ class SwanConfig(BaseConfig):
     outputs: Outputs = Field(Outputs(), description="The outputs for SWAN.")
     spectra_file: str = Field("boundary.spec", description="The spectra file for SWAN.")
     template: str = Field(DEFAULT_TEMPLATE, description="The template for SWAN.")
-    _datefmt: Annotated[
-        str, Field(description="The date format for SWAN.")
-    ] = "%Y%m%d.%H%M%S"
+    _datefmt: Annotated[str, Field(description="The date format for SWAN.")] = (
+        "%Y%m%d.%H%M%S"
+    )
     # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
 
     @property

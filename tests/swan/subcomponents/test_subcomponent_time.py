@@ -1,4 +1,5 @@
 """Test time sub-component."""
+
 import pytest
 from datetime import datetime, timedelta
 

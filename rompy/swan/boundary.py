@@ -1,4 +1,5 @@
 """SWAN boundary classes."""
+
 import logging
 from pathlib import Path
 from typing import Literal, Optional, Union, Annotated
@@ -14,7 +15,15 @@ from rompy.core.boundary import BoundaryWaveStation
 from rompy.swan.grid import SwanGrid
 from rompy.swan.components.boundary import BOUNDSPEC
 from rompy.swan.subcomponents.base import BaseSubComponent, XY, IJ
-from rompy.swan.subcomponents.boundary  import SIDE, SIDES, SEGMENT, VARIABLEFILE, VARIABLEPAR, CONSTANTFILE, CONSTANTPAR
+from rompy.swan.subcomponents.boundary import (
+    SIDE,
+    SIDES,
+    SEGMENT,
+    VARIABLEFILE,
+    VARIABLEPAR,
+    CONSTANTFILE,
+    CONSTANTPAR,
+)
 from rompy.swan.subcomponents.spectrum import SHAPESPEC
 
 logger = logging.getLogger(__name__)
@@ -99,6 +108,7 @@ class Boundnest1(BoundaryWaveStation):
 
 class BoundspecBase(BoundaryWaveStation, ABC):
     """Base class for SWAN BOUNDSPEC data classes."""
+
     model_type: Literal["boundspecbase", "BOUNDSPECBASE"] = Field(
         default="boundspecbase", description="Model type discriminator"
     )
@@ -279,7 +289,10 @@ class BoundspecSide(BoundspecBase):
         # Code below allows for multiple sides but only one side is currently supported
         for ind in range(ds.lon.size):
             self._ds = ds.isel(site=ind, drop=True)
-            filename = Path(destdir) / f"{self.id}_{self.file_type}_{self.location.side}_{ind:03d}.bnd"
+            filename = (
+                Path(destdir)
+                / f"{self.id}_{self.file_type}_{self.location.side}_{ind:03d}.bnd"
+            )
             if self.file_type == "tpar":
                 write_tpar(self.tpar, filename)
             elif self.file_type == "spec2d":
@@ -375,7 +388,7 @@ class BoundspecSegmentXY(BoundspecBase):
         cmds = []
         filenames = []
         for ind in range(ds.lon.size - 1):
-            ds_seg = ds.isel(site=slice(ind, ind+2))
+            ds_seg = ds.isel(site=slice(ind, ind + 2))
             # TODO: Ensure points in segment are different
             self._ds = ds_seg.mean("site")
             filename = Path(destdir) / f"{self.id}_{self.file_type}_{ind:03d}.bnd"

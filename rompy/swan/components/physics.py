@@ -1,4 +1,5 @@
 """Model physics components."""
+
 import logging
 from typing import Any, Literal, Optional, Union, Annotated
 from pydantic import field_validator, model_validator, Field, ValidationInfo
@@ -2538,6 +2539,7 @@ OBSTACLES_TYPE = Annotated[
     Union[OBSTACLE, OBSTACLE_FIG],
     Field(discriminator="model_type"),
 ]
+
 
 class OBSTACLES(BaseComponent):
     """List of swan obstacles.

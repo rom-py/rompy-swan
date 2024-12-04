@@ -1,4 +1,5 @@
 """Test output components."""
+
 import copy
 import pytest
 import numpy as np
@@ -166,7 +167,7 @@ def test():
         points=dict(
             model_type="xy",
             x=np.linspace(172.5, 174.0, 25),
-            y=25*[-38],
+            y=25 * [-38],
         ),
         fname_s2d="2d_variance_density.test",
     )
@@ -248,7 +249,7 @@ def test_ngrid_unstructured():
         dict(output=["hsign"], fswell=0.08),
         dict(output=["per"], short="Tm-1,0", power=0),
         dict(output=["transp", "force"], coord="frame"),
-    ]
+    ],
 )
 def test_quantity(kwargs):
     quant = QUANTITY(**kwargs)
@@ -327,27 +328,27 @@ def test_test_max50():
             points=dict(
                 model_type="xy",
                 x=np.linspace(172.5, 174.0, 60),
-                y=60*[-38],
+                y=60 * [-38],
             ),
             fname_s2d="2d_variance_density.test",
         )
 
 
 def test_output_group_all_set(
-        frame,
-        group,
-        curves,
-        ray,
-        isoline,
-        points,
-        ngrid,
-        quantities,
-        output_options,
-        block,
-        table,
-        specout,
-        nestout,
-    ):
+    frame,
+    group,
+    curves,
+    ray,
+    isoline,
+    points,
+    ngrid,
+    quantities,
+    output_options,
+    block,
+    table,
+    specout,
+    nestout,
+):
     output = OUTPUT(
         frame=frame,
         group=group,

@@ -1,4 +1,5 @@
 """Test physics components."""
+
 import pytest
 from pydantic import ValidationError
 
@@ -110,7 +111,9 @@ def test_triad_lta():
 def test_triad_spb():
     phys = TRIAD_SPB()
     assert phys.render() == "TRIAD SPB"
-    phys = TRIAD_SPB(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.9, a=0.95, b=0.0)
+    phys = TRIAD_SPB(
+        biphase=dict(model_type="dewit", lpar=0.0), trfac=0.9, a=0.95, b=0.0
+    )
     assert phys.render() == "TRIAD SPB trfac=0.9 a=0.95 b=0.0 BIPHASE DEWIT lpar=0.0"
 
 

@@ -1,4 +1,5 @@
 """Base class for SWAN sub-components."""
+
 from typing import Literal, Optional
 from abc import ABC
 from pydantic import ConfigDict, Field, model_validator
