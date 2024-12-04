@@ -1,4 +1,5 @@
 """Types for the swan wrapper."""
+
 from enum import Enum, IntEnum
 
 

@@ -1,4 +1,5 @@
 """Input grid for SWAN."""
+
 from typing import Literal, Union, Annotated, Optional
 from pathlib import Path
 from pydantic import Field, model_validator
@@ -394,4 +395,3 @@ class ICE(BaseComponent):
 
     def cmd(self):
         return f"ICE aice={self.aice} hice={self.hice}"
-

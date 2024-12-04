@@ -1,4 +1,5 @@
 """SWAN boundary subcomponents."""
+
 import logging
 from typing import Annotated, Optional, Literal, Union
 from pydantic import Field, model_validator

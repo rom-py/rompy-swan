@@ -1,4 +1,5 @@
 """Test SWAN boundary components."""
+
 import pytest
 
 from rompy.swan.components.boundary import (

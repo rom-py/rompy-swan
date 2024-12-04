@@ -1,4 +1,5 @@
 """Model output components."""
+
 import logging
 from typing import Literal, Optional, Union, Annotated
 from abc import ABC

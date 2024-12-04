@@ -1,4 +1,5 @@
 """Test swan_config class."""
+
 # import pytest
 # import logging
 # from rompy.swan.config import SwanConfigComponents as SwanConfig

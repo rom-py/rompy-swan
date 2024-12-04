@@ -1,4 +1,5 @@
 """Model start up components."""
+
 import logging
 from typing import Literal, Optional
 from pydantic import field_validator, Field

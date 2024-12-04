@@ -1,4 +1,5 @@
 """Test base component."""
+
 from string import ascii_lowercase, ascii_uppercase
 from typing import Literal
 

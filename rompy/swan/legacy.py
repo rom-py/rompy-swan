@@ -1,4 +1,5 @@
 """Legacy objects in SwanConfig."""
+
 import logging
 from typing import Union, Annotated, Optional, Literal
 from pathlib import Path

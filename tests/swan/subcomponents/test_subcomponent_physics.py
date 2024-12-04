@@ -1,4 +1,5 @@
 """Test physics sub-components."""
+
 import pytest
 from pydantic import ValidationError
 

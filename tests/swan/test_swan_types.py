@@ -1,4 +1,5 @@
 """Test swan_types."""
+
 import pytest
 from rompy.swan.types import IDLA, GridOptions, BoundShapeOptions, SideOptions
 

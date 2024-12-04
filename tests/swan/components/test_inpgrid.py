@@ -1,4 +1,5 @@
 """Test inpgrid component."""
+
 import pytest
 import logging
 from pydantic import ValidationError
@@ -26,7 +27,9 @@ def readinp():
 @pytest.fixture(scope="module")
 def nonstat():
     yield NONSTATIONARY(
-        tbeg="2023-01-01T00:00:00", tend="2023-02-01T00:00:00", delt="PT30M",
+        tbeg="2023-01-01T00:00:00",
+        tend="2023-02-01T00:00:00",
+        delt="PT30M",
     )
 
 
@@ -115,9 +118,7 @@ def test_inpgrids(nonstat, readinp):
         readinp=readinp,
     )
 
-    inpgrids = INPGRIDS(
-        inpgrids=[bottom, wind]
-    )
+    inpgrids = INPGRIDS(inpgrids=[bottom, wind])
     logger.info(inpgrids.render())
 
 
@@ -149,6 +150,4 @@ def test_inpgrids_unique_var(nonstat, readinp):
     )
 
     with pytest.raises(ValidationError):
-        inpgrids = INPGRIDS(
-            inpgrids=[bottom, wind]
-        )
+        inpgrids = INPGRIDS(inpgrids=[bottom, wind])

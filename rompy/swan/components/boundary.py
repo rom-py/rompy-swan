@@ -1,4 +1,5 @@
 """Boundary for SWAN."""
+
 from typing import Literal, Optional
 from pathlib import Path
 from pydantic import Field

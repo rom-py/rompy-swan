@@ -1,4 +1,5 @@
 """Test cgrid component."""
+
 import pytest
 
 from rompy.swan.subcomponents.readgrid import GRIDREGULAR

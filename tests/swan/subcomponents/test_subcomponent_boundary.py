@@ -1,4 +1,5 @@
 """Test subcomponents."""
+
 import pytest
 from pydantic import ValidationError
 

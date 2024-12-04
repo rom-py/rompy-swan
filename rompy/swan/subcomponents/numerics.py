@@ -1,4 +1,5 @@
 """SWAN numerics subcomponents."""
+
 from typing import Literal, Optional, Union
 from pydantic import Field
 

@@ -1,4 +1,5 @@
 """Test startup components."""
+
 import pytest
 from pydantic import ValidationError
 

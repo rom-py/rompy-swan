@@ -1,4 +1,5 @@
 """Spectrum subcomponents."""
+
 import logging
 from typing import Any, Literal, Optional
 from pydantic import Field, model_validator
