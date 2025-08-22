@@ -11,9 +11,9 @@ from test_utils.logging import get_test_logger
 # Initialize logger
 logger = get_test_logger(__name__)
 
-from rompy.swan.subcomponents.time import STATIONARY, NONSTATIONARY
-from rompy.swan.components.group import LOCKUP
-from rompy.swan.components.lockup import (
+from rompy_swan.subcomponents.time import STATIONARY, NONSTATIONARY
+from rompy_swan.components.group import LOCKUP
+from rompy_swan.components.lockup import (
     COMPUTE,
     HOTFILE,
     COMPUTE_STAT,

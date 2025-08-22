@@ -11,8 +11,8 @@ from typing import Literal, Optional, Union
 from pydantic import Field, field_validator, model_validator
 
 from rompy.logging import get_logger
-from rompy.swan.subcomponents.base import BaseSubComponent
-from rompy.swan.types import IDLA, GridOptions
+from rompy_swan.subcomponents.base import BaseSubComponent
+from rompy_swan.types import IDLA, GridOptions
 
 logger = get_logger(__name__)
 
@@ -39,7 +39,7 @@ class GRIDREGULAR(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.readgrid import GRIDREGULAR
+        from rompy_swan.subcomponents.readgrid import GRIDREGULAR
         kwargs = dict(xp=173, yp=-40, alp=0, xlen=2, ylen=2, mx=199, my=199)
         grid = GRIDREGULAR(suffix="c", **kwargs)
         print(grid.render())
@@ -235,7 +235,7 @@ class READCOORD(READGRID):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.readgrid import READCOORD
+        from rompy_swan.subcomponents.readgrid import READCOORD
         readcoord = READCOORD(
             fac=1.0,
             fname="coords.txt",
@@ -277,7 +277,7 @@ class READINP(READGRID):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.readgrid import READINP
+        from rompy_swan.subcomponents.readgrid import READINP
         readinp = READINP(
             grid_type="wind",
             fname1="wind.txt",

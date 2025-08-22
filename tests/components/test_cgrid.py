@@ -8,8 +8,8 @@ from test_utils.logging import get_test_logger
 # Initialize logger
 logger = get_test_logger(__name__)
 
-from rompy.swan.subcomponents.readgrid import GRIDREGULAR
-from rompy.swan.components.cgrid import (
+from rompy_swan.subcomponents.readgrid import GRIDREGULAR
+from rompy_swan.components.cgrid import (
     SPECTRUM,
     CGRID,
     REGULAR,

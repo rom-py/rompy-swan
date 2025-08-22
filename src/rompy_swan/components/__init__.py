@@ -1,3 +1,3 @@
-from rompy.swan.components import cgrid
-from rompy.swan.components import inpgrid
-from rompy.swan.grid import SwanGrid
+from rompy_swan.components import cgrid
+from rompy_swan.components import inpgrid
+from rompy_swan.grid import SwanGrid

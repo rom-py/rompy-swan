@@ -9,5 +9,5 @@ SWAN numerics commands
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.components.numerics.PROP
-    rompy.swan.components.numerics.NUMERIC
+    rompy_swan.components.numerics.PROP
+    rompy_swan.components.numerics.NUMERIC

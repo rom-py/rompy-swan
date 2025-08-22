@@ -12,9 +12,9 @@ logger = get_test_logger(__name__)
 import numpy as np
 from pydantic import ValidationError
 
-from rompy.swan.subcomponents.time import TimeRangeOpen
-from rompy.swan.components.group import OUTPUT
-from rompy.swan.components.output import (
+from rompy_swan.subcomponents.time import TimeRangeOpen
+from rompy_swan.components.group import OUTPUT
+from rompy_swan.components.output import (
     SPECIAL_NAMES,
     BaseLocation,
     FRAME,

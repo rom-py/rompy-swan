@@ -11,12 +11,12 @@ from typing import Annotated, Literal, Optional, Union
 from pydantic import Field, field_validator, model_validator
 
 from rompy.logging import get_logger
-from rompy.swan.components.base import BaseComponent, MultiComponents
-from rompy.swan.subcomponents.base import IJ, XY
-from rompy.swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
-from rompy.swan.subcomponents.readgrid import GRIDREGULAR
-from rompy.swan.subcomponents.time import TimeRangeOpen
-from rompy.swan.types import IDLA, BlockOptions
+from rompy_swan.components.base import BaseComponent, MultiComponents
+from rompy_swan.subcomponents.base import IJ, XY
+from rompy_swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
+from rompy_swan.subcomponents.readgrid import GRIDREGULAR
+from rompy_swan.subcomponents.time import TimeRangeOpen
+from rompy_swan.types import IDLA, BlockOptions
 
 logger = get_logger(__name__)
 
@@ -49,7 +49,7 @@ class BaseLocation(BaseComponent, ABC):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import BaseLocation
+        from rompy_swan.components.output import BaseLocation
         loc = BaseLocation(sname="outsites")
         print(loc.render())
 
@@ -101,7 +101,7 @@ class FRAME(BaseLocation):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import FRAME
+        from rompy_swan.components.output import FRAME
         loc = FRAME(
             sname="outgrid",
             grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
@@ -160,7 +160,7 @@ class GROUP(BaseLocation):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import GROUP
+        from rompy_swan.components.output import GROUP
         loc = GROUP(sname="subgrid", ix1=20, iy1=0, ix2=50, iy2=100)
         print(loc.render())
 
@@ -224,7 +224,7 @@ class CURVE(BaseLocation):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import CURVE
+        from rompy_swan.components.output import CURVE
         loc = CURVE(
             sname="outcurve",
             xp1=172,
@@ -303,7 +303,7 @@ class CURVES(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import CURVE, CURVES
+        from rompy_swan.components.output import CURVE, CURVES
         loc1 = CURVE(
             sname="c1", xp1=7, yp1=-40, npts=[3, 3], xp=[7, 9], yp=[-38, -38],
         )
@@ -371,7 +371,7 @@ class RAY(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import RAY
+        from rompy_swan.components.output import RAY
         loc = RAY(
             rname="outray",
             xp1=171.9,
@@ -492,7 +492,7 @@ class ISOLINE(BaseLocation):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import ISOLINE
+        from rompy_swan.components.output import ISOLINE
         loc = ISOLINE(sname="outcurve", rname="outray", dep_type="depth", dep=12.0)
         print(loc.render())
 
@@ -550,7 +550,7 @@ class POINTS(BaseLocation):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import POINTS
+        from rompy_swan.components.output import POINTS
         loc = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
         print(loc.render())
 
@@ -604,7 +604,7 @@ class POINTS_FILE(BaseLocation):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import POINTS_FILE
+        from rompy_swan.components.output import POINTS_FILE
         loc = POINTS_FILE(sname="outpts", fname="./output_locations.txt")
         print(loc.render())
 
@@ -652,7 +652,7 @@ class NGRID(BaseLocation):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import NGRID
+        from rompy_swan.components.output import NGRID
         loc = NGRID(
             sname="outnest",
             grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
@@ -705,7 +705,7 @@ class NGRID_UNSTRUCTURED(BaseLocation):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import NGRID_UNSTRUCTURED
+        from rompy_swan.components.output import NGRID_UNSTRUCTURED
         loc = NGRID_UNSTRUCTURED(sname="outnest", kind="triangle", fname="ngrid.txt")
         print(loc.render())
 
@@ -804,7 +804,7 @@ class QUANTITY(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import QUANTITY
+        from rompy_swan.components.output import QUANTITY
         quant = QUANTITY(output=["xp"], hexp=100)
         print(quant.render())
         quant = QUANTITY(output=["hsign", "tm01", "rtmm10"], excv=-9)
@@ -966,7 +966,7 @@ class QUANTITIES(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import QUANTITY, QUANTITIES
+        from rompy_swan.components.output import QUANTITY, QUANTITIES
         q1 = QUANTITY(output=["xp"], hexp=100)
         q2 = QUANTITY(output=["hsign", "tm01", "rtmm10"], excv=-9)
         q3 = QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
@@ -1006,7 +1006,7 @@ class OUTPUT_OPTIONS(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import OUTPUT_OPTIONS
+        from rompy_swan.components.output import OUTPUT_OPTIONS
         opts = OUTPUT_OPTIONS(
             comment="!", field=10, ndec_block=4, len=20, ndec_spec=6,
         )
@@ -1087,7 +1087,7 @@ class BaseWrite(BaseComponent, ABC):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import BaseWrite
+        from rompy_swan.components.output import BaseWrite
         write = BaseWrite(
             sname="outgrid",
             fname="./output-grid.nc",
@@ -1184,7 +1184,7 @@ class BLOCK(BaseWrite):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import BLOCK
+        from rompy_swan.components.output import BLOCK
         block = BLOCK(sname="outgrid", fname="./depth-frame.nc", output=["depth"])
         print(block.render())
         block = BLOCK(
@@ -1302,7 +1302,7 @@ class BLOCKS(MultiComponents):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import BLOCK, BLOCKS
+        from rompy_swan.components.output import BLOCK, BLOCKS
         block1 = BLOCK(sname="outgrid", fname="./depth.txt", output=["depth"])
         block2 = BLOCK(sname="outgrid", fname="./output.nc", output=["hsign", "hswell"])
         blocks = BLOCKS(components=[block1, block2])
@@ -1356,7 +1356,7 @@ class TABLE(BaseWrite):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import TABLE
+        from rompy_swan.components.output import TABLE
         table = TABLE(
             sname="outpts",
             format="noheader",
@@ -1449,7 +1449,7 @@ class SPECOUT(BaseWrite):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import SPECOUT
+        from rompy_swan.components.output import SPECOUT
         out = SPECOUT(sname="outpts", fname="./specout.swn")
         print(out.render())
         out = SPECOUT(
@@ -1507,7 +1507,7 @@ class NESTOUT(BaseWrite):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import NESTOUT
+        from rompy_swan.components.output import NESTOUT
         out = NESTOUT(
             sname="outnest",
             fname="./nestout.swn",
@@ -1554,7 +1554,7 @@ class TEST(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import TEST
+        from rompy_swan.components.output import TEST
         test = TEST(
             itest=10,
             points=dict(model_type="ij", i=[0, 0], j=[10, 20]),

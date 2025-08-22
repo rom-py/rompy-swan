@@ -10,8 +10,8 @@ from typing import Literal, Optional
 from pydantic import Field, field_validator
 
 from rompy.logging import get_logger
-from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.startup import CARTESIAN, SPHERICAL
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.subcomponents.startup import CARTESIAN, SPHERICAL
 
 logger = get_logger(__name__)
 
@@ -32,7 +32,7 @@ class PROJECT(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.startup import PROJECT
+        from rompy_swan.components.startup import PROJECT
         proj = PROJECT(nr="01")
         print(proj.render())
         proj = PROJECT(
@@ -124,7 +124,7 @@ class SET(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.startup import SET
+        from rompy_swan.components.startup import SET
         set = SET(level=0.5, direction_convention="nautical")
         print(set.render())
         set = SET(
@@ -341,7 +341,7 @@ class MODE(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.startup import MODE
+        from rompy_swan.components.startup import MODE
         mode = MODE()
         print(mode.render())
         mode = MODE(kind="nonstationary", dim="twodimensional")
@@ -384,7 +384,7 @@ class COORDINATES(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.startup import COORDINATES
+        from rompy_swan.components.startup import COORDINATES
         coords = COORDINATES()
         print(coords.render())
         coords = COORDINATES(

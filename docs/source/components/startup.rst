@@ -8,8 +8,8 @@ SWAN startup commands
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.startup.PROJECT
-   rompy.swan.components.startup.SET
-   rompy.swan.components.startup.MODE
-   rompy.swan.components.startup.COORDINATES
+   rompy_swan.components.startup.PROJECT
+   rompy_swan.components.startup.SET
+   rompy_swan.components.startup.MODE
+   rompy_swan.components.startup.COORDINATES
 

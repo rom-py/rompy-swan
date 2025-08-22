@@ -4,7 +4,7 @@ import logging
 import pytest
 
 from pydantic import ValidationError
-from rompy.swan.subcomponents.readgrid import READGRID, READCOORD, READINP, GRIDREGULAR
+from rompy_swan.subcomponents.readgrid import READGRID, READCOORD, READINP, GRIDREGULAR
 
 # Import test utilities
 from test_utils.logging import get_test_logger

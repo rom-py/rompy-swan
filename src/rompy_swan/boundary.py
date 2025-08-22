@@ -17,10 +17,10 @@ from shapely.geometry import LineString
 from rompy.core.boundary import BoundaryWaveStation
 from rompy.logging import get_logger
 from rompy.core.time import TimeRange
-from rompy.swan.components.boundary import BOUNDSPEC
-from rompy.swan.grid import SwanGrid
-from rompy.swan.subcomponents.base import IJ, XY, BaseSubComponent
-from rompy.swan.subcomponents.boundary import (
+from rompy_swan.components.boundary import BOUNDSPEC
+from rompy_swan.grid import SwanGrid
+from rompy_swan.subcomponents.base import IJ, XY, BaseSubComponent
+from rompy_swan.subcomponents.boundary import (
     CONSTANTFILE,
     CONSTANTPAR,
     SEGMENT,
@@ -29,7 +29,7 @@ from rompy.swan.subcomponents.boundary import (
     VARIABLEFILE,
     VARIABLEPAR,
 )
-from rompy.swan.subcomponents.spectrum import SHAPESPEC
+from rompy_swan.subcomponents.spectrum import SHAPESPEC
 
 logger = get_logger(__name__)
 

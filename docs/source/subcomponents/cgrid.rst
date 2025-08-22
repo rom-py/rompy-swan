@@ -8,5 +8,5 @@ Sub-commands to support the computational grid components
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.subcomponents.startup.CARTESIAN
-   rompy.swan.subcomponents.startup.SPHERICAL
+   rompy_swan.subcomponents.startup.CARTESIAN
+   rompy_swan.subcomponents.startup.SPHERICAL

@@ -8,7 +8,7 @@ SWAN computational grid commands
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.cgrid.REGULAR
-   rompy.swan.components.cgrid.CURVILINEAR
-   rompy.swan.components.cgrid.UNSTRUCTURED
+   rompy_swan.components.cgrid.REGULAR
+   rompy_swan.components.cgrid.CURVILINEAR
+   rompy_swan.components.cgrid.UNSTRUCTURED
 

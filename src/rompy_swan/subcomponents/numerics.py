@@ -3,8 +3,8 @@
 from typing import Literal, Optional, Union
 from pydantic import Field
 
-from rompy.swan.subcomponents.base import BaseSubComponent
-from rompy.swan.subcomponents.time import Delt
+from rompy_swan.subcomponents.base import BaseSubComponent
+from rompy_swan.subcomponents.time import Delt
 
 
 class BSBT(BaseSubComponent):
@@ -20,7 +20,7 @@ class BSBT(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import BSBT
+        from rompy_swan.subcomponents.numerics import BSBT
         scheme = BSBT()
         print(scheme.render())
 
@@ -53,7 +53,7 @@ class GSE(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import GSE
+        from rompy_swan.subcomponents.numerics import GSE
         scheme = GSE(waveage=dict(delt=86400, dfmt="day"))
         print(scheme.render())
 
@@ -173,7 +173,7 @@ class STOPC(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import STOPC
+        from rompy_swan.subcomponents.numerics import STOPC
         stop = STOPC()
         print(stop.render())
         stop = STOPC(
@@ -283,7 +283,7 @@ class ACCUR(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import ACCUR
+        from rompy_swan.subcomponents.numerics import ACCUR
         accur = ACCUR()
         print(accur.render())
         accur = ACCUR(
@@ -373,7 +373,7 @@ class DIRIMPL(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import DIRIMPL
+        from rompy_swan.subcomponents.numerics import DIRIMPL
         dirimpl = DIRIMPL()
         print(dirimpl.render())
         dirimpl = DIRIMPL(cdd=0.5)
@@ -419,7 +419,7 @@ class SIGIMPL(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import SIGIMPL
+        from rompy_swan.subcomponents.numerics import SIGIMPL
         sigimpl = SIGIMPL()
         print(sigimpl.render())
         sigimpl = SIGIMPL(css=0.5, eps2=1e-4, outp=0, niter=20)
@@ -496,7 +496,7 @@ class CTHETA(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import CTHETA
+        from rompy_swan.subcomponents.numerics import CTHETA
         ctheta = CTHETA()
         print(ctheta.render())
         ctheta = CTHETA(cfl=0.9)
@@ -541,7 +541,7 @@ class CSIGMA(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import CSIGMA
+        from rompy_swan.subcomponents.numerics import CSIGMA
         csigma = CSIGMA()
         print(csigma.render())
         csigma = CSIGMA(cfl=0.9)
@@ -583,7 +583,7 @@ class SETUP(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.numerics import SETUP
+        from rompy_swan.subcomponents.numerics import SETUP
         setup = SETUP()
         print(setup.render())
         setup = SETUP(eps2=1e-4, outp=0, niter=20)

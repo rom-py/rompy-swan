@@ -20,8 +20,8 @@ from rompy.core.data import DataGrid
 from rompy.logging import get_logger
 from rompy.core.time import TimeRange
 from rompy.formatting import get_formatted_box, get_formatted_header_footer, log_box
-from rompy.swan.grid import SwanGrid
-from rompy.swan.types import GridOptions
+from rompy_swan.grid import SwanGrid
+from rompy_swan.types import GridOptions
 
 logger = get_logger(__name__)
 

@@ -8,15 +8,15 @@ from test_utils.logging import get_test_logger
 # Initialize logger
 logger = get_test_logger(__name__)
 
-from rompy.swan.components.boundary import (
+from rompy_swan.components.boundary import (
     INITIAL,
     BOUNDSPEC,
     BOUNDNEST1,
     BOUNDNEST2,
     BOUNDNEST3,
 )
-from rompy.swan.subcomponents.spectrum import SHAPESPEC, JONSWAP
-from rompy.swan.subcomponents.boundary import (
+from rompy_swan.subcomponents.spectrum import SHAPESPEC, JONSWAP
+from rompy_swan.subcomponents.boundary import (
     SIDE,
     PAR,
     CONSTANTPAR,

@@ -11,16 +11,16 @@ from test_utils.logging import get_test_logger
 # Initialize logger
 logger = get_test_logger(__name__)
 
-from rompy.swan.types import GridOptions
-from rompy.swan.components.group import INPGRIDS
-from rompy.swan.components.inpgrid import (
+from rompy_swan.types import GridOptions
+from rompy_swan.components.group import INPGRIDS
+from rompy_swan.components.inpgrid import (
     INPGRID,
     REGULAR,
     CURVILINEAR,
     UNSTRUCTURED,
     READINP,
 )
-from rompy.swan.subcomponents.time import NONSTATIONARY, Time, Delt
+from rompy_swan.subcomponents.time import NONSTATIONARY, Time, Delt
 
 
 @pytest.fixture(scope="module")

@@ -12,7 +12,7 @@ from shapely.geometry import Polygon
 
 from rompy.core.grid import RegularGrid
 from rompy.logging import get_logger
-from rompy.swan.subcomponents.readgrid import GRIDREGULAR
+from rompy_swan.subcomponents.readgrid import GRIDREGULAR
 
 logger = get_logger(__name__)
 

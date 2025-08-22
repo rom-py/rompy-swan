@@ -13,7 +13,7 @@ Grid
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.grid.SwanGrid
+   rompy_swan.grid.SwanGrid
 
 
 Data
@@ -23,8 +23,8 @@ Data
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.data.SwanDataGrid
-    rompy.swan.boundary.Boundnest1
+    rompy_swan.data.SwanDataGrid
+    rompy_swan.boundary.Boundnest1
 
 
 Components
@@ -35,7 +35,7 @@ SWAN command instructions are described in Rompy by a set of pydantic models def
 `CGRID`, `GEN3`, NUMERIC, etc. Inputs to the components may include other pydantic
 models called `subcomponents` to handle more complex arguments.
 
-Components are subclasses of :py:class:`rompy.swan.components.base.BaseComponent`.
+Components are subclasses of :py:class:`rompy_swan.components.base.BaseComponent`.
 The base component class implements the following attribues:
 
 * The **model_type** field that should be overwritten in each component subclass. The
@@ -55,7 +55,7 @@ The base component class implements the following attribues:
   line continuation.
 
 
-Components are defined within the :py:mod:`rompy.swan.components` subpackage and
+Components are defined within the :py:mod:`rompy_swan.components` subpackage and
 render an entire SWAN command line specification. The following modules are available:
 
 .. toctree::
@@ -85,7 +85,7 @@ render an entire SWAN command line specification. The following modules are avai
 Subcomponents
 -------------
 
-Subcomponents are defined within the :py:mod:`rompy.swan.subcomponents` subpackage
+Subcomponents are defined within the :py:mod:`rompy_swan.subcomponents` subpackage
 and render part of a SWAN command line specification. They typically define specific
 arguments to one or more component. The following modules are available:
 
@@ -128,10 +128,10 @@ components and define consistent parameters to the config after instantiating th
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.interface.DataInterface
-    rompy.swan.interface.BoundaryInterface
-    rompy.swan.interface.OutputInterface
-    rompy.swan.interface.LockupInterface
+    rompy_swan.interface.DataInterface
+    rompy_swan.interface.BoundaryInterface
+    rompy_swan.interface.OutputInterface
+    rompy_swan.interface.LockupInterface
 
 
 Types

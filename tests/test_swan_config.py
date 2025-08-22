@@ -9,8 +9,8 @@ logger = get_test_logger(__name__)
 
 # import pytest
 # import logging
-# from rompy.swan.config import SwanConfigComponents as SwanConfig
-# from rompy.swan.config import cgrid, inpgrid
+# from rompy_swan.config import SwanConfigComponents as SwanConfig
+# from rompy_swan.config import cgrid, inpgrid
 
 
 # logger = logging.getLogger(__name__)

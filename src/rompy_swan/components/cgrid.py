@@ -5,9 +5,9 @@ from pydantic import Field, model_validator
 from typing import Literal, Optional
 from abc import ABC, abstractmethod
 
-from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.spectrum import SPECTRUM
-from rompy.swan.subcomponents.readgrid import READCOORD, GRIDREGULAR
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.subcomponents.spectrum import SPECTRUM
+from rompy_swan.subcomponents.readgrid import READCOORD, GRIDREGULAR
 
 
 logger = logging.getLogger(__name__)
@@ -56,7 +56,7 @@ class REGULAR(CGRID):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.cgrid import REGULAR
+        from rompy_swan.components.cgrid import REGULAR
         cgrid = REGULAR(
             grid=dict(xp=0, yp=0, alp=0, xlen=2000, ylen=1300, mx=100, my=100),
             spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
@@ -101,7 +101,7 @@ class CURVILINEAR(CGRID):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.cgrid import CURVILINEAR
+        from rompy_swan.components.cgrid import CURVILINEAR
         cgrid = CURVILINEAR(
             mxc=199,
             myc=199,
@@ -199,7 +199,7 @@ class UNSTRUCTURED(CGRID):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.cgrid import UNSTRUCTURED
+        from rompy_swan.components.cgrid import UNSTRUCTURED
         cgrid = UNSTRUCTURED(
             grid_type="adcirc",
             spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),

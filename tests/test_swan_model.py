@@ -11,16 +11,16 @@ from test_utils.logging import get_test_logger
 
 from rompy.core.source import SourceIntake
 from rompy.model import ModelRun
-from rompy.swan import Boundnest1
-from rompy.swan.config import SwanConfigComponents
-from rompy.swan.interface import BoundaryInterface
+from rompy_swan import Boundnest1
+from rompy_swan.config import SwanConfigComponents
+from rompy_swan.interface import BoundaryInterface
 
 # Initialize logger
 logger = get_test_logger(__name__)
 
 HERE = Path(__file__).parent
 
-os.environ["ROMPY_PATH"] = str(HERE.parent.parent)
+os.environ["ROMPY_PATH"] = str(HERE.parent)
 
 
 @pytest.fixture(scope="module")
@@ -59,7 +59,7 @@ def test_swan_model_boundary(tmpdir, config_dict):
             kind=Boundnest1(
                 id="wave_forcing",
                 source=SourceIntake(
-                    dataset_id="ausspec", catalog_uri=HERE / "../data/catalog.yaml"
+                    dataset_id="ausspec", catalog_uri=HERE / "data/catalog.yaml"
                 ),
             )
         ),
