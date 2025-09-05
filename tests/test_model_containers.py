@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import pytest
-
 from rompy.backends.config import DockerConfig
 from rompy.model import ModelRun
 from rompy.run.docker import DockerRunBackend
@@ -24,7 +23,8 @@ def test_swan_container_basic_config(
     from rompy_swan.components.inpgrid import UNSTRUCTURED
     from rompy_swan.components.lockup import COMPUTE_NONSTAT
     from rompy_swan.components.output import BLOCK
-    from rompy_swan.components.physics import BREAKING_CONSTANT, FRICTION_MADSEN, GEN3
+    from rompy_swan.components.physics import (BREAKING_CONSTANT,
+                                               FRICTION_MADSEN, GEN3)
     from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
     from rompy_swan.config import SwanConfigComponents
     from rompy_swan.subcomponents.boundary import CONSTANTPAR, DEFAULT, SIDE
@@ -198,7 +198,7 @@ def test_swan_container_basic_config(
     run_cmd = 'bash -c "cd /app/run_id && swan.exe"'
 
     # Get dockerfile paths for DockerRunBackend to handle building if needed
-    repo_root = Path(__file__).resolve().parents[2]
+    repo_root = Path(__file__).resolve().parents[1]
     context_path = repo_root / "docker"
 
     docker_config = DockerConfig(
