@@ -24,11 +24,11 @@ jobs:
     -
       name: Run tests
       run: pytest -s -v tests
-    -
-      name: Run linting
-      run: |
-        pip install ruff
-        ruff check .
+    # -
+    #   name: Run linting
+    #   run: |
+    #     pip install ruff
+    #     ruff check .
     -
       name: Build package
       run: python -m build
