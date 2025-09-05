@@ -16,23 +16,23 @@ def test_swan_container_basic_config(
     if should_skip_docker_builds:
         pytest.skip("Skipping Potential Docker build tests in CI environment")
     """Test SWAN container with framework integration - validates template rendering and Docker execution."""
-    from rompy.swan.components.boundary import BOUNDSPEC, INITIAL
-    from rompy.swan.components.cgrid import REGULAR
-    from rompy.swan.components.group import INPGRIDS, LOCKUP, OUTPUT
-    from rompy.swan.components.inpgrid import CURVILINEAR, INPGRID, READINP
-    from rompy.swan.components.inpgrid import REGULAR as INPGRID_REGULAR
-    from rompy.swan.components.inpgrid import UNSTRUCTURED
-    from rompy.swan.components.lockup import COMPUTE_NONSTAT
-    from rompy.swan.components.output import BLOCK
-    from rompy.swan.components.physics import BREAKING_CONSTANT, FRICTION_MADSEN, GEN3
-    from rompy.swan.components.startup import COORDINATES, MODE, PROJECT, SET
-    from rompy.swan.config import SwanConfigComponents
-    from rompy.swan.subcomponents.boundary import CONSTANTPAR, DEFAULT, SIDE
-    from rompy.swan.subcomponents.physics import ST6
-    from rompy.swan.subcomponents.readgrid import GRIDREGULAR, READINP
-    from rompy.swan.subcomponents.spectrum import PM, SHAPESPEC, SPECTRUM
-    from rompy.swan.subcomponents.startup import SPHERICAL
-    from rompy.swan.subcomponents.time import NONSTATIONARY
+    from rompy_swan.components.boundary import BOUNDSPEC, INITIAL
+    from rompy_swan.components.cgrid import REGULAR
+    from rompy_swan.components.group import INPGRIDS, LOCKUP, OUTPUT
+    from rompy_swan.components.inpgrid import CURVILINEAR, INPGRID, READINP
+    from rompy_swan.components.inpgrid import REGULAR as INPGRID_REGULAR
+    from rompy_swan.components.inpgrid import UNSTRUCTURED
+    from rompy_swan.components.lockup import COMPUTE_NONSTAT
+    from rompy_swan.components.output import BLOCK
+    from rompy_swan.components.physics import BREAKING_CONSTANT, FRICTION_MADSEN, GEN3
+    from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
+    from rompy_swan.config import SwanConfigComponents
+    from rompy_swan.subcomponents.boundary import CONSTANTPAR, DEFAULT, SIDE
+    from rompy_swan.subcomponents.physics import ST6
+    from rompy_swan.subcomponents.readgrid import GRIDREGULAR, READINP
+    from rompy_swan.subcomponents.spectrum import PM, SHAPESPEC, SPECTRUM
+    from rompy_swan.subcomponents.startup import SPHERICAL
+    from rompy_swan.subcomponents.time import NONSTATIONARY
 
     # Create cgrid component using actual component classes
     cgrid_config = REGULAR(
@@ -199,7 +199,7 @@ def test_swan_container_basic_config(
 
     # Get dockerfile paths for DockerRunBackend to handle building if needed
     repo_root = Path(__file__).resolve().parents[2]
-    context_path = repo_root / "docker" / "swan"
+    context_path = repo_root / "docker"
 
     docker_config = DockerConfig(
         dockerfile=Path("Dockerfile"),  # Relative to build context

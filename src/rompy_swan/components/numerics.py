@@ -10,8 +10,8 @@ from typing import Annotated, Literal, Optional, Union
 from pydantic import Field
 
 from rompy.logging import get_logger
-from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.numerics import (
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.subcomponents.numerics import (
     ACCUR,
     BSBT,
     CSIGMA,
@@ -64,7 +64,7 @@ class PROP(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.numerics import PROP
+        from rompy_swan.components.numerics import PROP
         prop = PROP()
         print(prop.render())
         prop = PROP(scheme=dict(model_type="bsbt"))
@@ -112,7 +112,7 @@ class NUMERIC(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.numerics import NUMERIC
+        from rompy_swan.components.numerics import NUMERIC
         numeric = NUMERIC()
         print(numeric.render())
         numeric = NUMERIC(

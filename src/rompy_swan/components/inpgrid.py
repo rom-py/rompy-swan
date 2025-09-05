@@ -6,10 +6,10 @@ from typing import Literal, Optional
 
 from pydantic import Field, model_validator
 
-from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.readgrid import READINP
-from rompy.swan.subcomponents.time import NONSTATIONARY
-from rompy.swan.types import GridOptions
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.subcomponents.readgrid import READINP
+from rompy_swan.subcomponents.time import NONSTATIONARY
+from rompy_swan.types import GridOptions
 
 # TODO: Components are a bit mixed up here, define them a bit better.
 
@@ -83,7 +83,7 @@ class REGULAR(INPGRID):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.inpgrid import REGULAR
+        from rompy_swan.components.inpgrid import REGULAR
         inpgrid = REGULAR(
             grid_type="bottom",
             excval=-99.0,
@@ -208,7 +208,7 @@ class CURVILINEAR(INPGRID):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.inpgrid import CURVILINEAR
+        from rompy_swan.components.inpgrid import CURVILINEAR
         inpgrid = CURVILINEAR(
             grid_type="wind",
             stagrx=0.0,
@@ -295,7 +295,7 @@ class UNSTRUCTURED(INPGRID):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.inpgrid import UNSTRUCTURED
+        from rompy_swan.components.inpgrid import UNSTRUCTURED
         inpgrid = UNSTRUCTURED(
             grid_type="bottom",
             excval=-99.0,
@@ -340,7 +340,7 @@ class WIND(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.inpgrid import WIND
+        from rompy_swan.components.inpgrid import WIND
         wind = WIND(vel=10.0, dir=270.0)
         print(wind.render())
 
@@ -379,7 +379,7 @@ class ICE(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.inpgrid import ICE
+        from rompy_swan.components.inpgrid import ICE
         ice = ICE(aice=0.1, hice=0.1)
         print(ice.render())
 

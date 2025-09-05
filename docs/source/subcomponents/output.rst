@@ -9,7 +9,7 @@ Sub-commands to support the output components
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.subcomponents.output.SPEC1D
-    rompy.swan.subcomponents.output.SPEC2D
-    rompy.swan.subcomponents.output.ABS
-    rompy.swan.subcomponents.output.REL
+    rompy_swan.subcomponents.output.SPEC1D
+    rompy_swan.subcomponents.output.SPEC2D
+    rompy_swan.subcomponents.output.ABS
+    rompy_swan.subcomponents.output.REL

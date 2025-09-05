@@ -7,9 +7,9 @@ Enum Types
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.types.IDLA
-    rompy.swan.types.GridOptions
-    rompy.swan.types.BoundShapeOptions
-    rompy.swan.types.SideOptions
-    rompy.swan.types.PhysicsOff
-    rompy.swan.types.BlockOptions
+    rompy_swan.types.IDLA
+    rompy_swan.types.GridOptions
+    rompy_swan.types.BoundShapeOptions
+    rompy_swan.types.SideOptions
+    rompy_swan.types.PhysicsOff
+    rompy_swan.types.BlockOptions

@@ -55,7 +55,7 @@ class XY(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.base import XY
+        from rompy_swan.subcomponents.base import XY
         points = XY(
             x=[172, 172, 172, 172.5, 173],
             y=[-41, -40.5, -40, -40, -40],
@@ -111,7 +111,7 @@ class IJ(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.base import IJ
+        from rompy_swan.subcomponents.base import IJ
         points = IJ(i=[0, 0, 5], j=[0, 19, 19])
         print(points.render())
 

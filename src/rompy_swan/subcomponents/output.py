@@ -9,7 +9,7 @@ from typing import Literal
 
 from pydantic import Field
 
-from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy_swan.subcomponents.base import BaseSubComponent
 
 
 class SPEC1D(BaseSubComponent):
@@ -25,7 +25,7 @@ class SPEC1D(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.output import SPEC1D
+        from rompy_swan.subcomponents.output import SPEC1D
         spec = SPEC1D()
         print(spec.render())
 
@@ -53,7 +53,7 @@ class SPEC2D(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.output import SPEC2D
+        from rompy_swan.subcomponents.output import SPEC2D
         spec = SPEC2D()
         print(spec.render())
 
@@ -84,7 +84,7 @@ class ABS(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.output import ABS
+        from rompy_swan.subcomponents.output import ABS
         freq = ABS()
         print(freq.render())
 
@@ -115,7 +115,7 @@ class REL(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.output import REL
+        from rompy_swan.subcomponents.output import REL
         freq = REL()
         print(freq.render())
 

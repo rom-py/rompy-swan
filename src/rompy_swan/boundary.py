@@ -16,10 +16,10 @@ from shapely.geometry import LineString
 from rompy.core.boundary import BoundaryWaveStation
 from rompy.core.time import TimeRange
 from rompy.logging import get_logger
-from rompy.swan.grid import SwanGrid
-from rompy.swan.subcomponents.base import XY
-from rompy.swan.subcomponents.boundary import CONSTANTFILE, SEGMENT, SIDE, SIDES
-from rompy.swan.subcomponents.spectrum import SHAPESPEC
+from rompy_swan.grid import SwanGrid
+from rompy_swan.subcomponents.base import XY
+from rompy_swan.subcomponents.boundary import CONSTANTFILE, SEGMENT, SIDE, SIDES
+from rompy_swan.subcomponents.spectrum import SHAPESPEC
 
 logger = get_logger(__name__)
 

@@ -10,7 +10,7 @@ logger = get_test_logger(__name__)
 
 from datetime import datetime, timedelta
 
-from rompy.swan.subcomponents.time import (
+from rompy_swan.subcomponents.time import (
     NONSTATIONARY,
     STATIONARY,
     Delt,

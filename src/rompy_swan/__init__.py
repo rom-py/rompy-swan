@@ -1,3 +1,4 @@
+__version__ = "0.5.4"
 """
 SWAN Module for ROMPY
 

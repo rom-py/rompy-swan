@@ -13,9 +13,9 @@ from pydantic import Field, field_validator
 from rompy.core.time import TimeRange
 from rompy.core.types import Coordinate, RompyBaseModel, Spectrum
 from rompy.logging import get_logger
-from rompy.swan.boundary import Boundnest1
-from rompy.swan.data import SwanDataGrid
-from rompy.swan.grid import SwanGrid
+from rompy_swan.boundary import Boundnest1
+from rompy_swan.data import SwanDataGrid
+from rompy_swan.grid import SwanGrid
 
 logger = get_logger(__name__)
 
@@ -29,7 +29,7 @@ class ForcingData(RompyBaseModel):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.forcing import ForcingData
+        from rompy_swan.forcing import ForcingData
 
     """
 

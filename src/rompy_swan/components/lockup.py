@@ -14,8 +14,8 @@ from pandas import Timestamp
 from pydantic import Field, field_validator, model_validator
 
 from rompy.logging import get_logger
-from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.time import NONSTATIONARY, STATIONARY
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.subcomponents.time import NONSTATIONARY, STATIONARY
 
 logger = get_logger(__name__)
 
@@ -71,7 +71,7 @@ class COMPUTE(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.lockup import COMPUTE
+        from rompy_swan.components.lockup import COMPUTE
         comp = COMPUTE()
         print(comp.render())
         comp = COMPUTE(
@@ -162,7 +162,7 @@ class HOTFILE(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.lockup import HOTFILE
+        from rompy_swan.components.lockup import HOTFILE
         hotfile = HOTFILE(fname="hotfile.swn")
         print(hotfile.render())
         hotfile = HOTFILE(fname="hotfile.dat", format="unformatted")
@@ -223,8 +223,8 @@ class COMPUTE_STAT(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import STATIONARY, NONSTATIONARY
-        from rompy.swan.components.lockup import COMPUTE_STAT
+        from rompy_swan.subcomponents.time import STATIONARY, NONSTATIONARY
+        from rompy_swan.components.lockup import COMPUTE_STAT
         time = STATIONARY(time="1990-01-01T00:00:00")
         comp = COMPUTE_STAT(times=time)
         print(comp.render())
@@ -347,8 +347,8 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import NONSTATIONARY
-        from rompy.swan.components.lockup import COMPUTE_NONSTAT
+        from rompy_swan.subcomponents.time import NONSTATIONARY
+        from rompy_swan.components.lockup import COMPUTE_NONSTAT
         times = NONSTATIONARY(
             tbeg="1990-01-01T00:00:00",
             tend="1990-02-01T00:00:00",
@@ -440,7 +440,7 @@ class STOP(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.lockup import STOP
+        from rompy_swan.components.lockup import STOP
         stop = STOP()
         print(stop.render())
 

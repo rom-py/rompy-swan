@@ -11,10 +11,10 @@ Boundary
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.boundary.BOUNDSPEC
-   rompy.swan.components.boundary.BOUNDNEST1
-   rompy.swan.components.boundary.BOUNDNEST2
-   rompy.swan.components.boundary.BOUNDNEST3
+   rompy_swan.components.boundary.BOUNDSPEC
+   rompy_swan.components.boundary.BOUNDNEST1
+   rompy_swan.components.boundary.BOUNDNEST2
+   rompy_swan.components.boundary.BOUNDNEST3
 
 Initial conditions
 ~~~~~~~~~~~~~~~~~~
@@ -23,4 +23,4 @@ Initial conditions
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.boundary.INITIAL
+   rompy_swan.components.boundary.INITIAL

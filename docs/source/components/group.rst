@@ -8,9 +8,9 @@ SWAN group commands
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.group.BaseGroupComponent
-   rompy.swan.components.group.STARTUP
-   rompy.swan.components.group.INPGRIDS
-   rompy.swan.components.group.PHYSICS
-   rompy.swan.components.group.OUTPUT
-   rompy.swan.components.group.LOCKUP
+   rompy_swan.components.group.BaseGroupComponent
+   rompy_swan.components.group.STARTUP
+   rompy_swan.components.group.INPGRIDS
+   rompy_swan.components.group.PHYSICS
+   rompy_swan.components.group.OUTPUT
+   rompy_swan.components.group.LOCKUP

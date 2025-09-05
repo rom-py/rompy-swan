@@ -12,7 +12,7 @@ import pandas as pd
 from pydantic import Field, field_validator
 
 from rompy.logging import get_logger
-from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy_swan.subcomponents.base import BaseSubComponent
 
 logger = get_logger(__name__)
 
@@ -60,7 +60,7 @@ class Time(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import Time
+        from rompy_swan.subcomponents.time import Time
         from datetime import datetime
         time = Time(time=datetime(1990, 1, 1))
         print(time.render())
@@ -116,7 +116,7 @@ class Delt(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import Delt
+        from rompy_swan.subcomponents.time import Delt
         from datetime import timedelta
         delt = Delt(delt=timedelta(minutes=30))
         print(delt.render())
@@ -191,7 +191,7 @@ class TimeRangeOpen(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import TimeRangeOpen
+        from rompy_swan.subcomponents.time import TimeRangeOpen
         from datetime import datetime, timedelta
         times = TimeRangeOpen(
             tbeg=datetime(1990, 1, 1), delt=timedelta(minutes=30), dfmt="min"
@@ -247,7 +247,7 @@ class TimeRangeClosed(TimeRangeOpen):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import TimeRangeClosed
+        from rompy_swan.subcomponents.time import TimeRangeClosed
         from datetime import datetime, timedelta
         times = TimeRangeClosed(
             tbeg=datetime(1990, 1, 1),
@@ -311,7 +311,7 @@ class NONSTATIONARY(TimeRangeClosed):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import NONSTATIONARY
+        from rompy_swan.subcomponents.time import NONSTATIONARY
         nonstat = NONSTATIONARY(
             tbeg="2012-01-01T00:00:00",
             tend="2012-02-01T00:00:00",
@@ -363,7 +363,7 @@ class STATIONARY(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.time import STATIONARY
+        from rompy_swan.subcomponents.time import STATIONARY
         stat = STATIONARY(time="2012-01-01T00:00:00")
         print(stat.render())
 

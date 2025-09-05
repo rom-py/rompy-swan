@@ -5,7 +5,7 @@ from typing import Any, Literal, Optional
 
 from pydantic import Field, model_validator
 
-from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy_swan.subcomponents.base import BaseSubComponent
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +34,7 @@ class SPECTRUM(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.spectrum import SPECTRUM
+        from rompy_swan.subcomponents.spectrum import SPECTRUM
         spec = SPECTRUM(mdc=36, flow=0.04, fhigh=1.0)
         print(spec.render())
         spec = SPECTRUM(mdc=36, dir1=0, dir2=180, flow=0.04, msc=31)
@@ -146,7 +146,7 @@ class JONSWAP(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.spectrum import JONSWAP
+        from rompy_swan.subcomponents.spectrum import JONSWAP
         shape = JONSWAP(gamma=3.3)
         print(shape.render())
 
@@ -178,7 +178,7 @@ class TMA(JONSWAP):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.spectrum import TMA
+        from rompy_swan.subcomponents.spectrum import TMA
         shape = TMA(gamma=2.0, d=18)
         print(shape.render())
 
@@ -209,7 +209,7 @@ class GAUSS(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.spectrum import GAUSS
+        from rompy_swan.subcomponents.spectrum import GAUSS
         shape = GAUSS(sigfr=0.02)
         print(shape.render())
 
@@ -243,7 +243,7 @@ class PM(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.spectrum import PM
+        from rompy_swan.subcomponents.spectrum import PM
         shape = PM()
         print(shape.render())
 
@@ -267,7 +267,7 @@ class BIN(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.spectrum import BIN
+        from rompy_swan.subcomponents.spectrum import BIN
         shape = BIN()
         print(shape.render())
 
@@ -300,7 +300,7 @@ class SHAPESPEC(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.spectrum import SHAPESPEC
+        from rompy_swan.subcomponents.spectrum import SHAPESPEC
         shapespec = SHAPESPEC()
         print(shapespec.render())
         shapespec = SHAPESPEC(

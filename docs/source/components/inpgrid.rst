@@ -9,8 +9,8 @@ SWAN input grids commands
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.inpgrid.REGULAR
-   rompy.swan.components.inpgrid.CURVILINEAR
-   rompy.swan.components.inpgrid.UNSTRUCTURED
-   rompy.swan.components.inpgrid.WIND
-   rompy.swan.components.inpgrid.ICE
+   rompy_swan.components.inpgrid.REGULAR
+   rompy_swan.components.inpgrid.CURVILINEAR
+   rompy_swan.components.inpgrid.UNSTRUCTURED
+   rompy_swan.components.inpgrid.WIND
+   rompy_swan.components.inpgrid.ICE

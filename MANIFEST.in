@@ -1,16 +1,16 @@
-recursive-include rompy *.html
-recursive-include rompy *.csv
-recursive-include rompy *.npy
-recursive-include rompy *.yml
-recursive-include rompy *.yaml
-recursive-include rompy *.zip
-recursive-include rompy *.png
-recursive-include docs/source *
-include docs/Makefile docs/make.bat
-
-recursive-include rompy/templates *
-
-include versioneer.py
-include rompy/_version.py
-include requirements.txt
+include README.md
 include LICENSE
+include HISTORY.rst
+include pyproject.toml
+include setup.cfg
+recursive-include src *.py
+recursive-include tests *.py
+recursive-include src/rompy_swan/templates *
+recursive-include docs *.rst *.py *.bat Makefile
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+prune .git
+prune .pytest_cache
+prune .mypy_cache
+prune build
+prune dist

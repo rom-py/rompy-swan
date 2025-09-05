@@ -11,13 +11,13 @@ Boundary
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.subcomponents.boundary.SIDE
-    rompy.swan.subcomponents.boundary.SEGMENT
-    rompy.swan.subcomponents.boundary.PAR
-    rompy.swan.subcomponents.boundary.CONSTANTPAR
-    rompy.swan.subcomponents.boundary.VARIABLEPAR
-    rompy.swan.subcomponents.boundary.CONSTANTFILE
-    rompy.swan.subcomponents.boundary.VARIABLEFILE
+    rompy_swan.subcomponents.boundary.SIDE
+    rompy_swan.subcomponents.boundary.SEGMENT
+    rompy_swan.subcomponents.boundary.PAR
+    rompy_swan.subcomponents.boundary.CONSTANTPAR
+    rompy_swan.subcomponents.boundary.VARIABLEPAR
+    rompy_swan.subcomponents.boundary.CONSTANTFILE
+    rompy_swan.subcomponents.boundary.VARIABLEFILE
 
 Initial conditions
 ~~~~~~~~~~~~~~~~~~
@@ -26,7 +26,7 @@ Initial conditions
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.subcomponents.boundary.DEFAULT
-    rompy.swan.subcomponents.boundary.ZERO
-    rompy.swan.subcomponents.boundary.HOTSINGLE
-    rompy.swan.subcomponents.boundary.HOTMULTIPLE
+    rompy_swan.subcomponents.boundary.DEFAULT
+    rompy_swan.subcomponents.boundary.ZERO
+    rompy_swan.subcomponents.boundary.HOTSINGLE
+    rompy_swan.subcomponents.boundary.HOTMULTIPLE

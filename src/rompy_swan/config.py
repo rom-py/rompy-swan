@@ -13,22 +13,22 @@ from pydantic import Field, model_validator
 from rompy.core.config import BaseConfig
 from rompy.formatting import get_formatted_header_footer
 from rompy.logging import get_logger
-from rompy.swan.components import boundary, cgrid, numerics
-from rompy.swan.components.group import INPGRIDS, LOCKUP, OUTPUT, PHYSICS, STARTUP
-from rompy.swan.grid import SwanGrid
-from rompy.swan.interface import (
+from rompy_swan.components import boundary, cgrid, numerics
+from rompy_swan.components.group import INPGRIDS, LOCKUP, OUTPUT, PHYSICS, STARTUP
+from rompy_swan.grid import SwanGrid
+from rompy_swan.interface import (
     BoundaryInterface,
     DataInterface,
     LockupInterface,
     OutputInterface,
 )
-from rompy.swan.legacy import ForcingData, Outputs, SwanPhysics, SwanSpectrum
+from rompy_swan.legacy import ForcingData, Outputs, SwanPhysics, SwanSpectrum
 
 logger = get_logger(__name__)
 
 HERE = Path(__file__).parent
 
-DEFAULT_TEMPLATE = str(Path(__file__).parent.parent / "templates" / "swan")
+DEFAULT_TEMPLATE = str(Path(__file__).parent / "templates" / "swan")
 
 
 class SwanConfig(BaseConfig):
@@ -136,7 +136,7 @@ class SwanConfigComponents(BaseConfig):
         description="Model type discriminator",
     )
     template: str = Field(
-        default=str(HERE.parent / "templates" / "swancomp"),
+        default=str(HERE / "templates" / "swancomp"),
         description="The template for SWAN.",
     )
     cgrid: CGRID_TYPES
@@ -218,7 +218,7 @@ class SwanConfigComponents(BaseConfig):
         """
         # Import specific types if needed
         from rompy.logging import LoggingConfig
-        from rompy.swan.grid import SwanGrid
+        from rompy_swan.grid import SwanGrid
 
         # Get ASCII mode setting from LoggingConfig
         logging_config = LoggingConfig()
@@ -328,7 +328,7 @@ class SwanConfigComponents(BaseConfig):
             )
 
         # Format CGRID component directly
-        from rompy.swan.components.cgrid import REGULAR
+        from rompy_swan.components.cgrid import REGULAR
 
         if isinstance(obj, REGULAR):
             grid = obj.grid

@@ -4,7 +4,7 @@ from typing import Literal
 
 from pydantic import Field
 
-from rompy.swan.subcomponents.base import BaseSubComponent
+from rompy_swan.subcomponents.base import BaseSubComponent
 
 
 class CARTESIAN(BaseSubComponent):
@@ -23,7 +23,7 @@ class CARTESIAN(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.startup import CARTESIAN
+        from rompy_swan.components.startup import CARTESIAN
         coords = CARTESIAN()
         print(coords.render())
 
@@ -72,7 +72,7 @@ class SPHERICAL(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.startup import SPHERICAL
+        from rompy_swan.components.startup import SPHERICAL
         coords = SPHERICAL()
         print(coords.render())
         coords = SPHERICAL(projection="qc")

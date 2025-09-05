@@ -5,8 +5,8 @@ from typing import Literal, Optional
 
 from pydantic import Field
 
-from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.boundary import (
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.subcomponents.boundary import (
     CONSTANTFILE,
     CONSTANTPAR,
     DEFAULT,
@@ -19,7 +19,7 @@ from rompy.swan.subcomponents.boundary import (
     VARIABLEPAR,
     ZERO,
 )
-from rompy.swan.subcomponents.spectrum import SHAPESPEC
+from rompy_swan.subcomponents.spectrum import SHAPESPEC
 
 HERE = Path(__file__).parent
 
@@ -43,7 +43,7 @@ class INITIAL(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.boundary import INITIAL
+        from rompy_swan.components.boundary import INITIAL
         init = INITIAL()
         print(init.render())
         init = INITIAL(
@@ -90,7 +90,7 @@ class BOUNDSPEC(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.boundary import BOUNDSPEC
+        from rompy_swan.components.boundary import BOUNDSPEC
         boundary = BOUNDSPEC(
             shapespec=dict(model_type="shapespec", shape=dict(model_type="pm")),
             location=dict(model_type="side", side="west", direction="ccw"),
@@ -157,7 +157,7 @@ class BOUNDNEST1(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.boundary import BOUNDNEST1
+        from rompy_swan.components.boundary import BOUNDNEST1
         boundary = BOUNDNEST1(fname="boundary.swn", rectangle="closed")
         print(boundary.render())
 
@@ -233,7 +233,7 @@ class BOUNDNEST2(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.boundary import BOUNDNEST2
+        from rompy_swan.components.boundary import BOUNDNEST2
         boundary = BOUNDNEST2(fname="boundary.wam", format="cray", lwdate=12)
         print(boundary.render())
 
@@ -345,7 +345,7 @@ class BOUNDNEST3(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.boundary import BOUNDNEST3
+        from rompy_swan.components.boundary import BOUNDNEST3
         boundary = BOUNDNEST3(
             fname="boundary.ww3",
             format="free",

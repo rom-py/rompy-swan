@@ -9,10 +9,10 @@ from typing import Annotated, Literal, Optional, Union
 
 from pydantic import Field, field_validator, model_validator
 
-from rompy.swan.components.base import BaseComponent
-from rompy.swan.components.inpgrid import CURVILINEAR, ICE, REGULAR, UNSTRUCTURED, WIND
-from rompy.swan.components.lockup import COMPUTE_NONSTAT, COMPUTE_STAT, STOP
-from rompy.swan.components.output import (
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.components.inpgrid import CURVILINEAR, ICE, REGULAR, UNSTRUCTURED, WIND
+from rompy_swan.components.lockup import COMPUTE_NONSTAT, COMPUTE_STAT, STOP
+from rompy_swan.components.output import (
     BLOCK,
     BLOCKS,
     CURVES,
@@ -32,7 +32,7 @@ from rompy.swan.components.output import (
     TABLE,
     TEST,
 )
-from rompy.swan.components.physics import (
+from rompy_swan.components.physics import (
     BRAGG,
     BRAGG_FILE,
     BRAGG_FT,
@@ -72,8 +72,8 @@ from rompy.swan.components.physics import (
     WCAPPING_AB,
     WCAPPING_KOMEN,
 )
-from rompy.swan.components.startup import COORDINATES, MODE, PROJECT, SET
-from rompy.swan.types import PhysicsOff
+from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
+from rompy_swan.types import PhysicsOff
 
 logger = logging.getLogger(__name__)
 
@@ -127,8 +127,8 @@ class STARTUP(BaseGroupComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.startup import PROJECT, SET, MODE, COORDINATES
-        from rompy.swan.components.group import STARTUP
+        from rompy_swan.components.startup import PROJECT, SET, MODE, COORDINATES
+        from rompy_swan.components.group import STARTUP
         proj = PROJECT(nr="01")
         set = SET(level=0.5, direction_convention="nautical")
         mode = MODE(kind="nonstationary", dim="twodimensional")
@@ -196,8 +196,8 @@ class INPGRIDS(BaseGroupComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.inpgrid import REGULAR, ICE
-        from rompy.swan.components.group import INPGRIDS
+        from rompy_swan.components.inpgrid import REGULAR, ICE
+        from rompy_swan.components.group import INPGRIDS
         inpgrid_bottom = REGULAR(
             grid_type="bottom",
             excval=-99.0,
@@ -319,7 +319,7 @@ class PHYSICS(BaseGroupComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.group import PHYSICS
+        from rompy_swan.components.group import PHYSICS
         gen = {"model_type": "gen3", "source_terms": {"model_type": "komen"}}
         phys = PHYSICS(gen=gen)
         print(phys.render())
@@ -497,8 +497,8 @@ class OUTPUT(BaseGroupComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.output import POINTS, BLOCK, QUANTITIES, TABLE
-        from rompy.swan.components.group import OUTPUT
+        from rompy_swan.components.output import POINTS, BLOCK, QUANTITIES, TABLE
+        from rompy_swan.components.group import OUTPUT
         points = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
         quantity = QUANTITIES(
             quantities=[
@@ -744,7 +744,7 @@ class LOCKUP(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.group import LOCKUP
+        from rompy_swan.components.group import LOCKUP
         lockup = LOCKUP(
             compute=dict(
                 model_type="stat",

@@ -10,8 +10,8 @@ from typing import Annotated, Any, Literal, Optional, Union
 from pydantic import Field, ValidationInfo, field_validator, model_validator
 
 from rompy.logging import get_logger
-from rompy.swan.components.base import BaseComponent
-from rompy.swan.subcomponents.physics import (
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.subcomponents.physics import (
     DANGREMOND,
     DEWIT,
     ELDEBERKY,
@@ -34,7 +34,7 @@ from rompy.swan.subcomponents.physics import (
     TRANSM,
     WESTHUYSEN,
 )
-from rompy.swan.types import IDLA, PhysicsOff
+from rompy_swan.types import IDLA, PhysicsOff
 
 logger = get_logger(__name__)
 
@@ -71,7 +71,7 @@ class GEN1(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import GEN1
+        from rompy_swan.components.physics import GEN1
         gen = GEN1()
         print(gen.render())
         kwargs = dict(
@@ -174,7 +174,7 @@ class GEN2(GEN1):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import GEN2
+        from rompy_swan.components.physics import GEN2
         gen = GEN2()
         print(gen.render())
         kwargs = dict(
@@ -254,7 +254,7 @@ class GEN3(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import GEN3
+        from rompy_swan.components.physics import GEN3
         gen = GEN3(
             source_terms=dict(
                 model_type="westhuysen",
@@ -263,7 +263,7 @@ class GEN3(BaseComponent):
             ),
         )
         print(gen.render())
-        from rompy.swan.subcomponents.physics import ST6C1
+        from rompy_swan.subcomponents.physics import ST6C1
         gen = GEN3(source_terms=ST6C1())
         print(gen.render())
 
@@ -317,7 +317,7 @@ class NEGATINP(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import NEGATINP
+        from rompy_swan.components.physics import NEGATINP
         negatinp = NEGATINP()
         print(negatinp.render())
         negatinp = NEGATINP(rdcoef=0.04)
@@ -363,7 +363,7 @@ class SSWELL_ROGERS(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SSWELL_ROGERS
+        from rompy_swan.components.physics import SSWELL_ROGERS
         sswell = SSWELL_ROGERS()
         print(sswell.render())
         sswell = SSWELL_ROGERS(cdsv=1.2, feswell=0.5)
@@ -416,7 +416,7 @@ class SSWELL_ARDHUIN(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SSWELL_ARDHUIN
+        from rompy_swan.components.physics import SSWELL_ARDHUIN
         sswell = SSWELL_ARDHUIN()
         print(sswell.render())
         sswell = SSWELL_ARDHUIN(cdsv=1.2)
@@ -471,7 +471,7 @@ class SSWELL_ZIEGER(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SSWELL_ZIEGER
+        from rompy_swan.components.physics import SSWELL_ZIEGER
         sswell = SSWELL_ZIEGER()
         print(sswell.render())
         sswell = SSWELL_ZIEGER(b1=0.00025)
@@ -524,7 +524,7 @@ class WCAPPING_KOMEN(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import WCAPPING_KOMEN
+        from rompy_swan.components.physics import WCAPPING_KOMEN
         wcapping = WCAPPING_KOMEN()
         print(wcapping.render())
         wcapping = WCAPPING_KOMEN(cds2=2.36e-5, stpm=3.02e-3, powst=2, delta=1, powk=2)
@@ -606,7 +606,7 @@ class WCAPPING_AB(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import WCAPPING_AB
+        from rompy_swan.components.physics import WCAPPING_AB
         wcapping = WCAPPING_AB()
         print(wcapping.render())
         wcapping = WCAPPING_AB(cds2=5.0e-5, br=1.75e-3, current=True, cds3=0.8)
@@ -682,7 +682,7 @@ class QUADRUPL(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import QUADRUPL
+        from rompy_swan.components.physics import QUADRUPL
         quadrupl = QUADRUPL()
         print(quadrupl.render())
         kwargs = dict(
@@ -778,7 +778,7 @@ class BREAKING_CONSTANT(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import BREAKING_CONSTANT
+        from rompy_swan.components.physics import BREAKING_CONSTANT
         breaking = BREAKING_CONSTANT()
         print(breaking.render())
         breaking = BREAKING_CONSTANT(alpha=1.0, gamma=0.73)
@@ -830,7 +830,7 @@ class BREAKING_BKD(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import BREAKING_BKD
+        from rompy_swan.components.physics import BREAKING_BKD
         breaking = BREAKING_BKD()
         print(breaking.render())
         breaking = BREAKING_BKD(alpha=1.0, gamma0=0.54, a1=7.59, a2=-8.06, a3=8.09)
@@ -915,7 +915,7 @@ class FRICTION_JONSWAP(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import FRICTION_JONSWAP
+        from rompy_swan.components.physics import FRICTION_JONSWAP
         friction = FRICTION_JONSWAP()
         print(friction.render())
         friction = FRICTION_JONSWAP(cfjon=0.038)
@@ -965,7 +965,7 @@ class FRICTION_COLLINS(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import FRICTION_COLLINS
+        from rompy_swan.components.physics import FRICTION_COLLINS
         friction = FRICTION_COLLINS()
         print(friction.render())
         friction = FRICTION_COLLINS(cfw=0.038)
@@ -1016,7 +1016,7 @@ class FRICTION_MADSEN(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import FRICTION_MADSEN
+        from rompy_swan.components.physics import FRICTION_MADSEN
         friction = FRICTION_MADSEN()
         print(friction.render())
         friction = FRICTION_MADSEN(kn=0.038)
@@ -1066,7 +1066,7 @@ class FRICTION_RIPPLES(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import FRICTION_RIPPLES
+        from rompy_swan.components.physics import FRICTION_RIPPLES
         friction = FRICTION_RIPPLES()
         print(friction.render())
         friction = FRICTION_RIPPLES(s=2.65, d=0.0001)
@@ -1118,7 +1118,7 @@ class TRIAD(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import TRIAD
+        from rompy_swan.components.physics import TRIAD
         triad = TRIAD()
         print(triad.render())
         triad = TRIAD(
@@ -1235,7 +1235,7 @@ class TRIAD_DCTA(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import TRIAD_DCTA
+        from rompy_swan.components.physics import TRIAD_DCTA
         triad = TRIAD_DCTA()
         print(triad.render())
         triad = TRIAD_DCTA(
@@ -1318,7 +1318,7 @@ class TRIAD_LTA(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import TRIAD_LTA
+        from rompy_swan.components.physics import TRIAD_LTA
         triad = TRIAD_LTA()
         print(triad.render())
         triad = TRIAD_LTA(
@@ -1391,7 +1391,7 @@ class TRIAD_SPB(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import TRIAD_SPB
+        from rompy_swan.components.physics import TRIAD_SPB
         triad = TRIAD_SPB()
         print(triad.render())
         triad = TRIAD_SPB(
@@ -1502,7 +1502,7 @@ class VEGETATION(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import VEGETATION
+        from rompy_swan.components.physics import VEGETATION
         # Single layer
         vegetation = VEGETATION(
             height=1.2,
@@ -1613,7 +1613,7 @@ class MUD(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import MUD
+        from rompy_swan.components.physics import MUD
         mud = MUD()
         print(mud.render())
         mud = MUD(
@@ -1708,7 +1708,7 @@ class SICE(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SICE
+        from rompy_swan.components.physics import SICE
         sice = SICE()
         print(sice.render())
         sice = SICE(aice=0.5)
@@ -1771,7 +1771,7 @@ class SICE_R19(SICE):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SICE_R19
+        from rompy_swan.components.physics import SICE_R19
         sice = SICE_R19()
         print(sice.render())
         kwargs = dict(
@@ -1881,7 +1881,7 @@ class SICE_D15(SICE):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SICE_D15
+        from rompy_swan.components.physics import SICE_D15
         sice = SICE_D15()
         print(sice.render())
         sice = SICE_D15(aice=0.2, chf=0.1)
@@ -1924,7 +1924,7 @@ class SICE_M18(SICE):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SICE_M18
+        from rompy_swan.components.physics import SICE_M18
         sice = SICE_M18()
         print(sice.render())
         sice = SICE_M18(aice=0.8, chf=0.059)
@@ -1967,7 +1967,7 @@ class SICE_R21B(SICE):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SICE_R21B
+        from rompy_swan.components.physics import SICE_R21B
         sice = SICE_R21B()
         print(sice.render())
         sice = SICE_R21B(aice=0.8, chf=2.9, npf=4.5)
@@ -2022,7 +2022,7 @@ class TURBULENCE(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import TURBULENCE
+        from rompy_swan.components.physics import TURBULENCE
         turbulence = TURBULENCE(current=False)
         print(turbulence.render())
         turbulence = TURBULENCE(ctb=0.01, current=True, tbcur=0.004)
@@ -2124,7 +2124,7 @@ class BRAGG(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import BRAGG
+        from rompy_swan.components.physics import BRAGG
         bragg = BRAGG(nreg=200)
         print(bragg.render())
         bragg = BRAGG(ibrag=1, nreg=200, cutoff=5.0)
@@ -2196,7 +2196,7 @@ class BRAGG_FT(BRAGG):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import BRAGG_FT
+        from rompy_swan.components.physics import BRAGG_FT
         bragg = BRAGG_FT(nreg=350)
         print(bragg.render())
         bragg = BRAGG_FT(ibrag=2, nreg=350, cutoff=5.0)
@@ -2232,7 +2232,7 @@ class BRAGG_FILE(BRAGG):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import BRAGG_FILE
+        from rompy_swan.components.physics import BRAGG_FILE
         bragg = BRAGG_FILE(fname="bottom_spectrum.txt", nreg=500, mkx=99, dkx=0.1)
         print(bragg.render())
         kwargs = dict(
@@ -2324,7 +2324,7 @@ class LIMITER(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import LIMITER
+        from rompy_swan.components.physics import LIMITER
         limiter = LIMITER()
         print(limiter.render())
         limiter = LIMITER(ursell=10.0, qb=1.0)
@@ -2401,7 +2401,7 @@ class OBSTACLE(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import OBSTACLE
+        from rompy_swan.components.physics import OBSTACLE
         obs = OBSTACLE(
             transmission=dict(model_type="transm", trcoef=0.5),
             reflection=dict(reflc=0.5),
@@ -2491,7 +2491,7 @@ class OBSTACLE_FIG(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import OBSTACLE_FIG
+        from rompy_swan.components.physics import OBSTACLE_FIG
         obs = OBSTACLE_FIG(
             alpha1=5e-4,
             hss=2.5,
@@ -2564,7 +2564,7 @@ class OBSTACLES(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import OBSTACLES, OBSTACLE, OBSTACLE_FIG
+        from rompy_swan.components.physics import OBSTACLES, OBSTACLE, OBSTACLE_FIG
         obst1 = dict(
             model_type="obstacle",
             reflection=dict(reflc=1.0),
@@ -2636,7 +2636,7 @@ class SETUP(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import SETUP
+        from rompy_swan.components.physics import SETUP
         setup = SETUP()
         print(setup.render())
         setup = SETUP(supcor=0.5)
@@ -2703,7 +2703,7 @@ class DIFFRACTION(BaseComponent):
 
     .. ipython:: python
 
-        from rompy.swan.components.physics import DIFFRACTION
+        from rompy_swan.components.physics import DIFFRACTION
         diffraction = DIFFRACTION()
         print(diffraction.render())
         diffraction = DIFFRACTION(idiffr=True, smpar=0.0, smnum=1.0)
@@ -2786,7 +2786,7 @@ class SURFBEAT(BaseComponent):
 
     .. ipython:: python
 
-        from rompy.swan.components.physics import SURFBEAT
+        from rompy_swan.components.physics import SURFBEAT
         surfbeat = SURFBEAT()
         print(surfbeat.render())
         surfbeat = SURFBEAT(df=0.01, nmax=50000, emin=0.05, spacing="logarithmic")
@@ -2889,7 +2889,7 @@ class SCAT(BaseComponent):
 
     .. ipython:: python
 
-        from rompy.swan.components.physics import SCAT
+        from rompy_swan.components.physics import SCAT
         scat = SCAT()
         print(scat.render())
         scat = SCAT(iqcm=2, rfac=1.0, alpha=1.0)
@@ -2974,7 +2974,7 @@ class OFF(BaseComponent):
 
     .. ipython:: python
 
-        from rompy.swan.components.physics import OFF
+        from rompy_swan.components.physics import OFF
         off = OFF(physics="windgrowth")
         print(off.render())
 
@@ -3008,7 +3008,7 @@ class OFFS(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.components.physics import OFFS
+        from rompy_swan.components.physics import OFFS
         off1 = dict(physics="windgrowth")
         off2 = dict(physics="wcapping")
         offs = OFFS(offs=[off1, off2])

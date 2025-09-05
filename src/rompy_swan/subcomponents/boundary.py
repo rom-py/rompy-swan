@@ -10,7 +10,7 @@ from typing import Annotated, Literal, Optional, Union
 from pydantic import Field, model_validator
 
 from rompy.logging import get_logger
-from rompy.swan.subcomponents.base import IJ, XY, BaseSubComponent
+from rompy_swan.subcomponents.base import IJ, XY, BaseSubComponent
 
 logger = get_logger(__name__)
 
@@ -35,7 +35,7 @@ class SIDE(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import SIDE
+        from rompy_swan.subcomponents.boundary import SIDE
         side = SIDE(side="west", direction="ccw")
         print(side.render())
 
@@ -77,7 +77,7 @@ class SIDES(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import SIDE, SIDES
+        from rompy_swan.subcomponents.boundary import SIDE, SIDES
         side1 = SIDE(side="west", direction="ccw")
         side2 = SIDE(side="north", direction="ccw")
         sides = SIDES(sides=[side1, side2])
@@ -118,7 +118,7 @@ class SEGMENT(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import SEGMENT
+        from rompy_swan.subcomponents.boundary import SEGMENT
         seg = SEGMENT(
             points=dict(
                 model_type="xy",
@@ -165,7 +165,7 @@ class PAR(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import PAR
+        from rompy_swan.subcomponents.boundary import PAR
         par = PAR(hs=1.5, per=8.1, dir=225)
         print(par.render())
 
@@ -230,7 +230,7 @@ class CONSTANTPAR(PAR):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import CONSTANTPAR
+        from rompy_swan.subcomponents.boundary import CONSTANTPAR
         par = CONSTANTPAR(hs=1.5, per=8.1, dir=225)
         print(par.render())
 
@@ -259,7 +259,7 @@ class VARIABLEPAR(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import VARIABLEPAR
+        from rompy_swan.subcomponents.boundary import VARIABLEPAR
         par = VARIABLEPAR(
             hs=[1.5, 1.4, 1.1],
             per=[8.1, 8.0, 8.1],
@@ -374,7 +374,7 @@ class CONSTANTFILE(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import CONSTANTFILE
+        from rompy_swan.subcomponents.boundary import CONSTANTFILE
         par = CONSTANTFILE(fname="tpar.txt")
         print(par.render())
 
@@ -448,7 +448,7 @@ class VARIABLEFILE(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import VARIABLEFILE
+        from rompy_swan.subcomponents.boundary import VARIABLEFILE
         par = VARIABLEFILE(
             fname=["tpar1.txt", "tpar2.txt", "tpar3.txt"],
             len=[0.0, 0.5, 1.0],
@@ -527,7 +527,7 @@ class DEFAULT(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import DEFAULT
+        from rompy_swan.subcomponents.boundary import DEFAULT
         init = DEFAULT()
         print(init.render())
 
@@ -556,7 +556,7 @@ class ZERO(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import ZERO
+        from rompy_swan.subcomponents.boundary import ZERO
         init = ZERO()
         print(init.render())
 
@@ -592,7 +592,7 @@ class HOTSINGLE(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import HOTSINGLE
+        from rompy_swan.subcomponents.boundary import HOTSINGLE
         init = HOTSINGLE(fname="hotstart.swn", format="free")
         print(init.render())
 
@@ -643,7 +643,7 @@ class HOTMULTIPLE(BaseSubComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.subcomponents.boundary import HOTMULTIPLE
+        from rompy_swan.subcomponents.boundary import HOTMULTIPLE
         init = HOTMULTIPLE(fname="hotstart.swn", format="free")
         print(init.render())
 

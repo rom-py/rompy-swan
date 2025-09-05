@@ -9,5 +9,5 @@ Sub-commands to support the output components
     :nosignatures:
     :toctree: _generated/
 
-    rompy.swan.subcomponents.base.XY
-    rompy.swan.subcomponents.base.IJ
+    rompy_swan.subcomponents.base.XY
+    rompy_swan.subcomponents.base.IJ

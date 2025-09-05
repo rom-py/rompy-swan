@@ -8,8 +8,8 @@ from test_utils.logging import get_test_logger
 # Initialize logger
 logger = get_test_logger(__name__)
 
-from rompy.swan.components.cgrid import CURVILINEAR, REGULAR, SPECTRUM, UNSTRUCTURED
-from rompy.swan.subcomponents.readgrid import GRIDREGULAR
+from rompy_swan.components.cgrid import CURVILINEAR, REGULAR, SPECTRUM, UNSTRUCTURED
+from rompy_swan.subcomponents.readgrid import GRIDREGULAR
 
 
 @pytest.fixture(scope="module")

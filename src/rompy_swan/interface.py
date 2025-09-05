@@ -12,10 +12,10 @@ from pydantic import Field, ValidationInfo, field_validator, model_validator
 from rompy.core.time import TimeRange
 from rompy.core.types import RompyBaseModel
 from rompy.logging import get_logger
-from rompy.swan.boundary import Boundnest1, BoundspecSegmentXY, BoundspecSide
-from rompy.swan.data import SwanDataGrid
-from rompy.swan.grid import SwanGrid
-from rompy.swan.subcomponents.time import NONSTATIONARY, STATIONARY, TimeRangeOpen
+from rompy_swan.boundary import Boundnest1, BoundspecSegmentXY, BoundspecSide
+from rompy_swan.data import SwanDataGrid
+from rompy_swan.grid import SwanGrid
+from rompy_swan.subcomponents.time import NONSTATIONARY, STATIONARY, TimeRangeOpen
 
 logger = get_logger(__name__)
 
@@ -29,7 +29,7 @@ class DataInterface(RompyBaseModel):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.interface import DataInterface
+        from rompy_swan.interface import DataInterface
 
     """
 
@@ -77,7 +77,7 @@ class BoundaryInterface(RompyBaseModel):
     .. ipython:: python
         :okwarning:
 
-        from rompy.swan.interface import BoundaryInterface
+        from rompy_swan.interface import BoundaryInterface
 
     """
 

@@ -11,9 +11,9 @@ Generation
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.GEN1
-   rompy.swan.components.physics.GEN2
-   rompy.swan.components.physics.GEN3
+   rompy_swan.components.physics.GEN1
+   rompy_swan.components.physics.GEN2
+   rompy_swan.components.physics.GEN3
 
 Swell dissipation
 ~~~~~~~~~~~~~~~~~
@@ -22,10 +22,10 @@ Swell dissipation
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.NEGATINP
-   rompy.swan.components.physics.SSWELL_ARDHUIN
-   rompy.swan.components.physics.SSWELL_ZIEGER
-   rompy.swan.components.physics.SSWELL_ROGERS
+   rompy_swan.components.physics.NEGATINP
+   rompy_swan.components.physics.SSWELL_ARDHUIN
+   rompy_swan.components.physics.SSWELL_ZIEGER
+   rompy_swan.components.physics.SSWELL_ROGERS
 
 Whitecapping
 ~~~~~~~~~~~~
@@ -34,8 +34,8 @@ Whitecapping
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.WCAPPING_KOMEN
-   rompy.swan.components.physics.WCAPPING_AB
+   rompy_swan.components.physics.WCAPPING_KOMEN
+   rompy_swan.components.physics.WCAPPING_AB
 
 Quadruplet interactions
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -44,7 +44,7 @@ Quadruplet interactions
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.QUADRUPL
+   rompy_swan.components.physics.QUADRUPL
 
 Wave breaking
 ~~~~~~~~~~~~~
@@ -53,8 +53,8 @@ Wave breaking
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.BREAKING_CONSTANT
-   rompy.swan.components.physics.BREAKING_BKD
+   rompy_swan.components.physics.BREAKING_CONSTANT
+   rompy_swan.components.physics.BREAKING_BKD
 
 Bottom friction
 ~~~~~~~~~~~~~~~
@@ -63,10 +63,10 @@ Bottom friction
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.FRICTION_JONSWAP
-   rompy.swan.components.physics.FRICTION_COLLINS
-   rompy.swan.components.physics.FRICTION_MADSEN
-   rompy.swan.components.physics.FRICTION_RIPPLES
+   rompy_swan.components.physics.FRICTION_JONSWAP
+   rompy_swan.components.physics.FRICTION_COLLINS
+   rompy_swan.components.physics.FRICTION_MADSEN
+   rompy_swan.components.physics.FRICTION_RIPPLES
 
 Wave triads
 ~~~~~~~~~~~
@@ -75,10 +75,10 @@ Wave triads
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.TRIAD
-   rompy.swan.components.physics.TRIAD_DCTA
-   rompy.swan.components.physics.TRIAD_LTA
-   rompy.swan.components.physics.TRIAD_SPB
+   rompy_swan.components.physics.TRIAD
+   rompy_swan.components.physics.TRIAD_DCTA
+   rompy_swan.components.physics.TRIAD_LTA
+   rompy_swan.components.physics.TRIAD_SPB
 
 Vegetaion dumping
 ~~~~~~~~~~~~~~~~~
@@ -87,7 +87,7 @@ Vegetaion dumping
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.VEGETATION
+   rompy_swan.components.physics.VEGETATION
 
 Mud dumping
 ~~~~~~~~~~~
@@ -96,7 +96,7 @@ Mud dumping
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.MUD
+   rompy_swan.components.physics.MUD
 
 Sea ice dissipation
 ~~~~~~~~~~~~~~~~~~~
@@ -105,11 +105,11 @@ Sea ice dissipation
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.SICE
-   rompy.swan.components.physics.SICE_R19
-   rompy.swan.components.physics.SICE_D15
-   rompy.swan.components.physics.SICE_M18
-   rompy.swan.components.physics.SICE_R21B
+   rompy_swan.components.physics.SICE
+   rompy_swan.components.physics.SICE_R19
+   rompy_swan.components.physics.SICE_D15
+   rompy_swan.components.physics.SICE_M18
+   rompy_swan.components.physics.SICE_R21B
 
 Turbulent viscosity
 ~~~~~~~~~~~~~~~~~~~
@@ -118,7 +118,7 @@ Turbulent viscosity
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.TURBULENCE
+   rompy_swan.components.physics.TURBULENCE
 
 Bragg scattering
 ~~~~~~~~~~~~~~~~
@@ -127,9 +127,9 @@ Bragg scattering
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.BRAGG
-   rompy.swan.components.physics.BRAGG_FT
-   rompy.swan.components.physics.BRAGG_FILE
+   rompy_swan.components.physics.BRAGG
+   rompy_swan.components.physics.BRAGG_FT
+   rompy_swan.components.physics.BRAGG_FILE
 
 Limiter
 ~~~~~~~
@@ -138,7 +138,7 @@ Limiter
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.LIMITER
+   rompy_swan.components.physics.LIMITER
 
 Obstacle
 ~~~~~~~~
@@ -147,9 +147,9 @@ Obstacle
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.OBSTACLE
-   rompy.swan.components.physics.OBSTACLE_FIG
-   rompy.swan.components.physics.OBSTACLES
+   rompy_swan.components.physics.OBSTACLE
+   rompy_swan.components.physics.OBSTACLE_FIG
+   rompy_swan.components.physics.OBSTACLES
 
 Wave setup
 ~~~~~~~~~~
@@ -158,7 +158,7 @@ Wave setup
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.SETUP
+   rompy_swan.components.physics.SETUP
 
 Wave diffraction
 ~~~~~~~~~~~~~~~~
@@ -167,7 +167,7 @@ Wave diffraction
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.DIFFRACTION
+   rompy_swan.components.physics.DIFFRACTION
 
 Surfbeat
 ~~~~~~~~
@@ -176,7 +176,7 @@ Surfbeat
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.SURFBEAT
+   rompy_swan.components.physics.SURFBEAT
 
 Scattering
 ~~~~~~~~~~
@@ -185,7 +185,7 @@ Scattering
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.SCAT
+   rompy_swan.components.physics.SCAT
 
 Off
 ~~~
@@ -194,5 +194,5 @@ Off
    :nosignatures:
    :toctree: _generated/
 
-   rompy.swan.components.physics.OFF
-   rompy.swan.components.physics.OFFS
+   rompy_swan.components.physics.OFF
+   rompy_swan.components.physics.OFFS
