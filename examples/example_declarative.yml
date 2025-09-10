@@ -47,7 +47,7 @@ config:
       var: bottom
       source:
         model_type: intake
-        catalog_uri: ../../tests/data/catalog.yaml
+        catalog_uri: ../tests/data/catalog.yaml
         dataset_id: gebco
       fac: -1.0
       buffer: 1.0
@@ -59,7 +59,7 @@ config:
       - var: wind
         source:
           model_type: intake
-          catalog_uri: ../../tests/data/catalog.yaml
+          catalog_uri: ../tests/data/catalog.yaml
           dataset_id: era5
         buffer: 2.0
         filter:
