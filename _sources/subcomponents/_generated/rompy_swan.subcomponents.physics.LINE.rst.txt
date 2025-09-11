@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.physics.LINE
+======================================
+
+.. currentmodule:: rompy_swan.subcomponents.physics
+
+.. autopydantic_model:: LINE

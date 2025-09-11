@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.output.ABS
+====================================
+
+.. currentmodule:: rompy_swan.subcomponents.output
+
+.. autopydantic_model:: ABS

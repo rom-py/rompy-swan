@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.readgrid.GRIDREGULAR
+==============================================
+
+.. currentmodule:: rompy_swan.subcomponents.readgrid
+
+.. autopydantic_model:: GRIDREGULAR

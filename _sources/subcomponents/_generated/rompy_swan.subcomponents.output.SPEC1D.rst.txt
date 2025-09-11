@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.output.SPEC1D
+=======================================
+
+.. currentmodule:: rompy_swan.subcomponents.output
+
+.. autopydantic_model:: SPEC1D

@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.numerics.NUMERIC
+=======================================
+
+.. currentmodule:: rompy_swan.components.numerics
+
+.. autopydantic_model:: NUMERIC

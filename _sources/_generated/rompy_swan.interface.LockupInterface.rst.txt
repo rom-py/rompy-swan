@@ -1,0 +1,6 @@
+﻿rompy\_swan.interface.LockupInterface
+=====================================
+
+.. currentmodule:: rompy_swan.interface
+
+.. autopydantic_model:: LockupInterface

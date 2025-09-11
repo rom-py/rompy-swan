@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.cgrid.CURVILINEAR
+========================================
+
+.. currentmodule:: rompy_swan.components.cgrid
+
+.. autopydantic_model:: CURVILINEAR

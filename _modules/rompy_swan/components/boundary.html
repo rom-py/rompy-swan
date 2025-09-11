@@ -1,0 +1,1253 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rompy_swan.components.boundary &#8212; rompy-swan 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/rompy_swan/components/boundary';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">rompy-swan 0.6.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/group.html">
+    Group
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../_generated/rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../_generated/rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../_generated/rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../_generated/rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../types.html">
+    Enum Types
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/group.html">
+    Group
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../types.html">
+    Enum Types
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.grid.SwanGrid.html">rompy_swan.grid.SwanGrid</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.data.SwanDataGrid.html">rompy_swan.data.SwanDataGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.boundary.Boundnest1.html">rompy_swan.boundary.Boundnest1</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/inpgrid.html">Input grids</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/lockup.html">Lock-up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/group.html">Group</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/spectrum.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/time.html">Time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/readgrid.html">Grid reader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/output.html">Output</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.interface.DataInterface.html">rompy_swan.interface.DataInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.interface.BoundaryInterface.html">rompy_swan.interface.BoundaryInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.interface.OutputInterface.html">rompy_swan.interface.OutputInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.interface.LockupInterface.html">rompy_swan.interface.LockupInterface</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../types.html">Enum Types</a></li>
+</ul>
+</div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">rompy_swan.components.boundary</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for rompy_swan.components.boundary</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Boundary for SWAN.&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">rompy_swan.components.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseComponent</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rompy_swan.subcomponents.boundary</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CONSTANTFILE</span><span class="p">,</span>
+    <span class="n">CONSTANTPAR</span><span class="p">,</span>
+    <span class="n">DEFAULT</span><span class="p">,</span>
+    <span class="n">HOTMULTIPLE</span><span class="p">,</span>
+    <span class="n">HOTSINGLE</span><span class="p">,</span>
+    <span class="n">PAR</span><span class="p">,</span>
+    <span class="n">SEGMENT</span><span class="p">,</span>
+    <span class="n">SIDE</span><span class="p">,</span>
+    <span class="n">VARIABLEFILE</span><span class="p">,</span>
+    <span class="n">VARIABLEPAR</span><span class="p">,</span>
+    <span class="n">ZERO</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rompy_swan.subcomponents.spectrum</span><span class="w"> </span><span class="kn">import</span> <span class="n">SHAPESPEC</span>
+
+<span class="n">HERE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
+
+
+<div class="viewcode-block" id="INITIAL">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.INITIAL.html#rompy_swan.components.boundary.INITIAL">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">INITIAL</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Initial conditions.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        INITIAL -&gt; DEFAULT|ZERO|PAR|HOTSTART</span>
+
+<span class="sd">    This command can be used to specify the initial values for a stationary (INITIAL</span>
+<span class="sd">    HOTSTART only) or nonstationary computation. The initial values thus specified</span>
+<span class="sd">    override the default initialization (see Section 2.6.3). Note that it is possible</span>
+<span class="sd">    to obtain an initial state by carrying out a previous stationary or nonstationary</span>
+<span class="sd">    computation.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.components.boundary import INITIAL</span>
+<span class="sd">        init = INITIAL()</span>
+<span class="sd">        print(init.render())</span>
+<span class="sd">        init = INITIAL(</span>
+<span class="sd">            kind=dict(model_type=&quot;hotmultiple&quot;, fname=&quot;hotstart.swn&quot;, format=&quot;free&quot;)</span>
+<span class="sd">        )</span>
+<span class="sd">        print(init.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;initial&quot;</span><span class="p">,</span> <span class="s2">&quot;INITIAL&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;initial&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="n">DEFAULT</span> <span class="o">|</span> <span class="n">ZERO</span> <span class="o">|</span> <span class="n">PAR</span> <span class="o">|</span> <span class="n">HOTSINGLE</span> <span class="o">|</span> <span class="n">HOTMULTIPLE</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="n">DEFAULT</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Initial condition type&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="INITIAL.cmd">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.INITIAL.html#rompy_swan.components.boundary.INITIAL.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;INITIAL </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BOUNDSPEC">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.BOUNDSPEC.html#rompy_swan.components.boundary.BOUNDSPEC">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BOUNDSPEC</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary along sides or segment.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        BOUNDSPEC -&gt;SIDE|SEGMENT CONSTANT|VARIABLE PAR|FILE</span>
+
+<span class="sd">    This command BOUNDSPEC defines parametric spectra at the boundary. It consists of</span>
+<span class="sd">    two parts, the first part defines the boundary side or segment where the spectra</span>
+<span class="sd">    will be given, the second part defines the spectral parameters of these spectra.</span>
+<span class="sd">    Note that in fact only the incoming wave components of these spectra are used by</span>
+<span class="sd">    SWAN. The fact that complete spectra are calculated at the model boundaries from</span>
+<span class="sd">    the spectral parameters should not be misinterpreted. Only the incoming components</span>
+<span class="sd">    are effective in the computation.</span>
+
+<span class="sd">    TODO: Add support for unstructured grid (k).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.components.boundary import BOUNDSPEC</span>
+<span class="sd">        boundary = BOUNDSPEC(</span>
+<span class="sd">            shapespec=dict(model_type=&quot;shapespec&quot;, shape=dict(model_type=&quot;pm&quot;)),</span>
+<span class="sd">            location=dict(model_type=&quot;side&quot;, side=&quot;west&quot;, direction=&quot;ccw&quot;),</span>
+<span class="sd">            data=dict(model_type=&quot;constantpar&quot;, hs=2, per=8, dir=270, dd=30),</span>
+<span class="sd">        )</span>
+<span class="sd">        print(boundary.render())</span>
+<span class="sd">        boundary = BOUNDSPEC(</span>
+<span class="sd">            shapespec=dict(model_type=&quot;shapespec&quot;, shape=dict(model_type=&quot;pm&quot;)),</span>
+<span class="sd">            location=dict(</span>
+<span class="sd">                model_type=&quot;segment&quot;,</span>
+<span class="sd">                points=dict(model_type=&quot;ij&quot;, i=[0, 0], j=[0, 3])</span>
+<span class="sd">            ),</span>
+<span class="sd">            data=dict(model_type=&quot;constantpar&quot;, hs=2, per=8, dir=270, dd=30),</span>
+<span class="sd">        )</span>
+<span class="sd">        print(boundary.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;boundspec&quot;</span><span class="p">,</span> <span class="s2">&quot;BOUNDSPEC&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;boundspec&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">shapespec</span><span class="p">:</span> <span class="n">SHAPESPEC</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default_factory</span><span class="o">=</span><span class="n">SHAPESPEC</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Spectral shape specification&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">location</span><span class="p">:</span> <span class="n">SIDE</span> <span class="o">|</span> <span class="n">SEGMENT</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Location to apply the boundary&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">data</span><span class="p">:</span> <span class="n">CONSTANTPAR</span> <span class="o">|</span> <span class="n">CONSTANTFILE</span> <span class="o">|</span> <span class="n">VARIABLEPAR</span> <span class="o">|</span> <span class="n">VARIABLEFILE</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Spectral data&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="BOUNDSPEC.cmd">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.BOUNDSPEC.html#rompy_swan.components.boundary.BOUNDSPEC.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">shapespec</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="nb">repr</span> <span class="o">+=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;BOUNDSPEC </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">location</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BOUNDNEST1">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.BOUNDNEST1.html#rompy_swan.components.boundary.BOUNDNEST1">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BOUNDNEST1</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary spectra from a coarser SWAN nest.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        BOUNDNEST1 NEST &#39;fname&#39; -&gt;CLOSED|OPEN</span>
+
+<span class="sd">    With this optional command a nested SWAN run can be carried out with the boundary</span>
+<span class="sd">    conditions obtained from a coarse grid SWAN run (generated in that previous SWAN</span>
+<span class="sd">    run with command NESTOUT). The spectral frequencies and directions of the coarse</span>
+<span class="sd">    grid run do not have to coincide with the frequencies and directions used in the</span>
+<span class="sd">    nested SWAN run; SWAN will interpolate to these frequencies and directions in the</span>
+<span class="sd">    nested run (see Section 2.6.3). To generate the nest boundary in the coarse grid</span>
+<span class="sd">    run, use command NGRID. For the nested run, use the command CGRID with identical</span>
+<span class="sd">    geographical information except the number of meshes (which will be much higher for</span>
+<span class="sd">    the nested run). This BOUNDNEST1 command is not available for 1D computations; in</span>
+<span class="sd">    such cases the commands SPECOUT and BOUNDSPEC can be used for the same purpose. A</span>
+<span class="sd">    nested SWAN run must use the same coordinate system as the coarse grid SWAN run.</span>
+<span class="sd">    For a curvilinear grid, it is advised to use the commands POINTS or CURVE and</span>
+<span class="sd">    SPECOUT instead of NGRID and NESTOUT.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.components.boundary import BOUNDNEST1</span>
+<span class="sd">        boundary = BOUNDNEST1(fname=&quot;boundary.swn&quot;, rectangle=&quot;closed&quot;)</span>
+<span class="sd">        print(boundary.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;boundnest1&quot;</span><span class="p">,</span> <span class="s2">&quot;BOUNDNEST1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;boundnest1&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Name of the file containing the boundary conditions for the present run, &quot;</span>
+            <span class="s2">&quot;created by the previous SWAN coarse grid run. This file is structured &quot;</span>
+            <span class="s2">&quot;according to the rules given in Appendix D for 2D spectra&quot;</span>
+        <span class="p">),</span>
+        <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">rectangle</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;closed&quot;</span><span class="p">,</span> <span class="s2">&quot;open&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;closed&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Boundary is defined over a closed (default) or an open rectangle. &quot;</span>
+            <span class="s2">&quot;Boundary generated from the NESTOUT command is aways closed&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="BOUNDNEST1.cmd">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.BOUNDNEST1.html#rompy_swan.components.boundary.BOUNDNEST1.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;BOUNDNEST1 NEST fname=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rectangle</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BOUNDNEST2">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.BOUNDNEST2.html#rompy_swan.components.boundary.BOUNDNEST2">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BOUNDNEST2</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary spectra from WAM.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        BOUNDNEST2 WAMNEST &#39;fname&#39; FREE|UNFORMATTED -&gt;CRAY|WKSTAT [xgc] [ygc] [lwdate]</span>
+
+<span class="sd">    With this optional command (not fully tested) a nested SWAN run can be carried out</span>
+<span class="sd">    with the boundary conditions obtained from a coarse grid WAM run (WAM Cycle 4.5,</span>
+<span class="sd">    source code as distributed by the Max Planck Institute in Hamburg). The spectral</span>
+<span class="sd">    frequencies and directions of the coarse grid run do not have to coincide with the</span>
+<span class="sd">    frequencies and directions used in the nested SWAN run; SWAN will interpolate to</span>
+<span class="sd">    these frequencies and directions in the nested run (see Section 2.6.3). Note that</span>
+<span class="sd">    SWAN will accept output of a WAM output location only if the SWAN grid point on the</span>
+<span class="sd">    nest boundary lies within a rectangle between two consecutive WAM output locations</span>
+<span class="sd">    with a width equal to 0.1 times the distance between these output locations on</span>
+<span class="sd">    either side of the line between these WAM output locations. This BOUNDNEST2 command</span>
+<span class="sd">    is not available for 1D computations. Only boundary conditions generated by WAM</span>
+<span class="sd">    Cycle 4.5 can be read properly by SWAN. A nested SWAN run may use either Cartesian</span>
+<span class="sd">    or spherical coordinates. A curvilinear grid may be used in the nested grid but the</span>
+<span class="sd">    boundaries of this nest should conform to the rectangular course grid nest</span>
+<span class="sd">    boundaries. WAM output files are unformatted (binary); this usually implies that</span>
+<span class="sd">    WAM and SWAN have to run on the same computer. For those cases where WAM and SWAN</span>
+<span class="sd">    run on different types of machines (binary files do not transfer properly), the</span>
+<span class="sd">    option FREE is available in this command. The distributed version of WAM does not</span>
+<span class="sd">    support the required free format nesting output; WAM users who modify WAM such that</span>
+<span class="sd">    it can make formatted output, must modify WAM such that the files made by WAM can</span>
+<span class="sd">    be read in free format, i.e. with at least a blank or comma between numbers.</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    the contents of &#39;fname&#39; file could look like:</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        CBO9212010000</span>
+<span class="sd">        CBO9212020000</span>
+<span class="sd">        CBO9212030000</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.components.boundary import BOUNDNEST2</span>
+<span class="sd">        boundary = BOUNDNEST2(fname=&quot;boundary.wam&quot;, format=&quot;cray&quot;, lwdate=12)</span>
+<span class="sd">        print(boundary.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;boundnest2&quot;</span><span class="p">,</span> <span class="s2">&quot;BOUNDNEST2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;boundnest2&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;A file name that contains all the names of WAM files containing the &quot;</span>
+            <span class="s2">&quot;nested boundary conditions in time-sequence (usually one file per day)&quot;</span>
+        <span class="p">),</span>
+        <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;cray&quot;</span><span class="p">,</span> <span class="s2">&quot;wkstat&quot;</span><span class="p">,</span> <span class="s2">&quot;free&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Format of the WAM file. `cray`: CRAY version of WAM, `wkstat`: &quot;</span>
+            <span class="s2">&quot;WORKSTATION version of WAM, `free`: Free format (these files are not &quot;</span>
+            <span class="s2">&quot;generated standard by WAM)&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">xgc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;If SWAN is used with Cartesian coordinates: longitude of south-west &quot;</span>
+            <span class="s2">&quot;corner of SWAN computational grid (in degrees); if the south-west &quot;</span>
+            <span class="s2">&quot;corner of the nest in the WAM computation is on land this value is &quot;</span>
+            <span class="s2">&quot;required. If SWAN is used with spherical coordinates then `xgc` is &quot;</span>
+            <span class="s2">&quot;ignored by SWAN (SWAN default: the location of the first spectrum &quot;</span>
+            <span class="s2">&quot;encountered in the nest file&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">ygc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;If SWAN is used with Cartesian coordinates: latitude of south-west &quot;</span>
+            <span class="s2">&quot;corner of SWAN computational grid (in degrees); if the south-west &quot;</span>
+            <span class="s2">&quot;corner of the nest in the WAM computation is on land this value is &quot;</span>
+            <span class="s2">&quot;required. If SWAN is used with spherical coordinates then `ygc` is &quot;</span>
+            <span class="s2">&quot;ignored by SWAN (SWAN default: the location of the first spectrum &quot;</span>
+            <span class="s2">&quot;encountered in the nest file&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">lwdate</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Length of character string for date-time as used in the WAM files. &quot;</span>
+            <span class="s2">&quot;Possible values are: 10 (i.e. YYMMDDHHMM), 12 (i.e. YYMMDDHHMMSS) &quot;</span>
+            <span class="s2">&quot;or 14 (i.e. YYYYMMDDHHMMSS) (SWAN default: `lwdate` = 12)&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">format_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;cray&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;UNFORMATTED CRAY&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;wkstat&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;UNFORMATTED WKSTAT&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">format</span> <span class="o">==</span> <span class="s2">&quot;free&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;FREE&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown format </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BOUNDNEST2.cmd">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.BOUNDNEST2.html#rompy_swan.components.boundary.BOUNDNEST2.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BOUNDNEST2 WAMNEST fname=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format_str</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xgc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; xgc=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">xgc</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ygc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; ygc=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ygc</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; lwdate=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lwdate</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="BOUNDNEST3">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.BOUNDNEST3.html#rompy_swan.components.boundary.BOUNDNEST3">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">BOUNDNEST3</span><span class="p">(</span><span class="n">BaseComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary spectra from WAVEWATCHIII.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        BOUNDNEST3 WW3 &#39;fname&#39; FREE|UNFORMATTED -&gt;CLOSED|OPEN [xgc] [ygc]</span>
+
+<span class="sd">    With this optional command a nested SWAN run can be carried out with the boundary</span>
+<span class="sd">    conditions obtained from a coarse grid WAVEWATCH III run. The spectral frequencies</span>
+<span class="sd">    and directions of the coarse grid run do not have to coincide with the frequencies</span>
+<span class="sd">    and directions used in the nested SWAN run; SWAN will interpolate to these</span>
+<span class="sd">    frequencies and directions in the nested run (see Section 2.6.3). The output files</span>
+<span class="sd">    of WAVEWATCH III have to be created with the post-processor of WAVEWATCH III as</span>
+<span class="sd">    output transfer files (formatted or unformatted) with WW_3 OUTP (output type 1 sub</span>
+<span class="sd">    type 3) at the locations along the nest boundary (i.e. computational grid points in</span>
+<span class="sd">    WAVEWATCH III). These locations are equal to the corner points of the SWAN nested</span>
+<span class="sd">    grid and optionally also distributed between the corner points of the SWAN nested</span>
+<span class="sd">    grid (the boundary of the WAVEWATCH III nested grid need not be closed and may</span>
+<span class="sd">    cover land). The locations should be output by WAVEWATCH III in sequence (going</span>
+<span class="sd">    along the nest boundary, clockwise or counterclockwise). Note that SWAN will accept</span>
+<span class="sd">    output of a WAVEWATCH III output location only if the SWAN grid point on the nest</span>
+<span class="sd">    boundary lies within a rectangle between two consecutive WAVEWATCH III output</span>
+<span class="sd">    locations with a width equal to 0.1 times the distance between these output</span>
+<span class="sd">    locations on either side of the line between these WAVEWATCH III output locations.</span>
+<span class="sd">    This BOUNDNEST3 command is not available for 1D computations. A nested SWAN run may</span>
+<span class="sd">    use either Cartesian or spherical coordinates. A curvilinear grid may be used in</span>
+<span class="sd">    the nested grid but the boundaries of this nest should conform to the rectangular</span>
+<span class="sd">    course grid nest boundaries.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.components.boundary import BOUNDNEST3</span>
+<span class="sd">        boundary = BOUNDNEST3(</span>
+<span class="sd">            fname=&quot;boundary.ww3&quot;,</span>
+<span class="sd">            format=&quot;free&quot;,</span>
+<span class="sd">            rectangle=&quot;closed&quot;,</span>
+<span class="sd">        )</span>
+<span class="sd">        print(boundary.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;boundnest3&quot;</span><span class="p">,</span> <span class="s2">&quot;BOUNDNEST3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;boundnest3&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;The name of the file that contains the spectra computed by WAVEWATCH III&quot;</span>
+        <span class="p">),</span>
+        <span class="n">min_length</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;unformatted&quot;</span><span class="p">,</span> <span class="s2">&quot;free&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Format of the WW3 file. `unformatted`: The input WW3 files are binary, &quot;</span>
+            <span class="s2">&quot;`free`: The input WW3 files are formatted&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">rectangle</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;closed&quot;</span><span class="p">,</span> <span class="s2">&quot;open&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;closed&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Boundary is defined over a closed (default) or an open rectangle. &quot;</span>
+            <span class="s2">&quot;Boundary generated from the NESTOUT command is aways closed&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">xgc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;If SWAN is used with Cartesian coordinates: longitude of south-west &quot;</span>
+            <span class="s2">&quot;corner of SWAN computational grid (in degrees); if the south-west &quot;</span>
+            <span class="s2">&quot;corner of the nest in the WAM computation is on land this value is &quot;</span>
+            <span class="s2">&quot;required. If SWAN is used with spherical coordinates then `xgc` is &quot;</span>
+            <span class="s2">&quot;ignored by SWAN (SWAN default: the location of the first spectrum &quot;</span>
+            <span class="s2">&quot;encountered in the nest file. &quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">ygc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;If SWAN is used with Cartesian coordinates: latitude of south-west &quot;</span>
+            <span class="s2">&quot;corner of SWAN computational grid (in degrees); if the south-west &quot;</span>
+            <span class="s2">&quot;corner of the nest in the WAM computation is on land this value is &quot;</span>
+            <span class="s2">&quot;required. If SWAN is used with spherical coordinates then `ygc` is &quot;</span>
+            <span class="s2">&quot;ignored by SWAN (SWAN default: the location of the first spectrum &quot;</span>
+            <span class="s2">&quot;encountered in the nest file. &quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="BOUNDNEST3.cmd">
+<a class="viewcode-back" href="../../../components/_generated/rompy_swan.components.boundary.BOUNDNEST3.html#rompy_swan.components.boundary.BOUNDNEST3.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;BOUNDNEST3 WW3 fname=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rectangle</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xgc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; xgc=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">xgc</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ygc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; ygc=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">ygc</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2021, CSIRO and rompy contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

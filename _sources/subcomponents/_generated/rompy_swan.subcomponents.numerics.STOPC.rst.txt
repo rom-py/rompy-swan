@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.numerics.STOPC
+========================================
+
+.. currentmodule:: rompy_swan.subcomponents.numerics
+
+.. autopydantic_model:: STOPC

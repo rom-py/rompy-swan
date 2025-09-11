@@ -1,0 +1,6 @@
+﻿rompy\_swan.boundary.Boundnest1
+===============================
+
+.. currentmodule:: rompy_swan.boundary
+
+.. autopydantic_model:: Boundnest1

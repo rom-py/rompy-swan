@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.spectrum.BIN
+======================================
+
+.. currentmodule:: rompy_swan.subcomponents.spectrum
+
+.. autopydantic_model:: BIN

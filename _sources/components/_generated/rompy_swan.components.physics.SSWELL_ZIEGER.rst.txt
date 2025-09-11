@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.SSWELL\_ZIEGER
+=============================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: SSWELL_ZIEGER

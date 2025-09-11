@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.output.BaseLocation
+==========================================
+
+.. currentmodule:: rompy_swan.components.output
+
+.. autopydantic_model:: BaseLocation

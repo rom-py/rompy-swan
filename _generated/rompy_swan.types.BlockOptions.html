@@ -1,0 +1,2185 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rompy_swan.types.BlockOptions &#8212; rompy-swan 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_generated/rompy_swan.types.BlockOptions';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="rompy_swan.types.PhysicsOff" href="rompy_swan.types.PhysicsOff.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">rompy-swan 0.6.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../components/inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../components/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../components/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../components/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../components/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../components/lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../components/group.html">
+    Group
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="../types.html">
+    Enum Types
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../components/group.html">
+    Group
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../types.html">
+    Enum Types
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rompy_swan.grid.SwanGrid.html">rompy_swan.grid.SwanGrid</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rompy_swan.data.SwanDataGrid.html">rompy_swan.data.SwanDataGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rompy_swan.boundary.Boundnest1.html">rompy_swan.boundary.Boundnest1</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../components/startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/inpgrid.html">Input grids</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/lockup.html">Lock-up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../components/group.html">Group</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/spectrum.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/time.html">Time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/readgrid.html">Grid reader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/output.html">Output</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="rompy_swan.interface.DataInterface.html">rompy_swan.interface.DataInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rompy_swan.interface.BoundaryInterface.html">rompy_swan.interface.BoundaryInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rompy_swan.interface.OutputInterface.html">rompy_swan.interface.OutputInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="rompy_swan.interface.LockupInterface.html">rompy_swan.interface.LockupInterface</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../types.html">Enum Types</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="rompy_swan.types.IDLA.html">rompy_swan.types.IDLA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rompy_swan.types.GridOptions.html">rompy_swan.types.GridOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rompy_swan.types.BoundShapeOptions.html">rompy_swan.types.BoundShapeOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rompy_swan.types.SideOptions.html">rompy_swan.types.SideOptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rompy_swan.types.PhysicsOff.html">rompy_swan.types.PhysicsOff</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">rompy_swan.types.BlockOptions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rompy_swan.types.BlockOptions"><code class="docutils literal notranslate"><span class="pre">BlockOptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.HSIGN"><code class="docutils literal notranslate"><span class="pre">BlockOptions.HSIGN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.HSWELL"><code class="docutils literal notranslate"><span class="pre">BlockOptions.HSWELL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DIR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DPM"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DPM</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PDIR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PDIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TDIR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TDIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TM01"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TM01</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.RTM01"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RTM01</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.RTP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RTP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TPS"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TPS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PER"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.RPER"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RPER</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TMM10"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TMM10</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.RTMM10"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RTMM10</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TM02"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TM02</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.FSPR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.FSPR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DSPR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DSPR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.QP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.QP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DEPTH"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DEPTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.WATLEV"><code class="docutils literal notranslate"><span class="pre">BlockOptions.WATLEV</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.BOTLEV"><code class="docutils literal notranslate"><span class="pre">BlockOptions.BOTLEV</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.VEL"><code class="docutils literal notranslate"><span class="pre">BlockOptions.VEL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.FRCOEF"><code class="docutils literal notranslate"><span class="pre">BlockOptions.FRCOEF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.WIND"><code class="docutils literal notranslate"><span class="pre">BlockOptions.WIND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.AICE"><code class="docutils literal notranslate"><span class="pre">BlockOptions.AICE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PROPAGAT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PROPAGAT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PROPXY"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PROPXY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PROPTHETA"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PROPTHETA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PROPSIGMA"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PROPSIGMA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.GENERAT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.GENERAT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.GENWIND"><code class="docutils literal notranslate"><span class="pre">BlockOptions.GENWIND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.REDIST"><code class="docutils literal notranslate"><span class="pre">BlockOptions.REDIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.REDQUAD"><code class="docutils literal notranslate"><span class="pre">BlockOptions.REDQUAD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.REDTRIAD"><code class="docutils literal notranslate"><span class="pre">BlockOptions.REDTRIAD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISSIP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISSIP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISBOT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISBOT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISSURF"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISSURF</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISWCAP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISWCAP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISSWELL"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISSWELL</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISVEG"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISVEG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISMUD"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISMUD</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISICE"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISICE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.RADSTR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RADSTR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.QB"><code class="docutils literal notranslate"><span class="pre">BlockOptions.QB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TRANSP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TRANSP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.FORCE"><code class="docutils literal notranslate"><span class="pre">BlockOptions.FORCE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.UBOT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.UBOT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.URMS"><code class="docutils literal notranslate"><span class="pre">BlockOptions.URMS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TMBOT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TMBOT</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.WLENGTH"><code class="docutils literal notranslate"><span class="pre">BlockOptions.WLENGTH</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.LWAVP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.LWAVP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.STEEPNESS"><code class="docutils literal notranslate"><span class="pre">BlockOptions.STEEPNESS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.BFI"><code class="docutils literal notranslate"><span class="pre">BlockOptions.BFI</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.NPLANTS"><code class="docutils literal notranslate"><span class="pre">BlockOptions.NPLANTS</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DHSIGN"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DHSIGN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DRTM01"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DRTM01</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.LEAK"><code class="docutils literal notranslate"><span class="pre">BlockOptions.LEAK</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TIME"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TIME</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.TSEC"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TSEC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.XP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.XP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.YP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.YP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.DIST"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DIST</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.SETUP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.SETUP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTHSIGN"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTHSIGN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTRTP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTRTP</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTWLEN"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTWLEN</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTDIR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTDIR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTDSPR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTDSPR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTWFRAC"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTWFRAC</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTSTEEPNE"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTSTEEPNE</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.PARTITION"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PARTITION</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.types.BlockOptions.__init__"><code class="docutils literal notranslate"><span class="pre">BlockOptions.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../types.html" class="nav-link">Enum Types</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">rompy_swan.types.BlockOptions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="rompy-swan-types-blockoptions">
+<h1>rompy_swan.types.BlockOptions<a class="headerlink" href="#rompy-swan-types-blockoptions" title="Link to this heading">#</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rompy_swan.types.</span></span><span class="sig-name descname"><span class="pre">BlockOptions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/rompy_swan/types.html#BlockOptions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rompy_swan.types.BlockOptions" title="Link to this definition">#</a></dt>
+<dd><p>Valid options for block output parameters.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.HSIGN">
+<span class="sig-name descname"><span class="pre">HSIGN</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.HSIGN" title="Link to this definition">#</a></dt>
+<dd><p>Significant wave height (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“hsign”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.HSWELL">
+<span class="sig-name descname"><span class="pre">HSWELL</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.HSWELL" title="Link to this definition">#</a></dt>
+<dd><p>Swell wave height (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“hswell”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DIR">
+<span class="sig-name descname"><span class="pre">DIR</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DIR" title="Link to this definition">#</a></dt>
+<dd><p>Mean wave direction (in degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“dir”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DPM">
+<span class="sig-name descname"><span class="pre">DPM</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DPM" title="Link to this definition">#</a></dt>
+<dd><p>Mean wave direction at the peak frequency (in degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“dpm”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PDIR">
+<span class="sig-name descname"><span class="pre">PDIR</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PDIR" title="Link to this definition">#</a></dt>
+<dd><p>Peak wave direction (in degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“pdir”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TDIR">
+<span class="sig-name descname"><span class="pre">TDIR</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TDIR" title="Link to this definition">#</a></dt>
+<dd><p>Direction of energy transport (in degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“tdir”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TM01">
+<span class="sig-name descname"><span class="pre">TM01</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TM01" title="Link to this definition">#</a></dt>
+<dd><p>Mean absolute wave period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“tm01”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.RTM01">
+<span class="sig-name descname"><span class="pre">RTM01</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.RTM01" title="Link to this definition">#</a></dt>
+<dd><p>Mean relative wave period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“rtm01”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.RTP">
+<span class="sig-name descname"><span class="pre">RTP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.RTP" title="Link to this definition">#</a></dt>
+<dd><p>Peak period of the (relative frequency) variance density spectrum (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“rtp”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TPS">
+<span class="sig-name descname"><span class="pre">TPS</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TPS" title="Link to this definition">#</a></dt>
+<dd><p>Smoothed peak period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“tps”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PER">
+<span class="sig-name descname"><span class="pre">PER</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PER" title="Link to this definition">#</a></dt>
+<dd><p>Mean absolute wave period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“per”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.RPER">
+<span class="sig-name descname"><span class="pre">RPER</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.RPER" title="Link to this definition">#</a></dt>
+<dd><p>Mean relative wave period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“rper”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TMM10">
+<span class="sig-name descname"><span class="pre">TMM10</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TMM10" title="Link to this definition">#</a></dt>
+<dd><p>Mean absolute wave period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“tmm10”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.RTMM10">
+<span class="sig-name descname"><span class="pre">RTMM10</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.RTMM10" title="Link to this definition">#</a></dt>
+<dd><p>Mean relative wave period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“rtmm10”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TM02">
+<span class="sig-name descname"><span class="pre">TM02</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TM02" title="Link to this definition">#</a></dt>
+<dd><p>Mean absolute zero-crossing period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“tm02”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.FSPR">
+<span class="sig-name descname"><span class="pre">FSPR</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.FSPR" title="Link to this definition">#</a></dt>
+<dd><p>The normalised width of the frequency spectrum.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“fspr”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DSPR">
+<span class="sig-name descname"><span class="pre">DSPR</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DSPR" title="Link to this definition">#</a></dt>
+<dd><p>Directional spreading of the waves (in degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“dspr”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.QP">
+<span class="sig-name descname"><span class="pre">QP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.QP" title="Link to this definition">#</a></dt>
+<dd><p>Peakedness of the wave spectrum (dimensionless).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“qp”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DEPTH">
+<span class="sig-name descname"><span class="pre">DEPTH</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DEPTH" title="Link to this definition">#</a></dt>
+<dd><p>Water depth (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“depth”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.WATLEV">
+<span class="sig-name descname"><span class="pre">WATLEV</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.WATLEV" title="Link to this definition">#</a></dt>
+<dd><p>Water level (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“watlev”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.BOTLEV">
+<span class="sig-name descname"><span class="pre">BOTLEV</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.BOTLEV" title="Link to this definition">#</a></dt>
+<dd><p>Bottom level (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“botlev”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.VEL">
+<span class="sig-name descname"><span class="pre">VEL</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.VEL" title="Link to this definition">#</a></dt>
+<dd><p>Current velocity (vector; in m/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“vel”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.FRCOEF">
+<span class="sig-name descname"><span class="pre">FRCOEF</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.FRCOEF" title="Link to this definition">#</a></dt>
+<dd><p>Friction coefficient (equal to <cite>cfw</cite> or <cite>kn</cite> in command <cite>FRICTION</cite>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“frcoef”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.WIND">
+<span class="sig-name descname"><span class="pre">WIND</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.WIND" title="Link to this definition">#</a></dt>
+<dd><p>Wind velocity (vector; in m/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“wind”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.AICE">
+<span class="sig-name descname"><span class="pre">AICE</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.AICE" title="Link to this definition">#</a></dt>
+<dd><p>Ice concentration (as a fraction from 0 to 1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“aice”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PROPAGAT">
+<span class="sig-name descname"><span class="pre">PROPAGAT</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PROPAGAT" title="Link to this definition">#</a></dt>
+<dd><p>Sum of PROPXY, PROPTHETA and PROPSIGMA (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“propagat”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PROPXY">
+<span class="sig-name descname"><span class="pre">PROPXY</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PROPXY" title="Link to this definition">#</a></dt>
+<dd><p>Energy propagation in geographic space; sum of x- and y-direction
+(in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“propxy”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PROPTHETA">
+<span class="sig-name descname"><span class="pre">PROPTHETA</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PROPTHETA" title="Link to this definition">#</a></dt>
+<dd><p>Energy propagation in theta space (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“proptheta”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PROPSIGMA">
+<span class="sig-name descname"><span class="pre">PROPSIGMA</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PROPSIGMA" title="Link to this definition">#</a></dt>
+<dd><p>Energy propagation in sigma space (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“propsigma”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.GENERAT">
+<span class="sig-name descname"><span class="pre">GENERAT</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.GENERAT" title="Link to this definition">#</a></dt>
+<dd><p>Total energy generation (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“generat”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.GENWIND">
+<span class="sig-name descname"><span class="pre">GENWIND</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.GENWIND" title="Link to this definition">#</a></dt>
+<dd><p>Energy generation due to wind (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“genwind”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.REDIST">
+<span class="sig-name descname"><span class="pre">REDIST</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.REDIST" title="Link to this definition">#</a></dt>
+<dd><p>Total energy redistribution (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“redist”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.REDQUAD">
+<span class="sig-name descname"><span class="pre">REDQUAD</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.REDQUAD" title="Link to this definition">#</a></dt>
+<dd><p>Energy redistribution due to quadruplets (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“redquad”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.REDTRIAD">
+<span class="sig-name descname"><span class="pre">REDTRIAD</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.REDTRIAD" title="Link to this definition">#</a></dt>
+<dd><p>Energy redistribution due to triads (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“redtriad”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DISSIP">
+<span class="sig-name descname"><span class="pre">DISSIP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DISSIP" title="Link to this definition">#</a></dt>
+<dd><p>Total energy dissipation (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“dissip”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DISBOT">
+<span class="sig-name descname"><span class="pre">DISBOT</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DISBOT" title="Link to this definition">#</a></dt>
+<dd><p>Energy dissipation due to bottom friction (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“disbot”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DISSURF">
+<span class="sig-name descname"><span class="pre">DISSURF</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DISSURF" title="Link to this definition">#</a></dt>
+<dd><p>Energy dissipation due to surf breaking (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“dissurf”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DISWCAP">
+<span class="sig-name descname"><span class="pre">DISWCAP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DISWCAP" title="Link to this definition">#</a></dt>
+<dd><p>Energy dissipation due to whitecapping (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“diswcap”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DISSWELL">
+<span class="sig-name descname"><span class="pre">DISSWELL</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DISSWELL" title="Link to this definition">#</a></dt>
+<dd><p>Energy dissipation due to swell dissipation (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“disswell”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DISVEG">
+<span class="sig-name descname"><span class="pre">DISVEG</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DISVEG" title="Link to this definition">#</a></dt>
+<dd><p>Energy dissipation due to vegetation (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“disveg”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DISMUD">
+<span class="sig-name descname"><span class="pre">DISMUD</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DISMUD" title="Link to this definition">#</a></dt>
+<dd><p>Energy dissipation due to mud (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“dismud”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DISICE">
+<span class="sig-name descname"><span class="pre">DISICE</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DISICE" title="Link to this definition">#</a></dt>
+<dd><p>Energy dissipation due to sea ice (in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“disice”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.RADSTR">
+<span class="sig-name descname"><span class="pre">RADSTR</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.RADSTR" title="Link to this definition">#</a></dt>
+<dd><p>Energy transfer between waves and currents due to radiation stress
+(in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“radstr”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.QB">
+<span class="sig-name descname"><span class="pre">QB</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.QB" title="Link to this definition">#</a></dt>
+<dd><p>Fraction of breaking waves due to depth-induced breaking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“qb”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TRANSP">
+<span class="sig-name descname"><span class="pre">TRANSP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TRANSP" title="Link to this definition">#</a></dt>
+<dd><p>Transport of energy (vector; in W/m2 or m2/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“transp”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.FORCE">
+<span class="sig-name descname"><span class="pre">FORCE</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.FORCE" title="Link to this definition">#</a></dt>
+<dd><p>Wave-induced force per unit surface area (vector; in N/m2).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“force”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.UBOT">
+<span class="sig-name descname"><span class="pre">UBOT</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.UBOT" title="Link to this definition">#</a></dt>
+<dd><p>The rms-value of the maxima of the orbital velocity near the bottom (in m/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“ubot”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.URMS">
+<span class="sig-name descname"><span class="pre">URMS</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.URMS" title="Link to this definition">#</a></dt>
+<dd><p>The rms-value of the orbital velocity near the bottom (in m/s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“urms”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TMBOT">
+<span class="sig-name descname"><span class="pre">TMBOT</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TMBOT" title="Link to this definition">#</a></dt>
+<dd><p>The bottom wave period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“tmbot”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.WLENGTH">
+<span class="sig-name descname"><span class="pre">WLENGTH</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.WLENGTH" title="Link to this definition">#</a></dt>
+<dd><p>Average wave length (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“wlength”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.LWAVP">
+<span class="sig-name descname"><span class="pre">LWAVP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.LWAVP" title="Link to this definition">#</a></dt>
+<dd><p>Peak wave length (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“lwavp”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.STEEPNESS">
+<span class="sig-name descname"><span class="pre">STEEPNESS</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.STEEPNESS" title="Link to this definition">#</a></dt>
+<dd><p>Average wave steepness (dimensionless).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“steepness”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.BFI">
+<span class="sig-name descname"><span class="pre">BFI</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.BFI" title="Link to this definition">#</a></dt>
+<dd><p>Benjamin-Feir index (dimensionless).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“bfi”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.NPLANTS">
+<span class="sig-name descname"><span class="pre">NPLANTS</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.NPLANTS" title="Link to this definition">#</a></dt>
+<dd><p>Number of plants per square meter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“nplants”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DHSIGN">
+<span class="sig-name descname"><span class="pre">DHSIGN</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DHSIGN" title="Link to this definition">#</a></dt>
+<dd><p>Difference in significant wave height from the last two iterations (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“dhsign”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DRTM01">
+<span class="sig-name descname"><span class="pre">DRTM01</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DRTM01" title="Link to this definition">#</a></dt>
+<dd><p>Difference in average wave period (RTM01) from the last two iterations (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“drtm01”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.LEAK">
+<span class="sig-name descname"><span class="pre">LEAK</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.LEAK" title="Link to this definition">#</a></dt>
+<dd><p>Numerical loss of energy equal to <cite>cthetaE(omega,theta)</cite> across boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“leak”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TIME">
+<span class="sig-name descname"><span class="pre">TIME</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TIME" title="Link to this definition">#</a></dt>
+<dd><p>Full date-time string as part of line used in TABLE only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“time”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.TSEC">
+<span class="sig-name descname"><span class="pre">TSEC</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.TSEC" title="Link to this definition">#</a></dt>
+<dd><p>Time in seconds with respect to a reference time (see command QUANTITY).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“tsec”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.XP">
+<span class="sig-name descname"><span class="pre">XP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.XP" title="Link to this definition">#</a></dt>
+<dd><p>The x-coordinate in the problem coordinate system of the output location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“xp”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.YP">
+<span class="sig-name descname"><span class="pre">YP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.YP" title="Link to this definition">#</a></dt>
+<dd><p>The y-coordinate in the problem coordinate system of the output location.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“yp”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.DIST">
+<span class="sig-name descname"><span class="pre">DIST</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.DIST" title="Link to this definition">#</a></dt>
+<dd><p>If output has been requested along a curve then the distance along the curve
+can be obtained with the command TABLE. DIST is the distance along the curve
+measured from teh first point on the curve to the output location on the curve
+in meters (also in the case of spherical coordinates).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“dist”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.SETUP">
+<span class="sig-name descname"><span class="pre">SETUP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.SETUP" title="Link to this definition">#</a></dt>
+<dd><p>Set-up due to waves (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“setup”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PTHSIGN">
+<span class="sig-name descname"><span class="pre">PTHSIGN</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PTHSIGN" title="Link to this definition">#</a></dt>
+<dd><p>Watershed partitions of the significant wave height (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“pthsign”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PTRTP">
+<span class="sig-name descname"><span class="pre">PTRTP</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PTRTP" title="Link to this definition">#</a></dt>
+<dd><p>Watershed partitions of the relative peak period (in s).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“ptrtp”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PTWLEN">
+<span class="sig-name descname"><span class="pre">PTWLEN</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PTWLEN" title="Link to this definition">#</a></dt>
+<dd><p>Watershed partitions of the average wave length (in m).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“ptwlen”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PTDIR">
+<span class="sig-name descname"><span class="pre">PTDIR</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PTDIR" title="Link to this definition">#</a></dt>
+<dd><p>Watershed partitions of the peak wave direction (in degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“ptdir”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PTDSPR">
+<span class="sig-name descname"><span class="pre">PTDSPR</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PTDSPR" title="Link to this definition">#</a></dt>
+<dd><p>Watershed partitions of the directional spreading (in degrees).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“ptdspr”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PTWFRAC">
+<span class="sig-name descname"><span class="pre">PTWFRAC</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PTWFRAC" title="Link to this definition">#</a></dt>
+<dd><p>Watershed partitions of the wind fraction (dimensionless).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“ptwfrac”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PTSTEEPNE">
+<span class="sig-name descname"><span class="pre">PTSTEEPNE</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PTSTEEPNE" title="Link to this definition">#</a></dt>
+<dd><p>Watershed partition of the wave steepness (dimensionless).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“ptsteepne”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.PARTITION">
+<span class="sig-name descname"><span class="pre">PARTITION</span></span><a class="headerlink" href="#rompy_swan.types.BlockOptions.PARTITION" title="Link to this definition">#</a></dt>
+<dd><p>The raw spectral partition for wave system tracking post-processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>“partition”</p>
+</dd>
+</dl>
+</dd></dl>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Energy given in W/m2 or m2/s depending on command SET.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>UBOT and URMS required command <cite>FRICTION</cite> to be used. If friction is ignored in the
+computation, then one should use the command <cite>FRICTION</cite> with the value of the
+friction set to zero (e.g., <cite>FRICTION COLLINS 0</cite>).</p>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="rompy_swan.types.BlockOptions.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#rompy_swan.types.BlockOptions.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<p class="rubric">Methods</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">encode</span></code>([encoding, errors])</p></td>
+<td><p>Encode the string using the codec registered for encoding.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">replace</span></code>(old, new[, count])</p></td>
+<td><p>Return a copy with all occurrences of substring old replaced by new.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">split</span></code>([sep, maxsplit])</p></td>
+<td><p>Return a list of the substrings in the string, using sep as the separator string.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rsplit</span></code>([sep, maxsplit])</p></td>
+<td><p>Return a list of the substrings in the string, using sep as the separator string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code>(iterable, /)</p></td>
+<td><p>Concatenate any number of strings.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">capitalize</span></code>()</p></td>
+<td><p>Return a capitalized version of the string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">casefold</span></code>()</p></td>
+<td><p>Return a version of the string suitable for caseless comparisons.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">title</span></code>()</p></td>
+<td><p>Return a version of the string where each word is titlecased.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">center</span></code>(width[, fillchar])</p></td>
+<td><p>Return a centered string of length width.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">count</span></code>(sub[, start[, end]])</p></td>
+<td><p>Return the number of non-overlapping occurrences of substring sub in string S[start:end].</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">expandtabs</span></code>([tabsize])</p></td>
+<td><p>Return a copy where all tab characters are expanded using spaces.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">find</span></code>(sub[, start[, end]])</p></td>
+<td><p>Return the lowest index in S where substring sub is found, such that sub is contained within S[start:end].</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">partition</span></code>(sep, /)</p></td>
+<td><p>Partition the string into three parts using the given separator.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">index</span></code>(sub[, start[, end]])</p></td>
+<td><p>Return the lowest index in S where substring sub is found, such that sub is contained within S[start:end].</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ljust</span></code>(width[, fillchar])</p></td>
+<td><p>Return a left-justified string of length width.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lower</span></code>()</p></td>
+<td><p>Return a copy of the string converted to lowercase.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">lstrip</span></code>([chars])</p></td>
+<td><p>Return a copy of the string with leading whitespace removed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rfind</span></code>(sub[, start[, end]])</p></td>
+<td><p>Return the highest index in S where substring sub is found, such that sub is contained within S[start:end].</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rindex</span></code>(sub[, start[, end]])</p></td>
+<td><p>Return the highest index in S where substring sub is found, such that sub is contained within S[start:end].</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rjust</span></code>(width[, fillchar])</p></td>
+<td><p>Return a right-justified string of length width.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rstrip</span></code>([chars])</p></td>
+<td><p>Return a copy of the string with trailing whitespace removed.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rpartition</span></code>(sep, /)</p></td>
+<td><p>Partition the string into three parts using the given separator.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">splitlines</span></code>([keepends])</p></td>
+<td><p>Return a list of the lines in the string, breaking at line boundaries.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">strip</span></code>([chars])</p></td>
+<td><p>Return a copy of the string with leading and trailing whitespace removed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">swapcase</span></code>()</p></td>
+<td><p>Convert uppercase characters to lowercase and lowercase characters to uppercase.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">translate</span></code>(table, /)</p></td>
+<td><p>Replace each character in the string using the given translation table.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">upper</span></code>()</p></td>
+<td><p>Return a copy of the string converted to uppercase.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">startswith</span></code>(prefix[, start[, end]])</p></td>
+<td><p>Return True if S starts with the specified prefix, False otherwise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">endswith</span></code>(suffix[, start[, end]])</p></td>
+<td><p>Return True if S ends with the specified suffix, False otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">removeprefix</span></code>(prefix, /)</p></td>
+<td><p>Return a str with the given prefix string removed if present.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">removesuffix</span></code>(suffix, /)</p></td>
+<td><p>Return a str with the given suffix string removed if present.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isascii</span></code>()</p></td>
+<td><p>Return True if all characters in the string are ASCII, False otherwise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">islower</span></code>()</p></td>
+<td><p>Return True if the string is a lowercase string, False otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isupper</span></code>()</p></td>
+<td><p>Return True if the string is an uppercase string, False otherwise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">istitle</span></code>()</p></td>
+<td><p>Return True if the string is a title-cased string, False otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isspace</span></code>()</p></td>
+<td><p>Return True if the string is a whitespace string, False otherwise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isdecimal</span></code>()</p></td>
+<td><p>Return True if the string is a decimal string, False otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isdigit</span></code>()</p></td>
+<td><p>Return True if the string is a digit string, False otherwise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isnumeric</span></code>()</p></td>
+<td><p>Return True if the string is a numeric string, False otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isalpha</span></code>()</p></td>
+<td><p>Return True if the string is an alphabetic string, False otherwise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isalnum</span></code>()</p></td>
+<td><p>Return True if the string is an alpha-numeric string, False otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isidentifier</span></code>()</p></td>
+<td><p>Return True if the string is a valid Python identifier, False otherwise.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">isprintable</span></code>()</p></td>
+<td><p>Return True if the string is printable, False otherwise.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">zfill</span></code>(width, /)</p></td>
+<td><p>Pad a numeric string with zeros on the left, to fill a field of the given width.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">format</span></code>(*args, **kwargs)</p></td>
+<td><p>Return a formatted version of S, using substitutions from args and kwargs.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_map</span></code>(mapping)</p></td>
+<td><p>Return a formatted version of S, using substitutions from mapping.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">maketrans</span></code></p></td>
+<td><p>Return a translation table usable for str.translate().</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.HSIGN" title="rompy_swan.types.BlockOptions.HSIGN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HSIGN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.HSWELL" title="rompy_swan.types.BlockOptions.HSWELL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HSWELL</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DIR" title="rompy_swan.types.BlockOptions.DIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DIR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DPM" title="rompy_swan.types.BlockOptions.DPM"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DPM</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PDIR" title="rompy_swan.types.BlockOptions.PDIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PDIR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TDIR" title="rompy_swan.types.BlockOptions.TDIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TDIR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TM01" title="rompy_swan.types.BlockOptions.TM01"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TM01</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.RTM01" title="rompy_swan.types.BlockOptions.RTM01"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RTM01</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.RTP" title="rompy_swan.types.BlockOptions.RTP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RTP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TPS" title="rompy_swan.types.BlockOptions.TPS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TPS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PER" title="rompy_swan.types.BlockOptions.PER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.RPER" title="rompy_swan.types.BlockOptions.RPER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RPER</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TMM10" title="rompy_swan.types.BlockOptions.TMM10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TMM10</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.RTMM10" title="rompy_swan.types.BlockOptions.RTMM10"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RTMM10</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TM02" title="rompy_swan.types.BlockOptions.TM02"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TM02</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.FSPR" title="rompy_swan.types.BlockOptions.FSPR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FSPR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DSPR" title="rompy_swan.types.BlockOptions.DSPR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DSPR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.QP" title="rompy_swan.types.BlockOptions.QP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DEPTH" title="rompy_swan.types.BlockOptions.DEPTH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DEPTH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.WATLEV" title="rompy_swan.types.BlockOptions.WATLEV"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WATLEV</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.BOTLEV" title="rompy_swan.types.BlockOptions.BOTLEV"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BOTLEV</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.VEL" title="rompy_swan.types.BlockOptions.VEL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VEL</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.FRCOEF" title="rompy_swan.types.BlockOptions.FRCOEF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FRCOEF</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.WIND" title="rompy_swan.types.BlockOptions.WIND"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WIND</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.AICE" title="rompy_swan.types.BlockOptions.AICE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">AICE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PROPAGAT" title="rompy_swan.types.BlockOptions.PROPAGAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROPAGAT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PROPXY" title="rompy_swan.types.BlockOptions.PROPXY"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROPXY</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PROPTHETA" title="rompy_swan.types.BlockOptions.PROPTHETA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROPTHETA</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PROPSIGMA" title="rompy_swan.types.BlockOptions.PROPSIGMA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PROPSIGMA</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.GENERAT" title="rompy_swan.types.BlockOptions.GENERAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GENERAT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.GENWIND" title="rompy_swan.types.BlockOptions.GENWIND"><code class="xref py py-obj docutils literal notranslate"><span class="pre">GENWIND</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.REDIST" title="rompy_swan.types.BlockOptions.REDIST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REDIST</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.REDQUAD" title="rompy_swan.types.BlockOptions.REDQUAD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REDQUAD</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.REDTRIAD" title="rompy_swan.types.BlockOptions.REDTRIAD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">REDTRIAD</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISSIP" title="rompy_swan.types.BlockOptions.DISSIP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DISSIP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISBOT" title="rompy_swan.types.BlockOptions.DISBOT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DISBOT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISSURF" title="rompy_swan.types.BlockOptions.DISSURF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DISSURF</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISWCAP" title="rompy_swan.types.BlockOptions.DISWCAP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DISWCAP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISSWELL" title="rompy_swan.types.BlockOptions.DISSWELL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DISSWELL</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISVEG" title="rompy_swan.types.BlockOptions.DISVEG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DISVEG</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISMUD" title="rompy_swan.types.BlockOptions.DISMUD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DISMUD</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DISICE" title="rompy_swan.types.BlockOptions.DISICE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DISICE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.RADSTR" title="rompy_swan.types.BlockOptions.RADSTR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">RADSTR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.QB" title="rompy_swan.types.BlockOptions.QB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">QB</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TRANSP" title="rompy_swan.types.BlockOptions.TRANSP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TRANSP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.FORCE" title="rompy_swan.types.BlockOptions.FORCE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">FORCE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.UBOT" title="rompy_swan.types.BlockOptions.UBOT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UBOT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.URMS" title="rompy_swan.types.BlockOptions.URMS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">URMS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TMBOT" title="rompy_swan.types.BlockOptions.TMBOT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TMBOT</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.WLENGTH" title="rompy_swan.types.BlockOptions.WLENGTH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WLENGTH</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.LWAVP" title="rompy_swan.types.BlockOptions.LWAVP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LWAVP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.STEEPNESS" title="rompy_swan.types.BlockOptions.STEEPNESS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">STEEPNESS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.BFI" title="rompy_swan.types.BlockOptions.BFI"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BFI</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.NPLANTS" title="rompy_swan.types.BlockOptions.NPLANTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NPLANTS</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DHSIGN" title="rompy_swan.types.BlockOptions.DHSIGN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DHSIGN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DRTM01" title="rompy_swan.types.BlockOptions.DRTM01"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DRTM01</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.LEAK" title="rompy_swan.types.BlockOptions.LEAK"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LEAK</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TIME" title="rompy_swan.types.BlockOptions.TIME"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TIME</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.TSEC" title="rompy_swan.types.BlockOptions.TSEC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">TSEC</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.XP" title="rompy_swan.types.BlockOptions.XP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">XP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.YP" title="rompy_swan.types.BlockOptions.YP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">YP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.DIST" title="rompy_swan.types.BlockOptions.DIST"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DIST</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.SETUP" title="rompy_swan.types.BlockOptions.SETUP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SETUP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTHSIGN" title="rompy_swan.types.BlockOptions.PTHSIGN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PTHSIGN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTRTP" title="rompy_swan.types.BlockOptions.PTRTP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PTRTP</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTWLEN" title="rompy_swan.types.BlockOptions.PTWLEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PTWLEN</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTDIR" title="rompy_swan.types.BlockOptions.PTDIR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PTDIR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTDSPR" title="rompy_swan.types.BlockOptions.PTDSPR"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PTDSPR</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTWFRAC" title="rompy_swan.types.BlockOptions.PTWFRAC"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PTWFRAC</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PTSTEEPNE" title="rompy_swan.types.BlockOptions.PTSTEEPNE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PTSTEEPNE</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#rompy_swan.types.BlockOptions.PARTITION" title="rompy_swan.types.BlockOptions.PARTITION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PARTITION</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="rompy_swan.types.PhysicsOff.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">rompy_swan.types.PhysicsOff</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions"><code class="docutils literal notranslate"><span class="pre">BlockOptions</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.HSIGN"><code class="docutils literal notranslate"><span class="pre">BlockOptions.HSIGN</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.HSWELL"><code class="docutils literal notranslate"><span class="pre">BlockOptions.HSWELL</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DIR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DIR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DPM"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DPM</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PDIR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PDIR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TDIR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TDIR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TM01"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TM01</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.RTM01"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RTM01</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.RTP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RTP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TPS"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TPS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PER"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PER</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.RPER"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RPER</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TMM10"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TMM10</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.RTMM10"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RTMM10</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TM02"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TM02</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.FSPR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.FSPR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DSPR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DSPR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.QP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.QP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DEPTH"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DEPTH</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.WATLEV"><code class="docutils literal notranslate"><span class="pre">BlockOptions.WATLEV</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.BOTLEV"><code class="docutils literal notranslate"><span class="pre">BlockOptions.BOTLEV</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.VEL"><code class="docutils literal notranslate"><span class="pre">BlockOptions.VEL</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.FRCOEF"><code class="docutils literal notranslate"><span class="pre">BlockOptions.FRCOEF</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.WIND"><code class="docutils literal notranslate"><span class="pre">BlockOptions.WIND</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.AICE"><code class="docutils literal notranslate"><span class="pre">BlockOptions.AICE</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PROPAGAT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PROPAGAT</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PROPXY"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PROPXY</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PROPTHETA"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PROPTHETA</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PROPSIGMA"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PROPSIGMA</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.GENERAT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.GENERAT</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.GENWIND"><code class="docutils literal notranslate"><span class="pre">BlockOptions.GENWIND</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.REDIST"><code class="docutils literal notranslate"><span class="pre">BlockOptions.REDIST</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.REDQUAD"><code class="docutils literal notranslate"><span class="pre">BlockOptions.REDQUAD</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.REDTRIAD"><code class="docutils literal notranslate"><span class="pre">BlockOptions.REDTRIAD</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DISSIP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISSIP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DISBOT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISBOT</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DISSURF"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISSURF</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DISWCAP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISWCAP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DISSWELL"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISSWELL</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DISVEG"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISVEG</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DISMUD"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISMUD</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DISICE"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DISICE</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.RADSTR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.RADSTR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.QB"><code class="docutils literal notranslate"><span class="pre">BlockOptions.QB</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TRANSP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TRANSP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.FORCE"><code class="docutils literal notranslate"><span class="pre">BlockOptions.FORCE</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.UBOT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.UBOT</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.URMS"><code class="docutils literal notranslate"><span class="pre">BlockOptions.URMS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TMBOT"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TMBOT</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.WLENGTH"><code class="docutils literal notranslate"><span class="pre">BlockOptions.WLENGTH</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.LWAVP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.LWAVP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.STEEPNESS"><code class="docutils literal notranslate"><span class="pre">BlockOptions.STEEPNESS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.BFI"><code class="docutils literal notranslate"><span class="pre">BlockOptions.BFI</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.NPLANTS"><code class="docutils literal notranslate"><span class="pre">BlockOptions.NPLANTS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DHSIGN"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DHSIGN</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DRTM01"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DRTM01</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.LEAK"><code class="docutils literal notranslate"><span class="pre">BlockOptions.LEAK</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TIME"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TIME</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.TSEC"><code class="docutils literal notranslate"><span class="pre">BlockOptions.TSEC</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.XP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.XP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.YP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.YP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.DIST"><code class="docutils literal notranslate"><span class="pre">BlockOptions.DIST</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.SETUP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.SETUP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PTHSIGN"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTHSIGN</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PTRTP"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTRTP</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PTWLEN"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTWLEN</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PTDIR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTDIR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PTDSPR"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTDSPR</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PTWFRAC"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTWFRAC</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PTSTEEPNE"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PTSTEEPNE</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.PARTITION"><code class="docutils literal notranslate"><span class="pre">BlockOptions.PARTITION</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.types.BlockOptions.__init__"><code class="docutils literal notranslate"><span class="pre">BlockOptions.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_generated/rompy_swan.types.BlockOptions.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2021, CSIRO and rompy contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

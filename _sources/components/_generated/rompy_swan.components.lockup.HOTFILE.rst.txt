@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.lockup.HOTFILE
+=====================================
+
+.. currentmodule:: rompy_swan.components.lockup
+
+.. autopydantic_model:: HOTFILE

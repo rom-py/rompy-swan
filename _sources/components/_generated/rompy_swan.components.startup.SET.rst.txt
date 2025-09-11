@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.startup.SET
+==================================
+
+.. currentmodule:: rompy_swan.components.startup
+
+.. autopydantic_model:: SET

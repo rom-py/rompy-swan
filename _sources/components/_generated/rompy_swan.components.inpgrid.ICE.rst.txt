@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.inpgrid.ICE
+==================================
+
+.. currentmodule:: rompy_swan.components.inpgrid
+
+.. autopydantic_model:: ICE

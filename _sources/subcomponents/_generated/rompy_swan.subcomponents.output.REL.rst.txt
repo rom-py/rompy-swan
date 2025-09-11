@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.output.REL
+====================================
+
+.. currentmodule:: rompy_swan.subcomponents.output
+
+.. autopydantic_model:: REL

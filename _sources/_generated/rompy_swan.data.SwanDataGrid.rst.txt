@@ -1,0 +1,6 @@
+﻿rompy\_swan.data.SwanDataGrid
+=============================
+
+.. currentmodule:: rompy_swan.data
+
+.. autopydantic_model:: SwanDataGrid

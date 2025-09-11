@@ -1,0 +1,6 @@
+﻿rompy\_swan.interface.DataInterface
+===================================
+
+.. currentmodule:: rompy_swan.interface
+
+.. autopydantic_model:: DataInterface

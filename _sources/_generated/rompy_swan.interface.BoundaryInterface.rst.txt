@@ -1,0 +1,6 @@
+﻿rompy\_swan.interface.BoundaryInterface
+=======================================
+
+.. currentmodule:: rompy_swan.interface
+
+.. autopydantic_model:: BoundaryInterface

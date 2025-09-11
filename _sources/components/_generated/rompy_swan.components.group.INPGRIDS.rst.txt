@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.group.INPGRIDS
+=====================================
+
+.. currentmodule:: rompy_swan.components.group
+
+.. autopydantic_model:: INPGRIDS

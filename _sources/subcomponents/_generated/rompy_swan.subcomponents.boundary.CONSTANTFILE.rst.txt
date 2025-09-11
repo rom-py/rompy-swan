@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.boundary.CONSTANTFILE
+===============================================
+
+.. currentmodule:: rompy_swan.subcomponents.boundary
+
+.. autopydantic_model:: CONSTANTFILE

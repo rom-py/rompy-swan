@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.SSWELL\_ROGERS
+=============================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: SSWELL_ROGERS

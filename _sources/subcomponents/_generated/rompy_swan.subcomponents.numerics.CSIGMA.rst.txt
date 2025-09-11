@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.numerics.CSIGMA
+=========================================
+
+.. currentmodule:: rompy_swan.subcomponents.numerics
+
+.. autopydantic_model:: CSIGMA

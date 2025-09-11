@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.spectrum.SHAPESPEC
+============================================
+
+.. currentmodule:: rompy_swan.subcomponents.spectrum
+
+.. autopydantic_model:: SHAPESPEC

@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.output.BLOCK
+===================================
+
+.. currentmodule:: rompy_swan.components.output
+
+.. autopydantic_model:: BLOCK

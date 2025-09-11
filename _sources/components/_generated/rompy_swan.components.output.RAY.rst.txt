@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.output.RAY
+=================================
+
+.. currentmodule:: rompy_swan.components.output
+
+.. autopydantic_model:: RAY

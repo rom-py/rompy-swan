@@ -1,0 +1,1553 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rompy_swan.subcomponents.boundary &#8212; rompy-swan 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/rompy_swan/subcomponents/boundary';</script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">rompy-swan 0.6.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../components/group.html">
+    Group
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../_generated/rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../_generated/rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../_generated/rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../_generated/rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../../types.html">
+    Enum Types
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../components/group.html">
+    Group
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../_generated/rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../../types.html">
+    Enum Types
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<h3><a href="../../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.grid.SwanGrid.html">rompy_swan.grid.SwanGrid</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.data.SwanDataGrid.html">rompy_swan.data.SwanDataGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.boundary.Boundnest1.html">rompy_swan.boundary.Boundnest1</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/inpgrid.html">Input grids</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/lockup.html">Lock-up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../components/group.html">Group</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/spectrum.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/time.html">Time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/readgrid.html">Grid reader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../subcomponents/output.html">Output</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.interface.DataInterface.html">rompy_swan.interface.DataInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.interface.BoundaryInterface.html">rompy_swan.interface.BoundaryInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.interface.OutputInterface.html">rompy_swan.interface.OutputInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_generated/rompy_swan.interface.LockupInterface.html">rompy_swan.interface.LockupInterface</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../types.html">Enum Types</a></li>
+</ul>
+</div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">rompy_swan.subcomponents.boundary</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for rompy_swan.subcomponents.boundary</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">SWAN Boundary Subcomponents</span>
+
+<span class="sd">This module contains subcomponents for defining boundary conditions in SWAN,</span>
+<span class="sd">including boundary segments, spectral parameters, and initial conditions.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">rompy.logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_logger</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rompy_swan.subcomponents.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">IJ</span><span class="p">,</span> <span class="n">XY</span><span class="p">,</span> <span class="n">BaseSubComponent</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">get_logger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SIDE">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.SIDE.html#rompy_swan.subcomponents.boundary.SIDE">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SIDE</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary over one side of computational domain.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE</span>
+
+<span class="sd">    The boundary is one full side of the computational grid (in 1D cases either of the</span>
+<span class="sd">    two ends of the 1D-grid).</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Should not be used in case of CURVILINEAR grids.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import SIDE</span>
+<span class="sd">        side = SIDE(side=&quot;west&quot;, direction=&quot;ccw&quot;)</span>
+<span class="sd">        print(side.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;side&quot;</span><span class="p">,</span> <span class="s2">&quot;SIDE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;side&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">side</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;north&quot;</span><span class="p">,</span> <span class="s2">&quot;nw&quot;</span><span class="p">,</span> <span class="s2">&quot;west&quot;</span><span class="p">,</span> <span class="s2">&quot;sw&quot;</span><span class="p">,</span> <span class="s2">&quot;south&quot;</span><span class="p">,</span> <span class="s2">&quot;se&quot;</span><span class="p">,</span> <span class="s2">&quot;east&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The side of the grid to apply the boundary to&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">direction</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;ccw&quot;</span><span class="p">,</span> <span class="s2">&quot;clockwise&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;ccw&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The direction to apply the boundary in&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="SIDE.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.SIDE.html#rompy_swan.subcomponents.boundary.SIDE.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;SIDE </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">side</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SIDES">
+<a class="viewcode-back" href="../../../api.html#rompy_swan.subcomponents.boundary.SIDES">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SIDES</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary over multiple side of computational domain.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE</span>
+<span class="sd">        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE</span>
+<span class="sd">        ...</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Should not be used in case of CURVILINEAR grids.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import SIDE, SIDES</span>
+<span class="sd">        side1 = SIDE(side=&quot;west&quot;, direction=&quot;ccw&quot;)</span>
+<span class="sd">        side2 = SIDE(side=&quot;north&quot;, direction=&quot;ccw&quot;)</span>
+<span class="sd">        sides = SIDES(sides=[side1, side2])</span>
+<span class="sd">        print(sides.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;sides&quot;</span><span class="p">,</span> <span class="s2">&quot;SIDES&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;sides&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">sides</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">SIDE</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The sides of the grid to apply the boundary to&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="SIDES.cmd">
+<a class="viewcode-back" href="../../../api.html#rompy_swan.subcomponents.boundary.SIDES.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sides</span><span class="p">:</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;SIDE </span><span class="si">{</span><span class="n">side</span><span class="o">.</span><span class="n">side</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">side</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> &quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SEGMENT">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.SEGMENT.html#rompy_swan.subcomponents.boundary.SEGMENT">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SEGMENT</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Boundary over a segment defined from points.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        SEGMENT XY &lt; [x] [y] &gt;</span>
+<span class="sd">        SEGMENT IJ &lt; [i] [j] &gt;</span>
+
+<span class="sd">    The segment is defined either by means of a series of points in terms of problem</span>
+<span class="sd">    coordinates (`XY`) or by means of a series of points in terms of grid indices</span>
+<span class="sd">    (`IJ`). The points do not have to include all or coincide with actual grid points.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import SEGMENT</span>
+<span class="sd">        seg = SEGMENT(</span>
+<span class="sd">            points=dict(</span>
+<span class="sd">                model_type=&quot;xy&quot;,</span>
+<span class="sd">                x=[172, 172, 172, 172.5, 173],</span>
+<span class="sd">                y=[-41, -40.5, -40, -40, -40],</span>
+<span class="sd">                fmt=&quot;0.2f&quot;,</span>
+<span class="sd">            ),</span>
+<span class="sd">        )</span>
+<span class="sd">        print(seg.render())</span>
+<span class="sd">        seg = SEGMENT(</span>
+<span class="sd">            points=dict(</span>
+<span class="sd">                model_type=&quot;ij&quot;,</span>
+<span class="sd">                i=[0, 0, 5],</span>
+<span class="sd">                j=[0, 19, 19],</span>
+<span class="sd">            ),</span>
+<span class="sd">        )</span>
+<span class="sd">        print(seg.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;segment&quot;</span><span class="p">,</span> <span class="s2">&quot;SEGMENT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;segment&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">points</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">XY</span><span class="p">,</span> <span class="n">IJ</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Points to define the segment&quot;</span><span class="p">,</span>
+        <span class="n">discriminator</span><span class="o">=</span><span class="s2">&quot;model_type&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="SEGMENT.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.SEGMENT.html#rompy_swan.subcomponents.boundary.SEGMENT.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;SEGMENT </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">model_type</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PAR">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.PAR.html#rompy_swan.subcomponents.boundary.PAR">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">PAR</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Spectral parameters.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        PAR [hs] [per] [dir] [dd]</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import PAR</span>
+<span class="sd">        par = PAR(hs=1.5, per=8.1, dir=225)</span>
+<span class="sd">        print(par.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;par&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;par&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">hs</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The significant wave height (m)&quot;</span><span class="p">,</span>
+        <span class="n">gt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">per</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;The characteristic period (s) of the energy spectrum (relative &quot;</span>
+            <span class="s2">&quot;frequency; which is equal to absolute frequency in the absence of &quot;</span>
+            <span class="s2">&quot;currents); `per` is the value of the peak period if option PEAK is &quot;</span>
+            <span class="s2">&quot;chosen in command BOUND SHAPE or `per` is the value of the mean period, &quot;</span>
+            <span class="s2">&quot;if option MEAN was chosen in command BOUND SHAPE.&quot;</span>
+        <span class="p">),</span>
+        <span class="n">gt</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">dir</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;The peak wave direction thetapeak (degree), constant over frequencies&quot;</span>
+        <span class="p">),</span>
+        <span class="n">ge</span><span class="o">=-</span><span class="mf">360.0</span><span class="p">,</span>
+        <span class="n">le</span><span class="o">=</span><span class="mf">360.0</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">dd</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Coefficient of directional spreading; a `cos^m(θ)` distribution is &quot;</span>
+            <span class="s2">&quot;assumed. `dd` is interpreted as the directional standard deviation in &quot;</span>
+            <span class="s2">&quot;degrees, if the option DEGREES is chosen in the command BOUND SHAPE &quot;</span>
+            <span class="s2">&quot;(SWAN default: 30). `dd` is interpreted as the power `m`, if the option &quot;</span>
+            <span class="s2">&quot;POWER is chosen in the command BOUND SHAPE (SWAN default: 2)&quot;</span>
+        <span class="p">),</span>
+        <span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span>
+        <span class="n">le</span><span class="o">=</span><span class="mf">360.0</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="PAR.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.PAR.html#rompy_swan.subcomponents.boundary.PAR.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render subcomponent cmd.&quot;&quot;&quot;</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;PAR hs=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">hs</span><span class="si">}</span><span class="s2"> per=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">per</span><span class="si">}</span><span class="s2"> dir=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dd</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; dd=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dd</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CONSTANTPAR">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.CONSTANTPAR.html#rompy_swan.subcomponents.boundary.CONSTANTPAR">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CONSTANTPAR</span><span class="p">(</span><span class="n">PAR</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constant spectral parameters.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        CONSTANT PAR [hs] [per] [dir] ([dd])</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import CONSTANTPAR</span>
+<span class="sd">        par = CONSTANTPAR(hs=1.5, per=8.1, dir=225)</span>
+<span class="sd">        print(par.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;constantpar&quot;</span><span class="p">,</span> <span class="s2">&quot;CONSTANTPAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;constantpar&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="CONSTANTPAR.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.CONSTANTPAR.html#rompy_swan.subcomponents.boundary.CONSTANTPAR.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render subcomponent cmd.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;CONSTANT </span><span class="si">{</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">cmd</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VARIABLEPAR">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.VARIABLEPAR.html#rompy_swan.subcomponents.boundary.VARIABLEPAR">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VARIABLEPAR</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Variable spectral parameter.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        VARIABLE PAR &lt; [len] [hs] [per] [dir] [dd] &gt;</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import VARIABLEPAR</span>
+<span class="sd">        par = VARIABLEPAR(</span>
+<span class="sd">            hs=[1.5, 1.4, 1.1],</span>
+<span class="sd">            per=[8.1, 8.0, 8.1],</span>
+<span class="sd">            dir=[225, 226, 228],</span>
+<span class="sd">            dd=[25, 22, 23],</span>
+<span class="sd">            len=[0, 0.5, 1.0],</span>
+<span class="sd">        )</span>
+<span class="sd">        print(par.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;variablepar&quot;</span><span class="p">,</span> <span class="s2">&quot;VARIABLEPAR&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;variablepar&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">hs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The significant wave height (m)&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">per</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;The characteristic period (s) of the energy spectrum (relative &quot;</span>
+            <span class="s2">&quot;frequency; which is equal to absolute frequency in the absence of &quot;</span>
+            <span class="s2">&quot;currents); `per` is the value of the peak period if option PEAK is &quot;</span>
+            <span class="s2">&quot;chosen in command BOUND SHAPE or `per` is the value of the mean period, &quot;</span>
+            <span class="s2">&quot;if option MEAN was chosen in command BOUND SHAPE&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="nb">dir</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=-</span><span class="mf">360.0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mf">360.0</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;The peak wave direction thetapeak (degrees), constant over frequencies&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">dd</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">le</span><span class="o">=</span><span class="mf">360.0</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Coefficient of directional spreading; a $cos^m(θ)$ distribution is &quot;</span>
+            <span class="s2">&quot;assumed. `dd` is interpreted as the directional standard deviation in &quot;</span>
+            <span class="s2">&quot;degrees, if the option DEGREES is chosen in the command BOUND SHAPE &quot;</span>
+            <span class="s2">&quot;(SWAN default: 30). `dd` is interpreted as the power `m`, if the option &quot;</span>
+            <span class="s2">&quot;POWER is chosen in the command BOUND SHAPE (SWAN default: 2)&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">dist</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;len&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Is the distance from the first point of the side or segment to the point &quot;</span>
+            <span class="s2">&quot;along the side or segment for which the incident wave spectrum is &quot;</span>
+            <span class="s2">&quot;prescribed. Note: these points do no have to coincide with grid points of &quot;</span>
+            <span class="s2">&quot;the computational grid. `len` is the distance in m or degrees in the case &quot;</span>
+            <span class="s2">&quot;of spherical coordinates, not in grid steps. The values of `len` should &quot;</span>
+            <span class="s2">&quot;be given in ascending order. The length along a SIDE is measured in &quot;</span>
+            <span class="s2">&quot;clockwise or counterclockwise direction, depending on the options CCW or &quot;</span>
+            <span class="s2">&quot;CLOCKWISE (see above). The option CCW is default. In case of a SEGMENT &quot;</span>
+            <span class="s2">&quot;the length is measured from the indicated begin point of the segment&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="VARIABLEPAR.ensure_equal_size">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.VARIABLEPAR.html#rompy_swan.subcomponents.boundary.VARIABLEPAR.ensure_equal_size">[docs]</a>
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ensure_equal_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;VARIABLEPAR&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;hs&quot;</span><span class="p">,</span> <span class="s2">&quot;per&quot;</span><span class="p">,</span> <span class="s2">&quot;dir&quot;</span><span class="p">,</span> <span class="s2">&quot;dd&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Size of dist and </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> must be the same&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="VARIABLEPAR.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.VARIABLEPAR.html#rompy_swan.subcomponents.boundary.VARIABLEPAR.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render subcomponent cmd.&quot;&quot;&quot;</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="s2">&quot;VARIABLE PAR&quot;</span>
+        <span class="k">for</span> <span class="n">dist</span><span class="p">,</span> <span class="n">hs</span><span class="p">,</span> <span class="n">per</span><span class="p">,</span> <span class="nb">dir</span><span class="p">,</span> <span class="n">dd</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">per</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dd</span>
+        <span class="p">):</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; &amp;</span><span class="se">\n\t</span><span class="s2">len=</span><span class="si">{</span><span class="n">dist</span><span class="si">}</span><span class="s2"> hs=</span><span class="si">{</span><span class="n">hs</span><span class="si">}</span><span class="s2"> per=</span><span class="si">{</span><span class="n">per</span><span class="si">}</span><span class="s2"> dir=</span><span class="si">{</span><span class="nb">dir</span><span class="si">}</span><span class="s2"> dd=</span><span class="si">{</span><span class="n">dd</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="CONSTANTFILE">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.CONSTANTFILE.html#rompy_swan.subcomponents.boundary.CONSTANTFILE">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CONSTANTFILE</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Constant file specification.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        CONSTANT FILE &#39;fname&#39; [seq]</span>
+
+<span class="sd">    There are three types of files:</span>
+
+<span class="sd">    - TPAR files containing nonstationary wave parameters</span>
+<span class="sd">    - files containing stationary or nonstationary 1D spectra</span>
+<span class="sd">      (usually from measurements)</span>
+<span class="sd">    - files containing stationary or nonstationary 2D spectra</span>
+<span class="sd">      (from other computer programs or other SWAN runs)</span>
+
+<span class="sd">    A TPAR file is for only one location; it has the string TPAR on the first</span>
+<span class="sd">    line of the file and a number of lines which each contain 5 numbers, i.e.:</span>
+<span class="sd">    Time (ISO-notation), Hs, Period (average or peak period depending on the</span>
+<span class="sd">    choice given in command BOUND SHAPE), Peak Direction (Nautical or Cartesian,</span>
+<span class="sd">    depending on command SET), Directional spread (in degrees or as power of cos</span>
+<span class="sd">    depending on the choice given in command BOUND SHAPE).</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Example of a TPAR file:</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        TPAR</span>
+<span class="sd">        19920516.130000 4.2 12. -110. 22.</span>
+<span class="sd">        19920516.180000 4.2 12. -110. 22.</span>
+<span class="sd">        19920517.000000 1.2 8. -110. 22.</span>
+<span class="sd">        19920517.120000 1.4 8.5 -80. 26</span>
+<span class="sd">        19920517.200000 0.9 6.5 -95. 28</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import CONSTANTFILE</span>
+<span class="sd">        par = CONSTANTFILE(fname=&quot;tpar.txt&quot;)</span>
+<span class="sd">        print(par.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;constantfile&quot;</span><span class="p">,</span> <span class="s2">&quot;CONSTANTFILE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;constantfile&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the file containing the boundary condition.&quot;</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;sequence number of geographic location in the file (see Appendix D); &quot;</span>
+            <span class="s2">&quot;useful for files which contain spectra for more than one location. &quot;</span>
+            <span class="s2">&quot;Note: a TPAR file always contains only one location so in this case &quot;</span>
+            <span class="s2">&quot;`seq` must always be 1&quot;</span>
+        <span class="p">),</span>
+        <span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="CONSTANTFILE.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.CONSTANTFILE.html#rompy_swan.subcomponents.boundary.CONSTANTFILE.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render subcomponent cmd.&quot;&quot;&quot;</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;CONSTANT FILE fname=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; seq=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VARIABLEFILE">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.VARIABLEFILE.html#rompy_swan.subcomponents.boundary.VARIABLEFILE">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VARIABLEFILE</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Variable file specification.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        VARIABLE FILE &lt; [len] &#39;fname&#39; [seq] &gt;</span>
+
+<span class="sd">    There are three types of files:</span>
+
+<span class="sd">    - TPAR files containing nonstationary wave parameters</span>
+<span class="sd">    - files containing stationary or nonstationary 1D spectra</span>
+<span class="sd">      (usually from measurements)</span>
+<span class="sd">    - files containing stationary or nonstationary 2D spectra</span>
+<span class="sd">      (from other computer programs or other SWAN runs)</span>
+
+<span class="sd">    A TPAR file is for only one location; it has the string TPAR on the first</span>
+<span class="sd">    line of the file and a number of lines which each contain 5 numbers, i.e.:</span>
+<span class="sd">    Time (ISO-notation), Hs, Period (average or peak period depending on the</span>
+<span class="sd">    choice given in command BOUND SHAPE), Peak Direction (Nautical or Cartesian,</span>
+<span class="sd">    depending on command SET), Directional spread (in degrees or as power of cos</span>
+<span class="sd">    depending on the choice given in command BOUND SHAPE).</span>
+
+<span class="sd">    Note</span>
+<span class="sd">    ----</span>
+<span class="sd">    Example of a TPAR file:</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        TPAR</span>
+<span class="sd">        19920516.130000 4.2 12. -110. 22.</span>
+<span class="sd">        19920516.180000 4.2 12. -110. 22.</span>
+<span class="sd">        19920517.000000 1.2 8. -110. 22.</span>
+<span class="sd">        19920517.120000 1.4 8.5 -80. 26</span>
+<span class="sd">        19920517.200000 0.9 6.5 -95. 28</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import VARIABLEFILE</span>
+<span class="sd">        par = VARIABLEFILE(</span>
+<span class="sd">            fname=[&quot;tpar1.txt&quot;, &quot;tpar2.txt&quot;, &quot;tpar3.txt&quot;],</span>
+<span class="sd">            len=[0.0, 0.5, 1.0],</span>
+<span class="sd">        )</span>
+<span class="sd">        print(par.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;variablefile&quot;</span><span class="p">,</span> <span class="s2">&quot;VARIABLEFILE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;variablefile&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">36</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Names of the files containing the boundary condition&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">seq</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">1</span><span class="p">)]]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;sequence number of geographic location in the file (see Appendix D); &quot;</span>
+            <span class="s2">&quot;useful for files which contain spectra for more than one location. &quot;</span>
+            <span class="s2">&quot;Note: a TPAR file always contains only one location so in this case &quot;</span>
+            <span class="s2">&quot;[seq] must always be 1.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">dist</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Annotated</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">ge</span><span class="o">=</span><span class="mi">0</span><span class="p">)]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">alias</span><span class="o">=</span><span class="s2">&quot;len&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Is the distance from the first point of the side or segment to the point &quot;</span>
+            <span class="s2">&quot;along the side or segment for which the incident wave spectrum is &quot;</span>
+            <span class="s2">&quot;prescribed. Note: these points do no have to coincide with grid points &quot;</span>
+            <span class="s2">&quot;of the computational grid. [len] is the distance in m or degrees in the &quot;</span>
+            <span class="s2">&quot;case of spherical coordinates, not in grid steps. The values of `len` &quot;</span>
+            <span class="s2">&quot;should be given in ascending order. The length along a SIDE is measured &quot;</span>
+            <span class="s2">&quot;in clockwise or counterclockwise direction, depending on the options CCW &quot;</span>
+            <span class="s2">&quot;or CLOCKWISE (see above). The option CCW is default. In case of a &quot;</span>
+            <span class="s2">&quot;SEGMENT the length is measured from the indicated begin point of the &quot;</span>
+            <span class="s2">&quot;segment.&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="VARIABLEFILE.ensure_equal_size">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.VARIABLEFILE.html#rompy_swan.subcomponents.boundary.VARIABLEFILE.ensure_equal_size">[docs]</a>
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">ensure_equal_size</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;VARIABLEFILE&quot;</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;fname&quot;</span><span class="p">,</span> <span class="s2">&quot;seq&quot;</span><span class="p">]:</span>
+            <span class="n">attr</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Size of dist and </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> must be the same&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">seq</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="VARIABLEFILE.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.VARIABLEFILE.html#rompy_swan.subcomponents.boundary.VARIABLEFILE.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render subcomponent cmd.&quot;&quot;&quot;</span>
+        <span class="nb">repr</span> <span class="o">=</span> <span class="s2">&quot;VARIABLE FILE&quot;</span>
+        <span class="k">for</span> <span class="n">dist</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dist</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">seq</span><span class="p">):</span>
+            <span class="nb">repr</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot; &amp;</span><span class="se">\n\t</span><span class="s2">len=</span><span class="si">{</span><span class="n">dist</span><span class="si">}</span><span class="s2"> fname=&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39; seq=</span><span class="si">{</span><span class="n">seq</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="nb">repr</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="DEFAULT">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.DEFAULT.html#rompy_swan.subcomponents.boundary.DEFAULT">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">DEFAULT</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Default initial conditions.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        DEFAULT</span>
+
+<span class="sd">    The initial spectra are computed from the local wind velocities, using the</span>
+<span class="sd">    deep-water growth curve of Kahma and Calkoen (1992), cut off at values of</span>
+<span class="sd">    significant wave height and peak frequency from Pierson and Moskowitz (1964).</span>
+<span class="sd">    The average (over the model area) spatial step size is used as fetch with local</span>
+<span class="sd">    wind. The shape of the spectrum is default JONSWAP with a cos2-directional</span>
+<span class="sd">    distribution (options are available: see command BOUND SHAPE).</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import DEFAULT</span>
+<span class="sd">        init = DEFAULT()</span>
+<span class="sd">        print(init.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ZERO">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.ZERO.html#rompy_swan.subcomponents.boundary.ZERO">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ZERO</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Zero initial conditions.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        ZERO</span>
+
+<span class="sd">    The initial spectral densities are all 0; note that if waves are generated in the</span>
+<span class="sd">    model only by wind, waves can become non-zero only by the presence of the</span>
+<span class="sd">    ”A” term in the growth model; see the keyword AGROW in command GEN3.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import ZERO</span>
+<span class="sd">        init = ZERO()</span>
+<span class="sd">        print(init.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;zero&quot;</span><span class="p">,</span> <span class="s2">&quot;ZERO&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;zero&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="HOTSINGLE">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.HOTSINGLE.html#rompy_swan.subcomponents.boundary.HOTSINGLE">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HOTSINGLE</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hotstart single initial conditions.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        HOTSTART SINGLE fname=&#39;fname&#39; FREE|UNFORMATTED</span>
+
+<span class="sd">    Initial wave field is read from file; this file was generated in a previous SWAN</span>
+<span class="sd">    run by means of the HOTFILE command. If the previous run was nonstationary,</span>
+<span class="sd">    the time found on the file will be assumed to be the initial time of computation. It</span>
+<span class="sd">    can also be used for stationary computation as first guess. The computational grid</span>
+<span class="sd">    (both in geographical space and in spectral space) must be identical to the one in</span>
+<span class="sd">    the run in which the initial wave field was computed</span>
+
+<span class="sd">    Input will be read from a single (concatenated) hotfile. In the case of a previous</span>
+<span class="sd">    parallel MPI run, the concatenated hotfile can be created from a set of multiple</span>
+<span class="sd">    hotfiles using the program hcat.exe, see Implementation Manual.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import HOTSINGLE</span>
+<span class="sd">        init = HOTSINGLE(fname=&quot;hotstart.swn&quot;, format=&quot;free&quot;)</span>
+<span class="sd">        print(init.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;hotsingle&quot;</span><span class="p">,</span> <span class="s2">&quot;HOTSINGLE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;hotsingle&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the file containing the initial wave field&quot;</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;free&quot;</span><span class="p">,</span> <span class="s2">&quot;unformatted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;free&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Format of the file containing the initial wave field. &quot;</span>
+            <span class="s2">&quot;FREE: free format, UNFORMATTED: binary format&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="HOTSINGLE.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.HOTSINGLE.html#rompy_swan.subcomponents.boundary.HOTSINGLE.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render subcomponent cmd.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;HOTSTART SINGLE fname=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="HOTMULTIPLE">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.HOTMULTIPLE.html#rompy_swan.subcomponents.boundary.HOTMULTIPLE">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">HOTMULTIPLE</span><span class="p">(</span><span class="n">BaseSubComponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hotstart multiple initial conditions.</span>
+
+<span class="sd">    .. code-block:: text</span>
+
+<span class="sd">        HOTSTART MULTIPLE fname=&#39;fname&#39; FREE|UNFORMATTED</span>
+
+<span class="sd">    Initial wave field is read from file; this file was generated in a previous SWAN</span>
+<span class="sd">    run by means of the HOTFILE command. If the previous run was nonstationary,</span>
+<span class="sd">    the time found on the file will be assumed to be the initial time of computation. It</span>
+<span class="sd">    can also be used for stationary computation as first guess. The computational grid</span>
+<span class="sd">    (both in geographical space and in spectral space) must be identical to the one in</span>
+<span class="sd">    the run in which the initial wave field was computed</span>
+
+<span class="sd">    Input will be read from multiple hotfiles obtained from a previous parallel MPI run.</span>
+<span class="sd">    The number of files equals the number of processors. Hence, for the present run the</span>
+<span class="sd">    same number of processors must be chosen.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    .. ipython:: python</span>
+<span class="sd">        :okwarning:</span>
+
+<span class="sd">        from rompy_swan.subcomponents.boundary import HOTMULTIPLE</span>
+<span class="sd">        init = HOTMULTIPLE(fname=&quot;hotstart.swn&quot;, format=&quot;free&quot;)</span>
+<span class="sd">        print(init.render())</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;hotmultiple&quot;</span><span class="p">,</span> <span class="s2">&quot;HOTMULTIPLE&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;hotmultiple&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">fname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Name of the file containing the initial wave field&quot;</span><span class="p">,</span>
+        <span class="n">max_length</span><span class="o">=</span><span class="mi">36</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="nb">format</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;free&quot;</span><span class="p">,</span> <span class="s2">&quot;unformatted&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;free&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="p">(</span>
+            <span class="s2">&quot;Format of the file containing the initial wave field. &quot;</span>
+            <span class="s2">&quot;FREE: free format, UNFORMATTED: binary format&quot;</span>
+        <span class="p">),</span>
+    <span class="p">)</span>
+
+<div class="viewcode-block" id="HOTMULTIPLE.cmd">
+<a class="viewcode-back" href="../../../subcomponents/_generated/rompy_swan.subcomponents.boundary.HOTMULTIPLE.html#rompy_swan.subcomponents.boundary.HOTMULTIPLE.cmd">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cmd</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render subcomponent cmd.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;HOTSTART MULTIPLE fname=&#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="si">}</span><span class="s2">&#39; </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">format</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span></div>
+</div>
+
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2021, CSIRO and rompy contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

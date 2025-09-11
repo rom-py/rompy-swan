@@ -1,0 +1,1386 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>rompy_swan.components.startup.SET &#8212; rompy-swan 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'components/_generated/rompy_swan.components.startup.SET';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="rompy_swan.components.startup.MODE" href="rompy_swan.components.startup.MODE.html" />
+    <link rel="prev" title="rompy_swan.components.startup.PROJECT" href="rompy_swan.components.startup.PROJECT.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">rompy-swan 0.6.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../group.html">
+    Group
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../_generated/rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../_generated/rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../_generated/rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../_generated/rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../../types.html">
+    Enum Types
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../group.html">
+    Group
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../_generated/rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../../types.html">
+    Enum Types
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<h3><a href="../../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_generated/rompy_swan.grid.SwanGrid.html">rompy_swan.grid.SwanGrid</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_generated/rompy_swan.data.SwanDataGrid.html">rompy_swan.data.SwanDataGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_generated/rompy_swan.boundary.Boundnest1.html">rompy_swan.boundary.Boundnest1</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../startup.html">Startup</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="rompy_swan.components.startup.PROJECT.html">rompy_swan.components.startup.PROJECT</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">rompy_swan.components.startup.SET</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#rompy_swan.components.startup.SET"><code class="docutils literal notranslate"><span class="pre">SET</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.cdcap"><code class="docutils literal notranslate"><span class="pre">SET.cdcap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.depmin"><code class="docutils literal notranslate"><span class="pre">SET.depmin</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.direction_convention"><code class="docutils literal notranslate"><span class="pre">SET.direction_convention</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.froudmax"><code class="docutils literal notranslate"><span class="pre">SET.froudmax</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.grav"><code class="docutils literal notranslate"><span class="pre">SET.grav</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.hsrerr"><code class="docutils literal notranslate"><span class="pre">SET.hsrerr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.icewind"><code class="docutils literal notranslate"><span class="pre">SET.icewind</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.inrhog"><code class="docutils literal notranslate"><span class="pre">SET.inrhog</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.level"><code class="docutils literal notranslate"><span class="pre">SET.level</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.maxerr"><code class="docutils literal notranslate"><span class="pre">SET.maxerr</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.maxmes"><code class="docutils literal notranslate"><span class="pre">SET.maxmes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.model_type"><code class="docutils literal notranslate"><span class="pre">SET.model_type</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.nor"><code class="docutils literal notranslate"><span class="pre">SET.nor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.pwtail"><code class="docutils literal notranslate"><span class="pre">SET.pwtail</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.rho"><code class="docutils literal notranslate"><span class="pre">SET.rho</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.cmd"><code class="docutils literal notranslate"><span class="pre">SET.cmd()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rompy_swan.components.startup.SET.pwtail_after_gen"><code class="docutils literal notranslate"><span class="pre">SET.pwtail_after_gen</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="rompy_swan.components.startup.MODE.html">rompy_swan.components.startup.MODE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rompy_swan.components.startup.COORDINATES.html">rompy_swan.components.startup.COORDINATES</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../inpgrid.html">Input grids</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../lockup.html">Lock-up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../group.html">Group</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/spectrum.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/time.html">Time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/readgrid.html">Grid reader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../subcomponents/output.html">Output</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_generated/rompy_swan.interface.DataInterface.html">rompy_swan.interface.DataInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_generated/rompy_swan.interface.BoundaryInterface.html">rompy_swan.interface.BoundaryInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_generated/rompy_swan.interface.OutputInterface.html">rompy_swan.interface.OutputInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_generated/rompy_swan.interface.LockupInterface.html">rompy_swan.interface.LockupInterface</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../types.html">Enum Types</a></li>
+</ul>
+</div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../startup.html" class="nav-link">Startup</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">rompy_swan.components.startup.SET</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="rompy-swan-components-startup-set">
+<h1>rompy_swan.components.startup.SET<a class="headerlink" href="#rompy-swan-components-startup-set" title="Link to this heading">#</a></h1>
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">rompy_swan.components.startup.</span></span><span class="sig-name descname"><span class="pre">SET</span></span><a class="reference internal" href="../../_modules/rompy_swan/components/startup.html#SET"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rompy_swan.components.startup.SET" title="Link to this definition">#</a></dt>
+<dd><p>SWAN setting commands.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SET [level] [nor] [depmin] [maxmes] [maxerr] [grav] [rho] [cdcap] &amp;
+    [inrhog] [hsrerr] NAUTICAL|-&gt;CARTESIAN [pwtail] [froudmax] [icewind]
+</pre></div>
+</div>
+<p>With this optional command the user assigns values to various general parameters.</p>
+<p class="rubric">Notes</p>
+<p>The error level <cite>maxerr</cite> is coded as follows:</p>
+<ul class="simple">
+<li><p>1: warnings</p></li>
+<li><p>2: errors (possibly automatically repaired or repairable by SWAN)</p></li>
+<li><p>3: severe errors</p></li>
+</ul>
+<p>Default values for <cite>pwtail</cite> depend on formulations of physics:</p>
+<ul class="simple">
+<li><p>command GEN1: <cite>pwtail = 5</cite></p></li>
+<li><p>command GEN2: <cite>pwtail = 5</cite></p></li>
+<li><p>command GEN3 KOMEN: <cite>pwtail = 4</cite></p></li>
+<li><p>command GEN3 WESTH: <cite>pwtail = 4</cite></p></li>
+<li><p>command GEN3 JANSSEN: <cite>pwtail = 5</cite></p></li>
+</ul>
+<p class="rubric">Examples</p>
+<div class="highlight-ipython notranslate"><div class="highlight"><pre><span></span><span class="gp">In [230]: </span><span class="kn">from</span><span class="w"> </span><span class="nn">rompy_swan.components.startup</span><span class="w"> </span><span class="kn">import</span> <span class="n">SET</span>
+
+<span class="gp">In [231]: </span><span class="nb">set</span> <span class="o">=</span> <span class="n">SET</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">direction_convention</span><span class="o">=</span><span class="s2">&quot;nautical&quot;</span><span class="p">)</span>
+
+<span class="gp">In [232]: </span><span class="nb">print</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+<span class="go">SET level=0.5 NAUTICAL</span>
+
+<span class="gp">In [233]: </span><span class="nb">set</span> <span class="o">=</span> <span class="n">SET</span><span class="p">(</span>
+<span class="gp">   .....: </span>    <span class="n">level</span><span class="o">=-</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">nor</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">depmin</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">maxerr</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">grav</span><span class="o">=</span><span class="mf">9.81</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">rho</span><span class="o">=</span><span class="mi">1025</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">cdcap</span><span class="o">=</span><span class="mf">2.5e-3</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">inrhog</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">hsrerr</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+<span class="gp">   .....: </span>    <span class="n">direction_convention</span><span class="o">=</span><span class="s2">&quot;nautical&quot;</span><span class="p">,</span>
+<span class="gp">   .....: </span><span class="p">)</span>
+<span class="gp">   .....: </span>
+
+<span class="gp">In [234]: </span><span class="nb">print</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">render</span><span class="p">())</span>
+<span class="go">SET level=-1.0 nor=90.0 depmin=0.01 maxerr=3 grav=9.81 rho=1025.0 cdcap=0.0025 inrhog=0 hsrerr=0.1 NAUTICAL</span>
+</pre></div>
+</div>
+<p><details  class="autodoc_pydantic_collapsable_json">
+<summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SET&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SWAN setting commands.\n\n.. code-block:: text\n\n    SET [level] [nor] [depmin] [maxmes] [maxerr] [grav] [rho] [cdcap] &amp;\n        [inrhog] [hsrerr] NAUTICAL|-&gt;CARTESIAN [pwtail] [froudmax] [icewind]\n\nWith this optional command the user assigns values to various general parameters.\n\nNotes\n-----\nThe error level `maxerr` is coded as follows:\n\n* 1: warnings\n* 2: errors (possibly automatically repaired or repairable by SWAN)\n* 3: severe errors\n\nDefault values for `pwtail` depend on formulations of physics:\n\n* command GEN1: `pwtail = 5`\n* command GEN2: `pwtail = 5`\n* command GEN3 KOMEN: `pwtail = 4`\n* command GEN3 WESTH: `pwtail = 4`\n* command GEN3 JANSSEN: `pwtail = 5`\n\nExamples\n--------\n\n.. ipython:: python\n    :okwarning:\n\n    from rompy_swan.components.startup import SET\n    set = SET(level=0.5, direction_convention=\&quot;nautical\&quot;)\n    print(set.render())\n    set = SET(\n        level=-1.0,\n        nor=90,\n        depmin=0.01,\n        maxerr=3,\n        grav=9.81,\n        rho=1025,\n        cdcap=2.5e-3,\n        inrhog=0,\n        hsrerr=0.1,\n        direction_convention=\&quot;nautical\&quot;,\n    )\n    print(set.render())&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;model_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;set&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;set&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;SET&quot;</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Model Type&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Increase in water level that is constant in space and time can be given with this option, `level` is the value of this increase (in m). For a variable water level reference is made to the commands INPGRID and READINP (SWAN default: 0)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;examples&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="mi">0</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Level&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;nor&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;maximum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">360.0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">-360.0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Direction of North with respect to the x-axis (measured counterclockwise); default `nor = 90`, i.e. x-axis of the problem coordinate system points East. When spherical coordinates are used (see command COORD) the value of `nor` may not be modified&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Nor&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;depmin&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Threshold depth (in m). In the computation any positive depth smaller than `depmin` is made equal to `depmin` (SWAN default: 0.05)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Depmin&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;maxmes&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Maximum number of error messages during the computation at which the computation is terminated. During the computational process messages are written to the print file (SWAN default: 200)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Maxmes&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;maxerr&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                  </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">                  </span><span class="mi">3</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;During pre-processing SWAN checks input data. Depending on the severity of the errors encountered during this pre-processing, SWAN does not start computations. The user can influence the error level above which SWAN will  not start computations (at the level indicated the computations will continue) (SWAN default: 1)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Maxerr&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;grav&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The gravitational acceleration (in m/s2) (SWAN default: 9.81)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Grav&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;rho&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The water density (in kg/m3) (SWAN default: 1025)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Rho&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;cdcap&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The maximum value for the wind drag coefficient. A value of 99999 meansno cutting off the drag coefficient. A suggestion for this parameter is `cdcap = 2.5x 10-3` (SWAN default: 99999) &quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Cdcap&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;inrhog&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                  </span><span class="mi">1</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;To indicate whether the user requires output based on variance or based on true energy (see Section 2.5). `inrhog` = 0: output based on variance, `inrhog` = 1: output based on true energy (SWAN default: 0)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Inrhog&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;hsrerr&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;The relative difference between the user imposed significant wave height and the significant wave height computed by SWAN (anywhere along the computational grid boundary) above which a warning will be given. This relative difference is the difference normalized with the user provided significant wave height. This warning will be given for each boundary grid point where the problem occurs (with its x- and y-index number of the computational grid). The cause of the difference is explained in Section 2.6.3. To suppress these warnings (in particular for nonstationary computations), set `hsrerr` at a very high value or use command OFF BNDCHK (SWAN default: 0.10) (ONLY MEANT FOR STRUCTURED GRIDS)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Hsrerr&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;direction_convention&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Direction convention: `nautical` indicates that the Nautical convention for wind and wave direction (SWAN input and output) will be used, `cartesian` indicates that the Cartesian convention for wind and wave direction will be used. For definition, see Section 2.5 or Appendix A (SWAN default: `cartesian`)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;nautical&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;cartesian&quot;</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Direction Convention&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;string&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;pwtail&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Power of high frequency tail; defines the shape of the spectral tail above the highest prognostic frequency `fhigh` (see command CGRID). The energy density is assumed to be proportional to frequency to the power `pwtail`. If the user wishes to use another value, then this SET command should be located in the command file after GEN1, GEN2 or GEN3 command (these will override the SET command with respect to `pwtail`)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Pwtail&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;froudmax&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;minimum&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;number&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Is the maximum Froude number (`U/\u221agd` with `U` the current and `d` the water depth). The currents taken from a circulation model may mismatch with given water depth `d` in the sense that the Froude number becomes larger than 1. For this, the current velocities will be maximized by Froude number times `sqrt(gh)` (SWAN default: 0.8)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Froudmax&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;icewind&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;enum&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                  </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                  </span><span class="mi">1</span>
+<span class="w">               </span><span class="p">],</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;integer&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Controls the scaling of wind input by open water fraction. Default value of zero corresponds to the case where wind input is scaled by the open water fraction. If `icewind = 1` then sea ice does not affect wind input directly. (Though there is still indirect effect via the sea ice sink term; see command SICE) (SWAN default: 0)&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Icewind&quot;</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="nt">&quot;additionalProperties&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;required&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;direction_convention&quot;</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</details></p><dl class="field-list simple">
+<dt class="field-odd">Fields<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.cdcap" title="rompy_swan.components.startup.SET.cdcap"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cdcap</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.depmin" title="rompy_swan.components.startup.SET.depmin"><code class="xref py py-obj docutils literal notranslate"><span class="pre">depmin</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.direction_convention" title="rompy_swan.components.startup.SET.direction_convention"><code class="xref py py-obj docutils literal notranslate"><span class="pre">direction_convention</span> <span class="pre">(Literal['nautical',</span> <span class="pre">'cartesian'])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.froudmax" title="rompy_swan.components.startup.SET.froudmax"><code class="xref py py-obj docutils literal notranslate"><span class="pre">froudmax</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.grav" title="rompy_swan.components.startup.SET.grav"><code class="xref py py-obj docutils literal notranslate"><span class="pre">grav</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.hsrerr" title="rompy_swan.components.startup.SET.hsrerr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">hsrerr</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.icewind" title="rompy_swan.components.startup.SET.icewind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">icewind</span> <span class="pre">(Literal[0,</span> <span class="pre">1]</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.inrhog" title="rompy_swan.components.startup.SET.inrhog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inrhog</span> <span class="pre">(Literal[0,</span> <span class="pre">1]</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.level" title="rompy_swan.components.startup.SET.level"><code class="xref py py-obj docutils literal notranslate"><span class="pre">level</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.maxerr" title="rompy_swan.components.startup.SET.maxerr"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maxerr</span> <span class="pre">(Literal[1,</span> <span class="pre">2,</span> <span class="pre">3]</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.maxmes" title="rompy_swan.components.startup.SET.maxmes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">maxmes</span> <span class="pre">(int</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.model_type" title="rompy_swan.components.startup.SET.model_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">model_type</span> <span class="pre">(Literal['set',</span> <span class="pre">'SET'])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.nor" title="rompy_swan.components.startup.SET.nor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nor</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.pwtail" title="rompy_swan.components.startup.SET.pwtail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pwtail</span> <span class="pre">(int</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.rho" title="rompy_swan.components.startup.SET.rho"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rho</span> <span class="pre">(float</span> <span class="pre">|</span> <span class="pre">None)</span></code></a></p></li>
+</ul>
+</dd>
+<dt class="field-even">Validators<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.pwtail_after_gen" title="rompy_swan.components.startup.SET.pwtail_after_gen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pwtail_after_gen</span></code></a> » <a class="reference internal" href="#rompy_swan.components.startup.SET.pwtail" title="rompy_swan.components.startup.SET.pwtail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pwtail</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.cdcap">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cdcap</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.cdcap" title="Link to this definition">#</a></dt>
+<dd><p>The maximum value for the wind drag coefficient. A value of 99999 meansno cutting off the drag coefficient. A suggestion for this parameter is <cite>cdcap = 2.5x 10-3</cite> (SWAN default: 99999)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = 0.0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.depmin">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">depmin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.depmin" title="Link to this definition">#</a></dt>
+<dd><p>Threshold depth (in m). In the computation any positive depth smaller than <cite>depmin</cite> is made equal to <cite>depmin</cite> (SWAN default: 0.05)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = 0.0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.direction_convention">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">direction_convention</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'nautical'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'cartesian'</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Required]</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.direction_convention" title="Link to this definition">#</a></dt>
+<dd><p>Direction convention: <cite>nautical</cite> indicates that the Nautical convention for wind and wave direction (SWAN input and output) will be used, <cite>cartesian</cite> indicates that the Cartesian convention for wind and wave direction will be used. For definition, see Section 2.5 or Appendix A (SWAN default: <cite>cartesian</cite>)</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.froudmax">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">froudmax</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.froudmax" title="Link to this definition">#</a></dt>
+<dd><p>Is the maximum Froude number (<cite>U/√gd</cite> with <cite>U</cite> the current and <cite>d</cite> the water depth). The currents taken from a circulation model may mismatch with given water depth <cite>d</cite> in the sense that the Froude number becomes larger than 1. For this, the current velocities will be maximized by Froude number times <cite>sqrt(gh)</cite> (SWAN default: 0.8)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = 0.0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.grav">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">grav</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.grav" title="Link to this definition">#</a></dt>
+<dd><p>The gravitational acceleration (in m/s2) (SWAN default: 9.81)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = 0.0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.hsrerr">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hsrerr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.hsrerr" title="Link to this definition">#</a></dt>
+<dd><p>The relative difference between the user imposed significant wave height and the significant wave height computed by SWAN (anywhere along the computational grid boundary) above which a warning will be given. This relative difference is the difference normalized with the user provided significant wave height. This warning will be given for each boundary grid point where the problem occurs (with its x- and y-index number of the computational grid). The cause of the difference is explained in Section 2.6.3. To suppress these warnings (in particular for nonstationary computations), set <cite>hsrerr</cite> at a very high value or use command OFF BNDCHK (SWAN default: 0.10) (ONLY MEANT FOR STRUCTURED GRIDS)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = 0.0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.icewind">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">icewind</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.icewind" title="Link to this definition">#</a></dt>
+<dd><p>Controls the scaling of wind input by open water fraction. Default value of zero corresponds to the case where wind input is scaled by the open water fraction. If <cite>icewind = 1</cite> then sea ice does not affect wind input directly. (Though there is still indirect effect via the sea ice sink term; see command SICE) (SWAN default: 0)</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.inrhog">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">inrhog</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">0</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.inrhog" title="Link to this definition">#</a></dt>
+<dd><p>To indicate whether the user requires output based on variance or based on true energy (see Section 2.5). <cite>inrhog</cite> = 0: output based on variance, <cite>inrhog</cite> = 1: output based on true energy (SWAN default: 0)</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.level">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">level</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.level" title="Link to this definition">#</a></dt>
+<dd><p>Increase in water level that is constant in space and time can be given with this option, <cite>level</cite> is the value of this increase (in m). For a variable water level reference is made to the commands INPGRID and READINP (SWAN default: 0)</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.maxerr">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxerr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="m"><span class="pre">1</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">2</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.maxerr" title="Link to this definition">#</a></dt>
+<dd><p>During pre-processing SWAN checks input data. Depending on the severity of the errors encountered during this pre-processing, SWAN does not start computations. The user can influence the error level above which SWAN will  not start computations (at the level indicated the computations will continue) (SWAN default: 1)</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.maxmes">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">maxmes</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.maxmes" title="Link to this definition">#</a></dt>
+<dd><p>Maximum number of error messages during the computation at which the computation is terminated. During the computational process messages are written to the print file (SWAN default: 200)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = 0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.model_type">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">model_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Literal</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'set'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'SET'</span></span><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'set'</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.model_type" title="Link to this definition">#</a></dt>
+<dd><p>Model type discriminator</p>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.nor">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">nor</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.nor" title="Link to this definition">#</a></dt>
+<dd><p>Direction of North with respect to the x-axis (measured counterclockwise); default <cite>nor = 90</cite>, i.e. x-axis of the problem coordinate system points East. When spherical coordinates are used (see command COORD) the value of <cite>nor</cite> may not be modified</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = -360.0</p></li>
+<li><p><strong>le</strong> = 360.0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.pwtail">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pwtail</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.pwtail" title="Link to this definition">#</a></dt>
+<dd><p>Power of high frequency tail; defines the shape of the spectral tail above the highest prognostic frequency <cite>fhigh</cite> (see command CGRID). The energy density is assumed to be proportional to frequency to the power <cite>pwtail</cite>. If the user wishes to use another value, then this SET command should be located in the command file after GEN1, GEN2 or GEN3 command (these will override the SET command with respect to <cite>pwtail</cite>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = 0</p></li>
+</ul>
+</dd>
+<dt class="field-even">Validated by<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#rompy_swan.components.startup.SET.pwtail_after_gen" title="rompy_swan.components.startup.SET.pwtail_after_gen"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pwtail_after_gen</span></code></a></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.rho">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rho</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#rompy_swan.components.startup.SET.rho" title="Link to this definition">#</a></dt>
+<dd><p>The water density (in kg/m3) (SWAN default: 1025)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Constraints<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ge</strong> = 0.0</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.cmd">
+<span class="sig-name descname"><span class="pre">cmd</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/rompy_swan/components/startup.html#SET.cmd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rompy_swan.components.startup.SET.cmd" title="Link to this definition">#</a></dt>
+<dd><p>Return the string or list of strings to render the component to the CMD.</p>
+</dd></dl>
+
+<dl class="py method pydantic_validator">
+<dt class="sig sig-object py" id="rompy_swan.components.startup.SET.pwtail_after_gen">
+<em class="property"><span class="pre">validator</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pwtail_after_gen</span></span><em class="autodoc_pydantic_validator_arrow property">&#160; <span class="pre">»</span>&#160; </em><a class="reference internal" href="#rompy_swan.components.startup.SET.pwtail" title="rompy_swan.components.startup.SET.pwtail"><em class="xref py py-obj"><span class="pre">pwtail</span></em></a><a class="reference internal" href="../../_modules/rompy_swan/components/startup.html#SET.pwtail_after_gen"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rompy_swan.components.startup.SET.pwtail_after_gen" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="rompy_swan.components.startup.PROJECT.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">rompy_swan.components.startup.PROJECT</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="rompy_swan.components.startup.MODE.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">rompy_swan.components.startup.MODE</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET"><code class="docutils literal notranslate"><span class="pre">SET</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.cdcap"><code class="docutils literal notranslate"><span class="pre">SET.cdcap</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.depmin"><code class="docutils literal notranslate"><span class="pre">SET.depmin</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.direction_convention"><code class="docutils literal notranslate"><span class="pre">SET.direction_convention</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.froudmax"><code class="docutils literal notranslate"><span class="pre">SET.froudmax</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.grav"><code class="docutils literal notranslate"><span class="pre">SET.grav</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.hsrerr"><code class="docutils literal notranslate"><span class="pre">SET.hsrerr</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.icewind"><code class="docutils literal notranslate"><span class="pre">SET.icewind</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.inrhog"><code class="docutils literal notranslate"><span class="pre">SET.inrhog</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.level"><code class="docutils literal notranslate"><span class="pre">SET.level</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.maxerr"><code class="docutils literal notranslate"><span class="pre">SET.maxerr</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.maxmes"><code class="docutils literal notranslate"><span class="pre">SET.maxmes</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.model_type"><code class="docutils literal notranslate"><span class="pre">SET.model_type</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.nor"><code class="docutils literal notranslate"><span class="pre">SET.nor</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.pwtail"><code class="docutils literal notranslate"><span class="pre">SET.pwtail</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.rho"><code class="docutils literal notranslate"><span class="pre">SET.rho</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.cmd"><code class="docutils literal notranslate"><span class="pre">SET.cmd()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rompy_swan.components.startup.SET.pwtail_after_gen"><code class="docutils literal notranslate"><span class="pre">SET.pwtail_after_gen</span></code></a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/components/_generated/rompy_swan.components.startup.SET.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2021, CSIRO and rompy contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

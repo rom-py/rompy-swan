@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.lockup.COMPUTE
+=====================================
+
+.. currentmodule:: rompy_swan.components.lockup
+
+.. autopydantic_model:: COMPUTE

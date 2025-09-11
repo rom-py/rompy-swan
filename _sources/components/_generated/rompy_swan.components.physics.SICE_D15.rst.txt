@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.SICE\_D15
+========================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: SICE_D15

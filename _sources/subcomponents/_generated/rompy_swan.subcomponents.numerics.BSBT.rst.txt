@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.numerics.BSBT
+=======================================
+
+.. currentmodule:: rompy_swan.subcomponents.numerics
+
+.. autopydantic_model:: BSBT

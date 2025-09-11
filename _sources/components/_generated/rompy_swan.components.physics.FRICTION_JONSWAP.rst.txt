@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.FRICTION\_JONSWAP
+================================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: FRICTION_JONSWAP

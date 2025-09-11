@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.startup.PROJECT
+======================================
+
+.. currentmodule:: rompy_swan.components.startup
+
+.. autopydantic_model:: PROJECT

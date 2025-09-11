@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.numerics.PROP
+====================================
+
+.. currentmodule:: rompy_swan.components.numerics
+
+.. autopydantic_model:: PROP

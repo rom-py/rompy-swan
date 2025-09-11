@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.DIFFRACTION
+==========================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: DIFFRACTION

@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.spectrum.TMA
+======================================
+
+.. currentmodule:: rompy_swan.subcomponents.spectrum
+
+.. autopydantic_model:: TMA

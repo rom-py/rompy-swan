@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.lockup.STOP
+==================================
+
+.. currentmodule:: rompy_swan.components.lockup
+
+.. autopydantic_model:: STOP

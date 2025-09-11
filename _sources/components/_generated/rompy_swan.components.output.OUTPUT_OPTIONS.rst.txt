@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.output.OUTPUT\_OPTIONS
+=============================================
+
+.. currentmodule:: rompy_swan.components.output
+
+.. autopydantic_model:: OUTPUT_OPTIONS

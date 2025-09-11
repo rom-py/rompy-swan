@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.inpgrid.WIND
+===================================
+
+.. currentmodule:: rompy_swan.components.inpgrid
+
+.. autopydantic_model:: WIND

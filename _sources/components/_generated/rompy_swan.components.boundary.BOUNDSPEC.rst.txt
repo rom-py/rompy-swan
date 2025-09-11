@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.boundary.BOUNDSPEC
+=========================================
+
+.. currentmodule:: rompy_swan.components.boundary
+
+.. autopydantic_model:: BOUNDSPEC

@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.NEGATINP
+=======================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: NEGATINP

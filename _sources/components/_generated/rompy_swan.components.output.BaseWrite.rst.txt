@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.output.BaseWrite
+=======================================
+
+.. currentmodule:: rompy_swan.components.output
+
+.. autopydantic_model:: BaseWrite

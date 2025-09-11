@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.OBSTACLE\_FIG
+============================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: OBSTACLE_FIG

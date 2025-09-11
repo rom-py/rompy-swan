@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.inpgrid.UNSTRUCTURED
+===========================================
+
+.. currentmodule:: rompy_swan.components.inpgrid
+
+.. autopydantic_model:: UNSTRUCTURED

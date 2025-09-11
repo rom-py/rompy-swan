@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.output.POINTS\_FILE
+==========================================
+
+.. currentmodule:: rompy_swan.components.output
+
+.. autopydantic_model:: POINTS_FILE

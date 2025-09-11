@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.startup.CARTESIAN
+===========================================
+
+.. currentmodule:: rompy_swan.subcomponents.startup
+
+.. autopydantic_model:: CARTESIAN

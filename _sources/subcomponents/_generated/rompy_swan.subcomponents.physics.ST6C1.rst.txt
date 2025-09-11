@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.physics.ST6C1
+=======================================
+
+.. currentmodule:: rompy_swan.subcomponents.physics
+
+.. autopydantic_model:: ST6C1

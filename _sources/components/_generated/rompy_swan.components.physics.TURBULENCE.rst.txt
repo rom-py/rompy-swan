@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.TURBULENCE
+=========================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: TURBULENCE

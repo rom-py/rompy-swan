@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.numerics.NONSTAT
+==========================================
+
+.. currentmodule:: rompy_swan.subcomponents.numerics
+
+.. autopydantic_model:: NONSTAT

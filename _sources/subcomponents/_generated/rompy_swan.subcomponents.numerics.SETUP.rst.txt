@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.numerics.SETUP
+========================================
+
+.. currentmodule:: rompy_swan.subcomponents.numerics
+
+.. autopydantic_model:: SETUP

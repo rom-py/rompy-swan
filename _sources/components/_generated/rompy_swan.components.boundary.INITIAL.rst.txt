@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.boundary.INITIAL
+=======================================
+
+.. currentmodule:: rompy_swan.components.boundary
+
+.. autopydantic_model:: INITIAL

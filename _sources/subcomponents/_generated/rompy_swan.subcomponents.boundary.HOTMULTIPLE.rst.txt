@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.boundary.HOTMULTIPLE
+==============================================
+
+.. currentmodule:: rompy_swan.subcomponents.boundary
+
+.. autopydantic_model:: HOTMULTIPLE

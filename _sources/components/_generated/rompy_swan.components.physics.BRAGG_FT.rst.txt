@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.BRAGG\_FT
+========================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: BRAGG_FT

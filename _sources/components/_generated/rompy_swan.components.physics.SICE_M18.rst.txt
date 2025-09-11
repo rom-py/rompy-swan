@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.SICE\_M18
+========================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: SICE_M18

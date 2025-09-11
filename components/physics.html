@@ -1,0 +1,1254 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Physics &#8212; rompy-swan 0.6.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=8fa8b3e9"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'components/physics';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="rompy_swan.components.physics.GEN1" href="_generated/rompy_swan.components.physics.GEN1.html" />
+    <link rel="prev" title="rompy_swan.components.boundary.INITIAL" href="_generated/rompy_swan.components.boundary.INITIAL.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.6.0" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">rompy-swan 0.6.0 documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+            <li class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button"
+                data-bs-toggle="dropdown" aria-expanded="false"
+                aria-controls="pst-nav-more-links">
+                    More
+                </button>
+                <ul id="pst-nav-more-links" class="dropdown-menu">
+                    
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" current active">
+  <a class="nav-link dropdown-item nav-internal" href="#">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="group.html">
+    Group
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../_generated/rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../_generated/rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../_generated/rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../_generated/rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class=" ">
+  <a class="nav-link dropdown-item nav-internal" href="../types.html">
+    Enum Types
+  </a>
+</li>
+
+                </ul>
+            </li>
+            
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.grid.SwanGrid.html">
+    rompy_swan.grid.SwanGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.data.SwanDataGrid.html">
+    rompy_swan.data.SwanDataGrid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.boundary.Boundnest1.html">
+    rompy_swan.boundary.Boundnest1
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="inpgrid.html">
+    Input grids
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="#">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="lockup.html">
+    Lock-up
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="group.html">
+    Group
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/base.html">
+    Base
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/startup.html">
+    Startup
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/spectrum.html">
+    Spectrum
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/time.html">
+    Time
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/cgrid.html">
+    Computational grid
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/readgrid.html">
+    Grid reader
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/boundary.html">
+    Boundary and initial conditions
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/physics.html">
+    Physics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/numerics.html">
+    Numerics
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../subcomponents/output.html">
+    Output
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.interface.DataInterface.html">
+    rompy_swan.interface.DataInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.interface.BoundaryInterface.html">
+    rompy_swan.interface.BoundaryInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.interface.OutputInterface.html">
+    rompy_swan.interface.OutputInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../_generated/rompy_swan.interface.LockupInterface.html">
+    rompy_swan.interface.LockupInterface
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../types.html">
+    Enum Types
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/rom-py/rompy-swan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fab fa-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<h3><a href="../index.html">Table of Contents</a></h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_generated/rompy_swan.grid.SwanGrid.html">rompy_swan.grid.SwanGrid</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_generated/rompy_swan.data.SwanDataGrid.html">rompy_swan.data.SwanDataGrid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_generated/rompy_swan.boundary.Boundnest1.html">rompy_swan.boundary.Boundnest1</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="inpgrid.html">Input grids</a></li>
+<li class="toctree-l1"><a class="reference internal" href="boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Physics</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generation">Generation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.GEN1.html">rompy_swan.components.physics.GEN1</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.GEN2.html">rompy_swan.components.physics.GEN2</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.GEN3.html">rompy_swan.components.physics.GEN3</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#swell-dissipation">Swell dissipation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.NEGATINP.html">rompy_swan.components.physics.NEGATINP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SSWELL_ARDHUIN.html">rompy_swan.components.physics.SSWELL_ARDHUIN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SSWELL_ZIEGER.html">rompy_swan.components.physics.SSWELL_ZIEGER</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SSWELL_ROGERS.html">rompy_swan.components.physics.SSWELL_ROGERS</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#whitecapping">Whitecapping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.WCAPPING_KOMEN.html">rompy_swan.components.physics.WCAPPING_KOMEN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.WCAPPING_AB.html">rompy_swan.components.physics.WCAPPING_AB</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#quadruplet-interactions">Quadruplet interactions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.QUADRUPL.html">rompy_swan.components.physics.QUADRUPL</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#wave-breaking">Wave breaking</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.BREAKING_CONSTANT.html">rompy_swan.components.physics.BREAKING_CONSTANT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.BREAKING_BKD.html">rompy_swan.components.physics.BREAKING_BKD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bottom-friction">Bottom friction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.FRICTION_JONSWAP.html">rompy_swan.components.physics.FRICTION_JONSWAP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.FRICTION_COLLINS.html">rompy_swan.components.physics.FRICTION_COLLINS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.FRICTION_MADSEN.html">rompy_swan.components.physics.FRICTION_MADSEN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.FRICTION_RIPPLES.html">rompy_swan.components.physics.FRICTION_RIPPLES</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#wave-triads">Wave triads</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.TRIAD.html">rompy_swan.components.physics.TRIAD</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.TRIAD_DCTA.html">rompy_swan.components.physics.TRIAD_DCTA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.TRIAD_LTA.html">rompy_swan.components.physics.TRIAD_LTA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.TRIAD_SPB.html">rompy_swan.components.physics.TRIAD_SPB</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#vegetaion-dumping">Vegetaion dumping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.VEGETATION.html">rompy_swan.components.physics.VEGETATION</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mud-dumping">Mud dumping</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.MUD.html">rompy_swan.components.physics.MUD</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#sea-ice-dissipation">Sea ice dissipation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE.html">rompy_swan.components.physics.SICE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE_R19.html">rompy_swan.components.physics.SICE_R19</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE_D15.html">rompy_swan.components.physics.SICE_D15</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE_M18.html">rompy_swan.components.physics.SICE_M18</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE_R21B.html">rompy_swan.components.physics.SICE_R21B</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#turbulent-viscosity">Turbulent viscosity</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.TURBULENCE.html">rompy_swan.components.physics.TURBULENCE</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bragg-scattering">Bragg scattering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.BRAGG.html">rompy_swan.components.physics.BRAGG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.BRAGG_FT.html">rompy_swan.components.physics.BRAGG_FT</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.BRAGG_FILE.html">rompy_swan.components.physics.BRAGG_FILE</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#limiter">Limiter</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.LIMITER.html">rompy_swan.components.physics.LIMITER</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#obstacle">Obstacle</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.OBSTACLE.html">rompy_swan.components.physics.OBSTACLE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.OBSTACLE_FIG.html">rompy_swan.components.physics.OBSTACLE_FIG</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.OBSTACLES.html">rompy_swan.components.physics.OBSTACLES</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#wave-setup">Wave setup</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SETUP.html">rompy_swan.components.physics.SETUP</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#wave-diffraction">Wave diffraction</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.DIFFRACTION.html">rompy_swan.components.physics.DIFFRACTION</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#surfbeat">Surfbeat</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SURFBEAT.html">rompy_swan.components.physics.SURFBEAT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#scattering">Scattering</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.SCAT.html">rompy_swan.components.physics.SCAT</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#off">Off</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.OFF.html">rompy_swan.components.physics.OFF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="_generated/rompy_swan.components.physics.OFFS.html">rompy_swan.components.physics.OFFS</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="output.html">Output</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lockup.html">Lock-up</a></li>
+<li class="toctree-l1"><a class="reference internal" href="group.html">Group</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/base.html">Base</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/startup.html">Startup</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/spectrum.html">Spectrum</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/time.html">Time</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/cgrid.html">Computational grid</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/readgrid.html">Grid reader</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/boundary.html">Boundary and initial conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/numerics.html">Numerics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../subcomponents/output.html">Output</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_generated/rompy_swan.interface.DataInterface.html">rompy_swan.interface.DataInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_generated/rompy_swan.interface.BoundaryInterface.html">rompy_swan.interface.BoundaryInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_generated/rompy_swan.interface.OutputInterface.html">rompy_swan.interface.OutputInterface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../_generated/rompy_swan.interface.LockupInterface.html">rompy_swan.interface.LockupInterface</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../types.html">Enum Types</a></li>
+</ul>
+</div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Physics</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="physics">
+<h1>Physics<a class="headerlink" href="#physics" title="Link to this heading">#</a></h1>
+<p>SWAN physics commands</p>
+<section id="generation">
+<h2>Generation<a class="headerlink" href="#generation" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.GEN1.html#rompy_swan.components.physics.GEN1" title="rompy_swan.components.physics.GEN1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.GEN1</span></code></a></p></td>
+<td><p>First generation source terms GEN1.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.GEN2.html#rompy_swan.components.physics.GEN2" title="rompy_swan.components.physics.GEN2"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.GEN2</span></code></a></p></td>
+<td><p>Second generation source terms GEN2.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.GEN3.html#rompy_swan.components.physics.GEN3" title="rompy_swan.components.physics.GEN3"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.GEN3</span></code></a></p></td>
+<td><p>Third generation source terms GEN3.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="swell-dissipation">
+<h2>Swell dissipation<a class="headerlink" href="#swell-dissipation" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.NEGATINP.html#rompy_swan.components.physics.NEGATINP" title="rompy_swan.components.physics.NEGATINP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.NEGATINP</span></code></a></p></td>
+<td><p>Negative wind input.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SSWELL_ARDHUIN.html#rompy_swan.components.physics.SSWELL_ARDHUIN" title="rompy_swan.components.physics.SSWELL_ARDHUIN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SSWELL_ARDHUIN</span></code></a></p></td>
+<td><p>Nonbreaking dissipation of Ardhuin et al. (2010).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SSWELL_ZIEGER.html#rompy_swan.components.physics.SSWELL_ZIEGER" title="rompy_swan.components.physics.SSWELL_ZIEGER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SSWELL_ZIEGER</span></code></a></p></td>
+<td><p>Nonbreaking dissipation of Zieger et al. (2015).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SSWELL_ROGERS.html#rompy_swan.components.physics.SSWELL_ROGERS" title="rompy_swan.components.physics.SSWELL_ROGERS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SSWELL_ROGERS</span></code></a></p></td>
+<td><p>Nonbreaking dissipation of Rogers et al. (2012).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="whitecapping">
+<h2>Whitecapping<a class="headerlink" href="#whitecapping" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.WCAPPING_KOMEN.html#rompy_swan.components.physics.WCAPPING_KOMEN" title="rompy_swan.components.physics.WCAPPING_KOMEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.WCAPPING_KOMEN</span></code></a></p></td>
+<td><p>Whitecapping according to Komen (1984).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.WCAPPING_AB.html#rompy_swan.components.physics.WCAPPING_AB" title="rompy_swan.components.physics.WCAPPING_AB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.WCAPPING_AB</span></code></a></p></td>
+<td><p>Whitecapping according to Alves and Banner (2003).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="quadruplet-interactions">
+<h2>Quadruplet interactions<a class="headerlink" href="#quadruplet-interactions" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.QUADRUPL.html#rompy_swan.components.physics.QUADRUPL" title="rompy_swan.components.physics.QUADRUPL"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.QUADRUPL</span></code></a></p></td>
+<td><p>Nonlinear quadruplet wave interactions.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="wave-breaking">
+<h2>Wave breaking<a class="headerlink" href="#wave-breaking" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.BREAKING_CONSTANT.html#rompy_swan.components.physics.BREAKING_CONSTANT" title="rompy_swan.components.physics.BREAKING_CONSTANT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.BREAKING_CONSTANT</span></code></a></p></td>
+<td><p>Constant wave breaking index.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.BREAKING_BKD.html#rompy_swan.components.physics.BREAKING_BKD" title="rompy_swan.components.physics.BREAKING_BKD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.BREAKING_BKD</span></code></a></p></td>
+<td><p>Variable wave breaking index.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="bottom-friction">
+<h2>Bottom friction<a class="headerlink" href="#bottom-friction" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.FRICTION_JONSWAP.html#rompy_swan.components.physics.FRICTION_JONSWAP" title="rompy_swan.components.physics.FRICTION_JONSWAP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.FRICTION_JONSWAP</span></code></a></p></td>
+<td><p>Hasselmann et al. (1973) Jonswap friction.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.FRICTION_COLLINS.html#rompy_swan.components.physics.FRICTION_COLLINS" title="rompy_swan.components.physics.FRICTION_COLLINS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.FRICTION_COLLINS</span></code></a></p></td>
+<td><p>Collins (1972) friction.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.FRICTION_MADSEN.html#rompy_swan.components.physics.FRICTION_MADSEN" title="rompy_swan.components.physics.FRICTION_MADSEN"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.FRICTION_MADSEN</span></code></a></p></td>
+<td><p>Madsen et al (1988) friction.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.FRICTION_RIPPLES.html#rompy_swan.components.physics.FRICTION_RIPPLES" title="rompy_swan.components.physics.FRICTION_RIPPLES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.FRICTION_RIPPLES</span></code></a></p></td>
+<td><p>Smith et al. (2011) Ripples friction.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="wave-triads">
+<h2>Wave triads<a class="headerlink" href="#wave-triads" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.TRIAD.html#rompy_swan.components.physics.TRIAD" title="rompy_swan.components.physics.TRIAD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.TRIAD</span></code></a></p></td>
+<td><p>Wave triad interactions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.TRIAD_DCTA.html#rompy_swan.components.physics.TRIAD_DCTA" title="rompy_swan.components.physics.TRIAD_DCTA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.TRIAD_DCTA</span></code></a></p></td>
+<td><p>Triad interactions with the DCTA method of Booij et al. (2009).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.TRIAD_LTA.html#rompy_swan.components.physics.TRIAD_LTA" title="rompy_swan.components.physics.TRIAD_LTA"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.TRIAD_LTA</span></code></a></p></td>
+<td><p>Triad interactions with the LTA method of Eldeberky (1996).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.TRIAD_SPB.html#rompy_swan.components.physics.TRIAD_SPB" title="rompy_swan.components.physics.TRIAD_SPB"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.TRIAD_SPB</span></code></a></p></td>
+<td><p>Triad interactions with the SPB method of Becq-Girard et al. (1999).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="vegetaion-dumping">
+<h2>Vegetaion dumping<a class="headerlink" href="#vegetaion-dumping" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.VEGETATION.html#rompy_swan.components.physics.VEGETATION" title="rompy_swan.components.physics.VEGETATION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.VEGETATION</span></code></a></p></td>
+<td><p>Vegetation dumping.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="mud-dumping">
+<h2>Mud dumping<a class="headerlink" href="#mud-dumping" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.MUD.html#rompy_swan.components.physics.MUD" title="rompy_swan.components.physics.MUD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.MUD</span></code></a></p></td>
+<td><p>Mud dumping.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="sea-ice-dissipation">
+<h2>Sea ice dissipation<a class="headerlink" href="#sea-ice-dissipation" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE.html#rompy_swan.components.physics.SICE" title="rompy_swan.components.physics.SICE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SICE</span></code></a></p></td>
+<td><p>Sea ice dissipation.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE_R19.html#rompy_swan.components.physics.SICE_R19" title="rompy_swan.components.physics.SICE_R19"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SICE_R19</span></code></a></p></td>
+<td><p>Sea ice dissipation based on the method of Rogers et al (2019).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE_D15.html#rompy_swan.components.physics.SICE_D15" title="rompy_swan.components.physics.SICE_D15"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SICE_D15</span></code></a></p></td>
+<td><p>Sea ice dissipation based on the method of Doble et al. (2015).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE_M18.html#rompy_swan.components.physics.SICE_M18" title="rompy_swan.components.physics.SICE_M18"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SICE_M18</span></code></a></p></td>
+<td><p>Sea ice dissipation based on the method of Meylan et al. (2018).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SICE_R21B.html#rompy_swan.components.physics.SICE_R21B" title="rompy_swan.components.physics.SICE_R21B"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SICE_R21B</span></code></a></p></td>
+<td><p>Sea ice dissipation based on the method of Rogers et al. (2021).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="turbulent-viscosity">
+<h2>Turbulent viscosity<a class="headerlink" href="#turbulent-viscosity" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.TURBULENCE.html#rompy_swan.components.physics.TURBULENCE" title="rompy_swan.components.physics.TURBULENCE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.TURBULENCE</span></code></a></p></td>
+<td><p>Turbulent viscosity.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="bragg-scattering">
+<h2>Bragg scattering<a class="headerlink" href="#bragg-scattering" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.BRAGG.html#rompy_swan.components.physics.BRAGG" title="rompy_swan.components.physics.BRAGG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.BRAGG</span></code></a></p></td>
+<td><p>Bragg scattering.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.BRAGG_FT.html#rompy_swan.components.physics.BRAGG_FT" title="rompy_swan.components.physics.BRAGG_FT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.BRAGG_FT</span></code></a></p></td>
+<td><p>Bragg scattering with bottom spectrum computed from FFT.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.BRAGG_FILE.html#rompy_swan.components.physics.BRAGG_FILE" title="rompy_swan.components.physics.BRAGG_FILE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.BRAGG_FILE</span></code></a></p></td>
+<td><p>Bragg scattering with bottom spectrum from file.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="limiter">
+<h2>Limiter<a class="headerlink" href="#limiter" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.LIMITER.html#rompy_swan.components.physics.LIMITER" title="rompy_swan.components.physics.LIMITER"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.LIMITER</span></code></a></p></td>
+<td><p>Physics limiter.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="obstacle">
+<h2>Obstacle<a class="headerlink" href="#obstacle" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.OBSTACLE.html#rompy_swan.components.physics.OBSTACLE" title="rompy_swan.components.physics.OBSTACLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.OBSTACLE</span></code></a></p></td>
+<td><p>Subgrid obstacle.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.OBSTACLE_FIG.html#rompy_swan.components.physics.OBSTACLE_FIG" title="rompy_swan.components.physics.OBSTACLE_FIG"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.OBSTACLE_FIG</span></code></a></p></td>
+<td><p>Obstacle for free infragravity radiation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.OBSTACLES.html#rompy_swan.components.physics.OBSTACLES" title="rompy_swan.components.physics.OBSTACLES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.OBSTACLES</span></code></a></p></td>
+<td><p>List of swan obstacles.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="wave-setup">
+<h2>Wave setup<a class="headerlink" href="#wave-setup" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SETUP.html#rompy_swan.components.physics.SETUP" title="rompy_swan.components.physics.SETUP"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SETUP</span></code></a></p></td>
+<td><p>Wave setup.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="wave-diffraction">
+<h2>Wave diffraction<a class="headerlink" href="#wave-diffraction" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.DIFFRACTION.html#rompy_swan.components.physics.DIFFRACTION" title="rompy_swan.components.physics.DIFFRACTION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.DIFFRACTION</span></code></a></p></td>
+<td><p>Wave diffraction.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="surfbeat">
+<h2>Surfbeat<a class="headerlink" href="#surfbeat" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SURFBEAT.html#rompy_swan.components.physics.SURFBEAT" title="rompy_swan.components.physics.SURFBEAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SURFBEAT</span></code></a></p></td>
+<td><p>Surfbeat.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="scattering">
+<h2>Scattering<a class="headerlink" href="#scattering" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.SCAT.html#rompy_swan.components.physics.SCAT" title="rompy_swan.components.physics.SCAT"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.SCAT</span></code></a></p></td>
+<td><p>Scattering.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="off">
+<h2>Off<a class="headerlink" href="#off" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.OFF.html#rompy_swan.components.physics.OFF" title="rompy_swan.components.physics.OFF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.OFF</span></code></a></p></td>
+<td><p>Deactivate physics commands.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="_generated/rompy_swan.components.physics.OFFS.html#rompy_swan.components.physics.OFFS" title="rompy_swan.components.physics.OFFS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rompy_swan.components.physics.OFFS</span></code></a></p></td>
+<td><p>Deactivate multiple physics commands.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="_generated/rompy_swan.components.boundary.INITIAL.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">rompy_swan.components.boundary.INITIAL</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="_generated/rompy_swan.components.physics.GEN1.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">rompy_swan.components.physics.GEN1</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#generation">Generation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#swell-dissipation">Swell dissipation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whitecapping">Whitecapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quadruplet-interactions">Quadruplet interactions</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wave-breaking">Wave breaking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bottom-friction">Bottom friction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wave-triads">Wave triads</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#vegetaion-dumping">Vegetaion dumping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mud-dumping">Mud dumping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sea-ice-dissipation">Sea ice dissipation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#turbulent-viscosity">Turbulent viscosity</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#bragg-scattering">Bragg scattering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limiter">Limiter</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#obstacle">Obstacle</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wave-setup">Wave setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wave-diffraction">Wave diffraction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#surfbeat">Surfbeat</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scattering">Scattering</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#off">Off</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/components/physics.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2021, CSIRO and rompy contributors.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.3.5.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

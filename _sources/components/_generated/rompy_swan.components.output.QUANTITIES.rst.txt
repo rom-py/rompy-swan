@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.output.QUANTITIES
+========================================
+
+.. currentmodule:: rompy_swan.components.output
+
+.. autopydantic_model:: QUANTITIES

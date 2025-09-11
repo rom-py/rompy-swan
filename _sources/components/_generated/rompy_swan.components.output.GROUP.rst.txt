@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.output.GROUP
+===================================
+
+.. currentmodule:: rompy_swan.components.output
+
+.. autopydantic_model:: GROUP

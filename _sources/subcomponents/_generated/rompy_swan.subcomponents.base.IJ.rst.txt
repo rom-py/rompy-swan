@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.base.IJ
+=================================
+
+.. currentmodule:: rompy_swan.subcomponents.base
+
+.. autopydantic_model:: IJ

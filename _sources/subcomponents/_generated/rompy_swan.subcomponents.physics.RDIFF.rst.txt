@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.physics.RDIFF
+=======================================
+
+.. currentmodule:: rompy_swan.subcomponents.physics
+
+.. autopydantic_model:: RDIFF

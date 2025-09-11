@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.base.XY
+=================================
+
+.. currentmodule:: rompy_swan.subcomponents.base
+
+.. autopydantic_model:: XY

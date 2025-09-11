@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.physics.DANGREMOND
+============================================
+
+.. currentmodule:: rompy_swan.subcomponents.physics
+
+.. autopydantic_model:: DANGREMOND

@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.startup.COORDINATES
+==========================================
+
+.. currentmodule:: rompy_swan.components.startup
+
+.. autopydantic_model:: COORDINATES

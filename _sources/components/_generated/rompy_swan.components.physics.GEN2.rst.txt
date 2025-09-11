@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.GEN2
+===================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: GEN2

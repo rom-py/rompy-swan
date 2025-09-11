@@ -1,0 +1,6 @@
+﻿rompy\_swan.components.physics.BREAKING\_CONSTANT
+=================================================
+
+.. currentmodule:: rompy_swan.components.physics
+
+.. autopydantic_model:: BREAKING_CONSTANT

@@ -1,0 +1,6 @@
+﻿rompy\_swan.subcomponents.time.Delt
+===================================
+
+.. currentmodule:: rompy_swan.subcomponents.time
+
+.. autopydantic_model:: Delt
