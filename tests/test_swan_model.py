@@ -11,7 +11,7 @@ from test_utils.logging import get_test_logger
 
 from rompy.core.source import SourceIntake
 from rompy.model import ModelRun
-from rompy_swan import Boundnest1
+from rompy_swan.boundary import Boundnest1
 from rompy_swan.config import SwanConfigComponents
 from rompy_swan.interface import BoundaryInterface
 
