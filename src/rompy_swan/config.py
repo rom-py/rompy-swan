@@ -31,64 +31,6 @@ HERE = Path(__file__).parent
 DEFAULT_TEMPLATE = str(Path(__file__).parent / "templates" / "swan")
 
 
-class SwanConfig(BaseConfig):
-    """SWAN configuration"""
-
-    grid: SwanGrid = Field(description="The model grid for the SWAN run")
-    model_type: Literal["swan"] = Field("swan", description="The model type for SWAN.")
-    spectral_resolution: SwanSpectrum = Field(
-        SwanSpectrum(), description="The spectral resolution for SWAN."
-    )
-    forcing: ForcingData = Field(
-        ForcingData(), description="The forcing data for SWAN."
-    )
-    physics: SwanPhysics = Field(
-        SwanPhysics(), description="The physics options for SWAN."
-    )
-    outputs: Outputs = Field(Outputs(), description="The outputs for SWAN.")
-    spectra_file: str = Field("boundary.spec", description="The spectra file for SWAN.")
-    template: str = Field(DEFAULT_TEMPLATE, description="The template for SWAN.")
-    _datefmt: Annotated[str, Field(description="The date format for SWAN.")] = (
-        "%Y%m%d.%H%M%S"
-    )
-    # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
-
-    @property
-    def domain(self):
-        output = f"CGRID {self.grid.cgrid} {self.spectral_resolution.cmd}\n"
-        output += f"{self.grid.cgrid_read}\n"
-        return output
-
-    def __call__(self, runtime) -> str:
-        # Use formatting utilities imported at the top of the file
-
-        # Log the process beginning
-        # Use the log_box utility function
-        from rompy.formatting import log_box
-
-        log_box(title="PROCESSING SWAN CONFIGURATION", logger=logger)
-
-        # Setup configuration
-        ret = {}
-        if not self.outputs.grid.period:
-            self.outputs.grid.period = runtime.period
-        if not self.outputs.spec.period:
-            self.outputs.spec.period = runtime.period
-        ret["grid"] = f"{self.domain}"
-        ret["forcing"] = self.forcing.get(
-            self.grid, runtime.period, runtime.staging_dir
-        )
-        ret["physics"] = f"{self.physics.cmd}"
-        ret["outputs"] = self.outputs.cmd
-
-        # Log completion
-        from rompy.formatting import log_box
-
-        log_box(title="SWAN CONFIGURATION PROCESSING COMPLETE", logger=logger)
-        ret["output_locs"] = self.outputs.spec.locations
-        return ret
-
-
 STARTUP_TYPE = Annotated[STARTUP, Field(description="Startup components")]
 INITIAL_TYPE = Annotated[boundary.INITIAL, Field(description="Initial component")]
 PHYSICS_TYPE = Annotated[PHYSICS, Field(description="Physics components")]
