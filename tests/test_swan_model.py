@@ -12,7 +12,7 @@ from test_utils.logging import get_test_logger
 from rompy.core.source import SourceIntake
 from rompy.model import ModelRun
 from rompy_swan.boundary import Boundnest1
-from rompy_swan.config import SwanConfigComponents
+from rompy_swan.config import SwanConfig
 from rompy_swan.interface import BoundaryInterface
 
 # Initialize logger
@@ -29,7 +29,7 @@ def config_dict():
 
 
 def test_swan_model(tmpdir, config_dict):
-    config = SwanConfigComponents(
+    config = SwanConfig(
         startup=config_dict["startup"],
         cgrid=config_dict["cgrid"],
         inpgrid=config_dict["inpgrid"],
@@ -51,7 +51,7 @@ def test_swan_model(tmpdir, config_dict):
 
 
 def test_swan_model_boundary(tmpdir, config_dict):
-    config = SwanConfigComponents(
+    config = SwanConfig(
         startup=config_dict["startup"],
         cgrid=config_dict["cgrid"],
         inpgrid=config_dict["inpgrid"],
