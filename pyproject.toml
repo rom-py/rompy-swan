@@ -59,6 +59,7 @@ docs = [
 ]
 
 [project.entry-points."rompy.config"]
+swan = "rompy_swan.config:SwanConfig"
 swan_components = "rompy_swan.config:SwanConfigComponents"
 
 [project.urls]
