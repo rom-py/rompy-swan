@@ -646,6 +646,7 @@ class SwanConfigComponents(SwanConfig):
     This class is deprecated and will be removed in a future version.
     Please use SwanConfig instead of SwanConfigComponents.
     """
+
     model_type: Literal["swanconfig", "SWANCONFIG"] = Field(
         default="swanconfig",
         description="Model type discriminator",
@@ -656,6 +657,6 @@ class SwanConfigComponents(SwanConfig):
             "SwanConfigComponents is deprecated and will be removed in a future version. "
             "Please use SwanConfig instead.",
             DeprecationWarning,
-            stacklevel=2
+            stacklevel=2,
         )
         super().__init__(**kwargs)
