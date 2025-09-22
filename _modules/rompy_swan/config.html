@@ -742,6 +742,7 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
@@ -766,67 +767,6 @@
 <span class="n">HERE</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span>
 
 <span class="n">DEFAULT_TEMPLATE</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;templates&quot;</span> <span class="o">/</span> <span class="s2">&quot;swan&quot;</span><span class="p">)</span>
-
-
-<div class="viewcode-block" id="SwanConfig">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SwanConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;SWAN configuration&quot;&quot;&quot;</span>
-
-    <span class="n">grid</span><span class="p">:</span> <span class="n">SwanGrid</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;The model grid for the SWAN run&quot;</span><span class="p">)</span>
-    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;swan&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;swan&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The model type for SWAN.&quot;</span><span class="p">)</span>
-    <span class="n">spectral_resolution</span><span class="p">:</span> <span class="n">SwanSpectrum</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">SwanSpectrum</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The spectral resolution for SWAN.&quot;</span>
-    <span class="p">)</span>
-    <span class="n">forcing</span><span class="p">:</span> <span class="n">ForcingData</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">ForcingData</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The forcing data for SWAN.&quot;</span>
-    <span class="p">)</span>
-    <span class="n">physics</span><span class="p">:</span> <span class="n">SwanPhysics</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">SwanPhysics</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The physics options for SWAN.&quot;</span>
-    <span class="p">)</span>
-    <span class="n">outputs</span><span class="p">:</span> <span class="n">Outputs</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">Outputs</span><span class="p">(),</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The outputs for SWAN.&quot;</span><span class="p">)</span>
-    <span class="n">spectra_file</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="s2">&quot;boundary.spec&quot;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The spectra file for SWAN.&quot;</span><span class="p">)</span>
-    <span class="n">template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">DEFAULT_TEMPLATE</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The template for SWAN.&quot;</span><span class="p">)</span>
-    <span class="n">_datefmt</span><span class="p">:</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;The date format for SWAN.&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">.%H%M%S&quot;</span>
-    <span class="p">)</span>
-    <span class="c1"># subnests: List[SwanConfig] = Field([], description=&quot;The subnests for SWAN.&quot;) # uncomment if needed</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">domain</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">output</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;CGRID </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">cgrid</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">spectral_resolution</span><span class="o">.</span><span class="n">cmd</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="n">output</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">cgrid_read</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
-        <span class="k">return</span> <span class="n">output</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">runtime</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-        <span class="c1"># Use formatting utilities imported at the top of the file</span>
-
-        <span class="c1"># Log the process beginning</span>
-        <span class="c1"># Use the log_box utility function</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">rompy.formatting</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_box</span>
-
-        <span class="n">log_box</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;PROCESSING SWAN CONFIGURATION&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-
-        <span class="c1"># Setup configuration</span>
-        <span class="n">ret</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">period</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">grid</span><span class="o">.</span><span class="n">period</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">period</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">period</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">period</span> <span class="o">=</span> <span class="n">runtime</span><span class="o">.</span><span class="n">period</span>
-        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;grid&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;forcing&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">forcing</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">grid</span><span class="p">,</span> <span class="n">runtime</span><span class="o">.</span><span class="n">period</span><span class="p">,</span> <span class="n">runtime</span><span class="o">.</span><span class="n">staging_dir</span>
-        <span class="p">)</span>
-        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;physics&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">physics</span><span class="o">.</span><span class="n">cmd</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;outputs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">cmd</span>
-
-        <span class="c1"># Log completion</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">rompy.formatting</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_box</span>
-
-        <span class="n">log_box</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;SWAN CONFIGURATION PROCESSING COMPLETE&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
-        <span class="n">ret</span><span class="p">[</span><span class="s2">&quot;output_locs&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">outputs</span><span class="o">.</span><span class="n">spec</span><span class="o">.</span><span class="n">locations</span>
-        <span class="k">return</span> <span class="n">ret</span></div>
-
 
 
 <span class="n">STARTUP_TYPE</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="n">STARTUP</span><span class="p">,</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Startup components&quot;</span><span class="p">)]</span>
@@ -859,9 +799,9 @@
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="SwanConfigComponents">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">SwanConfigComponents</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<div class="viewcode-block" id="SwanConfig">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwanConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;SWAN config class.</span>
 
 <span class="sd">    TODO: Combine boundary and inpgrid into a single input type.</span>
@@ -873,12 +813,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;swanconfig&quot;</span><span class="p">,</span> <span class="s2">&quot;SWANCONFIG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;swanconfig&quot;</span><span class="p">,</span>
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;swan&quot;</span><span class="p">,</span> <span class="s2">&quot;SWAN&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;swan&quot;</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">template</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">HERE</span> <span class="o">/</span> <span class="s2">&quot;templates&quot;</span> <span class="o">/</span> <span class="s2">&quot;swancomp&quot;</span><span class="p">),</span>
+        <span class="n">default</span><span class="o">=</span><span class="n">DEFAULT_TEMPLATE</span><span class="p">,</span>
         <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The template for SWAN.&quot;</span><span class="p">,</span>
     <span class="p">)</span>
     <span class="n">cgrid</span><span class="p">:</span> <span class="n">CGRID_TYPES</span>
@@ -892,59 +832,59 @@
     <span class="n">output</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">OUTPUT_TYPE</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">lockup</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">LOCKUP_TYPE</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SwanConfigComponents.no_nor_if_spherical">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.no_nor_if_spherical">[docs]</a>
+<div class="viewcode-block" id="SwanConfig.no_nor_if_spherical">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.no_nor_if_spherical">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">no_nor_if_spherical</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">no_nor_if_spherical</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure SET nor is not prescribed when using spherical coordinates.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="SwanConfigComponents.no_repeating_if_setup">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.no_repeating_if_setup">[docs]</a>
+<div class="viewcode-block" id="SwanConfig.no_repeating_if_setup">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.no_repeating_if_setup">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">no_repeating_if_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">no_repeating_if_setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure COORD repeating not set when using set-up.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="SwanConfigComponents.alp_is_zero_if_spherical">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.alp_is_zero_if_spherical">[docs]</a>
+<div class="viewcode-block" id="SwanConfig.alp_is_zero_if_spherical">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.alp_is_zero_if_spherical">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">alp_is_zero_if_spherical</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">alp_is_zero_if_spherical</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure alp is zero when using spherical coordinates.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="SwanConfigComponents.cgrid_contain_inpgrids">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.cgrid_contain_inpgrids">[docs]</a>
+<div class="viewcode-block" id="SwanConfig.cgrid_contain_inpgrids">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.cgrid_contain_inpgrids">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">cgrid_contain_inpgrids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">cgrid_contain_inpgrids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure all inpgrids are inside the cgrid area.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="SwanConfigComponents.layer_defined_if_no_mud_inpgrid">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.layer_defined_if_no_mud_inpgrid">[docs]</a>
+<div class="viewcode-block" id="SwanConfig.layer_defined_if_no_mud_inpgrid">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.layer_defined_if_no_mud_inpgrid">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">layer_defined_if_no_mud_inpgrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">layer_defined_if_no_mud_inpgrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure layer is set in MUD command if not defined with INPGRID MUD.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
     <span class="n">model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="SwanConfigComponents.transm_msc_mdc">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.transm_msc_mdc">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">transm_msc_mdc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+<div class="viewcode-block" id="SwanConfig.transm_msc_mdc">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.transm_msc_mdc">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">transm_msc_mdc</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure the number of transmission coefficients match msc and mdc.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="SwanConfigComponents.locations_2d">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.locations_2d">[docs]</a>
+<div class="viewcode-block" id="SwanConfig.locations_2d">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.locations_2d">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">locations_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">locations_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure Location components not used in 1D mode.&quot;&quot;&quot;</span>
         <span class="c1"># FRAME, GROUP, RAY, ISOLINE and NGRID not in 1D</span>
         <span class="c1"># BLOCK and NESTOUT not in 1D</span>
@@ -952,18 +892,18 @@
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="SwanConfigComponents.group_within_cgrid">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.group_within_cgrid">[docs]</a>
+<div class="viewcode-block" id="SwanConfig.group_within_cgrid">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.group_within_cgrid">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">group_within_cgrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">group_within_cgrid</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure group indices are contained in computational grid.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
-<div class="viewcode-block" id="SwanConfigComponents.not_curvilinear_if_ray">
-<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents.not_curvilinear_if_ray">[docs]</a>
+<div class="viewcode-block" id="SwanConfig.not_curvilinear_if_ray">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfig.not_curvilinear_if_ray">[docs]</a>
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">not_curvilinear_if_ray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfigComponents&quot;</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">not_curvilinear_if_ray</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SwanConfig&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Ensure bottom and water level grids are not curvilinear for RAY.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -974,10 +914,10 @@
         <span class="k">return</span> <span class="n">SwanGrid</span><span class="o">.</span><span class="n">from_component</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cgrid</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_format_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom formatter for SwanConfigComponents values.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom formatter for SwanConfig values.</span>
 
 <span class="sd">        This method provides special formatting for specific types used in</span>
-<span class="sd">        SwanConfigComponents such as grid, boundary, and output components.</span>
+<span class="sd">        SwanConfig such as grid, boundary, and output components.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">            obj: The object to format</span>
@@ -993,8 +933,8 @@
         <span class="n">logging_config</span> <span class="o">=</span> <span class="n">LoggingConfig</span><span class="p">()</span>
         <span class="n">USE_ASCII_ONLY</span> <span class="o">=</span> <span class="n">logging_config</span><span class="o">.</span><span class="n">use_ascii</span>
 
-        <span class="c1"># Format SwanConfigComponents (self-formatting)</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">SwanConfigComponents</span><span class="p">):</span>
+        <span class="c1"># Format SwanConfig (self-formatting)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">SwanConfig</span><span class="p">):</span>
             <span class="n">header</span><span class="p">,</span> <span class="n">footer</span><span class="p">,</span> <span class="n">bullet</span> <span class="o">=</span> <span class="n">get_formatted_header_footer</span><span class="p">(</span>
                 <span class="n">title</span><span class="o">=</span><span class="s2">&quot;SWAN COMPONENTS CONFIGURATION&quot;</span><span class="p">,</span> <span class="n">use_ascii</span><span class="o">=</span><span class="n">USE_ASCII_ONLY</span>
             <span class="p">)</span>
@@ -1463,6 +1403,32 @@
         <span class="n">log_box</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;SWAN CONFIGURATION RENDERING COMPLETE&quot;</span><span class="p">,</span> <span class="n">logger</span><span class="o">=</span><span class="n">logger</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">ret</span></div>
+
+
+
+<span class="c1"># Deprecated alias for backward compatibility</span>
+<div class="viewcode-block" id="SwanConfigComponents">
+<a class="viewcode-back" href="../../api.html#rompy_swan.config.SwanConfigComponents">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SwanConfigComponents</span><span class="p">(</span><span class="n">SwanConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Deprecated: Use SwanConfig instead.</span>
+
+<span class="sd">    This class is deprecated and will be removed in a future version.</span>
+<span class="sd">    Please use SwanConfig instead of SwanConfigComponents.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">model_type</span><span class="p">:</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;swanconfig&quot;</span><span class="p">,</span> <span class="s2">&quot;SWANCONFIG&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="s2">&quot;swanconfig&quot;</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Model type discriminator&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="s2">&quot;SwanConfigComponents is deprecated and will be removed in a future version. &quot;</span>
+            <span class="s2">&quot;Please use SwanConfig instead.&quot;</span><span class="p">,</span>
+            <span class="ne">DeprecationWarning</span><span class="p">,</span>
+            <span class="n">stacklevel</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 </pre></div>
 
