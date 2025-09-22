@@ -5,6 +5,7 @@ This module provides configuration classes for the SWAN model within the ROMPY f
 """
 
 import logging
+import warnings
 from pathlib import Path
 from typing import Annotated, Literal, Optional, Union
 
@@ -29,64 +30,6 @@ logger = get_logger(__name__)
 HERE = Path(__file__).parent
 
 DEFAULT_TEMPLATE = str(Path(__file__).parent / "templates" / "swan")
-
-
-class SwanConfig(BaseConfig):
-    """SWAN configuration"""
-
-    grid: SwanGrid = Field(description="The model grid for the SWAN run")
-    model_type: Literal["swan"] = Field("swan", description="The model type for SWAN.")
-    spectral_resolution: SwanSpectrum = Field(
-        SwanSpectrum(), description="The spectral resolution for SWAN."
-    )
-    forcing: ForcingData = Field(
-        ForcingData(), description="The forcing data for SWAN."
-    )
-    physics: SwanPhysics = Field(
-        SwanPhysics(), description="The physics options for SWAN."
-    )
-    outputs: Outputs = Field(Outputs(), description="The outputs for SWAN.")
-    spectra_file: str = Field("boundary.spec", description="The spectra file for SWAN.")
-    template: str = Field(DEFAULT_TEMPLATE, description="The template for SWAN.")
-    _datefmt: Annotated[str, Field(description="The date format for SWAN.")] = (
-        "%Y%m%d.%H%M%S"
-    )
-    # subnests: List[SwanConfig] = Field([], description="The subnests for SWAN.") # uncomment if needed
-
-    @property
-    def domain(self):
-        output = f"CGRID {self.grid.cgrid} {self.spectral_resolution.cmd}\n"
-        output += f"{self.grid.cgrid_read}\n"
-        return output
-
-    def __call__(self, runtime) -> str:
-        # Use formatting utilities imported at the top of the file
-
-        # Log the process beginning
-        # Use the log_box utility function
-        from rompy.formatting import log_box
-
-        log_box(title="PROCESSING SWAN CONFIGURATION", logger=logger)
-
-        # Setup configuration
-        ret = {}
-        if not self.outputs.grid.period:
-            self.outputs.grid.period = runtime.period
-        if not self.outputs.spec.period:
-            self.outputs.spec.period = runtime.period
-        ret["grid"] = f"{self.domain}"
-        ret["forcing"] = self.forcing.get(
-            self.grid, runtime.period, runtime.staging_dir
-        )
-        ret["physics"] = f"{self.physics.cmd}"
-        ret["outputs"] = self.outputs.cmd
-
-        # Log completion
-        from rompy.formatting import log_box
-
-        log_box(title="SWAN CONFIGURATION PROCESSING COMPLETE", logger=logger)
-        ret["output_locs"] = self.outputs.spec.locations
-        return ret
 
 
 STARTUP_TYPE = Annotated[STARTUP, Field(description="Startup components")]
@@ -119,7 +62,7 @@ BOUNDARY_TYPES = Annotated[
 logger = logging.getLogger(__name__)
 
 
-class SwanConfigComponents(BaseConfig):
+class SwanConfig(BaseConfig):
     """SWAN config class.
 
     TODO: Combine boundary and inpgrid into a single input type.
@@ -131,12 +74,12 @@ class SwanConfigComponents(BaseConfig):
 
     """
 
-    model_type: Literal["swanconfig", "SWANCONFIG"] = Field(
-        default="swanconfig",
+    model_type: Literal["swan", "SWAN"] = Field(
+        default="swan",
         description="Model type discriminator",
     )
     template: str = Field(
-        default=str(HERE / "templates" / "swancomp"),
+        default=DEFAULT_TEMPLATE,
         description="The template for SWAN.",
     )
     cgrid: CGRID_TYPES
@@ -151,38 +94,38 @@ class SwanConfigComponents(BaseConfig):
     lockup: Optional[LOCKUP_TYPE] = Field(default=None)
 
     @model_validator(mode="after")
-    def no_nor_if_spherical(self) -> "SwanConfigComponents":
+    def no_nor_if_spherical(self) -> "SwanConfig":
         """Ensure SET nor is not prescribed when using spherical coordinates."""
         return self
 
     @model_validator(mode="after")
-    def no_repeating_if_setup(self) -> "SwanConfigComponents":
+    def no_repeating_if_setup(self) -> "SwanConfig":
         """Ensure COORD repeating not set when using set-up."""
         return self
 
     @model_validator(mode="after")
-    def alp_is_zero_if_spherical(self) -> "SwanConfigComponents":
+    def alp_is_zero_if_spherical(self) -> "SwanConfig":
         """Ensure alp is zero when using spherical coordinates."""
         return self
 
     @model_validator(mode="after")
-    def cgrid_contain_inpgrids(self) -> "SwanConfigComponents":
+    def cgrid_contain_inpgrids(self) -> "SwanConfig":
         """Ensure all inpgrids are inside the cgrid area."""
         return self
 
     @model_validator(mode="after")
-    def layer_defined_if_no_mud_inpgrid(self) -> "SwanConfigComponents":
+    def layer_defined_if_no_mud_inpgrid(self) -> "SwanConfig":
         """Ensure layer is set in MUD command if not defined with INPGRID MUD."""
         return self
 
     model_validator(mode="after")
 
-    def transm_msc_mdc(self) -> "SwanConfigComponents":
+    def transm_msc_mdc(self) -> "SwanConfig":
         """Ensure the number of transmission coefficients match msc and mdc."""
         return self
 
     @model_validator(mode="after")
-    def locations_2d(self) -> "SwanConfigComponents":
+    def locations_2d(self) -> "SwanConfig":
         """Ensure Location components not used in 1D mode."""
         # FRAME, GROUP, RAY, ISOLINE and NGRID not in 1D
         # BLOCK and NESTOUT not in 1D
@@ -190,12 +133,12 @@ class SwanConfigComponents(BaseConfig):
         return self
 
     @model_validator(mode="after")
-    def group_within_cgrid(self) -> "SwanConfigComponents":
+    def group_within_cgrid(self) -> "SwanConfig":
         """Ensure group indices are contained in computational grid."""
         return self
 
     @model_validator(mode="after")
-    def not_curvilinear_if_ray(self) -> "SwanConfigComponents":
+    def not_curvilinear_if_ray(self) -> "SwanConfig":
         """Ensure bottom and water level grids are not curvilinear for RAY."""
         return self
 
@@ -205,10 +148,10 @@ class SwanConfigComponents(BaseConfig):
         return SwanGrid.from_component(self.cgrid.grid)
 
     def _format_value(self, obj):
-        """Custom formatter for SwanConfigComponents values.
+        """Custom formatter for SwanConfig values.
 
         This method provides special formatting for specific types used in
-        SwanConfigComponents such as grid, boundary, and output components.
+        SwanConfig such as grid, boundary, and output components.
 
         Args:
             obj: The object to format
@@ -224,8 +167,8 @@ class SwanConfigComponents(BaseConfig):
         logging_config = LoggingConfig()
         USE_ASCII_ONLY = logging_config.use_ascii
 
-        # Format SwanConfigComponents (self-formatting)
-        if isinstance(obj, SwanConfigComponents):
+        # Format SwanConfig (self-formatting)
+        if isinstance(obj, SwanConfig):
             header, footer, bullet = get_formatted_header_footer(
                 title="SWAN COMPONENTS CONFIGURATION", use_ascii=USE_ASCII_ONLY
             )
@@ -694,3 +637,26 @@ class SwanConfigComponents(BaseConfig):
         log_box(title="SWAN CONFIGURATION RENDERING COMPLETE", logger=logger)
 
         return ret
+
+
+# Deprecated alias for backward compatibility
+class SwanConfigComponents(SwanConfig):
+    """Deprecated: Use SwanConfig instead.
+
+    This class is deprecated and will be removed in a future version.
+    Please use SwanConfig instead of SwanConfigComponents.
+    """
+
+    model_type: Literal["swanconfig", "SWANCONFIG"] = Field(
+        default="swanconfig",
+        description="Model type discriminator",
+    )
+
+    def __init__(self, **kwargs):
+        warnings.warn(
+            "SwanConfigComponents is deprecated and will be removed in a future version. "
+            "Please use SwanConfig instead.",
+            DeprecationWarning,
+            stacklevel=2,
+        )
+        super().__init__(**kwargs)

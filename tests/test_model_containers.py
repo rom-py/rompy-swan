@@ -23,10 +23,9 @@ def test_swan_container_basic_config(
     from rompy_swan.components.inpgrid import UNSTRUCTURED
     from rompy_swan.components.lockup import COMPUTE_NONSTAT
     from rompy_swan.components.output import BLOCK
-    from rompy_swan.components.physics import (BREAKING_CONSTANT,
-                                               FRICTION_MADSEN, GEN3)
+    from rompy_swan.components.physics import BREAKING_CONSTANT, FRICTION_MADSEN, GEN3
     from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
-    from rompy_swan.config import SwanConfigComponents
+    from rompy_swan.config import SwanConfig
     from rompy_swan.subcomponents.boundary import CONSTANTPAR, DEFAULT, SIDE
     from rompy_swan.subcomponents.physics import ST6
     from rompy_swan.subcomponents.readgrid import GRIDREGULAR, READINP
@@ -168,7 +167,7 @@ def test_swan_container_basic_config(
 
         return bottom_file, wind_file
 
-    config = SwanConfigComponents(
+    config = SwanConfig(
         startup=startup_config,
         cgrid=cgrid_config,
         inpgrid=inpgrid_config,
@@ -215,7 +214,7 @@ def test_swan_container_basic_config(
 
     generated_dir = Path(model_run.output_dir) / model_run.run_id
 
-    # Main success: INPUT file generated properly using SwanConfigComponents
+    # Main success: INPUT file generated properly using SwanConfig
     input_file = generated_dir / "INPUT"
     assert input_file.exists(), "INPUT file should exist"
 

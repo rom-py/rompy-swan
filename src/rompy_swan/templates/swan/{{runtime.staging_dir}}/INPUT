@@ -1,19 +1,46 @@
-$
-$ SWAN - Simple example template used by rompy
-$ Template: {{_template}}
-$ Generated: {{runtime._generated_at}} on {{runtime._generated_on}} by {{runtime._generated_by}}
-$ projection: wgs84
-$
+! Rompy SwanConfig
+! Template: {{_template}}
+! Generated: {{runtime._generated_at}} on {{runtime._generated_on}} by {{runtime._generated_by}}
 
-MODE NONSTATIONARY TWODIMENSIONAL
-COORDINATES SPHERICAL
-SET 0.0 90 0.05 200 3 9.81 1025 NAUTICAL
 
-{{config.grid}}
-{{config.forcing['forcing']}}
-{{config.physics}}
-{{config.forcing['boundary']}}
-{{config.outputs}}
-COMPUTE NONST {{runtime.period.start.strftime(runtime._datefmt)}} {{runtime.frequency}} {{runtime.period.end.strftime(runtime._datefmt)}}
+! Startup -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-STOP
+{% if config.get("startup") %}{{config.startup}}{% endif %}
+
+! Computational Grid --------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+{% if config.get("cgrid") %}{{config.cgrid}}{% endif %}
+
+! Input Grids ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+{% if config.get("inpgrid") %}{{config.inpgrid}}{% endif %}
+
+
+! Boundary and Initial conditions -------------------------------------------------------------------------------------------------------------------------------------------------
+
+{% if config.get("boundary") %}{{config.boundary}}{% endif %}
+
+{% if config.get("initial") %}{{config.initial}}{% endif %}
+
+
+! Physics -------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+{% if config.get("physics") %}{{config.physics}}{% endif %}
+
+
+! Numerics ------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+{% if config.get("prop") %}{{config.prop}}{% endif %}
+
+{% if config.get("numeric") %}{{config.numeric}}{% endif %}
+
+
+! Output --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+{% if config.get("output") %}{{config.output}}{% endif %}
+
+
+! Lockup --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+{% if config.get("lockup") %}{{config.lockup}}{% endif %}
