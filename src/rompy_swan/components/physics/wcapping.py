@@ -10,7 +10,7 @@ from pydantic import Field
 from rompy_swan.components.base import BaseComponent
 
 
-class WCAPPING_KOMEN(BaseComponent):
+class KOMEN(BaseComponent):
     """Whitecapping according to Komen (1984).
 
     .. code-block:: text
@@ -35,10 +35,10 @@ class WCAPPING_KOMEN(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import WCAPPING_KOMEN
-        wcapping = WCAPPING_KOMEN()
+        from rompy_swan.components.physics.wcapping import KOMEN
+        wcapping = KOMEN()
         print(wcapping.render())
-        wcapping = WCAPPING_KOMEN(cds2=2.36e-5, stpm=3.02e-3, powst=2, delta=1, powk=2)
+        wcapping = KOMEN(cds2=2.36e-5, stpm=3.02e-3, powst=2, delta=1, powk=2)
         print(wcapping.render())
 
     """
@@ -98,7 +98,7 @@ class WCAPPING_KOMEN(BaseComponent):
         return repr
 
 
-class WCAPPING_AB(BaseComponent):
+class AB(BaseComponent):
     """Whitecapping according to Alves and Banner (2003).
 
     .. code-block:: text
@@ -117,10 +117,10 @@ class WCAPPING_AB(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import WCAPPING_AB
-        wcapping = WCAPPING_AB()
+        from rompy_swan.components.physics.wcapping import AB
+        wcapping = AB()
         print(wcapping.render())
-        wcapping = WCAPPING_AB(cds2=5.0e-5, br=1.75e-3, current=True, cds3=0.8)
+        wcapping = AB(cds2=5.0e-5, br=1.75e-3, current=True, cds3=0.8)
         print(wcapping.render())
 
     """

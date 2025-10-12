@@ -11,7 +11,7 @@ from pydantic import Field, field_validator, model_validator
 
 from rompy_swan.components.base import BaseComponent
 from rompy_swan.components.inpgrid import CURVILINEAR, ICE, REGULAR, UNSTRUCTURED, WIND
-from rompy_swan.components.lockup import COMPUTE_NONSTAT, COMPUTE_STAT, STOP
+from rompy_swan.components.lockup import NONSTAT, STAT, STOP
 from rompy_swan.components.output import (
     BLOCK,
     BLOCKS,
@@ -50,7 +50,7 @@ from rompy_swan.components.physics.surfbeat import SURFBEAT
 from rompy_swan.components.physics.triad import DCTA, LTA, SPB, TRIAD
 from rompy_swan.components.physics.turbulence import TURBULENCE
 from rompy_swan.components.physics.vegetation import VEGETATION
-from rompy_swan.components.physics.wcapping import WCAPPING_AB, WCAPPING_KOMEN
+from rompy_swan.components.physics.wcapping import AB, KOMEN
 from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
 from rompy_swan.types import PhysicsOff
 
@@ -261,7 +261,7 @@ SSWELL_TYPE = Annotated[
     Field(description="Swell dissipation component", discriminator="model_type"),
 ]
 WCAPPING_TYPE = Annotated[
-    Union[WCAPPING_KOMEN, WCAPPING_AB],
+    Union[KOMEN, AB],
     Field(description="Whitecapping component", discriminator="model_type"),
 ]
 BREAKING_TYPE = Annotated[
@@ -696,7 +696,7 @@ class OUTPUT(BaseGroupComponent):
 # Lockup
 # =====================================================================================
 COMPUTE_TYPE = Annotated[
-    Union[COMPUTE_STAT, COMPUTE_NONSTAT],
+    Union[STAT, NONSTAT],
     Field(description="Compute components", discriminator="model_type"),
 ]
 

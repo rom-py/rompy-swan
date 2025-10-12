@@ -21,18 +21,18 @@ def test_swan_container_basic_config(
     from rompy_swan.components.inpgrid import CURVILINEAR, INPGRID, READINP
     from rompy_swan.components.inpgrid import REGULAR as INPGRID_REGULAR
     from rompy_swan.components.inpgrid import UNSTRUCTURED
-    from rompy_swan.components.lockup import COMPUTE_NONSTAT
+    from rompy_swan.components.lockup import NONSTAT
     from rompy_swan.components.output import BLOCK
     from rompy_swan.components.physics.breaking import CONSTANT
     from rompy_swan.components.physics.friction import MADSEN
     from rompy_swan.components.physics.gen import GEN3
     from rompy_swan.components.physics.options.source_terms import ST6
     from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
+    from rompy_swan.components.startup.options.coords import SPHERICAL
     from rompy_swan.config import SwanConfig
     from rompy_swan.subcomponents.boundary import CONSTANTPAR, DEFAULT, SIDE
     from rompy_swan.subcomponents.readgrid import GRIDREGULAR, READINP
     from rompy_swan.subcomponents.spectrum import PM, SHAPESPEC, SPECTRUM
-    from rompy_swan.subcomponents.startup import SPHERICAL
     from rompy_swan.subcomponents.time import NONSTATIONARY
 
     # Create cgrid component using actual component classes
@@ -137,7 +137,7 @@ def test_swan_container_basic_config(
 
     # Lockup configuration with COMPUTE command using actual component classes
     lockup_config = LOCKUP(
-        compute=COMPUTE_NONSTAT(
+        compute=NONSTAT(
             times=NONSTATIONARY(
                 tbeg="2023-01-01T00:00:00",
                 tend="2023-01-01T06:00:00",

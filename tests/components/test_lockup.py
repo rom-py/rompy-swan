@@ -13,8 +13,8 @@ logger = get_test_logger(__name__)
 from rompy_swan.components.group import LOCKUP
 from rompy_swan.components.lockup import (
     COMPUTE,
-    COMPUTE_NONSTAT,
-    COMPUTE_STAT,
+    NONSTAT,
+    STAT,
     HOTFILE,
     STOP,
 )
@@ -66,12 +66,12 @@ def test_stop():
 
 
 def test_compute_nonstationary_single_no_hotfiles(times):
-    compute = COMPUTE_NONSTAT(times=times)
+    compute = NONSTAT(times=times)
     assert compute.render() == f"COMPUTE {times.render()}"
 
 
 def test_compute_nonstationary_single_with_hotfile(times):
-    compute = COMPUTE_NONSTAT(times=times, hotfile={"fname": "hotfile"}, hottimes=[-1])
+    compute = NONSTAT(times=times, hotfile={"fname": "hotfile"}, hottimes=[-1])
     cmds = compute.render().split("\n")
     assert len(cmds) == 2
     assert cmds[0].startswith("COMPUTE NONSTAT") and cmds[1].startswith("HOTFILE")
@@ -79,7 +79,7 @@ def test_compute_nonstationary_single_with_hotfile(times):
 
 def test_compute_nonstationary_multiple_with_hotfiles(times):
     hottimes = ["1990-01-01T06:00:00", "1990-01-01T12:00:00", "1990-01-01T18:00:00"]
-    compute = COMPUTE_NONSTAT(
+    compute = NONSTAT(
         times=times,
         hotfile={"fname": "hotfile"},
         hottimes=hottimes,
@@ -93,7 +93,7 @@ def test_compute_nonstationary_multiple_with_hotfiles(times):
 
 
 def test_compute_nonstationary_initstat(times):
-    compute = COMPUTE_NONSTAT(times=times, initstat=True)
+    compute = NONSTAT(times=times, initstat=True)
     cmds = compute.render().split("\n")
     assert len(cmds) == 2
     assert cmds[0].startswith("COMPUTE STATIONARY")
@@ -101,14 +101,14 @@ def test_compute_nonstationary_initstat(times):
 
 
 def test_compute_stationary_single_no_hotfile():
-    compute = COMPUTE_STAT(times=STATIONARY(time="1990-01-01T00:00:00"))
+    compute = STAT(times=STATIONARY(time="1990-01-01T00:00:00"))
     assert compute.render() == "COMPUTE STATIONARY time=19900101.000000"
 
 
 def test_compute_stationary_single_with_hotfile(times):
     t = deepcopy(times)
     t.tend = t.tbeg
-    compute = COMPUTE_STAT(times=t, hotfile=dict(fname="hotfile"), hottimes=[-1])
+    compute = STAT(times=t, hotfile=dict(fname="hotfile"), hottimes=[-1])
     cmds = compute.render().split("\n")
     assert len(cmds) == 2
     assert cmds[0] == "COMPUTE STATIONARY time=19900101.000000"
@@ -118,7 +118,7 @@ def test_compute_stationary_single_with_hotfile(times):
 def test_compute_stationary_multiple_no_hotfiles(times):
     t = deepcopy(times)
     t.tend = times()[6]
-    compute = COMPUTE_STAT(times=t)
+    compute = STAT(times=t)
     cmds = compute.render().split("\n")
     assert len(cmds) == 7
     for cmd in cmds:
@@ -129,7 +129,7 @@ def test_compute_stationary_multiple_with_hotfiles(times):
     t = deepcopy(times)
     t.tend = times()[6]
     hottimes = ["1990-01-01T03:00:00", "1990-01-01T06:00:00"]
-    compute = COMPUTE_STAT(times=t, hotfile={"fname": "hotfile"}, hottimes=hottimes)
+    compute = STAT(times=t, hotfile={"fname": "hotfile"}, hottimes=hottimes)
     cmds = compute.render().split("\n")
     assert len(cmds) == 9
     for ind in [0, 1, 2, 3, 5, 6, 7]:
@@ -156,10 +156,10 @@ def test_lockup_compute_nonstat(times):
 
 
 def test_compute_stationary_no_times_passed():
-    compute = COMPUTE_STAT()
+    compute = STAT()
     assert compute.render() == "COMPUTE STATIONARY time=19700101.000000"
 
 
 def test_compute_nonstationary_no_times_passed():
-    compute = COMPUTE_NONSTAT()
+    compute = NONSTAT()
     assert compute.render() == f"COMPUTE {compute.times.render()}"

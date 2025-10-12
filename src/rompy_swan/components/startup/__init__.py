@@ -11,7 +11,7 @@ from pydantic import Field, field_validator
 
 from rompy.logging import get_logger
 from rompy_swan.components.base import BaseComponent
-from rompy_swan.subcomponents.startup import CARTESIAN, SPHERICAL
+from rompy_swan.components.startup.options.coords import CARTESIAN, SPHERICAL
 
 logger = get_logger(__name__)
 

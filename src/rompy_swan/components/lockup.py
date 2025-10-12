@@ -196,7 +196,7 @@ class HOTFILE(BaseComponent):
         return repr
 
 
-class COMPUTE_STAT(BaseComponent):
+class STAT(BaseComponent):
     """Multiple SWAN stationary computations.
 
     .. code-block:: text
@@ -224,22 +224,22 @@ class COMPUTE_STAT(BaseComponent):
         :okwarning:
 
         from rompy_swan.subcomponents.time import STATIONARY, NONSTATIONARY
-        from rompy_swan.components.lockup import COMPUTE_STAT
+        from rompy_swan.components.lockup import STAT
         time = STATIONARY(time="1990-01-01T00:00:00")
-        comp = COMPUTE_STAT(times=time)
+        comp = STAT(times=time)
         print(comp.render())
         times = NONSTATIONARY(
             tbeg="1990-01-01T00:00:00",
             tend="1990-01-01T03:00:00",
             delt="PT1H",
         )
-        comp = COMPUTE_STAT(times=times)
+        comp = STAT(times=times)
         print(comp.render())
         hotfile = dict(fname="./hotfile.swn")
         hottimes=["1990-01-01T03:00:00"]
-        comp = COMPUTE_STAT(times=times, hotfile=hotfile, hottimes=hottimes)
+        comp = STAT(times=times, hotfile=hotfile, hottimes=hottimes)
         print(comp.render())
-        comp = COMPUTE_STAT(times=times, hotfile=hotfile, hottimes=[2, -1])
+        comp = STAT(times=times, hotfile=hotfile, hottimes=[2, -1])
         print(comp.render())
 
     """
@@ -276,7 +276,7 @@ class COMPUTE_STAT(BaseComponent):
         return hottimes
 
     @model_validator(mode="after")
-    def hotfile_with_hottimes(self) -> "COMPUTE_NONSTAT":
+    def hotfile_with_hottimes(self) -> "STAT":
         if self.hottimes and self.hotfile is None:
             logger.warning("hotfile not specified, hottimes will be ignored")
         elif self.hotfile is not None and not self.hottimes:
@@ -321,7 +321,7 @@ class COMPUTE_STAT(BaseComponent):
         return repr
 
 
-class COMPUTE_NONSTAT(COMPUTE_STAT):
+class NONSTAT(STAT):
     """Multiple SWAN nonstationary computations.
 
     .. code-block:: text
@@ -348,22 +348,22 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
         :okwarning:
 
         from rompy_swan.subcomponents.time import NONSTATIONARY
-        from rompy_swan.components.lockup import COMPUTE_NONSTAT
+        from rompy_swan.components.lockup import NONSTAT
         times = NONSTATIONARY(
             tbeg="1990-01-01T00:00:00",
             tend="1990-02-01T00:00:00",
             delt="PT1H",
             dfmt="hr",
         )
-        comp = COMPUTE_NONSTAT(times=times)
+        comp = NONSTAT(times=times)
         print(comp.render())
-        comp = COMPUTE_NONSTAT(
+        comp = NONSTAT(
             times=times,
             hotfile=dict(fname="hotfile.swn", format="free"),
             hottimes=["1990-02-01T00:00:00"],
         )
         print(comp.render())
-        comp = COMPUTE_NONSTAT(
+        comp = NONSTAT(
             times=times,
             initstat=True,
             hotfile=dict(fname="hotfile", format="free"),
