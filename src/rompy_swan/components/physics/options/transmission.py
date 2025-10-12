@@ -9,7 +9,7 @@ These are private implementation details used as field types in OBSTACLE compone
 
 from typing import Annotated, Literal, Optional
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, field_validator
 from pydantic_numpy.typing import Np2DArray
 
 from rompy_swan.subcomponents.base import BaseSubComponent

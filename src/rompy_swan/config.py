@@ -23,7 +23,6 @@ from rompy_swan.interface import (
     LockupInterface,
     OutputInterface,
 )
-from rompy_swan.legacy import ForcingData, Outputs, SwanPhysics, SwanSpectrum
 
 logger = get_logger(__name__)
 
@@ -209,7 +208,7 @@ class SwanConfig(BaseConfig):
                     if name == "Input Grid" and isinstance(component, list):
                         lines.append(f"  {bullet} {name}: {len(component)} grid(s)")
                         for i, ingrid in enumerate(component):
-                            lines.append(f"      Grid {i+1}: {type(ingrid).__name__}")
+                            lines.append(f"      Grid {i + 1}: {type(ingrid).__name__}")
                             # Try to add more details for each input grid
                             var_name = getattr(ingrid, "var", "unknown")
                             lines.append(f"          Variable: {var_name}")
@@ -344,10 +343,7 @@ class SwanConfig(BaseConfig):
 
             boundary_type = getattr(obj.boundary, "type", "spectral")
             return (
-                f"{header}\n"
-                f"  Type:     {boundary_type}\n"
-                f"  Segments: {count}\n"
-                f"{footer}"
+                f"{header}\n  Type:     {boundary_type}\n  Segments: {count}\n{footer}"
             )
 
         # Format output components
@@ -420,10 +416,12 @@ class SwanConfig(BaseConfig):
                         if hasattr(group, "output") and len(group.output) > 0:
                             outputs = group.output
                             if len(outputs) < 5:
-                                lines.append(f"      Group {i+1}: {', '.join(outputs)}")
+                                lines.append(
+                                    f"      Group {i + 1}: {', '.join(outputs)}"
+                                )
                             else:
                                 lines.append(
-                                    f"      Group {i+1}: {len(outputs)} variables"
+                                    f"      Group {i + 1}: {len(outputs)} variables"
                                 )
 
             # Table output
@@ -516,9 +514,9 @@ class SwanConfig(BaseConfig):
                 # Log details for each input grid
                 for i, inpgrid in enumerate(self.inpgrid):
                     if SIMPLE_LOGS:
-                        logger.info(f"Input Grid {i+1}: {type(inpgrid).__name__}")
+                        logger.info(f"Input Grid {i + 1}: {type(inpgrid).__name__}")
                     else:
-                        logger.info(f"    Input Grid {i+1}: {type(inpgrid).__name__}")
+                        logger.info(f"    Input Grid {i + 1}: {type(inpgrid).__name__}")
                     inpgrid_str = self._format_value(inpgrid)
                     if inpgrid_str:
                         for line in inpgrid_str.split("\n"):
@@ -581,11 +579,9 @@ class SwanConfig(BaseConfig):
 
         # Interface the runtime with components that require times
         if self.output:
-
             logger.debug("Configuring output interface with period")
             self.output = OutputInterface(group=self.output, period=period).group
         if self.lockup:
-
             logger.debug("Configuring lockup interface with period")
             self.lockup = LockupInterface(group=self.lockup, period=period).group
 

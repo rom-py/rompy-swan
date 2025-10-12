@@ -1,23 +1,11 @@
 """SWAN output component."""
 
-from abc import ABC
-from typing import Annotated, Literal, Optional, Union
+from typing import Literal, Optional
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, model_validator
 
-from rompy.logging import get_logger
-from rompy_swan.components.base import BaseComponent, MultiComponents
-from rompy_swan.subcomponents.base import IJ, XY
-from rompy_swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
-from rompy_swan.subcomponents.readgrid import GRIDREGULAR
-from rompy_swan.subcomponents.time import TimeRangeOpen
-from rompy_swan.types import IDLA, BlockOptions
 
-logger = get_logger(__name__)
-
-from rompy_swan.components.output.locations.frame import BaseLocation
-
-SPECIAL_NAMES = ["BOTTGRID", "COMPGRID", "BOUNDARY", "BOUND_"]
+from rompy_swan.components.output.locations import BaseLocation
 
 
 class POINTS(BaseLocation):
@@ -71,6 +59,7 @@ class POINTS(BaseLocation):
         for xp, yp in zip(self.xp, self.yp):
             repr += f"\nxp={xp} yp={yp}"
         return repr
+
 
 class POINTS_FILE(BaseLocation):
     """Isolated output locations.

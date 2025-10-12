@@ -2,6 +2,7 @@
 """
 Test script to verify the deprecation warning works correctly.
 """
+
 import warnings
 
 # Capture warnings

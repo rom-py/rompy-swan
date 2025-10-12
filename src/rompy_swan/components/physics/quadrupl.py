@@ -93,8 +93,7 @@ class QUADRUPL(BaseComponent):
     csh3: Optional[float] = Field(
         default=None,
         description=(
-            "Coefficient for shallow water scaling in case of DIA "
-            "(SWAN default: -1.25)"
+            "Coefficient for shallow water scaling in case of DIA (SWAN default: -1.25)"
         ),
     )
 

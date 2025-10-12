@@ -7,11 +7,11 @@ This module contains option types used by output components.
 Usage
 -----
 
-Import specific option classes:
+Import specific option classes from subcomponents:
 
 .. code-block:: python
 
-    from rompy_swan.components.output.options import ABS, REL, SPEC1D, SPEC2D
+    from rompy_swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
 
 Available Options
 -----------------
@@ -21,9 +21,9 @@ Available Options
     - REL - Relative output specification
     - SPEC1D - 1D spectral output
     - SPEC2D - 2D spectral output
+
+Note
+----
+These option types are currently defined in `rompy_swan.subcomponents.output`.
+They may be moved to this package in a future refactoring.
 """
-
-# Re-export from subcomponents for now (will be moved later)
-from rompy_swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
-
-__all__ = ["ABS", "REL", "SPEC1D", "SPEC2D"]

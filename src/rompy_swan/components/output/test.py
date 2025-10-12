@@ -1,17 +1,12 @@
 """SWAN output component."""
 
-from abc import ABC
-from typing import Annotated, Literal, Optional, Union
+from typing import Literal, Optional, Union
 
 from pydantic import Field, field_validator, model_validator
 
 from rompy.logging import get_logger
-from rompy_swan.components.base import BaseComponent, MultiComponents
+from rompy_swan.components.base import BaseComponent
 from rompy_swan.subcomponents.base import IJ, XY
-from rompy_swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
-from rompy_swan.subcomponents.readgrid import GRIDREGULAR
-from rompy_swan.subcomponents.time import TimeRangeOpen
-from rompy_swan.types import IDLA, BlockOptions
 
 logger = get_logger(__name__)
 

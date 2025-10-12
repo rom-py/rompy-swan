@@ -51,7 +51,10 @@ from rompy_swan.components.physics.triad import DCTA, LTA, SPB, TRIAD
 from rompy_swan.components.physics.turbulence import TURBULENCE
 from rompy_swan.components.physics.vegetation import VEGETATION
 from rompy_swan.components.physics.wcapping import AB, KOMEN
-from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
+from rompy_swan.components.startup.coordinates import COORDINATES
+from rompy_swan.components.startup.mode import MODE
+from rompy_swan.components.startup.project import PROJECT
+from rompy_swan.components.startup.set import SET
 from rompy_swan.types import PhysicsOff
 
 logger = logging.getLogger(__name__)

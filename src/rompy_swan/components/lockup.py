@@ -307,7 +307,7 @@ class STAT(BaseComponent):
         """Set timestamp to hotfile fname."""
         timestamp = time.strftime(self.suffix)
         fname = self.hotfile.fname.parent / (
-            f"{self.hotfile.fname.stem}{timestamp}" f"{self.hotfile.fname.suffix}"
+            f"{self.hotfile.fname.stem}{timestamp}{self.hotfile.fname.suffix}"
         )
         return HOTFILE(fname=fname, format=self.hotfile.format)
 

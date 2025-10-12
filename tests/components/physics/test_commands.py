@@ -98,9 +98,7 @@ def test_triad_lta():
 def test_triad_spb():
     phys = SPB()
     assert phys.render() == "TRIAD SPB"
-    phys = SPB(
-        biphase=dict(model_type="dewit", lpar=0.0), trfac=0.9, a=0.95, b=0.0
-    )
+    phys = SPB(biphase=dict(model_type="dewit", lpar=0.0), trfac=0.9, a=0.95, b=0.0)
     assert phys.render() == "TRIAD SPB trfac=0.9 a=0.95 b=0.0 BIPHASE DEWIT lpar=0.0"
 
 
@@ -251,9 +249,7 @@ def test_bragg_file():
 
 def test_bragg_file_idla():
     with pytest.raises(ValidationError):
-        FILE(
-            fname="bragg.txt", nreg=200, idla=7, mkx=200, mky=200, dkx=0.1, dky=0.1
-        )
+        FILE(fname="bragg.txt", nreg=200, idla=7, mkx=200, mky=200, dkx=0.1, dky=0.1)
 
 
 # =====================================================================================

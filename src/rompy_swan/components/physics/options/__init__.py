@@ -19,10 +19,10 @@ directly:
 Examples
 --------
     from rompy_swan.components.physics import GEN3
-    
+
     # Dict-based (YAML-friendly)
     gen = GEN3(source_terms={"model_type": "st6", "a1sds": 4.75e-7, "a2sds": 7.0e-5})
-    
+
     # Or direct instantiation
     from rompy_swan.components.physics.options.source_terms import ST6
     gen = GEN3(source_terms=ST6(a1sds=4.75e-7, a2sds=7.0e-5))

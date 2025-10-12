@@ -3,7 +3,6 @@ from pathlib import Path
 import pytest
 from rompy.backends.config import DockerConfig
 from rompy.model import ModelRun
-from rompy.run.docker import DockerRunBackend
 
 
 @pytest.mark.slow
@@ -18,16 +17,18 @@ def test_swan_container_basic_config(
     from rompy_swan.components.boundary import BOUNDSPEC, INITIAL
     from rompy_swan.components.cgrid import REGULAR
     from rompy_swan.components.group import INPGRIDS, LOCKUP, OUTPUT
-    from rompy_swan.components.inpgrid import CURVILINEAR, INPGRID, READINP
+    from rompy_swan.components.inpgrid import READINP
     from rompy_swan.components.inpgrid import REGULAR as INPGRID_REGULAR
-    from rompy_swan.components.inpgrid import UNSTRUCTURED
     from rompy_swan.components.lockup import NONSTAT
     from rompy_swan.components.output import BLOCK
     from rompy_swan.components.physics.breaking import CONSTANT
     from rompy_swan.components.physics.friction import MADSEN
     from rompy_swan.components.physics.gen import GEN3
     from rompy_swan.components.physics.options.source_terms import ST6
-    from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
+    from rompy_swan.components.startup.coordinates import COORDINATES
+    from rompy_swan.components.startup.mode import MODE
+    from rompy_swan.components.startup.project import PROJECT
+    from rompy_swan.components.startup.set import SET
     from rompy_swan.components.startup.options.coords import SPHERICAL
     from rompy_swan.config import SwanConfig
     from rompy_swan.subcomponents.boundary import CONSTANTPAR, DEFAULT, SIDE
@@ -242,9 +243,9 @@ def test_swan_container_basic_config(
     assert "latitude" in ds.dims, "Missing 'latitude' dimension in SWAN output"
 
     # Check for key wave variables
-    assert (
-        "hs" in ds.data_vars
-    ), "Missing significant wave height 'hs' variable in SWAN output"
+    assert "hs" in ds.data_vars, (
+        "Missing significant wave height 'hs' variable in SWAN output"
+    )
     assert "depth" in ds.data_vars, "Missing 'depth' variable in SWAN output"
 
     # Check dimensions are reasonable

@@ -45,8 +45,7 @@ def test_compute_stationary():
 def test_compute_nonstationary(times):
     comp = COMPUTE(times=times)
     assert comp.render() == (
-        "COMPUTE NONSTATIONARY tbegc=19900101.000000 deltc=1.0 HR "
-        "tendc=19900201.000000"
+        "COMPUTE NONSTATIONARY tbegc=19900101.000000 deltc=1.0 HR tendc=19900201.000000"
     )
 
 

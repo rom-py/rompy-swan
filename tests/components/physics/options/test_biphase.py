@@ -1,6 +1,5 @@
 """Test biphase option types for TRIAD component."""
 
-import pytest
 
 from rompy_swan.components.physics.options.biphase import DEWIT, ELDEBERKY
 

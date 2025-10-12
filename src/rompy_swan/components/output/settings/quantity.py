@@ -1,17 +1,12 @@
 """SWAN output component."""
 
-from abc import ABC
-from typing import Annotated, Literal, Optional, Union
+from typing import Literal, Optional
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field
 
 from rompy.logging import get_logger
-from rompy_swan.components.base import BaseComponent, MultiComponents
-from rompy_swan.subcomponents.base import IJ, XY
-from rompy_swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
-from rompy_swan.subcomponents.readgrid import GRIDREGULAR
-from rompy_swan.subcomponents.time import TimeRangeOpen
-from rompy_swan.types import IDLA, BlockOptions
+from rompy_swan.components.base import BaseComponent
+from rompy_swan.types import BlockOptions
 
 logger = get_logger(__name__)
 
@@ -225,6 +220,7 @@ class QUANTITY(BaseComponent):
         if self.coord is not None:
             repr += f" {self.coord.upper()}"
         return repr
+
 
 class QUANTITIES(BaseComponent):
     """Define output settings for multiple output.

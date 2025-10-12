@@ -174,7 +174,7 @@ class DCTA(BaseComponent):
     p: Optional[float] = Field(
         default=None,
         description=(
-            "Shape coefficient to force the high-frequency tail" "(SWAN default: 4/3)"
+            "Shape coefficient to force the high-frequency tail(SWAN default: 4/3)"
         ),
     )
     noncolinear: bool = Field(

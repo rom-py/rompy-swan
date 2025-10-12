@@ -39,8 +39,7 @@ class CONSTANT(BaseComponent):
     alpha: Optional[float] = Field(
         default=None,
         description=(
-            "Proportionality coefficient of the rate of dissipation "
-            "(SWAN default: 1.0)"
+            "Proportionality coefficient of the rate of dissipation (SWAN default: 1.0)"
         ),
     )
     gamma: Optional[float] = Field(
@@ -91,8 +90,7 @@ class BKD(BaseComponent):
     alpha: Optional[float] = Field(
         default=None,
         description=(
-            "Proportionality coefficient of the rate of dissipation "
-            "(SWAN default: 1.0)"
+            "Proportionality coefficient of the rate of dissipation (SWAN default: 1.0)"
         ),
     )
     gamma0: Optional[float] = Field(

@@ -9,13 +9,13 @@ Examples
     # Import modules
     from rompy_swan.components.physics import friction, breaking, gen
     from rompy_swan.components.physics import scat, limiter, triad
-    
+
     # Use module.Class pattern
     friction.JONSWAP(cfjon=0.038)
     breaking.CONSTANT(alpha=1.0, gamma=0.73)
     gen.GEN3(source_terms={...})
     triad.DCTA(...)
-    
+
     # Single-variant commands
     scat.SCAT(iqcm=1)
     limiter.LIMITER(ursell=10.0)

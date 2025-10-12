@@ -136,7 +136,8 @@ class AB(BaseComponent):
         ),
     )
     br: Optional[float] = Field(
-        default=None, description="Threshold saturation level	(SWAN default: 1.75e-3)"
+        default=None,
+        description="Threshold saturation level	(SWAN default: 1.75e-3)",
     )
     current: bool = Field(
         default=False,

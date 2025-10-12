@@ -39,15 +39,5 @@ Available Components
     - COORDINATES - Choose between Cartesian and spherical coordinates
 
 **Options** (`options/`)
-    - CARTESIAN - Cartesian coordinate system
-    - SPHERICAL - Spherical coordinate system with projection
+    - CARTESIAN, SPHERICAL - Coordinate system types
 """
-
-# For backward compatibility - re-export from specific modules
-# This allows existing code like `from rompy_swan.components.startup import PROJECT` to work
-from rompy_swan.components.startup.coordinates import COORDINATES
-from rompy_swan.components.startup.mode import MODE
-from rompy_swan.components.startup.project import PROJECT
-from rompy_swan.components.startup.set import SET
-
-__all__ = ["PROJECT", "SET", "MODE", "COORDINATES"]

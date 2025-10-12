@@ -16,11 +16,11 @@ Import specific component classes from their submodules:
     from rompy_swan.components.output.locations.frame import FRAME
     from rompy_swan.components.output.locations.points import POINTS
     from rompy_swan.components.output.locations.ngrid import NGRID
-    
+
     # Settings components
     from rompy_swan.components.output.settings.quantity import QUANTITY
     from rompy_swan.components.output.settings.options import OUTPUT_OPTIONS
-    
+
     # Write components
     from rompy_swan.components.output.write.block import BLOCK
     from rompy_swan.components.output.write.table import TABLE
@@ -60,8 +60,9 @@ SPECIAL_NAMES = ["BOTTGRID", "COMPGRID", "BOUNDARY", "BOUND_"]
 
 # For backward compatibility - re-export all classes
 # This allows existing code like `from rompy_swan.components.output import FRAME` to work
+from rompy_swan.components.output.locations import BaseLocation
 from rompy_swan.components.output.locations.curve import CURVE, CURVES
-from rompy_swan.components.output.locations.frame import BaseLocation, FRAME
+from rompy_swan.components.output.locations.frame import FRAME
 from rompy_swan.components.output.locations.group import GROUP
 from rompy_swan.components.output.locations.isoline import ISOLINE
 from rompy_swan.components.output.locations.ngrid import NGRID, NGRID_UNSTRUCTURED

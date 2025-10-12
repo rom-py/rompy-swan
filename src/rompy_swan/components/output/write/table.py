@@ -1,23 +1,13 @@
 """SWAN output component."""
 
-from abc import ABC
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field
 
-from rompy.logging import get_logger
-from rompy_swan.components.base import BaseComponent, MultiComponents
-from rompy_swan.subcomponents.base import IJ, XY
 from rompy_swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
-from rompy_swan.subcomponents.readgrid import GRIDREGULAR
-from rompy_swan.subcomponents.time import TimeRangeOpen
-from rompy_swan.types import IDLA, BlockOptions
+from rompy_swan.types import BlockOptions
 
-logger = get_logger(__name__)
-
-from rompy_swan.components.output.write.block import BaseWrite
-
-SPECIAL_NAMES = ["BOTTGRID", "COMPGRID", "BOUNDARY", "BOUND_"]
+from rompy_swan.components.output.write import BaseWrite
 
 
 class TABLE(BaseWrite):
@@ -48,7 +38,6 @@ class TABLE(BaseWrite):
     output compatible with GIS tools such as ARCVIEW, ARCINFO, etc. The user should
     give two TABLE commands, one to produce one file with `XP` and `YP` as output
     quantities, the other with `HS`, `RTM01` or other output quantities.
-
 
     Examples
     --------

@@ -281,7 +281,7 @@ def dset_to_swan(
                 i % max(1, total_times // 10) == 0 or i == total_times - 1
             ):  # Log progress at 10% intervals
                 logger.debug(
-                    f"Writing progress: {i+1}/{total_times} times ({(i+1)/total_times*100:.1f}%) - Time: {time_str}"
+                    f"Writing progress: {i + 1}/{total_times} times ({(i + 1) / total_times * 100:.1f}%) - Time: {time_str}"
                 )
             else:
                 logger.debug(f"Appending Time {time_str} to {output_file}")

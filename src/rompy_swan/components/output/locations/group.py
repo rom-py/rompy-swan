@@ -1,23 +1,11 @@
 """SWAN output component."""
 
-from abc import ABC
-from typing import Annotated, Literal, Optional, Union
+from typing import Literal
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field
 
-from rompy.logging import get_logger
-from rompy_swan.components.base import BaseComponent, MultiComponents
-from rompy_swan.subcomponents.base import IJ, XY
-from rompy_swan.subcomponents.output import ABS, REL, SPEC1D, SPEC2D
-from rompy_swan.subcomponents.readgrid import GRIDREGULAR
-from rompy_swan.subcomponents.time import TimeRangeOpen
-from rompy_swan.types import IDLA, BlockOptions
 
-logger = get_logger(__name__)
-
-from rompy_swan.components.output.locations.frame import BaseLocation
-
-SPECIAL_NAMES = ["BOTTGRID", "COMPGRID", "BOUNDARY", "BOUND_"]
+from rompy_swan.components.output.locations import BaseLocation
 
 
 class GROUP(BaseLocation):

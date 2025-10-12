@@ -3,7 +3,13 @@
 import pytest
 from pydantic import ValidationError
 
-from rompy_swan.components.physics.options.reflection import FREEBOARD, LINE, RDIFF, REFL, RSPEC
+from rompy_swan.components.physics.options.reflection import (
+    FREEBOARD,
+    LINE,
+    RDIFF,
+    REFL,
+    RSPEC,
+)
 
 
 def test_refl():

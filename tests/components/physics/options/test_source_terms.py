@@ -1,6 +1,5 @@
 """Test physics source term option types for GEN3 component."""
 
-import pytest
 
 from rompy_swan.components.physics.options.source_terms import (
     JANSSEN,

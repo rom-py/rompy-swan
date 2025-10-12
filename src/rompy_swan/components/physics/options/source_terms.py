@@ -207,7 +207,8 @@ class WESTHUYSEN(SourceTerms):
         ),
     )
     br: Optional[float] = Field(
-        default=None, description="Threshold saturation level	(SWAN default: 1.75e-3)"
+        default=None,
+        description="Threshold saturation level	(SWAN default: 1.75e-3)",
     )
 
     def cmd(self) -> str:
