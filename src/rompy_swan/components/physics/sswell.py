@@ -66,7 +66,7 @@ class NEGATINP(BaseComponent):
         return repr
 
 
-class SSWELL_ROGERS(BaseComponent):
+class ROGERS(BaseComponent):
     """Nonbreaking dissipation of Rogers et al. (2012).
 
     .. code-block:: text
@@ -86,10 +86,10 @@ class SSWELL_ROGERS(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import SSWELL_ROGERS
-        sswell = SSWELL_ROGERS()
+        from rompy_swan.components.physics.sswell import ROGERS
+        sswell = ROGERS()
         print(sswell.render())
-        sswell = SSWELL_ROGERS(cdsv=1.2, feswell=0.5)
+        sswell = ROGERS(cdsv=1.2, feswell=0.5)
         print(sswell.render())
 
     """
@@ -118,7 +118,7 @@ class SSWELL_ROGERS(BaseComponent):
         return repr
 
 
-class SSWELL_ARDHUIN(BaseComponent):
+class ARDHUIN(BaseComponent):
     """Nonbreaking dissipation of Ardhuin et al. (2010).
 
     .. code-block:: text
@@ -139,10 +139,10 @@ class SSWELL_ARDHUIN(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import SSWELL_ARDHUIN
-        sswell = SSWELL_ARDHUIN()
+        from rompy_swan.components.physics.sswell import ARDHUIN
+        sswell = ARDHUIN()
         print(sswell.render())
-        sswell = SSWELL_ARDHUIN(cdsv=1.2)
+        sswell = ARDHUIN(cdsv=1.2)
         print(sswell.render())
 
     """
@@ -166,7 +166,7 @@ class SSWELL_ARDHUIN(BaseComponent):
         return repr
 
 
-class SSWELL_ZIEGER(BaseComponent):
+class ZIEGER(BaseComponent):
     """Nonbreaking dissipation of Zieger et al. (2015).
 
     .. code-block:: text
@@ -194,10 +194,10 @@ class SSWELL_ZIEGER(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import SSWELL_ZIEGER
-        sswell = SSWELL_ZIEGER()
+        from rompy_swan.components.physics.sswell import ZIEGER
+        sswell = ZIEGER()
         print(sswell.render())
-        sswell = SSWELL_ZIEGER(b1=0.00025)
+        sswell = ZIEGER(b1=0.00025)
         print(sswell.render())
 
     """

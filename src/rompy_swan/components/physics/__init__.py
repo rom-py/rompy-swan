@@ -1,122 +1,76 @@
-"""SWAN physics components.
+"""SWAN physics commands.
 
-This package contains all physics-related components for SWAN wave model configuration.
+This package contains SWAN physics command components organized by physical process.
 
-The physics components are organized into:
-- Wave generation (GEN1, GEN2, GEN3)
-- Swell dissipation (NEGATINP, SSWELL_*)
-- Whitecapping (WCAPPING_*)
-- Quadruplet interactions (QUADRUPL)
-- Wave breaking (BREAKING_*)
-- Bottom friction (FRICTION_*)
-- Triad interactions (TRIAD_*)
-- Vegetation (VEGETATION)
-- Mud (MUD)
-- Sea ice (SICE_*)
-- Turbulence (TURBULENCE)
-- Bragg scattering (BRAGG_*)
-- Limiter (LIMITER)
-- Obstacles (OBSTACLE_*)
-- Setup (SETUP)
-- Diffraction (DIFFRACTION)
-- Surfbeat (SURFBEAT)
-- Scattering (SCAT)
-- Deactivation (OFF, OFFS)
+Import physics modules and use them as namespaces for clarity:
 
-Private modules (prefixed with _) contain models used as field types and are not
-part of the public API.
+Examples
+--------
+    # Import modules
+    from rompy_swan.components.physics import friction, breaking, gen
+    from rompy_swan.components.physics import scat, limiter, triad
+    
+    # Use module.Class pattern
+    friction.JONSWAP(cfjon=0.038)
+    breaking.CONSTANT(alpha=1.0, gamma=0.73)
+    gen.GEN3(source_terms={...})
+    triad.DCTA(...)
+    
+    # Single-variant commands
+    scat.SCAT(iqcm=1)
+    limiter.LIMITER(ursell=10.0)
+
+For direct imports (when you only need specific classes):
+    from rompy_swan.components.physics.friction import JONSWAP, MADSEN
+    from rompy_swan.components.physics.breaking import CONSTANT
+    from rompy_swan.components.physics.gen import GEN3
+
+Available Modules
+-----------------
+bragg
+    Bragg scattering: BRAGG, FT, FILE
+breaking
+    Wave breaking: CONSTANT, BKD
+diffraction
+    Diffraction: DIFFRACTION
+friction
+    Bottom friction: JONSWAP, COLLINS, MADSEN, RIPPLES
+gen
+    Wave generation: GEN1, GEN2, GEN3
+limiter
+    Wave height limiter: LIMITER
+mud
+    Mud dissipation: MUD
+obstacle
+    Obstacles: OBSTACLE, FIG, OBSTACLES
+off
+    Deactivate physics: OFF, OFFS
+quadrupl
+    Quadruplet interactions: QUADRUPL
+scat
+    Scattering: SCAT
+setup
+    Wave setup: SETUP
+sice
+    Sea ice: SICE, R19, D15, M18, R21B
+sswell
+    Swell dissipation: NEGATINP, ROGERS, ARDHUIN, ZIEGER
+surfbeat
+    Surf beat: SURFBEAT
+triad
+    Triad interactions: TRIAD, DCTA, LTA, SPB
+turbulence
+    Turbulence: TURBULENCE
+vegetation
+    Vegetation: VEGETATION
+wcapping
+    Whitecapping: WCAPPING_KOMEN, WCAPPING_AB
+
+Options Package
+---------------
+For option types used by commands (e.g., ST6, JANSSEN for GEN3):
+    from rompy_swan.components.physics.options.source_terms import ST6
+    from rompy_swan.components.physics.options.biphase import ELDEBERKY
+
+See `options/` package for parameter types used by commands.
 """
-
-# Import from completed modules
-from rompy_swan.components.physics.bragg import BRAGG, BRAGG_FILE, BRAGG_FT
-from rompy_swan.components.physics.breaking import BREAKING_BKD, BREAKING_CONSTANT
-from rompy_swan.components.physics.diffraction import DIFFRACTION
-from rompy_swan.components.physics.friction import (
-    FRICTION_COLLINS,
-    FRICTION_JONSWAP,
-    FRICTION_MADSEN,
-    FRICTION_RIPPLES,
-)
-from rompy_swan.components.physics.gen import GEN1, GEN2, GEN3
-from rompy_swan.components.physics.limiter import LIMITER
-from rompy_swan.components.physics.mud import MUD
-from rompy_swan.components.physics.obstacle import OBSTACLE, OBSTACLE_FIG, OBSTACLES
-from rompy_swan.components.physics.off import OFF, OFFS
-from rompy_swan.components.physics.quadrupl import QUADRUPL
-from rompy_swan.components.physics.scat import SCAT
-from rompy_swan.components.physics.setup import SETUP
-from rompy_swan.components.physics.sice import SICE, SICE_D15, SICE_M18, SICE_R19, SICE_R21B
-from rompy_swan.components.physics.sswell import (
-    NEGATINP,
-    SSWELL_ARDHUIN,
-    SSWELL_ROGERS,
-    SSWELL_ZIEGER,
-)
-from rompy_swan.components.physics.surfbeat import SURFBEAT
-from rompy_swan.components.physics.triad import TRIAD, TRIAD_DCTA, TRIAD_LTA, TRIAD_SPB
-from rompy_swan.components.physics.turbulence import TURBULENCE
-from rompy_swan.components.physics.vegetation import VEGETATION
-from rompy_swan.components.physics.wcapping import WCAPPING_AB, WCAPPING_KOMEN
-
-__all__ = [
-    # Wave generation
-    "GEN1",
-    "GEN2",
-    "GEN3",
-    # Swell dissipation
-    "NEGATINP",
-    "SSWELL_ROGERS",
-    "SSWELL_ARDHUIN",
-    "SSWELL_ZIEGER",
-    # Whitecapping
-    "WCAPPING_KOMEN",
-    "WCAPPING_AB",
-    # Quadruplet interactions
-    "QUADRUPL",
-    # Wave breaking
-    "BREAKING_CONSTANT",
-    "BREAKING_BKD",
-    # Bottom friction
-    "FRICTION_JONSWAP",
-    "FRICTION_COLLINS",
-    "FRICTION_MADSEN",
-    "FRICTION_RIPPLES",
-    # Triad interactions
-    "TRIAD",
-    "TRIAD_DCTA",
-    "TRIAD_LTA",
-    "TRIAD_SPB",
-    # Vegetation
-    "VEGETATION",
-    # Mud
-    "MUD",
-    # Sea ice
-    "SICE",
-    "SICE_R19",
-    "SICE_D15",
-    "SICE_M18",
-    "SICE_R21B",
-    # Turbulence
-    "TURBULENCE",
-    # Bragg scattering
-    "BRAGG",
-    "BRAGG_FT",
-    "BRAGG_FILE",
-    # Limiter
-    "LIMITER",
-    # Obstacles
-    "OBSTACLE",
-    "OBSTACLE_FIG",
-    "OBSTACLES",
-    # Setup
-    "SETUP",
-    # Diffraction
-    "DIFFRACTION",
-    # Surfbeat
-    "SURFBEAT",
-    # Scattering
-    "SCAT",
-    # Deactivation
-    "OFF",
-    "OFFS",
-]

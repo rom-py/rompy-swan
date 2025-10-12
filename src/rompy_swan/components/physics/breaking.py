@@ -10,7 +10,7 @@ from pydantic import Field
 from rompy_swan.components.base import BaseComponent
 
 
-class BREAKING_CONSTANT(BaseComponent):
+class CONSTANT(BaseComponent):
     """Constant wave breaking index.
 
     .. code-block:: text
@@ -25,10 +25,10 @@ class BREAKING_CONSTANT(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import BREAKING_CONSTANT
-        breaking = BREAKING_CONSTANT()
+        from rompy_swan.components.physics.breaking import CONSTANT
+        breaking = CONSTANT()
         print(breaking.render())
-        breaking = BREAKING_CONSTANT(alpha=1.0, gamma=0.73)
+        breaking = CONSTANT(alpha=1.0, gamma=0.73)
         print(breaking.render())
 
     """
@@ -61,7 +61,7 @@ class BREAKING_CONSTANT(BaseComponent):
         return repr
 
 
-class BREAKING_BKD(BaseComponent):
+class BKD(BaseComponent):
     """Variable wave breaking index.
 
     .. code-block:: text
@@ -77,10 +77,10 @@ class BREAKING_BKD(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import BREAKING_BKD
-        breaking = BREAKING_BKD()
+        from rompy_swan.components.physics.breaking import BKD
+        breaking = BKD()
         print(breaking.render())
-        breaking = BREAKING_BKD(alpha=1.0, gamma0=0.54, a1=7.59, a2=-8.06, a3=8.09)
+        breaking = BKD(alpha=1.0, gamma0=0.54, a1=7.59, a2=-8.06, a3=8.09)
         print(breaking.render())
 
     """

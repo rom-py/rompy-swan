@@ -114,7 +114,7 @@ class OBSTACLE(BaseComponent):
         return repr
 
 
-class OBSTACLE_FIG(BaseComponent):
+class FIG(BaseComponent):
     """Obstacle for free infragravity radiation.
 
     .. code-block:: text
@@ -161,15 +161,15 @@ class OBSTACLE_FIG(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import OBSTACLE_FIG
-        obs = OBSTACLE_FIG(
+        from rompy_swan.components.physics.obstacle import FIG
+        obs = FIG(
             alpha1=5e-4,
             hss=2.5,
             tss=10.3,
             line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
         )
         print(obs.render())
-        obs = OBSTACLE_FIG(
+        obs = FIG(
             alpha1=5e-4,
             hss=2.5,
             tss=10.3,
@@ -211,7 +211,7 @@ class OBSTACLE_FIG(BaseComponent):
 
 
 OBSTACLES_TYPE = Annotated[
-    Union[OBSTACLE, OBSTACLE_FIG],
+    Union[OBSTACLE, FIG],
     Field(discriminator="model_type"),
 ]
 
@@ -234,7 +234,7 @@ class OBSTACLES(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import OBSTACLES, OBSTACLE, OBSTACLE_FIG
+        from rompy_swan.components.physics.obstacle import OBSTACLES, OBSTACLE, FIG
         obst1 = dict(
             model_type="obstacle",
             reflection=dict(reflc=1.0),
@@ -244,7 +244,7 @@ class OBSTACLES(BaseComponent):
             transmission=dict(model_type="transm"),
             line=dict(xp=[174.3, 174.3], yp=[-39.1, -39.2]),
         )
-        obst3 = OBSTACLE_FIG(
+        obst3 = FIG(
             alpha1=5e-4,
             hss=2.5,
             tss=10.3,

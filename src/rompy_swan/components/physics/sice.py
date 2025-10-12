@@ -87,7 +87,7 @@ class SICE(BaseComponent):
         return repr
 
 
-class SICE_R19(SICE):
+class R19(SICE):
     """Sea ice dissipation based on the method of Rogers et al (2019).
 
     .. code-block:: text
@@ -115,8 +115,8 @@ class SICE_R19(SICE):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import SICE_R19
-        sice = SICE_R19()
+        from rompy_swan.components.physics.sice import R19
+        sice = R19()
         print(sice.render())
         kwargs = dict(
             aice=0.5,
@@ -128,7 +128,7 @@ class SICE_R19(SICE):
             c5=0.0,
             c6=0.0,
         )
-        sice = SICE_R19(**kwargs)
+        sice = R19(**kwargs)
         print(sice.render())
 
     """
@@ -206,7 +206,7 @@ class SICE_R19(SICE):
         return repr
 
 
-class SICE_D15(SICE):
+class D15(SICE):
     """Sea ice dissipation based on the method of Doble et al. (2015).
 
     .. code-block:: text
@@ -225,10 +225,10 @@ class SICE_D15(SICE):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import SICE_D15
-        sice = SICE_D15()
+        from rompy_swan.components.physics.sice import D15
+        sice = D15()
         print(sice.render())
-        sice = SICE_D15(aice=0.2, chf=0.1)
+        sice = D15(aice=0.2, chf=0.1)
         print(sice.render())
 
     """
@@ -249,7 +249,7 @@ class SICE_D15(SICE):
         return repr
 
 
-class SICE_M18(SICE):
+class M18(SICE):
     """Sea ice dissipation based on the method of Meylan et al. (2018).
 
     .. code-block:: text
@@ -268,10 +268,10 @@ class SICE_M18(SICE):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import SICE_M18
-        sice = SICE_M18()
+        from rompy_swan.components.physics.sice import M18
+        sice = M18()
         print(sice.render())
-        sice = SICE_M18(aice=0.8, chf=0.059)
+        sice = M18(aice=0.8, chf=0.059)
         print(sice.render())
 
     """
@@ -292,7 +292,7 @@ class SICE_M18(SICE):
         return repr
 
 
-class SICE_R21B(SICE):
+class R21B(SICE):
     """Sea ice dissipation based on the method of Rogers et al. (2021).
 
     .. code-block:: text
@@ -311,10 +311,10 @@ class SICE_R21B(SICE):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import SICE_R21B
-        sice = SICE_R21B()
+        from rompy_swan.components.physics.sice import R21B
+        sice = R21B()
         print(sice.render())
-        sice = SICE_R21B(aice=0.8, chf=2.9, npf=4.5)
+        sice = R21B(aice=0.8, chf=2.9, npf=4.5)
         print(sice.render())
 
     """

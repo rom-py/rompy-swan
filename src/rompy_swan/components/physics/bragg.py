@@ -108,7 +108,7 @@ class BRAGG(BaseComponent):
         return repr
 
 
-class BRAGG_FT(BRAGG):
+class FT(BRAGG):
     """Bragg scattering with bottom spectrum computed from FFT.
 
     .. code-block:: text
@@ -129,10 +129,10 @@ class BRAGG_FT(BRAGG):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import BRAGG_FT
-        bragg = BRAGG_FT(nreg=350)
+        from rompy_swan.components.physics.bragg import FT
+        bragg = FT(nreg=350)
         print(bragg.render())
-        bragg = BRAGG_FT(ibrag=2, nreg=350, cutoff=5.0)
+        bragg = FT(ibrag=2, nreg=350, cutoff=5.0)
         print(bragg.render())
 
     """
@@ -146,7 +146,7 @@ class BRAGG_FT(BRAGG):
         return f"{super().cmd()} FT"
 
 
-class BRAGG_FILE(BRAGG):
+class FILE(BRAGG):
     """Bragg scattering with bottom spectrum from file.
 
     .. code-block:: text
@@ -165,8 +165,8 @@ class BRAGG_FILE(BRAGG):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import BRAGG_FILE
-        bragg = BRAGG_FILE(fname="bottom_spectrum.txt", nreg=500, mkx=99, dkx=0.1)
+        from rompy_swan.components.physics.bragg import FILE
+        bragg = FILE(fname="bottom_spectrum.txt", nreg=500, mkx=99, dkx=0.1)
         print(bragg.render())
         kwargs = dict(
             ibrag=3,
@@ -178,7 +178,7 @@ class BRAGG_FILE(BRAGG):
             dkx=0.1,
             dky=0.1,
         )
-        bragg = BRAGG_FILE(**kwargs)
+        bragg = FILE(**kwargs)
         print(bragg.render())
 
     """

@@ -10,7 +10,7 @@ from pydantic import Field
 from rompy_swan.components.base import BaseComponent
 
 
-class FRICTION_JONSWAP(BaseComponent):
+class JONSWAP(BaseComponent):
     """Hasselmann et al. (1973) Jonswap friction.
 
     .. code-block:: text
@@ -35,10 +35,10 @@ class FRICTION_JONSWAP(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import FRICTION_JONSWAP
-        friction = FRICTION_JONSWAP()
+        from rompy_swan.components.physics.friction import JONSWAP
+        friction = JONSWAP()
         print(friction.render())
-        friction = FRICTION_JONSWAP(cfjon=0.038)
+        friction = JONSWAP(cfjon=0.038)
         print(friction.render())
 
     TODO: Implement VARIABLE option?
@@ -61,7 +61,7 @@ class FRICTION_JONSWAP(BaseComponent):
         return repr
 
 
-class FRICTION_COLLINS(BaseComponent):
+class COLLINS(BaseComponent):
     """Collins (1972) friction.
 
     .. code-block:: text
@@ -85,10 +85,10 @@ class FRICTION_COLLINS(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import FRICTION_COLLINS
-        friction = FRICTION_COLLINS()
+        from rompy_swan.components.physics.friction import COLLINS
+        friction = COLLINS()
         print(friction.render())
-        friction = FRICTION_COLLINS(cfw=0.038)
+        friction = COLLINS(cfw=0.038)
         print(friction.render())
 
     """
@@ -109,7 +109,7 @@ class FRICTION_COLLINS(BaseComponent):
         return repr
 
 
-class FRICTION_MADSEN(BaseComponent):
+class MADSEN(BaseComponent):
     """Madsen et al (1988) friction.
 
     .. code-block:: text
@@ -136,10 +136,10 @@ class FRICTION_MADSEN(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import FRICTION_MADSEN
-        friction = FRICTION_MADSEN()
+        from rompy_swan.components.physics.friction import MADSEN
+        friction = MADSEN()
         print(friction.render())
-        friction = FRICTION_MADSEN(kn=0.038)
+        friction = MADSEN(kn=0.038)
         print(friction.render())
 
     """
@@ -163,7 +163,7 @@ class FRICTION_MADSEN(BaseComponent):
         return repr
 
 
-class FRICTION_RIPPLES(BaseComponent):
+class RIPPLES(BaseComponent):
     """Smith et al. (2011) Ripples friction.
 
     .. code-block:: text
@@ -186,10 +186,10 @@ class FRICTION_RIPPLES(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import FRICTION_RIPPLES
-        friction = FRICTION_RIPPLES()
+        from rompy_swan.components.physics.friction import RIPPLES
+        friction = RIPPLES()
         print(friction.render())
-        friction = FRICTION_RIPPLES(s=2.65, d=0.0001)
+        friction = RIPPLES(s=2.65, d=0.0001)
         print(friction.render())
 
     """

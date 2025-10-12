@@ -124,7 +124,7 @@ class TRIAD(BaseComponent):
         return repr
 
 
-class TRIAD_DCTA(BaseComponent):
+class DCTA(BaseComponent):
     """Triad interactions with the DCTA method of Booij et al. (2009).
 
     .. code-block:: text
@@ -148,10 +148,10 @@ class TRIAD_DCTA(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import TRIAD_DCTA
-        triad = TRIAD_DCTA()
+        from rompy_swan.components.physics.triad import DCTA
+        triad = DCTA()
         print(triad.render())
-        triad = TRIAD_DCTA(
+        triad = DCTA(
             trfac=4.4,
             p=1.3,
             noncolinear=True,
@@ -208,7 +208,7 @@ class TRIAD_DCTA(BaseComponent):
         return repr
 
 
-class TRIAD_LTA(BaseComponent):
+class LTA(BaseComponent):
     """Triad interactions with the LTA method of Eldeberky (1996).
 
     .. code-block:: text
@@ -231,10 +231,10 @@ class TRIAD_LTA(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import TRIAD_LTA
-        triad = TRIAD_LTA()
+        from rompy_swan.components.physics.triad import LTA
+        triad = LTA()
         print(triad.render())
-        triad = TRIAD_LTA(
+        triad = LTA(
             trfac=0.8,
             cutfr=2.5,
             biphase={"model_type": "eldeberky", "urcrit": 0.63},
@@ -281,7 +281,7 @@ class TRIAD_LTA(BaseComponent):
         return repr
 
 
-class TRIAD_SPB(BaseComponent):
+class SPB(BaseComponent):
     """Triad interactions with the SPB method of Becq-Girard et al. (1999).
 
     .. code-block:: text
@@ -304,10 +304,10 @@ class TRIAD_SPB(BaseComponent):
     .. ipython:: python
         :okwarning:
 
-        from rompy_swan.components.physics import TRIAD_SPB
-        triad = TRIAD_SPB()
+        from rompy_swan.components.physics.triad import SPB
+        triad = SPB()
         print(triad.render())
-        triad = TRIAD_SPB(
+        triad = SPB(
             trfac=0.9,
             a=0.95,
             b=0.0,

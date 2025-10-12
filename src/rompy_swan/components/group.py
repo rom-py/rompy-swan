@@ -32,46 +32,25 @@ from rompy_swan.components.output import (
     TABLE,
     TEST,
 )
-from rompy_swan.components.physics import (
-    BRAGG,
-    BRAGG_FILE,
-    BRAGG_FT,
-    BREAKING_BKD,
-    BREAKING_CONSTANT,
-    DIFFRACTION,
-    FRICTION_COLLINS,
-    FRICTION_JONSWAP,
-    FRICTION_MADSEN,
-    FRICTION_RIPPLES,
-    GEN1,
-    GEN2,
-    GEN3,
-    LIMITER,
-    MUD,
-    NEGATINP,
-    OBSTACLES,
-    OFFS,
-    QUADRUPL,
-    SCAT,
-    SETUP,
-    SICE,
-    SICE_D15,
-    SICE_M18,
-    SICE_R19,
-    SICE_R21B,
-    SSWELL_ARDHUIN,
-    SSWELL_ROGERS,
-    SSWELL_ZIEGER,
-    SURFBEAT,
-    TRIAD,
-    TRIAD_DCTA,
-    TRIAD_LTA,
-    TRIAD_SPB,
-    TURBULENCE,
-    VEGETATION,
-    WCAPPING_AB,
-    WCAPPING_KOMEN,
-)
+from rompy_swan.components.physics.bragg import BRAGG, FILE, FT
+from rompy_swan.components.physics.breaking import BKD, CONSTANT
+from rompy_swan.components.physics.diffraction import DIFFRACTION
+from rompy_swan.components.physics.friction import COLLINS, JONSWAP, MADSEN, RIPPLES
+from rompy_swan.components.physics.gen import GEN1, GEN2, GEN3
+from rompy_swan.components.physics.limiter import LIMITER
+from rompy_swan.components.physics.mud import MUD
+from rompy_swan.components.physics.obstacle import OBSTACLES
+from rompy_swan.components.physics.off import OFFS
+from rompy_swan.components.physics.quadrupl import QUADRUPL
+from rompy_swan.components.physics.scat import SCAT
+from rompy_swan.components.physics.setup import SETUP
+from rompy_swan.components.physics.sice import D15, M18, R19, R21B, SICE
+from rompy_swan.components.physics.sswell import ARDHUIN, NEGATINP, ROGERS, ZIEGER
+from rompy_swan.components.physics.surfbeat import SURFBEAT
+from rompy_swan.components.physics.triad import DCTA, LTA, SPB, TRIAD
+from rompy_swan.components.physics.turbulence import TURBULENCE
+from rompy_swan.components.physics.vegetation import VEGETATION
+from rompy_swan.components.physics.wcapping import WCAPPING_AB, WCAPPING_KOMEN
 from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
 from rompy_swan.types import PhysicsOff
 
@@ -278,7 +257,7 @@ GEN_TYPE = Annotated[
     Field(description="Wave generation component", discriminator="model_type"),
 ]
 SSWELL_TYPE = Annotated[
-    Union[SSWELL_ROGERS, SSWELL_ARDHUIN, SSWELL_ZIEGER],
+    Union[ROGERS, ARDHUIN, ZIEGER],
     Field(description="Swell dissipation component", discriminator="model_type"),
 ]
 WCAPPING_TYPE = Annotated[
@@ -286,23 +265,23 @@ WCAPPING_TYPE = Annotated[
     Field(description="Whitecapping component", discriminator="model_type"),
 ]
 BREAKING_TYPE = Annotated[
-    Union[BREAKING_CONSTANT, BREAKING_BKD],
+    Union[CONSTANT, BKD],
     Field(description="Wave breaking component", discriminator="model_type"),
 ]
 FRICTION_TYPE = Annotated[
-    Union[FRICTION_JONSWAP, FRICTION_COLLINS, FRICTION_MADSEN, FRICTION_RIPPLES],
+    Union[JONSWAP, COLLINS, MADSEN, RIPPLES],
     Field(description="Bottom friction component", discriminator="model_type"),
 ]
 TRIAD_TYPE = Annotated[
-    Union[TRIAD, TRIAD_DCTA, TRIAD_LTA, TRIAD_SPB],
+    Union[TRIAD, DCTA, LTA, SPB],
     Field(description="Triad interactions component", discriminator="model_type"),
 ]
 SICE_TYPE = Annotated[
-    Union[SICE, SICE_R19, SICE_D15, SICE_M18, SICE_R21B],
+    Union[SICE, R19, D15, M18, R21B],
     Field(description="Sea ice component", discriminator="model_type"),
 ]
 BRAGG_TYPE = Annotated[
-    Union[BRAGG, BRAGG_FT, BRAGG_FILE],
+    Union[BRAGG, FT, FILE],
     Field(description="Bragg scattering component", discriminator="model_type"),
 ]
 
