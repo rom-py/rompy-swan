@@ -1,8 +1,8 @@
-"""Test physics source term models (private field types for GEN3 component)."""
+"""Test physics source term option types for GEN3 component."""
 
 import pytest
 
-from rompy_swan.components.physics._source_terms import (
+from rompy_swan.components.physics.options.source_terms import (
     JANSSEN,
     KOMEN,
     ST6,

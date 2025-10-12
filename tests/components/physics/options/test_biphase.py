@@ -1,8 +1,8 @@
-"""Test biphase models (private field types for TRIAD component)."""
+"""Test biphase option types for TRIAD component."""
 
 import pytest
 
-from rompy_swan.components.physics._biphase import DEWIT, ELDEBERKY
+from rompy_swan.components.physics.options.biphase import DEWIT, ELDEBERKY
 
 
 def test_biphase_elderberky():

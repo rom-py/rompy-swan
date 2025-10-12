@@ -9,14 +9,14 @@ from pydantic import Field, model_validator
 
 from rompy.logging import get_logger
 from rompy_swan.components.base import BaseComponent
-from rompy_swan.components.physics._reflection import (
+from rompy_swan.components.physics.options.reflection import (
     FREEBOARD,
     LINE,
     RDIFF,
     REFL,
     RSPEC,
 )
-from rompy_swan.components.physics._transmission import (
+from rompy_swan.components.physics.options.transmission import (
     DANGREMOND,
     GODA,
     TRANS1D,

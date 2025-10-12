@@ -8,7 +8,7 @@ from typing import Literal, Optional, Union
 from pydantic import Field
 
 from rompy_swan.components.base import BaseComponent
-from rompy_swan.components.physics._source_terms import (
+from rompy_swan.components.physics.options.source_terms import (
     JANSSEN,
     KOMEN,
     ST6,
@@ -242,7 +242,7 @@ class GEN3(BaseComponent):
             ),
         )
         print(gen.render())
-        from rompy_swan.components.physics._source_terms import ST6C1
+        from rompy_swan.components.physics.options.source_terms import ST6C1
         gen = GEN3(source_terms=ST6C1())
         print(gen.render())
 

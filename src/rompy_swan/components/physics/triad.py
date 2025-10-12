@@ -8,7 +8,7 @@ from typing import Literal, Optional, Union
 from pydantic import Field
 
 from rompy_swan.components.base import BaseComponent
-from rompy_swan.components.physics._biphase import DEWIT, ELDEBERKY
+from rompy_swan.components.physics.options.biphase import DEWIT, ELDEBERKY
 
 
 class TRIAD(BaseComponent):

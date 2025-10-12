@@ -1,4 +1,4 @@
-"""Test physics components."""
+"""Test physics command components (GEN, FRICTION, BREAKING, etc.)."""
 
 import pytest
 from pydantic import ValidationError

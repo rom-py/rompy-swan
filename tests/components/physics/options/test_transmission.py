@@ -1,9 +1,9 @@
-"""Test transmission models (private field types for OBSTACLE component)."""
+"""Test transmission option types for OBSTACLE component."""
 
 import pytest
 from pydantic import ValidationError
 
-from rompy_swan.components.physics._transmission import (
+from rompy_swan.components.physics.options.transmission import (
     DANGREMOND,
     GODA,
     TRANS1D,
