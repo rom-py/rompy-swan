@@ -50,12 +50,9 @@ test = [
     "envyaml"
 ]
 docs = [
-    "autodoc_pydantic",
-    "ipython",
-    "nbsphinx",
-    "pydata_sphinx_theme",
-    "sphinx<7.3.6",
-    "sphinx-collections",
+    "mkdocs",
+    "mkdocs-material",
+    "mkdocstrings[python]"
 ]
 
 [project.entry-points."rompy.config"]
