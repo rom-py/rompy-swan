@@ -9,6 +9,28 @@ nav:
   - Installation: installation.md
   - Usage: usage.md
   - Contributing: contributing.md
+  - Types: types.md
+  - Components:
+    - Startup: components/startup.md
+    - Numerics: components/numerics.md
+    - Output: components/output.md
+    - Lockup: components/lockup.md
+    - Group: components/group.md
+    - Boundary: components/boundary.md
+    - CGRID: components/cgrid.md
+    - INPGRID: components/inpgrid.md
+    - Physics: components/physics.md
+  - Subcomponents:
+    - Base: subcomponents/base.md
+    - Startup: subcomponents/startup.md
+    - Spectrum: subcomponents/spectrum.md
+    - Time: subcomponents/time.md
+    - CGRID: subcomponents/cgrid.md
+    - READGRID: subcomponents/readgrid.md
+    - Boundary: subcomponents/boundary.md
+    - Physics: subcomponents/physics.md
+    - Numerics: subcomponents/numerics.md
+    - Output: subcomponents/output.md
   - API Reference:
     - Config: reference/config.md
     - Types: reference/types.md
