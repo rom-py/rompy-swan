@@ -1,0 +1,25 @@
+# Local Backend Configuration
+# Configuration for executing models on the local system
+
+# Backend type specification
+type: local
+
+# Configuration parameters
+timeout: 7200 # 2 hours - Maximum execution time in seconds (60-86400)
+
+# Optional shell command to run instead of config.run()
+command: swan.exe
+
+# Whether to execute commands through the shell (default: true)
+shell: true
+
+# Whether to capture stdout and stderr (default: true)
+capture_output: false
+
+# Optional working directory for execution
+# If not specified, defaults to the model's output directory
+# working_dir: "/path/to/working/directory"
+
+# Additional environment variables to set during execution
+env_vars:
+    LOG_LEVEL: "INFO"

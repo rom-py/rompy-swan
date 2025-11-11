@@ -1,0 +1,14 @@
+# Docker Backend Configuration
+# Configuration for executing models in Docker containers
+
+type: docker
+dockerfile: Dockerfile
+build_context: ../docker
+timeout: 7200 # 2 hours
+cpu: 4
+memory: "2g"
+executable: swan.exe
+volumes:
+    - "/tmp:/tmp:rw"
+remove_container: true
+user: "root"
