@@ -203,12 +203,18 @@ class BlockOptions(str, Enum):
     ----------
     HSIGN: "hsign"
         Significant wave height (in m).
+    HSEA: "hsea"
+        Sea wave height (in m).
     HSWELL: "hswell"
         Swell wave height (in m).
     DIR: "dir"
         Mean wave direction (in degrees).
     DPM: "dpm"
         Mean wave direction at the peak frequency (in degrees).
+    DPMSEA: "dpmsea"
+        Sea mean wave direction at the peak frequency (in degrees).
+    DPMSWE: "dpmswe"
+        Swell mean wave direction at the peak frequency (in degrees).
     PDIR: "pdir"
         Peak wave direction (in degrees).
     TDIR: "tdir"
@@ -221,6 +227,10 @@ class BlockOptions(str, Enum):
         Peak period of the (relative frequency) variance density spectrum (in s).
     TPS: "tps"
         Smoothed peak period (in s).
+    TPSSEA: "tpssea"
+        Sea smoothed peak period (in s).
+    TPSSWE: "tpsswe"
+        Swell smoothed peak period (in s).
     PER: "per"
         Mean absolute wave period (in s).
     RPER: "rper"
@@ -362,15 +372,20 @@ class BlockOptions(str, Enum):
     """
 
     HSIGN = "hsign"
+    HSEA = "hsea"
     HSWELL = "hswell"
     DIR = "dir"
     DPM = "dpm"
+    DPMSEA = "dpmsea"
+    DPMSWE = "dpmswe"
     PDIR = "pdir"
     TDIR = "tdir"
     TM01 = "tm01"
     RTM01 = "rtm01"
     RTP = "rtp"
     TPS = "tps"
+    TPSSEA = "tpssea"
+    TPSSWE = "tpsswe"
     PER = "per"
     RPER = "rper"
     TMM10 = "tmm10"
