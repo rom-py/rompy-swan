@@ -33,6 +33,21 @@ are continually evolving. Contributions and feedback are welcome!
 Releases
 ********
 
+0.8.0 (2026-01-13)
+___________________
+
+New Features
+------------
+* Added extra frequency-split partitioned parameters to BlockOptions Enum (`#10 <https://github.com/rom-py/rompy-swan/pull/10>`_). Thanks to `@rsoutelino <https://github.com/rsoutelino>`_ for his first contribution!
+
+Internal Changes
+----------------
+* Migrated documentation from Sphinx to MkDocs.
+* Added envyaml dependency for YAML configuration with environment variable support.
+* Deprecated ``SwanConfigComponents`` in favor of ``SwanConfig``. The old class remains available for backward compatibility but will be removed in a future version.
+* Removed legacy SwanConfig templates and objects.
+
+
 0.5.0 (2025-07-13)
 ___________________
 
