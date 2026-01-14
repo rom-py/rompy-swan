@@ -42,6 +42,12 @@ nav:
       - Declarative Configuration: examples/example_declarative.ipynb
       - Procedural Configuration: examples/example_procedural.ipynb
       - Sensitivity Analysis: examples/example_sensitivity.ipynb
+      - Boundary:
+          - BOUNDSPEC Side: examples/boundary/boundspec_side.ipynb
+          - BOUNDSPEC Segment: examples/boundary/boundspec_segment.ipynb
+          - BOUNDNEST1: examples/boundary/boundnest1.ipynb
+      - Components:
+          - Output: examples/components/output.ipynb
   - API Reference:
       - Config: api-reference/config.md
       - Components: api-reference/components.md

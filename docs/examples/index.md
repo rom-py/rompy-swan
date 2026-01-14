@@ -2,7 +2,7 @@
 
 These notebooks demonstrate common rompy-swan workflows.
 
-## Available Examples
+## Getting Started
 
 <div class="grid cards" markdown>
 
@@ -29,6 +29,50 @@ These notebooks demonstrate common rompy-swan workflows.
     Run parameter sensitivity studies by varying configuration values.
 
     [:octicons-arrow-right-24: View notebook](example_sensitivity.ipynb)
+
+</div>
+
+## Boundary Conditions
+
+<div class="grid cards" markdown>
+
+-   :material-border-left-variant:{ .lg .middle } **BOUNDSPEC Side**
+
+    ---
+
+    Apply boundary conditions to entire domain sides.
+
+    [:octicons-arrow-right-24: View notebook](boundary/boundspec_side.ipynb)
+
+-   :material-vector-line:{ .lg .middle } **BOUNDSPEC Segment**
+
+    ---
+
+    Apply boundary conditions to specific segments.
+
+    [:octicons-arrow-right-24: View notebook](boundary/boundspec_segment.ipynb)
+
+-   :material-layers-outline:{ .lg .middle } **BOUNDNEST1**
+
+    ---
+
+    Nested boundary conditions from coarser SWAN runs.
+
+    [:octicons-arrow-right-24: View notebook](boundary/boundnest1.ipynb)
+
+</div>
+
+## Components
+
+<div class="grid cards" markdown>
+
+-   :material-file-export:{ .lg .middle } **Output**
+
+    ---
+
+    Configure SWAN output options (BLOCK, TABLE, SPECOUT).
+
+    [:octicons-arrow-right-24: View notebook](components/output.ipynb)
 
 </div>
 

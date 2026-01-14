@@ -75,6 +75,15 @@ jobs:
           # Copy SWAN notebooks
           cp rompy-notebooks/notebooks/swan/*.ipynb docs/examples/ || true
           cp rompy-notebooks/notebooks/swan/*.yml docs/examples/ || true
+          # Copy subdirectories (components, boundary, etc.)
+          for subdir in rompy-notebooks/notebooks/swan/*/; do
+            if [ -d "$subdir" ]; then
+              dirname=$(basename "$subdir")
+              mkdir -p "docs/examples/$dirname"
+              cp "$subdir"*.ipynb "docs/examples/$dirname/" 2>/dev/null || true
+              cp "$subdir"*.yml "docs/examples/$dirname/" 2>/dev/null || true
+            fi
+          done
           ls -la docs/examples/
 
       - name: Build documentation

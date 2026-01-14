@@ -101,6 +101,14 @@ Rompy-swan addresses these by:
 
     [:octicons-arrow-right-24: Components](components/index.md)
 
+-   :material-puzzle-outline:{ .lg .middle } **Subcomponents**
+
+    ---
+
+    Branching options within SWAN commands (locations, spectra, etc.)
+
+    [:octicons-arrow-right-24: Subcomponents](subcomponents/base.md)
+
 -   :material-database:{ .lg .middle } **Data Interfaces**
 
     ---
@@ -108,6 +116,14 @@ Rompy-swan addresses these by:
     Bridge external data sources with SWAN model inputs
 
     [:octicons-arrow-right-24: Data Interfaces](data-interfaces/index.md)
+
+-   :material-notebook:{ .lg .middle } **Examples**
+
+    ---
+
+    Jupyter notebooks demonstrating common workflows
+
+    [:octicons-arrow-right-24: Examples](examples/index.md)
 
 -   :material-api:{ .lg .middle } **API Reference**
 
