@@ -1,0 +1,5 @@
+# Notebooks are fetched from rompy-notebooks during CI build
+# Do not commit them here
+*.ipynb
+*.yml
+!index.md
