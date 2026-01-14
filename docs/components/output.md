@@ -1,6 +1,11 @@
 # Output
 
-SWAN output commands
+Output commands define where and what SWAN writes as results. Output can be written at specific locations (points, curves, grids) and in various formats (tables, blocks, spectra).
+
+!!! info "Output Types"
+    - **Locations** — Define where to extract output (points, curves, frames, nested grids)
+    - **Quantities** — Configure output variable settings (units, exceptions)
+    - **Write commands** — Specify output format and file names (BLOCK, TABLE, SPECOUT)
 
 ## Locations
 

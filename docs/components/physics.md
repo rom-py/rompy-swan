@@ -1,6 +1,9 @@
 # Physics
 
-SWAN physics commands
+SWAN physics commands control the physical processes in wave simulations. These include wave generation by wind, energy dissipation (whitecapping, bottom friction, depth-induced breaking), and nonlinear wave-wave interactions.
+
+!!! tip "Default Physics"
+    By default, SWAN activates third-generation physics (`GEN3`) which includes wind input, whitecapping, quadruplet interactions, and bottom friction. You can selectively disable processes using the `OFF` commands or customize individual formulations.
 
 ## Generation
 
@@ -43,11 +46,11 @@ SWAN physics commands
 ::: rompy_swan.components.physics.TRIAD_LTA
 ::: rompy_swan.components.physics.TRIAD_SPB
 
-## Vegetaion dumping
+## Vegetation damping
 
 ::: rompy_swan.components.physics.VEGETATION
 
-## Mud dumping
+## Mud damping
 
 ::: rompy_swan.components.physics.MUD
 
