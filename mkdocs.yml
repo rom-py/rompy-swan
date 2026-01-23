@@ -48,6 +48,11 @@ nav:
           - BOUNDNEST1: examples/boundary/boundnest1.ipynb
       - Components:
           - Output: examples/components/output.ipynb
+          - CGRID: examples/components/cgrid.ipynb
+          - Startup: examples/components/startup.ipynb
+          - Physics: examples/components/physics.ipynb
+          - Numerics: examples/components/numerics.ipynb
+          - INPGRID: examples/components/inpgrid.ipynb
   - API Reference:
       - Config: api-reference/config.md
       - Components: api-reference/components.md

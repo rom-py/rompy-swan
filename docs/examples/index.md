@@ -74,6 +74,46 @@ These notebooks demonstrate common rompy-swan workflows.
 
     [:octicons-arrow-right-24: View notebook](components/output.ipynb)
 
+-   :material-grid:{ .lg .middle } **CGRID**
+
+    ---
+
+    Define computational grids (REGULAR, CURVILINEAR, UNSTRUCTURED).
+
+    [:octicons-arrow-right-24: View notebook](components/cgrid.ipynb)
+
+-   :material-cog-play:{ .lg .middle } **Startup**
+
+    ---
+
+    Initialize SWAN runs (PROJECT, SET, MODE, COORDINATES).
+
+    [:octicons-arrow-right-24: View notebook](components/startup.ipynb)
+
+-   :material-waves:{ .lg .middle } **Physics**
+
+    ---
+
+    Configure physical processes (generation, breaking, friction).
+
+    [:octicons-arrow-right-24: View notebook](components/physics.ipynb)
+
+-   :material-calculator:{ .lg .middle } **Numerics**
+
+    ---
+
+    Set numerical schemes and iteration settings (PROP, NUMERIC).
+
+    [:octicons-arrow-right-24: View notebook](components/numerics.ipynb)
+
+-   :material-database-import:{ .lg .middle } **INPGRID**
+
+    ---
+
+    Define input grids for forcing data (bathymetry, wind, currents).
+
+    [:octicons-arrow-right-24: View notebook](components/inpgrid.ipynb)
+
 </div>
 
 ## Running the Examples

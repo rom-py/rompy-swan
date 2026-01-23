@@ -72,6 +72,71 @@ class SwanConfig(BaseConfig):
     The `cgrid` is the only required field since it is used to define the swan grid
     object which is passed to other components.
 
+    Time Control
+    ------------
+    When calling the config with a runtime `TimeRange` object (e.g., from `ModelRun.period`),
+    the temporal parameters are set as follows:
+
+    **COMPUTE Components (LOCKUP):**
+        - Time values (`tbeg`, `tend`, `delt`) are always from the runtime `TimeRange`
+        - Time and interval formatting (`tfmt`, `dfmt`) can be specified in the component's 
+          `times` field
+        - The runtime `interval` defines the computational timestep (`deltc`)
+
+    **OUTPUT Components (BLOCK, TABLE, SPECOUT, NESTOUT):**
+        - Start time (`tbeg`) is always from runtime `start`
+        - Time interval (`delt`) can be specified in the component's `times` field to 
+          override runtime `interval`
+        - Time and interval formatting (`tfmt`, `dfmt`) can be specified in the component's 
+          `times` field
+        - If no `times` field is specified, the component uses runtime `interval` for `delt`
+
+    This allows fine-grained control over:
+    - **COMPUTE**: Time and interval formatting
+    - **OUTPUT**: Time interval and formatting
+    
+    All components start at the same time from `ModelRun.period.start`.
+
+    Examples
+    --------
+    
+    .. code-block:: python
+
+        from datetime import datetime, timedelta
+        from rompy.core.time import TimeRange
+        
+        # Runtime with 1-hour interval
+        runtime = TimeRange(
+            start=datetime(2024, 1, 1, 0, 0, 0),
+            end=datetime(2024, 1, 2, 0, 0, 0),
+            interval=timedelta(hours=1),
+        )
+        
+        config = SwanConfig(
+            cgrid=dict(...),
+            output=dict(
+                # Custom 30-minute output interval
+                block=dict(
+                    sname="COMPGRID",
+                    fname="output.nc",
+                    output=["hsign"],
+                    times=dict(delt=timedelta(minutes=30), tfmt=1, dfmt="min"),
+                ),
+                # Uses runtime interval (1 hour)
+                table=dict(
+                    sname="COMPGRID",
+                    fname="table.nc",
+                    output=["dir"],
+                ),
+            ),
+        )
+        
+        # Result:
+        # - COMPUTE: deltc = 1 HR (from runtime)
+        # - BLOCK: deltblk = 30 MIN (from component times)
+        # - TABLE: delttbl = 1 HR (from runtime)
+        rendered = config(runtime)
+
     """
 
     model_type: Literal["swan", "SWAN"] = Field(
