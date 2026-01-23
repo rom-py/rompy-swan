@@ -7,6 +7,25 @@ Output commands define where and what SWAN writes as results. Output can be writ
     - **Quantities** — Configure output variable settings (units, exceptions)
     - **Write commands** — Specify output format and file names (BLOCK, TABLE, SPECOUT)
 
+!!! note "Time Control for Output Components"
+    When using the rompy API, output write commands (BLOCK, TABLE, SPECOUT, NESTOUT) have their start time (`tbeg`) set from the `ModelRun.period.start`. However, you can override the time interval (`delt`) and formatting (`tfmt`, `dfmt`) by specifying a `times` field in the component. If no `times` field is provided, the component uses the runtime interval.
+    
+    **Example:**
+    ```python
+    block=dict(
+        sname="COMPGRID",
+        fname="output.nc",
+        output=["hsign"],
+        times=dict(
+            delt=timedelta(minutes=30),  # Custom interval
+            tfmt=1,                       # ISO format
+            dfmt="min",                   # Minutes
+        ),
+    )
+    ```
+    
+    See the [Configuration Guide](../user-guide/configuration.md#time-control) for more details.
+
 ## Locations
 
 ::: rompy_swan.components.output.BaseLocation
