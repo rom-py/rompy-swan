@@ -124,10 +124,20 @@ class OutputInterface(TimeInterface):
     def time_interface(self) -> "OutputInterface":
         """Set the time parameter for all WRITE components."""
         for component in self.group._write_fields:
+            # Skip nestout as it's now handled via nests
+            if component == "nestout":
+                continue
             obj = getattr(self.group, component)
             if obj is not None:
                 times = obj.times or TimeRangeOpen()
                 obj.times = self._timerange(times.tfmt, times.dfmt, obj.suffix)
+        
+        # Handle nests separately
+        if self.group.nests is not None:
+            for nest in self.group.nests:
+                if nest.nestout is not None:
+                    times = nest.nestout.times or TimeRangeOpen()
+                    nest.nestout.times = self._timerange(times.tfmt, times.dfmt, nest.nestout.suffix)
 
     def _timerange(self, tfmt: int, dfmt: str, suffix: str) -> TimeRangeOpen:
         """Convert generic TimeRange into the Swan TimeRangeOpen subcomponent."""

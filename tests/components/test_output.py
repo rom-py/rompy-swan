@@ -22,6 +22,7 @@ from rompy_swan.components.output import (
     FRAME,
     GROUP,
     ISOLINE,
+    NEST,
     NESTOUT,
     NGRID,
     NGRID_UNSTRUCTURED,
@@ -167,6 +168,39 @@ def specout(times):
 @pytest.fixture(scope="module")
 def nestout(times):
     yield NESTOUT(sname="outnest", fname="./nestout.swn", times=times)
+
+
+@pytest.fixture(scope="module")
+def nest(times):
+    """Single nest fixture."""
+    yield NEST(
+        sname="child1",
+        ngrid=dict(
+            model_type="ngrid",
+            grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
+        ),
+        nestout=dict(
+            fname="nestout_child1.swn",
+            times=times,
+        ),
+    )
+
+
+@pytest.fixture(scope="module")
+def nest_unstructured(times):
+    """Nest fixture with unstructured grid."""
+    yield NEST(
+        sname="unstruct",
+        ngrid=dict(
+            model_type="ngrid_unstructured",
+            kind="triangle",
+            fname="ngrid.txt",
+        ),
+        nestout=dict(
+            fname="nestout_unstruct.swn",
+            times=times,
+        ),
+    )
 
 
 @pytest.fixture(scope="module")
@@ -357,6 +391,7 @@ def test_output_group_all_set(
     specout,
     nestout,
 ):
+    """Test OUTPUT with all components using legacy ngrid/nestout fields."""
     output = OUTPUT(
         frame=frame,
         group=group,
@@ -374,6 +409,43 @@ def test_output_group_all_set(
     )
     print("")
     print(output.render())
+
+
+def test_output_group_all_set_with_nests(
+    frame,
+    group,
+    curves,
+    ray,
+    isoline,
+    points,
+    nest,
+    quantities,
+    output_options,
+    block,
+    table,
+    specout,
+):
+    """Test OUTPUT with all components using new nests field."""
+    output = OUTPUT(
+        frame=frame,
+        group=group,
+        curve=curves,
+        ray=ray,
+        isoline=isoline,
+        points=points,
+        nests=[nest],
+        quantity=quantities,
+        output_options=output_options,
+        block=block,
+        table=table,
+        specout=specout,
+    )
+    rendered = output.render()
+    print("")
+    print(rendered)
+    # Verify nest is rendered
+    assert "NGRID sname='child1'" in rendered
+    assert "NESTOUT sname='child1'" in rendered
 
 
 def test_output_sname_unique(frame, group):
@@ -421,3 +493,84 @@ def test_output_sname_ngrid_nestout_match(ngrid, nestout):
     ngrid.sname = "dummy"
     with pytest.raises(ValidationError):
         OUTPUT(ngrid=ngrid, nestout=nestout)
+
+
+# =====================================================================================
+# Additional NEST Component Tests
+# =====================================================================================
+
+def test_nest(nest):
+    """Test basic NEST component rendering."""
+    assert "NGRID sname='child1'" in nest.render()
+    assert "NESTOUT sname='child1'" in nest.render()
+
+
+def test_nest_sname_sync():
+    """Test that sname is automatically synced to child components."""
+    nest = NEST(
+        sname="test",
+        ngrid=NGRID(
+            sname="other",
+            grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
+        ),
+        nestout=NESTOUT(
+            sname="another",
+            fname="nestout.swn",
+            times=dict(tfmt=1, dfmt="hr"),
+        ),
+    )
+    assert nest.ngrid.sname == "test"
+    assert nest.nestout.sname == "test"
+
+
+def test_output_multiple_nests(times):
+    """Test OUTPUT component with multiple nests."""
+    output = OUTPUT(
+        nests=[
+            dict(
+                sname="child_1",
+                ngrid=dict(
+                    model_type="ngrid",
+                    grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
+                ),
+                nestout=dict(fname="nestout_child1.swn", times=times),
+            ),
+            dict(
+                sname="child_2",
+                ngrid=dict(
+                    model_type="ngrid",
+                    grid=dict(xp=166.0, yp=-46.5, xlen=0.1, ylen=0.1, mx=8, my=6),
+                ),
+                nestout=dict(fname="nestout_child2.swn", times=times),
+            ),
+        ],
+    )
+    assert len(output.nests) == 2
+    rendered = output.render()
+    assert "NGRID sname='child_1'" in rendered
+    assert "NGRID sname='child_2'" in rendered
+
+
+def test_output_nests_unique_snames(times):
+    """Test that duplicate nest snames are rejected."""
+    with pytest.raises(ValidationError, match="Duplicate nest snames"):
+        OUTPUT(
+            nests=[
+                dict(
+                    sname="child",
+                    ngrid=dict(
+                        model_type="ngrid",
+                        grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
+                    ),
+                    nestout=dict(fname="nestout1.swn", times=times),
+                ),
+                dict(
+                    sname="child",
+                    ngrid=dict(
+                        model_type="ngrid",
+                        grid=dict(xp=166.0, yp=-46.5, xlen=0.1, ylen=0.1, mx=8, my=6),
+                    ),
+                    nestout=dict(fname="nestout2.swn", times=times),
+                ),
+            ],
+        )
