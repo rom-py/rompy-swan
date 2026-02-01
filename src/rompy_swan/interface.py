@@ -131,13 +131,15 @@ class OutputInterface(TimeInterface):
             if obj is not None:
                 times = obj.times or TimeRangeOpen()
                 obj.times = self._timerange(times.tfmt, times.dfmt, obj.suffix)
-        
+
         # Handle nests separately
         if self.group.nests is not None:
             for nest in self.group.nests:
                 if nest.nestout is not None:
                     times = nest.nestout.times or TimeRangeOpen()
-                    nest.nestout.times = self._timerange(times.tfmt, times.dfmt, nest.nestout.suffix)
+                    nest.nestout.times = self._timerange(
+                        times.tfmt, times.dfmt, nest.nestout.suffix
+                    )
 
     def _timerange(self, tfmt: int, dfmt: str, suffix: str) -> TimeRangeOpen:
         """Convert generic TimeRange into the Swan TimeRangeOpen subcomponent."""

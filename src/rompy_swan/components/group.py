@@ -648,7 +648,7 @@ class OUTPUT(BaseGroupComponent):
                     "Cannot specify both 'nests' and legacy 'ngrid'/'nestout' fields. "
                     "Please use only 'nests' for new configurations."
                 )
-            
+
             if self.ngrid is not None and self.nestout is None:
                 raise ValueError(
                     "NGRID component specified but no NESTOUT component has been defined"
@@ -669,7 +669,7 @@ class OUTPUT(BaseGroupComponent):
                     "Please migrate to using 'nests' field for better support of multiple nests."
                 )
                 # Create a NEST object from the legacy fields
-                
+
                 self.nests = [
                     NEST(
                         sname=self.ngrid.sname,
@@ -680,7 +680,7 @@ class OUTPUT(BaseGroupComponent):
                 # Clear old fields after conversion to avoid validation conflicts
                 self.ngrid = None
                 self.nestout = None
-        
+
         # Validate nests list if specified
         if self.nests is not None:
             snames = [nest.sname for nest in self.nests]
@@ -690,7 +690,7 @@ class OUTPUT(BaseGroupComponent):
                     f"Duplicate nest snames found: {duplicates}. "
                     "Each nest must have a unique sname."
                 )
-        
+
         return self
 
     @property

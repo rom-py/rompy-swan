@@ -499,6 +499,7 @@ def test_output_sname_ngrid_nestout_match(ngrid, nestout):
 # Additional NEST Component Tests
 # =====================================================================================
 
+
 def test_nest(nest):
     """Test basic NEST component rendering."""
     assert "NGRID sname='child1'" in nest.render()
