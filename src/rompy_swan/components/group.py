@@ -19,6 +19,7 @@ from rompy_swan.components.output import (
     FRAME,
     GROUP,
     ISOLINE,
+    NEST,
     NESTOUT,
     NGRID,
     NGRID_UNSTRUCTURED,
@@ -455,6 +456,7 @@ NGRID_TYPE = Annotated[
     Union[NGRID, NGRID_UNSTRUCTURED],
     Field(description="Ngrid locations component", discriminator="model_type"),
 ]
+NEST_TYPE = Annotated[NEST, Field(description="Nest component (NGRID + NESTOUT)")]
 
 
 class OUTPUT(BaseGroupComponent):
@@ -468,13 +470,19 @@ class OUTPUT(BaseGroupComponent):
         RAY 'rname' ...
         ISOLINE 'sname' 'rname' ...
         POINTS 'sname ...
-        NGRID 'sname' ...
+        NESTS (list):
+          - NEST 'sname':
+              NGRID 'sname' ...
+              NESTOUT 'sname' ...
+          - NEST 'sname':
+              NGRID 'sname' ...
+              NESTOUT 'sname' ...
         QUANTITY ...
         OUTPUT OPTIONS ...
         BLOCK 'sname' ...
         TABLE 'sname' ...
         SPECOUT 'sname' ...
-        NESTOUT 'sname ...
+
 
     This group component is used to define multiple types of output locations and
     write components in a single model. Only fields that are explicitly prescribed are
@@ -489,7 +497,10 @@ class OUTPUT(BaseGroupComponent):
     - The Locations `'sname'` assigned to each write component must be defined.
     - The BLOCK component must be associated with either a `FRAME` or `GROUP`.
     - The ISOLINE write component must be associated with a `RAY` component.
-    - The NGRID and NESTOUT components must be defined together.
+    - For nested grids, use the `nests` field which accepts a list of NEST components.
+      Each NEST automatically couples NGRID and NESTOUT with matching snames.
+    - Legacy `ngrid` and `nestout` fields are deprecated. Use `nests` instead for
+      single or multiple nested grid definitions.
 
     Examples
     --------
@@ -539,13 +550,23 @@ class OUTPUT(BaseGroupComponent):
     ray: Optional[RAY_TYPE] = Field(default=None)
     isoline: Optional[ISOLINE_TYPE] = Field(default=None)
     points: Optional[POINTS_TYPE] = Field(default=None)
-    ngrid: Optional[NGRID_TYPE] = Field(default=None)
+    nests: Optional[list[NEST_TYPE]] = Field(
+        default=None,
+        description="List of nested grid definitions (each couples NGRID + NESTOUT)",
+    )
+    ngrid: Optional[NGRID_TYPE] = Field(
+        default=None,
+        deprecated="Use 'nests' field instead for single or multiple nested grids",
+    )
     quantity: Optional[QUANTITY_TYPE] = Field(default=None)
     output_options: Optional[OUTOPT_TYPE] = Field(default=None)
     block: Optional[BLOCK_TYPE] = Field(default=None)
     table: Optional[TABLE_TYPE] = Field(default=None)
     specout: Optional[SPECOUT_TYPE] = Field(default=None)
-    nestout: Optional[NESTOUT_TYPE] = Field(default=None)
+    nestout: Optional[NESTOUT_TYPE] = Field(
+        default=None,
+        deprecated="Use 'nests' field instead for single or multiple nested grids",
+    )
     test: Optional[TEST_TYPE] = Field(default=None)
     _location_fields: list = ["frame", "group", "curve", "isoline", "points", "ngrid"]
     _write_fields: list = ["block", "table", "specout", "nestout"]
@@ -619,21 +640,57 @@ class OUTPUT(BaseGroupComponent):
 
     @model_validator(mode="after")
     def ngrid_and_nestout(self) -> "OUTPUT":
-        """Ensure NGRID and NESTOUT are specified together."""
-        if self.ngrid is not None and self.nestout is None:
-            raise ValueError(
-                "NGRID component specified but no NESTOUT component has been defined"
-            )
-        elif self.ngrid is None and self.nestout is not None:
-            raise ValueError(
-                "NESTOUT component specified but no NGRID component has been defined"
-            )
-        elif self.ngrid is not None and self.nestout is not None:
-            if self.ngrid.sname != self.nestout.sname:
+        """Ensure NGRID and NESTOUT are specified together, or convert to nests."""
+        # Handle legacy ngrid/nestout fields by converting to nests
+        if self.ngrid is not None or self.nestout is not None:
+            if self.nests is not None:
                 raise ValueError(
-                    f"NGRID sname='{self.ngrid.sname}' does not match "
-                    f"the NESTOUT sname='{self.nestout.sname}'"
+                    "Cannot specify both 'nests' and legacy 'ngrid'/'nestout' fields. "
+                    "Please use only 'nests' for new configurations."
                 )
+
+            if self.ngrid is not None and self.nestout is None:
+                raise ValueError(
+                    "NGRID component specified but no NESTOUT component has been defined"
+                )
+            elif self.ngrid is None and self.nestout is not None:
+                raise ValueError(
+                    "NESTOUT component specified but no NGRID component has been defined"
+                )
+            elif self.ngrid is not None and self.nestout is not None:
+                if self.ngrid.sname != self.nestout.sname:
+                    raise ValueError(
+                        f"NGRID sname='{self.ngrid.sname}' does not match "
+                        f"the NESTOUT sname='{self.nestout.sname}'"
+                    )
+                # Auto-convert to nests format with deprecation warning
+                logger.warning(
+                    "Using deprecated 'ngrid' and 'nestout' fields. "
+                    "Please migrate to using 'nests' field for better support of multiple nests."
+                )
+                # Create a NEST object from the legacy fields
+
+                self.nests = [
+                    NEST(
+                        sname=self.ngrid.sname,
+                        ngrid=self.ngrid,
+                        nestout=self.nestout,
+                    )
+                ]
+                # Clear old fields after conversion to avoid validation conflicts
+                self.ngrid = None
+                self.nestout = None
+
+        # Validate nests list if specified
+        if self.nests is not None:
+            snames = [nest.sname for nest in self.nests]
+            duplicates = {x for x in snames if snames.count(x) > 1}
+            if duplicates:
+                raise ValueError(
+                    f"Duplicate nest snames found: {duplicates}. "
+                    "Each nest must have a unique sname."
+                )
+
         return self
 
     @property
@@ -688,8 +745,9 @@ class OUTPUT(BaseGroupComponent):
             repr += [f"{self.isoline.cmd()}"]
         if self.points is not None:
             repr += [f"{self.points.cmd()}"]
-        if self.ngrid is not None:
-            repr += [f"{self.ngrid.cmd()}"]
+        if self.nests is not None:
+            for nest in self.nests:
+                repr += nest.cmd()
         if self.quantity is not None:
             # Component renders a list
             repr += self.quantity.cmd()
@@ -706,8 +764,6 @@ class OUTPUT(BaseGroupComponent):
             repr += [f"{self.table.cmd()}"]
         if self.specout is not None:
             repr += [f"{self.specout.cmd()}"]
-        if self.nestout is not None:
-            repr += [f"{self.nestout.cmd()}"]
         if self.test is not None:
             repr += [f"{self.test.cmd()}"]
         return repr

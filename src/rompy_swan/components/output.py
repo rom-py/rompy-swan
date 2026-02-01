@@ -1534,6 +1534,99 @@ class NESTOUT(BaseWrite):
 
 
 # =====================================================================================
+# Nested grid component (couples NGRID and NESTOUT)
+# =====================================================================================
+class NEST(BaseComponent):
+    """Coupled NGRID and NESTOUT component for nested runs.
+
+    .. code-block:: text
+
+        NGRID 'sname' ...
+        NESTOUT 'sname' ...
+
+    This component couples together an NGRID location definition with its corresponding
+    NESTOUT write command. This ensures that nested grid outputs are properly paired
+    and allows multiple nested grids to be defined in a single model configuration.
+
+    Note
+    ----
+    The `sname` field is automatically assigned to both the NGRID and NESTOUT
+    components to ensure they are properly linked.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy_swan.components.output import NEST
+        nest = NEST(
+            sname="child1",
+            ngrid=dict(
+                model_type="ngrid",
+                grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
+            ),
+            nestout=dict(
+                fname="nestout_child1.swn",
+                times=dict(tfmt=1, dfmt="hr"),
+            ),
+        )
+        print(nest.render())
+
+    """
+
+    model_type: Literal["nest", "NEST"] = Field(
+        default="nest", description="Model type discriminator"
+    )
+    sname: str = Field(
+        description="Name of the nested grid (used for both NGRID and NESTOUT)",
+        max_length=8,
+    )
+    ngrid: Union[NGRID, NGRID_UNSTRUCTURED] = Field(
+        description="NGRID location component defining the nested grid boundary",
+        discriminator="model_type",
+    )
+    nestout: NESTOUT = Field(
+        description="NESTOUT write component for the nested grid boundary spectra"
+    )
+
+    @field_validator("sname")
+    @classmethod
+    def not_special_name(cls, sname: str) -> str:
+        """Ensure sname is not defined as one of the special names."""
+        for name in SPECIAL_NAMES:
+            if sname.upper().startswith(name):
+                raise ValueError(f"sname {sname} is a special name and cannot be used")
+        return sname
+
+    @model_validator(mode="before")
+    @classmethod
+    def populate_snames(cls, data: dict) -> dict:
+        """Populate sname in ngrid and nestout if passed as dicts."""
+        if isinstance(data, dict) and "sname" in data:
+            sname = data["sname"]
+            # If ngrid is a dict and doesn't have sname, add it
+            if isinstance(data.get("ngrid"), dict) and "sname" not in data["ngrid"]:
+                data["ngrid"]["sname"] = sname
+            # If nestout is a dict and doesn't have sname, add it
+            if isinstance(data.get("nestout"), dict) and "sname" not in data["nestout"]:
+                data["nestout"]["sname"] = sname
+        return data
+
+    @model_validator(mode="after")
+    def sync_snames(self) -> "NEST":
+        """Synchronize sname across NGRID and NESTOUT components."""
+        # Update the ngrid and nestout snames to match the parent NEST sname
+        self.ngrid.sname = self.sname
+        self.nestout.sname = self.sname
+        return self
+
+    def cmd(self) -> list:
+        """Command file strings for this component."""
+        return [self.ngrid.cmd(), self.nestout.cmd()]
+
+
+# =====================================================================================
 # Write or plot intermediate results
 # =====================================================================================
 class TEST(BaseComponent):
