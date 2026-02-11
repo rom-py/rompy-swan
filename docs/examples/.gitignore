@@ -1,0 +1,5 @@
+# Notebooks are fetched from rompy-notebooks during CI build
+# For local development, run: ./scripts/fetch_notebooks.sh
+*.ipynb
+*.yml
+!index.md

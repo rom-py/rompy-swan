@@ -122,22 +122,28 @@ class OutputInterface(TimeInterface):
 
     @model_validator(mode="after")
     def time_interface(self) -> "OutputInterface":
-        """Set the time parameter for all WRITE components."""
+        """Set the time parameter for all WRITE components.
+
+        Note
+        ----
+        * tbeg is set to the Config runtime start
+        * delt is set from the component's times if defined, otherwise from the runtime interval
+        * tfmt is set from the component's times if defined, otherwise from TimeRange default
+        * dfmt is set from the component's times if defined, otherwise from TimeRange default
+        * suffix is set to the suffix of the component
+
+        """
         for component in self.group._write_fields:
             obj = getattr(self.group, component)
             if obj is not None:
                 times = obj.times or TimeRangeOpen()
-                obj.times = self._timerange(times.tfmt, times.dfmt, obj.suffix)
-
-    def _timerange(self, tfmt: int, dfmt: str, suffix: str) -> TimeRangeOpen:
-        """Convert generic TimeRange into the Swan TimeRangeOpen subcomponent."""
-        return TimeRangeOpen(
-            tbeg=self.period.start,
-            delt=self.period.interval,
-            tfmt=tfmt,
-            dfmt=dfmt,
-            suffix=suffix,
-        )
+                obj.times = TimeRangeOpen(
+                    tbeg=self.period.start,
+                    delt=times.delt if obj.times else self.period.interval,
+                    tfmt=times.tfmt,
+                    dfmt=times.dfmt,
+                    suffix=obj.suffix,
+                )
 
 
 class LockupInterface(TimeInterface):

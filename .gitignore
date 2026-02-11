@@ -125,6 +125,9 @@ venv.bak/
 # mkdocs documentation
 /site
 
+# Cloned notebooks repo for local docs development
+.rompy-notebooks/
+
 # mypy
 .mypy_cache/
 .dmypy.json
