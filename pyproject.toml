@@ -28,8 +28,8 @@ classifiers = [
 license = {text = "Apache Software License 2.0"}
 requires-python = ">=3.10"
 dependencies = [
-    "rompy>=0.6",
-    "pydantic>2",
+    "rompy",
+    "pydantic-numpy",
 ]
 
 dynamic = ["version"]
