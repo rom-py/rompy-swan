@@ -1,0 +1,7 @@
+autodoc_pydantic
+ipython
+nbsphinx
+pydata_sphinx_theme
+sphinx
+sphinx-collections
+rompy
