@@ -38,12 +38,25 @@ from rompy_swan.components.output import (
     TEST,
     BaseLocation,
 )
+from datetime import timedelta
+
+from rompy.core.time import TimeRange
+from rompy_swan.interface import OutputInterface
 from rompy_swan.subcomponents.time import TimeRangeOpen
 
 
 @pytest.fixture(scope="module")
 def times():
     yield TimeRangeOpen(tbeg="1990-01-01T00:00:00", delt="PT1H", tfmt=1, dfmt="hr")
+
+
+@pytest.fixture(scope="module")
+def period():
+    yield TimeRange(
+        start="1990-01-01T00:00:00",
+        end="1990-01-01T06:00:00",
+        interval="PT1H",
+    )
 
 
 @pytest.fixture(scope="module")
@@ -539,3 +552,33 @@ def test_output_nests_unique_snames(times):
                 ),
             ],
         )
+
+
+# =====================================================================================
+# OutputInterface time injection tests for nests
+# =====================================================================================
+
+
+def test_output_interface_injects_period_into_nest(nest, period):
+    """OutputInterface must set tbeg and delt on nestout from the runtime period."""
+    output = OUTPUT(nests=[nest])
+    result = OutputInterface(group=output, period=period).group
+    nestout_times = result.nests[0].nestout.times
+    assert nestout_times.tbeg == period.start
+    assert nestout_times.delt == period.interval
+
+
+def test_output_interface_respects_custom_nest_delt(period):
+    """A custom delt on nestout must not be overridden by the runtime interval."""
+    custom_delt = timedelta(minutes=30)
+    nest = NEST(
+        sname="child1",
+        ngrid=dict(
+            model_type="ngrid",
+            grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
+        ),
+        nestout=dict(fname="nestout.swn", times=dict(delt=custom_delt, tfmt=1, dfmt="min")),
+    )
+    output = OUTPUT(nests=[nest])
+    result = OutputInterface(group=output, period=period).group
+    assert result.nests[0].nestout.times.delt == custom_delt
