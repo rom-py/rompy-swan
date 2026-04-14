@@ -6,7 +6,6 @@ from rompy.model import ModelRun
 from rompy.run.docker import DockerRunBackend
 
 
-@pytest.mark.slow
 def test_swan_container_basic_config(
     tmp_path, docker_available, should_skip_docker_builds
 ):

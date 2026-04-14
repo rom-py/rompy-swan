@@ -383,41 +383,6 @@ def test_output_group_all_set(
     ray,
     isoline,
     points,
-    ngrid,
-    quantities,
-    output_options,
-    block,
-    table,
-    specout,
-    nestout,
-):
-    """Test OUTPUT with all components using legacy ngrid/nestout fields."""
-    output = OUTPUT(
-        frame=frame,
-        group=group,
-        curve=curves,
-        ray=ray,
-        isoline=isoline,
-        points=points,
-        ngrid=ngrid,
-        quantity=quantities,
-        output_options=output_options,
-        block=block,
-        table=table,
-        specout=specout,
-        nestout=nestout,
-    )
-    print("")
-    print(output.render())
-
-
-def test_output_group_all_set_with_nests(
-    frame,
-    group,
-    curves,
-    ray,
-    isoline,
-    points,
     nest,
     quantities,
     output_options,
@@ -425,7 +390,7 @@ def test_output_group_all_set_with_nests(
     table,
     specout,
 ):
-    """Test OUTPUT with all components using new nests field."""
+    """Test OUTPUT group with all components using the nests field."""
     output = OUTPUT(
         frame=frame,
         group=group,
@@ -443,7 +408,6 @@ def test_output_group_all_set_with_nests(
     rendered = output.render()
     print("")
     print(rendered)
-    # Verify nest is rendered
     assert "NGRID sname='child1'" in rendered
     assert "NESTOUT sname='child1'" in rendered
 
@@ -483,16 +447,16 @@ def test_output_ray_rname_matches_isoline_rname(isoline, ray):
         OUTPUT(isoline=isoline, ray=ray)
 
 
-def test_output_ngrid_nestout_defined(ngrid, nestout):
-    with pytest.raises(ValidationError):
-        OUTPUT(ngrid=ngrid)
-        OUTPUT(nestout=nestout)
+def test_output_legacy_ngrid_nestout_deprecated(ngrid, nestout):
+    """Legacy ngrid/nestout fields should still work but emit a deprecation warning."""
+    import warnings
 
-
-def test_output_sname_ngrid_nestout_match(ngrid, nestout):
-    ngrid.sname = "dummy"
-    with pytest.raises(ValidationError):
-        OUTPUT(ngrid=ngrid, nestout=nestout)
+    with warnings.catch_warnings(record=True) as caught:
+        warnings.simplefilter("always")
+        output = OUTPUT(ngrid=ngrid, nestout=nestout)
+        assert output.nests is not None
+        deprecation_warnings = [w for w in caught if issubclass(w.category, DeprecationWarning)]
+        assert deprecation_warnings, "Expected a DeprecationWarning for legacy ngrid/nestout usage"
 
 
 # =====================================================================================
