@@ -1,4 +1,5 @@
 site_name: rompy-swan
+site_description: Python interface for the SWAN spectral wave model
 site_url: https://rom-py.github.io/rompy-swan/
 repo_url: https://github.com/rom-py/rompy-swan
 repo_name: rom-py/rompy-swan
@@ -6,34 +7,59 @@ edit_uri: edit/main/docs/
 
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Usage: usage.md
-  - Contributing: contributing.md
-  - Types: types.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quickstart: getting-started/quickstart.md
+  - Concepts:
+      - Architecture: user-guide/architecture.md
+      - Configuration: user-guide/configuration.md
   - Components:
-    - Startup: components/startup.md
-    - Numerics: components/numerics.md
-    - Output: components/output.md
-    - Lockup: components/lockup.md
-    - Group: components/group.md
-    - Boundary: components/boundary.md
-    - CGRID: components/cgrid.md
-    - INPGRID: components/inpgrid.md
-    - Physics: components/physics.md
+      - Overview: components/index.md
+      - CGRID: components/cgrid.md
+      - Startup: components/startup.md
+      - INPGRID: components/inpgrid.md
+      - Boundary: components/boundary.md
+      - Physics: components/physics.md
+      - Numerics: components/numerics.md
+      - Output: components/output.md
+      - Lockup: components/lockup.md
+      - Group: components/group.md
   - Subcomponents:
-    - Base: subcomponents/base.md
-    - Startup: subcomponents/startup.md
-    - Spectrum: subcomponents/spectrum.md
-    - Time: subcomponents/time.md
-    - CGRID: subcomponents/cgrid.md
-    - READGRID: subcomponents/readgrid.md
-    - Boundary: subcomponents/boundary.md
-    - Physics: subcomponents/physics.md
-    - Numerics: subcomponents/numerics.md
-    - Output: subcomponents/output.md
+      - Base: subcomponents/base.md
+      - Startup: subcomponents/startup.md
+      - Spectrum: subcomponents/spectrum.md
+      - Time: subcomponents/time.md
+      - CGRID: subcomponents/cgrid.md
+      - READGRID: subcomponents/readgrid.md
+      - Boundary: subcomponents/boundary.md
+      - Physics: subcomponents/physics.md
+      - Numerics: subcomponents/numerics.md
+      - Output: subcomponents/output.md
+  - Data Interfaces:
+      - Overview: data-interfaces/index.md
+  - Examples:
+      - examples/index.md
+      - Declarative Configuration: examples/example_declarative.ipynb
+      - Procedural Configuration: examples/example_procedural.ipynb
+      - Sensitivity Analysis: examples/example_sensitivity.ipynb
+      - Boundary:
+          - BOUNDSPEC Side: examples/boundary/boundspec_side.ipynb
+          - BOUNDSPEC Segment: examples/boundary/boundspec_segment.ipynb
+          - BOUNDNEST1: examples/boundary/boundnest1.ipynb
+      - Components:
+          - Output: examples/components/output.ipynb
+          - CGRID: examples/components/cgrid.ipynb
+          - Startup: examples/components/startup.ipynb
+          - Physics: examples/components/physics.ipynb
+          - Numerics: examples/components/numerics.ipynb
+          - INPGRID: examples/components/inpgrid.ipynb
   - API Reference:
-    - Config: reference/config.md
-    - Types: reference/types.md
+      - Config: api-reference/config.md
+      - Components: api-reference/components.md
+      - Data: api-reference/data.md
+      - Types: api-reference/types.md
+  - Developer:
+      - Contributing: developer/contributing.md
 
 theme:
   name: material
@@ -55,16 +81,23 @@ theme:
   features:
     - navigation.tabs
     - navigation.sections
-    - toc.integrate
+    - navigation.expand
     - navigation.top
+    - navigation.indexes
+    - toc.follow
     - search.suggest
     - search.highlight
     - content.tabs.link
-    - content.code.annotation
+    - content.code.annotate
     - content.code.copy
+  icon:
+    repo: fontawesome/brands/github
 
 plugins:
   - search
+  - mkdocs-jupyter:
+      include_source: true
+      execute: false
   - mkdocstrings:
       handlers:
         python:
@@ -94,6 +127,8 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
   - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.critic
   - pymdownx.caret
   - pymdownx.keys
@@ -101,3 +136,15 @@ markdown_extensions:
   - pymdownx.tilde
   - attr_list
   - md_in_html
+  - admonition
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/rom-py/rompy-swan

@@ -1,4 +1,8 @@
-# Enum Types
+# Types API
+
+SWAN types provide valid values for specific SWAN command line arguments.
+
+## Enum Types
 
 ::: rompy_swan.types.IDLA
 ::: rompy_swan.types.GridOptions
