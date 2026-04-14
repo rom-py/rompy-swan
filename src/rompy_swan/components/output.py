@@ -23,6 +23,8 @@ logger = get_logger(__name__)
 
 SPECIAL_NAMES = ["BOTTGRID", "COMPGRID", "BOUNDARY", "BOUND_"]
 
+SNAME_TYPE = Annotated[str, Field(min_length=1, max_length=8)]
+
 
 # =====================================================================================
 # Locations
@@ -59,9 +61,8 @@ class BaseLocation(BaseComponent, ABC):
         default="locations",
         description="Model type discriminator",
     )
-    sname: str = Field(
+    sname: SNAME_TYPE = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=8,
     )
 
     @field_validator("sname")
@@ -664,6 +665,13 @@ class NGRID(BaseLocation):
     model_type: Literal["ngrid", "NGRID"] = Field(
         default="ngrid", description="Model type discriminator"
     )
+    sname: SNAME_TYPE = Field(
+        default="nest",
+        description=(
+            "Name of the NGRID output component, "
+            "overridden by the parent NEST component if used within one"
+        ),
+    )
     grid: GRIDREGULAR = Field(description="NGRID grid definition")
 
     @field_validator("grid")
@@ -713,6 +721,10 @@ class NGRID_UNSTRUCTURED(BaseLocation):
 
     model_type: Literal["ngrid_unstructured", "NGRID_UNSTRUCTURED"] = Field(
         default="ngrid_unstructured", description="Model type discriminator"
+    )
+    sname: SNAME_TYPE = Field(
+        default="nest",
+        description="Name of the NGRID output component, overridden by the parent NEST component if used within one",
     )
     kind: Optional[Literal["triangle", "easymesh"]] = Field(
         default="triangle",
@@ -1107,11 +1119,10 @@ class BaseWrite(BaseComponent, ABC):
         default="write",
         description="Model type discriminator",
     )
-    sname: str = Field(
+    sname: SNAME_TYPE = Field(
         description=(
             "Name of the set of output locations in which the output is to be written"
         ),
-        max_length=8,
     )
     fname: str = Field(
         description=(
@@ -1520,6 +1531,13 @@ class NESTOUT(BaseWrite):
     model_type: Literal["nestout", "NESTOUT"] = Field(
         default="nestout", description="Model type discriminator"
     )
+    sname: SNAME_TYPE = Field(
+        default="nest",
+        description=(
+            "Name of the NESTOUT output component, "
+            "overridden by the parent NEST component if used within one"
+        ),
+    )
 
     @property
     def suffix(self) -> str:
@@ -1578,9 +1596,8 @@ class NEST(BaseComponent):
     model_type: Literal["nest", "NEST"] = Field(
         default="nest", description="Model type discriminator"
     )
-    sname: str = Field(
+    sname: SNAME_TYPE = Field(
         description="Name of the nested grid (used for both NGRID and NESTOUT)",
-        max_length=8,
     )
     ngrid: Union[NGRID, NGRID_UNSTRUCTURED] = Field(
         description="NGRID location component defining the nested grid boundary",
@@ -1599,24 +1616,13 @@ class NEST(BaseComponent):
                 raise ValueError(f"sname {sname} is a special name and cannot be used")
         return sname
 
-    @model_validator(mode="before")
-    @classmethod
-    def populate_snames(cls, data: dict) -> dict:
-        """Populate sname in ngrid and nestout if passed as dicts."""
-        if isinstance(data, dict) and "sname" in data:
-            sname = data["sname"]
-            # If ngrid is a dict and doesn't have sname, add it
-            if isinstance(data.get("ngrid"), dict) and "sname" not in data["ngrid"]:
-                data["ngrid"]["sname"] = sname
-            # If nestout is a dict and doesn't have sname, add it
-            if isinstance(data.get("nestout"), dict) and "sname" not in data["nestout"]:
-                data["nestout"]["sname"] = sname
-        return data
-
     @model_validator(mode="after")
-    def sync_snames(self) -> "NEST":
-        """Synchronize sname across NGRID and NESTOUT components."""
-        # Update the ngrid and nestout snames to match the parent NEST sname
+    def set_sname(self) -> "NEST":
+        """Ensure consistent sname across components."""
+        if self.ngrid.sname != "nest":
+            logger.warning(f"NEST overriding NGRID sname: '{self.ngrid.sname}' -> '{self.sname}'")
+        if self.nestout.sname != "nest":
+            logger.warning(f"NEST overriding NESTOUT sname: '{self.nestout.sname}' -> '{self.sname}'")
         self.ngrid.sname = self.sname
         self.nestout.sname = self.sname
         return self
