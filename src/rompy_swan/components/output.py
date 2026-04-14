@@ -1617,12 +1617,17 @@ class NEST(BaseComponent):
         return sname
 
     @model_validator(mode="after")
-    def set_sname(self) -> "NEST":
-        """Ensure consistent sname across components."""
+    def warn_sname_override(self) -> "NEST":
+        """Warn if the user explicitly set a different sname on child components."""
         if self.ngrid.sname != "nest":
             logger.warning(f"NEST overriding NGRID sname: '{self.ngrid.sname}' -> '{self.sname}'")
         if self.nestout.sname != "nest":
             logger.warning(f"NEST overriding NESTOUT sname: '{self.nestout.sname}' -> '{self.sname}'")
+        return self
+
+    @model_validator(mode="after")
+    def set_sname(self) -> "NEST":
+        """Set sname on child components from the parent NEST sname."""
         self.ngrid.sname = self.sname
         self.nestout.sname = self.sname
         return self

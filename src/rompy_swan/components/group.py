@@ -639,58 +639,54 @@ class OUTPUT(BaseGroupComponent):
         return self
 
     @model_validator(mode="after")
-    def nest_or_ngrid_and_nestout(self) -> "OUTPUT":
-        """Ensure NGRID and NESTOUT are specified together, or convert to nests."""
-        # Handle legacy ngrid/nestout fields by converting to nests
-        if self.ngrid is not None or self.nestout is not None:
-            if self.nests is not None:
-                raise ValueError(
-                    "Cannot specify both 'nests' and legacy 'ngrid'/'nestout' fields. "
-                    "Please use only 'nests' for new configurations."
-                )
+    def migrate_legacy_ngrid_nestout(self) -> "OUTPUT":
+        """Convert deprecated ngrid/nestout fields to nests.
 
-            if self.ngrid is not None and self.nestout is None:
-                raise ValueError(
-                    "NGRID component specified but no NESTOUT component has been defined"
-                )
-            elif self.ngrid is None and self.nestout is not None:
-                raise ValueError(
-                    "NESTOUT component specified but no NGRID component has been defined"
-                )
-            elif self.ngrid is not None and self.nestout is not None:
-                if self.ngrid.sname != self.nestout.sname:
-                    raise ValueError(
-                        f"NGRID sname='{self.ngrid.sname}' does not match "
-                        f"the NESTOUT sname='{self.nestout.sname}'"
-                    )
-                # Auto-convert to nests format with deprecation warning
-                logger.warning(
-                    "Using deprecated 'ngrid' and 'nestout' fields. "
-                    "Please migrate to using 'nests' field for better support of multiple nests."
-                )
-                # Create a NEST object from the legacy fields
-
-                self.nests = [
-                    NEST(
-                        sname=self.ngrid.sname,
-                        ngrid=self.ngrid,
-                        nestout=self.nestout,
-                    )
-                ]
-                # Clear old fields after conversion to avoid validation conflicts
-                self.ngrid = None
-                self.nestout = None
-
-        # Validate nests list if specified
+        .. deprecated::
+            Use the `nests` field instead. This validator will be removed in a future
+            version once the legacy `ngrid` and `nestout` fields are dropped.
+        """
+        if self.ngrid is None and self.nestout is None:
+            return self
         if self.nests is not None:
-            snames = [nest.sname for nest in self.nests]
-            duplicates = {x for x in snames if snames.count(x) > 1}
-            if duplicates:
-                raise ValueError(
-                    f"Duplicate nest snames found: {duplicates}. "
-                    "Each nest must have a unique sname."
-                )
+            raise ValueError(
+                "Cannot specify both 'nests' and legacy 'ngrid'/'nestout' fields. "
+                "Please use only 'nests' for new configurations."
+            )
+        if self.ngrid is not None and self.nestout is None:
+            raise ValueError(
+                "NGRID component specified but no NESTOUT component has been defined"
+            )
+        if self.ngrid is None and self.nestout is not None:
+            raise ValueError(
+                "NESTOUT component specified but no NGRID component has been defined"
+            )
+        if self.ngrid.sname != self.nestout.sname:
+            raise ValueError(
+                f"NGRID sname='{self.ngrid.sname}' does not match "
+                f"the NESTOUT sname='{self.nestout.sname}'"
+            )
+        logger.warning(
+            "Using deprecated 'ngrid' and 'nestout' fields. "
+            "Please migrate to using 'nests' field for better support of multiple nests."
+        )
+        self.nests = [NEST(sname=self.ngrid.sname, ngrid=self.ngrid, nestout=self.nestout)]
+        self.ngrid = None
+        self.nestout = None
+        return self
 
+    @model_validator(mode="after")
+    def nests_snames_unique(self) -> "OUTPUT":
+        """Ensure each nest has a unique sname."""
+        if self.nests is None:
+            return self
+        snames = [nest.sname for nest in self.nests]
+        duplicates = {x for x in snames if snames.count(x) > 1}
+        if duplicates:
+            raise ValueError(
+                f"Duplicate nest snames found: {duplicates}. "
+                "Each nest must have a unique sname."
+            )
         return self
 
     @property
