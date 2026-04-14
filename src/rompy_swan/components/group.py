@@ -639,7 +639,7 @@ class OUTPUT(BaseGroupComponent):
         return self
 
     @model_validator(mode="after")
-    def ngrid_and_nestout(self) -> "OUTPUT":
+    def nest_or_ngrid_and_nestout(self) -> "OUTPUT":
         """Ensure NGRID and NESTOUT are specified together, or convert to nests."""
         # Handle legacy ngrid/nestout fields by converting to nests
         if self.ngrid is not None or self.nestout is not None:
