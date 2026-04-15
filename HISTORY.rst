@@ -33,6 +33,32 @@ are continually evolving. Contributions and feedback are welcome!
 Releases
 ********
 
+0.10.0 (2026-04-15)
+____________________
+
+New Features
+------------
+* Added ``NEST`` component that couples ``NGRID`` and ``NESTOUT`` under a single ``sname``, enabling multiple nested grids to be defined via the ``nests`` field in the ``OUTPUT`` group (`#13 <https://github.com/rom-py/rompy-swan/pull/13>`_). Thanks to `@MireyaMMO <https://github.com/MireyaMMO>`_ for her first contribution!
+* The ``OutputInterface`` now injects run-period times into ``NESTOUT`` components within ``NEST`` objects, consistent with other write components.
+
+Deprecations
+------------
+* Defining ``NGRID`` and ``NESTOUT`` individually in the ``OUTPUT`` group is deprecated. Use the ``NEST`` component and the ``nests`` field instead. Legacy fields are still accepted and automatically migrated, but will be removed in a future version.
+
+
+0.9.0 (2026-02-10)
+___________________
+
+New Features
+------------
+* Added support for controlling the output time interval independently of the run interval via the ``times`` field in write components (``BLOCK``, ``TABLE``, ``SPECOUT``).
+
+Internal Changes
+----------------
+* Redesigned documentation with MkDocs, including new examples section and time control guide.
+* Added ``pydantic-numpy`` as an explicit dependency (no longer bundled with ``rompy``).
+
+
 0.8.0 (2026-01-13)
 ___________________
 
