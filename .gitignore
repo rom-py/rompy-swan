@@ -168,3 +168,6 @@ task-*.md
 # Tests data
 tests/data/
 tests/schism/test_data/
+
+# Claude
+CLAUDE.md
