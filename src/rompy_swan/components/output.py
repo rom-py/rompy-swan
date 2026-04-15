@@ -23,6 +23,8 @@ logger = get_logger(__name__)
 
 SPECIAL_NAMES = ["BOTTGRID", "COMPGRID", "BOUNDARY", "BOUND_"]
 
+SNAME_TYPE = Annotated[str, Field(min_length=1, max_length=8)]
+
 
 # =====================================================================================
 # Locations
@@ -59,9 +61,8 @@ class BaseLocation(BaseComponent, ABC):
         default="locations",
         description="Model type discriminator",
     )
-    sname: str = Field(
+    sname: SNAME_TYPE = Field(
         description="Name of the set of output locations defined by this command",
-        max_length=8,
     )
 
     @field_validator("sname")
@@ -664,6 +665,13 @@ class NGRID(BaseLocation):
     model_type: Literal["ngrid", "NGRID"] = Field(
         default="ngrid", description="Model type discriminator"
     )
+    sname: SNAME_TYPE = Field(
+        default="nest",
+        description=(
+            "Name of the NGRID output component, "
+            "overridden by the parent NEST component if used within one"
+        ),
+    )
     grid: GRIDREGULAR = Field(description="NGRID grid definition")
 
     @field_validator("grid")
@@ -713,6 +721,10 @@ class NGRID_UNSTRUCTURED(BaseLocation):
 
     model_type: Literal["ngrid_unstructured", "NGRID_UNSTRUCTURED"] = Field(
         default="ngrid_unstructured", description="Model type discriminator"
+    )
+    sname: SNAME_TYPE = Field(
+        default="nest",
+        description="Name of the NGRID output component, overridden by the parent NEST component if used within one",
     )
     kind: Optional[Literal["triangle", "easymesh"]] = Field(
         default="triangle",
@@ -1107,11 +1119,10 @@ class BaseWrite(BaseComponent, ABC):
         default="write",
         description="Model type discriminator",
     )
-    sname: str = Field(
+    sname: SNAME_TYPE = Field(
         description=(
             "Name of the set of output locations in which the output is to be written"
         ),
-        max_length=8,
     )
     fname: str = Field(
         description=(
@@ -1520,6 +1531,13 @@ class NESTOUT(BaseWrite):
     model_type: Literal["nestout", "NESTOUT"] = Field(
         default="nestout", description="Model type discriminator"
     )
+    sname: SNAME_TYPE = Field(
+        default="nest",
+        description=(
+            "Name of the NESTOUT output component, "
+            "overridden by the parent NEST component if used within one"
+        ),
+    )
 
     @property
     def suffix(self) -> str:
@@ -1531,6 +1549,92 @@ class NESTOUT(BaseWrite):
         if self.times is not None:
             repr += f" OUTPUT {self.times.render()}"
         return repr
+
+
+# =====================================================================================
+# Nested grid component (couples NGRID and NESTOUT)
+# =====================================================================================
+class NEST(BaseComponent):
+    """Coupled NGRID and NESTOUT component for nested runs.
+
+    .. code-block:: text
+
+        NGRID 'sname' ...
+        NESTOUT 'sname' ...
+
+    This component couples together an NGRID location definition with its corresponding
+    NESTOUT write command. This ensures that nested grid outputs are properly paired
+    and allows multiple nested grids to be defined in a single model configuration.
+
+    Note
+    ----
+    The `sname` field is automatically assigned to both the NGRID and NESTOUT
+    components to ensure they are properly linked.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy_swan.components.output import NEST
+        nest = NEST(
+            sname="child1",
+            ngrid=dict(
+                model_type="ngrid",
+                grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
+            ),
+            nestout=dict(
+                fname="nestout_child1.swn",
+                times=dict(tfmt=1, dfmt="hr"),
+            ),
+        )
+        print(nest.render())
+
+    """
+
+    model_type: Literal["nest", "NEST"] = Field(
+        default="nest", description="Model type discriminator"
+    )
+    sname: SNAME_TYPE = Field(
+        description="Name of the nested grid (used for both NGRID and NESTOUT)",
+    )
+    ngrid: Union[NGRID, NGRID_UNSTRUCTURED] = Field(
+        description="NGRID location component defining the nested grid boundary",
+        discriminator="model_type",
+    )
+    nestout: NESTOUT = Field(
+        description="NESTOUT write component for the nested grid boundary spectra"
+    )
+
+    @field_validator("sname")
+    @classmethod
+    def not_special_name(cls, sname: str) -> str:
+        """Ensure sname is not defined as one of the special names."""
+        for name in SPECIAL_NAMES:
+            if sname.upper().startswith(name):
+                raise ValueError(f"sname {sname} is a special name and cannot be used")
+        return sname
+
+    @model_validator(mode="after")
+    def warn_sname_override(self) -> "NEST":
+        """Warn if the user explicitly set a different sname on child components."""
+        if self.ngrid.sname != "nest":
+            logger.warning(f"NEST overriding NGRID sname: '{self.ngrid.sname}' -> '{self.sname}'")
+        if self.nestout.sname != "nest":
+            logger.warning(f"NEST overriding NESTOUT sname: '{self.nestout.sname}' -> '{self.sname}'")
+        return self
+
+    @model_validator(mode="after")
+    def set_sname(self) -> "NEST":
+        """Set sname on child components from the parent NEST sname."""
+        self.ngrid.sname = self.sname
+        self.nestout.sname = self.sname
+        return self
+
+    def cmd(self) -> list:
+        """Command file strings for this component."""
+        return [self.ngrid.cmd(), self.nestout.cmd()]
 
 
 # =====================================================================================

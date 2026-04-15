@@ -8,7 +8,7 @@ Output commands define where and what SWAN writes as results. Output can be writ
     - **Write commands** — Specify output format and file names (BLOCK, TABLE, SPECOUT)
 
 !!! note "Time Control for Output Components"
-    When using the rompy API, output write commands (BLOCK, TABLE, SPECOUT, NESTOUT) have their start time (`tbeg`) set from the `ModelRun.period.start`. However, you can override the time interval (`delt`) and formatting (`tfmt`, `dfmt`) by specifying a `times` field in the component. If no `times` field is provided, the component uses the runtime interval.
+    When using the rompy API, output write commands (BLOCK, TABLE, SPECOUT, and NESTOUT within a NEST) have their start time (`tbeg`) set from the `ModelRun.period.start`. However, you can override the time interval (`delt`) and formatting (`tfmt`, `dfmt`) by specifying a `times` field in the component. If no `times` field is provided, the component uses the runtime interval.
     
     **Example:**
     ```python
@@ -37,6 +37,15 @@ Output commands define where and what SWAN writes as results. Output can be writ
 ::: rompy_swan.components.output.ISOLINE
 ::: rompy_swan.components.output.POINTS
 ::: rompy_swan.components.output.POINTS_FILE
+
+## Nested grids
+
+Use the `NEST` component to define nested grid output. It couples `NGRID` and `NESTOUT` together under a single `sname`, and can be used as a list in the `OUTPUT` group to support multiple nests.
+
+!!! warning "Deprecated"
+    Defining `NGRID` and `NESTOUT` individually in the `OUTPUT` group is deprecated. Use the `NEST` component and the `nests` field instead.
+
+::: rompy_swan.components.output.NEST
 ::: rompy_swan.components.output.NGRID
 ::: rompy_swan.components.output.NGRID_UNSTRUCTURED
 
@@ -52,5 +61,9 @@ Output commands define where and what SWAN writes as results. Output can be writ
 ::: rompy_swan.components.output.BLOCK
 ::: rompy_swan.components.output.TABLE
 ::: rompy_swan.components.output.SPECOUT
-::: rompy_swan.components.output.NESTOUT
 ::: rompy_swan.components.output.TEST
+
+!!! warning "Deprecated"
+    `NESTOUT` should no longer be used directly. Use the `NEST` component instead.
+
+::: rompy_swan.components.output.NESTOUT

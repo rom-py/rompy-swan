@@ -137,13 +137,24 @@ class OutputInterface(TimeInterface):
             obj = getattr(self.group, component)
             if obj is not None:
                 times = obj.times or TimeRangeOpen()
-                obj.times = TimeRangeOpen(
-                    tbeg=self.period.start,
-                    delt=times.delt if obj.times else self.period.interval,
-                    tfmt=times.tfmt,
-                    dfmt=times.dfmt,
-                    suffix=obj.suffix,
-                )
+                obj.times = self._timerange(times, obj.suffix)
+
+        # Handle nests separately
+        if self.group.nests is not None:
+            for nest in self.group.nests:
+                if nest.nestout is not None:
+                    times = nest.nestout.times or TimeRangeOpen()
+                    nest.nestout.times = self._timerange(times, nest.nestout.suffix)
+
+    def _timerange(self, times: TimeRangeOpen, suffix: str) -> TimeRangeOpen:
+        """Convert generic TimeRange into the Swan TimeRangeOpen subcomponent."""
+        return TimeRangeOpen(
+            tbeg=self.period.start,
+            delt=times.delt if times.delt is not None else self.period.interval,
+            tfmt=times.tfmt,
+            dfmt=times.dfmt,
+            suffix=suffix,
+        )
 
 
 class LockupInterface(TimeInterface):
