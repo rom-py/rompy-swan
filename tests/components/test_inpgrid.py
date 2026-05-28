@@ -12,10 +12,12 @@ logger = get_test_logger(__name__)
 from rompy_swan.components.group import INPGRIDS
 from rompy_swan.components.inpgrid import (
     CURVILINEAR,
+    ICE,
     INPGRID,
     READINP,
     REGULAR,
     UNSTRUCTURED,
+    WIND,
 )
 from rompy_swan.subcomponents.time import NONSTATIONARY
 from rompy_swan.types import GridOptions
@@ -153,3 +155,29 @@ def test_inpgrids_unique_var(nonstat, readinp):
 
     with pytest.raises(ValidationError):
         INPGRIDS(inpgrids=[bottom, wind])
+
+
+def test_wind_render():
+    wind = WIND(vel=10.0, dir=270.0)
+    rendered = wind.render()
+    assert "WIND" in rendered
+    assert "vel=10.0" in rendered
+    assert "dir=270.0" in rendered
+
+
+def test_ice_render():
+    ice = ICE(aice=0.5, hice=1.5)
+    rendered = ice.render()
+    assert "ICE" in rendered
+    assert "aice=0.5" in rendered
+    assert "hice=1.5" in rendered
+
+
+def test_inpgrids_wind_constant_deprecated():
+    with pytest.warns(DeprecationWarning, match="WIND.*deprecated"):
+        INPGRIDS(inpgrids=[WIND(vel=5.0, dir=180.0)])
+
+
+def test_inpgrids_ice_constant_deprecated():
+    with pytest.warns(DeprecationWarning, match="ICE.*deprecated"):
+        INPGRIDS(inpgrids=[ICE(aice=0.8, hice=2.0)])
