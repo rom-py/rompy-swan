@@ -168,6 +168,59 @@ class STARTUP(BaseGroupComponent):
 
 
 # =====================================================================================
+# Forcing
+# =====================================================================================
+class FORCING(BaseGroupComponent):
+    """SWAN constant forcing group component.
+
+    .. code-block:: text
+
+        WIND vel dir [cc]
+        ICE aice [hice]
+
+    This group component holds constant (non-gridded) forcing inputs. At most one
+    WIND and one ICE instance may be provided; use the INPGRID-based components for
+    spatially-varying inputs.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy_swan.components.group import FORCING
+        forcing = FORCING(wind=dict(vel=10.0, dir=270.0))
+        print(forcing.render())
+        forcing = FORCING(
+            wind=dict(vel=10.0, dir=270.0),
+            ice=dict(aice=0.5, hice=1.5),
+        )
+        print(forcing.render())
+
+    """
+
+    model_type: Literal["forcing", "FORCING"] = Field(
+        default="forcing", description="Model type discriminator"
+    )
+    wind: Optional[WIND] = Field(default=None, description="Constant wind forcing")
+    ice: Optional[ICE] = Field(default=None, description="Constant ice forcing")
+
+    @model_validator(mode="after")
+    def at_least_one(self) -> "FORCING":
+        if self.wind is None and self.ice is None:
+            raise ValueError("At least one of wind or ice must be specified")
+        return self
+
+    def cmd(self) -> str | list:
+        parts = []
+        if self.wind is not None:
+            parts.append(self.wind.cmd())
+        if self.ice is not None:
+            parts.append(self.ice.cmd())
+        return parts
+
+
+# =====================================================================================
 # Inpgrid
 # =====================================================================================
 INPGRID_TYPE = Annotated[

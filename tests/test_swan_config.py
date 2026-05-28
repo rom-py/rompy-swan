@@ -8,7 +8,7 @@ from test_utils.logging import get_test_logger
 logger = get_test_logger(__name__)
 
 from rompy_swan.components.cgrid import REGULAR as CGRID_REGULAR
-from rompy_swan.components.group import LOCKUP
+from rompy_swan.components.group import FORCING, LOCKUP
 from rompy_swan.components.inpgrid import ICE, WIND
 from rompy_swan.config import SwanConfig
 from rompy_swan.subcomponents.readgrid import GRIDREGULAR
@@ -38,41 +38,41 @@ def ice():
     return ICE(aice=0.5, hice=1.5)
 
 
-def test_forcing_wind(cgrid, wind):
-    config = SwanConfig(cgrid=cgrid, forcing=[wind])
-    assert len(config.forcing) == 1
-    assert isinstance(config.forcing[0], WIND)
-    assert config.forcing[0].vel == 10.0
-    assert config.forcing[0].dir == 270.0
+def test_forcing_wind_only(cgrid, wind):
+    config = SwanConfig(cgrid=cgrid, forcing=FORCING(wind=wind))
+    assert isinstance(config.forcing.wind, WIND)
+    assert config.forcing.wind.vel == 10.0
+    assert config.forcing.wind.dir == 270.0
+    assert config.forcing.ice is None
 
 
-def test_forcing_ice(cgrid, ice):
-    config = SwanConfig(cgrid=cgrid, forcing=[ice])
-    assert len(config.forcing) == 1
-    assert isinstance(config.forcing[0], ICE)
-    assert config.forcing[0].aice == 0.5
-    assert config.forcing[0].hice == 1.5
+def test_forcing_ice_only(cgrid, ice):
+    config = SwanConfig(cgrid=cgrid, forcing=FORCING(ice=ice))
+    assert isinstance(config.forcing.ice, ICE)
+    assert config.forcing.ice.aice == 0.5
+    assert config.forcing.ice.hice == 1.5
+    assert config.forcing.wind is None
 
 
-def test_forcing_multiple(cgrid, wind, ice):
-    config = SwanConfig(cgrid=cgrid, forcing=[wind, ice])
-    assert len(config.forcing) == 2
-    assert isinstance(config.forcing[0], WIND)
-    assert isinstance(config.forcing[1], ICE)
+def test_forcing_wind_and_ice(cgrid, wind, ice):
+    config = SwanConfig(cgrid=cgrid, forcing=FORCING(wind=wind, ice=ice))
+    assert isinstance(config.forcing.wind, WIND)
+    assert isinstance(config.forcing.ice, ICE)
+
+
+def test_forcing_requires_at_least_one(cgrid):
+    with pytest.raises(Exception):
+        SwanConfig(cgrid=cgrid, forcing=FORCING())
 
 
 def test_forcing_from_dict(cgrid):
     config = SwanConfig(
         cgrid=cgrid,
-        forcing=[
-            {"model_type": "wind", "vel": 15.0, "dir": 90.0},
-            {"model_type": "ice", "aice": 0.3, "hice": 1.0},
-        ],
+        forcing={"wind": {"vel": 15.0, "dir": 90.0}, "ice": {"aice": 0.3, "hice": 1.0}},
     )
-    assert len(config.forcing) == 2
-    assert isinstance(config.forcing[0], WIND)
-    assert config.forcing[0].vel == 15.0
-    assert isinstance(config.forcing[1], ICE)
+    assert isinstance(config.forcing.wind, WIND)
+    assert config.forcing.wind.vel == 15.0
+    assert isinstance(config.forcing.ice, ICE)
 
 
 def test_forcing_none_by_default(cgrid):
@@ -84,7 +84,7 @@ def test_forcing_render_in_call(cgrid, wind, lockup, tmpdir):
     """forcing items appear in the rendered INPUT file."""
     from rompy.model import ModelRun
 
-    config = SwanConfig(cgrid=cgrid, forcing=[wind], lockup=lockup)
+    config = SwanConfig(cgrid=cgrid, forcing=FORCING(wind=wind), lockup=lockup)
     model = ModelRun(
         run_id="test",
         period=dict(start="20230101T00", duration="12h", interval="1h"),
@@ -122,7 +122,7 @@ def test_forcing_and_inpgrid_coexist(cgrid, wind, lockup, tmpdir):
             )
         ]
     )
-    config = SwanConfig(cgrid=cgrid, inpgrid=inpgrid, forcing=[wind], lockup=lockup)
+    config = SwanConfig(cgrid=cgrid, inpgrid=inpgrid, forcing=FORCING(wind=wind), lockup=lockup)
     model = ModelRun(
         run_id="test",
         period=dict(start="20230101T00", duration="12h", interval="1h"),

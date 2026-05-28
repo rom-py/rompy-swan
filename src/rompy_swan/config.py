@@ -15,8 +15,7 @@ from rompy.core.config import BaseConfig
 from rompy.formatting import get_formatted_header_footer
 from rompy.logging import get_logger
 from rompy_swan.components import boundary, cgrid, numerics
-from rompy_swan.components.group import INPGRIDS, LOCKUP, OUTPUT, PHYSICS, STARTUP
-from rompy_swan.components.inpgrid import ICE, WIND
+from rompy_swan.components.group import FORCING, INPGRIDS, LOCKUP, OUTPUT, PHYSICS, STARTUP
 from rompy_swan.grid import SwanGrid
 from rompy_swan.interface import (
     BoundaryInterface,
@@ -47,10 +46,6 @@ CGRID_TYPES = Annotated[
 INPGRID_TYPES = Annotated[
     SerializeAsAny[Union[INPGRIDS, DataInterface]],
     Field(description="Input grid components", discriminator="model_type"),
-]
-FORCING_TYPE = Annotated[
-    SerializeAsAny[Union[WIND, ICE]],
-    Field(description="Constant forcing input component", discriminator="model_type"),
 ]
 BOUNDARY_TYPES = Annotated[
     Union[
@@ -155,7 +150,7 @@ class SwanConfig(BaseConfig):
     cgrid: CGRID_TYPES
     startup: Optional[STARTUP_TYPE] = Field(default=None)
     inpgrid: Optional[INPGRID_TYPES] = Field(default=None)
-    forcing: Optional[list[FORCING_TYPE]] = Field(default=None)
+    forcing: Optional[FORCING] = Field(default=None)
     boundary: Optional[BOUNDARY_TYPES] = Field(default=None)
     initial: Optional[INITIAL_TYPE] = Field(default=None)
     physics: Optional[PHYSICS_TYPE] = Field(default=None)
@@ -688,7 +683,7 @@ class SwanConfig(BaseConfig):
 
         if self.forcing:
             logger.debug("Rendering constant forcing configuration")
-            ret["forcing"] = "\n".join(item.render() for item in self.forcing)
+            ret["forcing"] = self.forcing.render()
 
         # inpgrid / boundary may use the Interface api so we need passing the args
         if self.inpgrid and isinstance(self.inpgrid, DataInterface):
