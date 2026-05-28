@@ -10,6 +10,7 @@ The `SwanConfig` class is the main entry point for configuring SWAN simulations.
         - cgrid
         - startup
         - inpgrid
+        - forcing
         - boundary
         - initial
         - physics

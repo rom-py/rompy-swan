@@ -137,7 +137,8 @@ physics:
 |-------|------|-------------|
 | `cgrid` | REGULAR, CURVILINEAR, UNSTRUCTURED | Computational grid (required) |
 | `startup` | STARTUP | Startup commands (PROJECT, SET, MODE, etc.) |
-| `inpgrid` | INPGRIDS, DataInterface | Input grids for bathymetry, wind, etc. |
+| `inpgrid` | INPGRIDS, DataInterface | Input grids for bathymetry, wind, currents, etc. |
+| `forcing` | FORCING | Constant (non-gridded) wind and/or ice forcing |
 | `boundary` | BOUNDSPEC, BOUNDNEST1-3, BoundaryInterface | Boundary conditions |
 | `initial` | INITIAL | Initial conditions |
 | `physics` | PHYSICS | Physics commands |
@@ -179,6 +180,44 @@ physics = PHYSICS(
     triad=True,  # Enable with defaults
 )
 ```
+
+### FORCING
+
+Prescribes constant (spatially uniform) wind and/or sea-ice forcing. Use this when you want to specify a single wind speed/direction or an ice fraction without providing a gridded file.
+
+```python
+from rompy_swan.components.group import FORCING
+from rompy_swan.components.inpgrid import WIND, ICE
+
+# Constant wind only
+forcing = FORCING(wind=WIND(vel=10.0, dir=270.0))
+
+# Constant ice only
+forcing = FORCING(ice=ICE(aice=0.5, hice=1.5))
+
+# Both wind and ice
+forcing = FORCING(
+    wind=WIND(vel=10.0, dir=270.0),
+    ice=ICE(aice=0.5, hice=1.5),
+)
+```
+
+YAML equivalent:
+
+```yaml
+forcing:
+  wind:
+    vel: 10.0
+    dir: 270.0
+  ice:
+    aice: 0.5
+    hice: 1.5
+```
+
+At least one of `wind` or `ice` must be supplied; specifying neither raises a `ValidationError`.
+
+!!! note
+    `FORCING` is for constant, uniform inputs. For time-varying or spatially varying wind/ice, use `inpgrid` with a `DataInterface` source instead.
 
 ### INPGRIDS
 
