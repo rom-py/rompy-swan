@@ -5,6 +5,7 @@ This module provides group components for organizing SWAN model configurations i
 """
 
 import logging
+import warnings
 from typing import Annotated, Literal, Optional, Union
 
 from pydantic import Field, field_validator, model_validator
@@ -250,6 +251,15 @@ class INPGRIDS(BaseGroupComponent):
         grid_types = [inp.grid_type for inp in inpgrids if hasattr(inp, "grid_type")]
         if len(grid_types) != len(set(grid_types)):
             raise ValueError("Each grid type must be unique")
+        constant_types = [inp for inp in inpgrids if isinstance(inp, (WIND, ICE))]
+        if constant_types:
+            names = ", ".join(type(c).__name__ for c in constant_types)
+            warnings.warn(
+                f"Specifying {names} inside INPGRIDS is deprecated. Use the "
+                "`SwanConfig.forcing` field instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         return inpgrids
 
     def cmd(self) -> str | list:
