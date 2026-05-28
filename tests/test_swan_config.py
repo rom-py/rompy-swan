@@ -1,4 +1,4 @@
-"""Tests for SwanConfig.forcing field."""
+"""Tests for SwanConfig validators."""
 
 import pytest
 
@@ -135,3 +135,80 @@ def test_forcing_and_inpgrid_coexist(cgrid, wind, lockup, tmpdir):
     content = input_file.read()
     assert "INPGRID BOTTOM" in content
     assert "WIND vel=10.0 dir=270.0" in content
+
+
+# ── SEGMENT IJ sentinel (-1) resolution ──────────────────────────────────────
+
+
+def test_segment_ij_sentinel_resolved(cgrid):
+    """BOUNDSPEC SEGMENT IJ: -1 is replaced by the cgrid max index (mx/my)."""
+    config = SwanConfig(
+        cgrid=cgrid,
+        boundary=dict(
+            model_type="boundspec",
+            location=dict(
+                model_type="segment",
+                points=dict(model_type="ij", i=[0, -1, -1], j=[-1, -1, 0]),
+            ),
+            data=dict(model_type="constantpar", hs=2.0, per=12.0, dir=270.0, dd=25.0),
+        ),
+    )
+    pts = config.boundary.location.points
+    mx = cgrid.grid.mx
+    my = cgrid.grid.my
+    assert -1 not in pts.i
+    assert -1 not in pts.j
+    assert pts.i == [0, mx, mx]
+    assert pts.j == [my, my, 0]
+
+
+def test_segment_ij_no_sentinel_unchanged(cgrid):
+    """BOUNDSPEC SEGMENT IJ without -1 is passed through unchanged."""
+    config = SwanConfig(
+        cgrid=cgrid,
+        boundary=dict(
+            model_type="boundspec",
+            location=dict(
+                model_type="segment",
+                points=dict(model_type="ij", i=[0, 10, 10], j=[10, 10, 0]),
+            ),
+            data=dict(model_type="constantpar", hs=2.0, per=12.0, dir=270.0, dd=25.0),
+        ),
+    )
+    pts = config.boundary.location.points
+    assert pts.i == [0, 10, 10]
+    assert pts.j == [10, 10, 0]
+
+
+def test_segment_ij_sentinel_renders_correctly(cgrid, lockup, tmpdir):
+    """Resolved SEGMENT IJ sentinel values appear correctly in the INPUT file."""
+    from rompy.model import ModelRun
+
+    config = SwanConfig(
+        cgrid=cgrid,
+        boundary=dict(
+            model_type="boundspec",
+            location=dict(
+                model_type="segment",
+                points=dict(model_type="ij", i=[0, -1, -1], j=[-1, -1, 0]),
+            ),
+            data=dict(model_type="constantpar", hs=2.0, per=12.0, dir=270.0, dd=25.0),
+        ),
+        lockup=lockup,
+    )
+    model = ModelRun(
+        run_id="test",
+        period=dict(start="20230101T00", duration="12h", interval="1h"),
+        output_dir=str(tmpdir),
+        config=config,
+    )
+    model.generate()
+
+    content = tmpdir.join("test", "INPUT").read()
+    mx = cgrid.grid.mx
+    my = cgrid.grid.my
+    assert f"i=0 j={my}" in content
+    assert f"i={mx} j={my}" in content
+    assert f"i={mx} j=0" in content
+    assert "i=-1" not in content
+    assert "j=-1" not in content

@@ -208,6 +208,47 @@ class SwanConfig(BaseConfig):
         """Ensure bottom and water level grids are not curvilinear for RAY."""
         return self
 
+    @model_validator(mode="after")
+    def resolve_segment_ij_sentinels(self) -> "SwanConfig":
+        """Replace -1 sentinel values in BOUNDSPEC SEGMENT IJ with grid max indices.
+
+        SWAN terminates the SEGMENT IJ reading loop when it encounters a negative i
+        value, so -1 cannot be used literally. This validator allows users to specify
+        -1 as a shorthand for the last grid index (mx for i, my for j) and replaces
+        it with the actual value derived from the cgrid definition.
+        """
+        from rompy_swan.subcomponents.base import IJ
+        from rompy_swan.subcomponents.boundary import SEGMENT
+
+        if not isinstance(self.boundary, boundary.BOUNDSPEC):
+            return self
+        if not isinstance(self.boundary.location, SEGMENT):
+            return self
+        if not isinstance(self.boundary.location.points, IJ):
+            return self
+
+        points = self.boundary.location.points
+        if -1 not in points.i and -1 not in points.j:
+            return self
+
+        grid = self.cgrid.grid
+        if not hasattr(grid, "mx") or not hasattr(grid, "my"):
+            return self
+
+        new_i = [grid.mx if v == -1 else v for v in points.i]
+        new_j = [grid.my if v == -1 else v for v in points.j]
+
+        logger.info(
+            f"Resolved SEGMENT IJ sentinel -1 values to grid max indices "
+            f"(mx={grid.mx}, my={grid.my}): i={new_i}, j={new_j}"
+        )
+
+        new_points = points.model_copy(update={"i": new_i, "j": new_j})
+        new_location = self.boundary.location.model_copy(update={"points": new_points})
+        self.boundary = self.boundary.model_copy(update={"location": new_location})
+
+        return self
+
     @property
     def grid(self):
         """Define a SwanGrid from the cgrid field."""
