@@ -9,7 +9,7 @@ import warnings
 from pathlib import Path
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import Field, model_validator
+from pydantic import Field, SerializeAsAny, model_validator
 
 from rompy.core.config import BaseConfig
 from rompy.formatting import get_formatted_header_footer
@@ -45,11 +45,11 @@ CGRID_TYPES = Annotated[
     Field(description="Cgrid component", discriminator="model_type"),
 ]
 INPGRID_TYPES = Annotated[
-    Union[INPGRIDS, DataInterface],
+    SerializeAsAny[Union[INPGRIDS, DataInterface]],
     Field(description="Input grid components", discriminator="model_type"),
 ]
 FORCING_TYPE = Annotated[
-    Union[WIND, ICE],
+    SerializeAsAny[Union[WIND, ICE]],
     Field(description="Constant forcing input component", discriminator="model_type"),
 ]
 BOUNDARY_TYPES = Annotated[

@@ -8,7 +8,7 @@ import logging
 import warnings
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, SerializeAsAny, field_validator, model_validator
 
 from rompy_swan.components.base import BaseComponent
 from rompy_swan.components.inpgrid import CURVILINEAR, ICE, REGULAR, UNSTRUCTURED, WIND
@@ -239,7 +239,7 @@ class INPGRIDS(BaseGroupComponent):
     model_type: Literal["inpgrids"] = Field(
         default="inpgrids", description="Model type discriminator"
     )
-    inpgrids: list[INPGRID_TYPE] = Field(
+    inpgrids: list[SerializeAsAny[INPGRID_TYPE]] = Field(
         min_length=1,
         description="List of input grid components",
     )

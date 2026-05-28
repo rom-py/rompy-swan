@@ -144,7 +144,7 @@ class READGRID(BaseSubComponent, ABC):
         gt=0.0,
     )
     idla: IDLA = Field(
-        default=1,
+        default=IDLA.ONE,
         description=(
             "Prescribes the order in which the values of bottom levels "
             "and other fields should be given in the file"
