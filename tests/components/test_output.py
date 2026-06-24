@@ -38,7 +38,7 @@ from rompy_swan.components.output import (
     TEST,
     BaseLocation,
 )
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from rompy.core.time import TimeRange
 from rompy_swan.interface import OutputInterface
@@ -582,3 +582,47 @@ def test_output_interface_respects_custom_nest_delt(period):
     output = OUTPUT(nests=[nest])
     result = OutputInterface(group=output, period=period).group
     assert result.nests[0].nestout.times.delt == custom_delt
+
+
+# =====================================================================================
+# OutputInterface spin-up handling (output starts after the model spin-up period)
+# =====================================================================================
+
+
+def test_output_interface_defaults_tbeg_to_period_start(frame, period):
+    """Without an explicit tbeg, output starts at the runtime period start."""
+    block = BLOCK(sname="outgrid", fname="./out.nc", output=["hsign"])
+    output = OUTPUT(frame=frame, block=block)
+    result = OutputInterface(group=output, period=period).group
+    assert result.block.times.tbeg == period.start
+
+
+def test_output_interface_preserves_spinup_tbeg(frame, period):
+    """An explicit tbeg is preserved so spin-up is excluded from output."""
+    spinup_start = "1990-01-01T03:00:00"
+    block = BLOCK(
+        sname="outgrid",
+        fname="./out.nc",
+        output=["hsign"],
+        times=dict(tbeg=spinup_start, tfmt=1, dfmt="hr"),
+    )
+    output = OUTPUT(frame=frame, block=block)
+    result = OutputInterface(group=output, period=period).group
+    assert result.block.times.tbeg == datetime.fromisoformat(spinup_start)
+    assert result.block.times.tbeg > period.start
+    assert result.block.times.delt == period.interval
+
+
+def test_output_interface_preserves_explicit_epoch_tbeg(frame, period):
+    """An explicit tbeg is preserved even when it equals the TimeRangeOpen default."""
+    epoch = "1970-01-01T00:00:00"
+    block = BLOCK(
+        sname="outgrid",
+        fname="./out.nc",
+        output=["hsign"],
+        times=dict(tbeg=epoch, tfmt=1, dfmt="hr"),
+    )
+    output = OUTPUT(frame=frame, block=block)
+    result = OutputInterface(group=output, period=period).group
+    assert result.block.times.tbeg == datetime.fromisoformat(epoch)
+    assert result.block.times.tbeg != period.start
