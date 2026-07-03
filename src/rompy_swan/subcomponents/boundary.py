@@ -604,7 +604,7 @@ class HOTSINGLE(BaseSubComponent):
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",
-        max_length=36,
+        max_length=80,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",
@@ -655,7 +655,7 @@ class HOTMULTIPLE(BaseSubComponent):
     )
     fname: str = Field(
         description="Name of the file containing the initial wave field",
-        max_length=36,
+        max_length=80,
     )
     format: Literal["free", "unformatted"] = Field(
         default="free",

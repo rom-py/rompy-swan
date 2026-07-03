@@ -126,11 +126,14 @@ class OutputInterface(TimeInterface):
 
         Note
         ----
-        * tbeg is set to the Config runtime start
+        * tbeg is set from the component's times if defined, otherwise from the runtime start
         * delt is set from the component's times if defined, otherwise from the runtime interval
         * tfmt is set from the component's times if defined, otherwise from TimeRange default
         * dfmt is set from the component's times if defined, otherwise from TimeRange default
         * suffix is set to the suffix of the component
+
+        A user-defined ``tbeg`` lets output start after a model spin-up period so the
+        spin-up is excluded from output files.
 
         """
         for component in self.group._write_fields:
@@ -148,9 +151,13 @@ class OutputInterface(TimeInterface):
         return self
 
     def _timerange(self, times: TimeRangeOpen, suffix: str) -> TimeRangeOpen:
-        """Convert generic TimeRange into the Swan TimeRangeOpen subcomponent."""
+        """Convert generic TimeRange into the Swan TimeRangeOpen subcomponent.
+
+        A ``tbeg`` explicitly set on the component is preserved (e.g. to exclude a
+        spin-up period from output); otherwise it falls back to the runtime start.
+        """
         return TimeRangeOpen(
-            tbeg=self.period.start,
+            tbeg=times.tbeg if "tbeg" in times.model_fields_set else self.period.start,
             delt=times.delt if times.delt is not None else self.period.interval,
             tfmt=times.tfmt,
             dfmt=times.dfmt,
