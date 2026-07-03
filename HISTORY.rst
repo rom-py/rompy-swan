@@ -38,11 +38,11 @@ ____________________
 
 New Features
 ------------
-* The output time range can now start later than the simulation, allowing a spin-up period to be excluded from output files. A ``tbeg`` explicitly set in the ``times`` field of write components is preserved by the ``OutputInterface`` instead of being overwritten by the runtime start time (`#16 <https://github.com/rom-py/rompy-swan/pull/16>`_). Thanks to `@benjaminleighton <https://github.com/benjaminleighton>`_ for his first contribution!
+* The output time range can now start later than the simulation, allowing a spin-up period to be excluded from output files. A ``tbeg`` explicitly set in the ``times`` field of write components is preserved by the ``OutputInterface`` instead of being overwritten by the runtime start time, by `@benjaminleighton <https://github.com/benjaminleighton>`_ (`#16 <https://github.com/rom-py/rompy-swan/pull/16>`_).
 
 Bug Fixes
 ---------
-* Relaxed the maximum hotfile filename length in the ``HOTSINGLE`` and ``HOTMULTIPLE`` subcomponents from 36 to 80 characters (`#15 <https://github.com/rom-py/rompy-swan/pull/15>`_).
+* Relaxed the maximum hotfile filename length in the ``HOTSINGLE`` and ``HOTMULTIPLE`` subcomponents from 36 to 80 characters, by `@rsoutelino <https://github.com/rsoutelino>`_ (`#15 <https://github.com/rom-py/rompy-swan/pull/15>`_).
 
 
 0.10.0 (2026-04-15)
