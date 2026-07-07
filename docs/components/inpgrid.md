@@ -18,5 +18,8 @@ Input grids (INPGRID) define the spatial grids for external forcing data such as
 
 ## Specialized Grids
 
+!!! warning "Deprecation notice"
+    `WIND` and `ICE` inside `INPGRIDS` (i.e. as entries in `inpgrid`) are deprecated. For constant, spatially-uniform wind or ice forcing use [`SwanConfig.forcing`](../user-guide/configuration.md#forcing) with the [`FORCING`](group.md) group component instead. Gridded, time-varying wind/ice should be supplied via `DataInterface`.
+
 ::: rompy_swan.components.inpgrid.WIND
 ::: rompy_swan.components.inpgrid.ICE

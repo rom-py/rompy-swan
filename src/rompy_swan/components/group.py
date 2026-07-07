@@ -5,9 +5,10 @@ This module provides group components for organizing SWAN model configurations i
 """
 
 import logging
+import warnings
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import Field, field_validator, model_validator
+from pydantic import Field, SerializeAsAny, field_validator, model_validator
 
 from rompy_swan.components.base import BaseComponent
 from rompy_swan.components.inpgrid import CURVILINEAR, ICE, REGULAR, UNSTRUCTURED, WIND
@@ -167,6 +168,59 @@ class STARTUP(BaseGroupComponent):
 
 
 # =====================================================================================
+# Forcing
+# =====================================================================================
+class FORCING(BaseGroupComponent):
+    """SWAN constant forcing group component.
+
+    .. code-block:: text
+
+        WIND vel dir [cc]
+        ICE aice [hice]
+
+    This group component holds constant (non-gridded) forcing inputs. At most one
+    WIND and one ICE instance may be provided; use the INPGRID-based components for
+    spatially-varying inputs.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy_swan.components.group import FORCING
+        forcing = FORCING(wind=dict(vel=10.0, dir=270.0))
+        print(forcing.render())
+        forcing = FORCING(
+            wind=dict(vel=10.0, dir=270.0),
+            ice=dict(aice=0.5, hice=1.5),
+        )
+        print(forcing.render())
+
+    """
+
+    model_type: Literal["forcing", "FORCING"] = Field(
+        default="forcing", description="Model type discriminator"
+    )
+    wind: Optional[WIND] = Field(default=None, description="Constant wind forcing")
+    ice: Optional[ICE] = Field(default=None, description="Constant ice forcing")
+
+    @model_validator(mode="after")
+    def at_least_one(self) -> "FORCING":
+        if self.wind is None and self.ice is None:
+            raise ValueError("At least one of wind or ice must be specified")
+        return self
+
+    def cmd(self) -> str | list:
+        parts = []
+        if self.wind is not None:
+            parts.append(self.wind.cmd())
+        if self.ice is not None:
+            parts.append(self.ice.cmd())
+        return parts
+
+
+# =====================================================================================
 # Inpgrid
 # =====================================================================================
 INPGRID_TYPE = Annotated[
@@ -238,7 +292,7 @@ class INPGRIDS(BaseGroupComponent):
     model_type: Literal["inpgrids"] = Field(
         default="inpgrids", description="Model type discriminator"
     )
-    inpgrids: list[INPGRID_TYPE] = Field(
+    inpgrids: list[SerializeAsAny[INPGRID_TYPE]] = Field(
         min_length=1,
         description="List of input grid components",
     )
@@ -250,6 +304,15 @@ class INPGRIDS(BaseGroupComponent):
         grid_types = [inp.grid_type for inp in inpgrids if hasattr(inp, "grid_type")]
         if len(grid_types) != len(set(grid_types)):
             raise ValueError("Each grid type must be unique")
+        constant_types = [inp for inp in inpgrids if isinstance(inp, (WIND, ICE))]
+        if constant_types:
+            names = ", ".join(type(c).__name__ for c in constant_types)
+            warnings.warn(
+                f"Specifying {names} inside INPGRIDS is deprecated. Use the "
+                "`SwanConfig.forcing` field instead.",
+                DeprecationWarning,
+                stacklevel=2,
+            )
         return inpgrids
 
     def cmd(self) -> str | list:
