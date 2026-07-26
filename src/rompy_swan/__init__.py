@@ -5,7 +5,7 @@ This module provides interfaces and utilities for working with the SWAN
 (Simulating WAves Nearshore) model within the ROMPY framework.
 """
 
-__version__ = "0.11.0"
+__version__ = "0.11.1"
 
 
 from rompy.logging import LoggingConfig, get_logger
