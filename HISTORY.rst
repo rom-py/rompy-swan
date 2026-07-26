@@ -33,8 +33,8 @@ are continually evolving. Contributions and feedback are welcome!
 Releases
 ********
 
-Unreleased
-__________
+0.11.1 (2026-07-27)
+____________________
 
 Bug Fixes
 ---------
