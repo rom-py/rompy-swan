@@ -278,7 +278,7 @@ def test_points(points):
 
 def test_points_file():
     loc = POINTS_FILE(sname="outpts", fname="./output_points.nc")
-    assert loc.render() == "POINTS sname='outpts' fname='./output_points.nc'"
+    assert loc.render() == "POINTS sname='outpts' FILE fname='./output_points.nc'"
 
 
 def test_ngrid(ngrid):

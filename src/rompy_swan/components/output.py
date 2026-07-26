@@ -621,7 +621,7 @@ class POINTS_FILE(BaseLocation):
 
     def cmd(self) -> str:
         """Command file string for this component."""
-        repr = f"POINTS sname='{self.sname}' fname='{self.fname}'"
+        repr = f"POINTS sname='{self.sname}' FILE fname='{self.fname}'"
         return repr
 
 

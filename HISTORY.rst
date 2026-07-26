@@ -33,6 +33,14 @@ are continually evolving. Contributions and feedback are welcome!
 Releases
 ********
 
+Unreleased
+__________
+
+Bug Fixes
+---------
+* The ``POINTS_FILE`` component now renders the mandatory ``FILE`` keyword, i.e. ``POINTS 'sname' FILE 'fname'``, so SWAN correctly reads the output locations from file. Reported by `@JOHN8736 <https://github.com/JOHN8736>`_ (`#17 <https://github.com/rom-py/rompy-swan/issues/17>`_).
+
+
 0.11.0 (2026-07-03)
 ____________________
 
