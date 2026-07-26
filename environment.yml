@@ -1,0 +1,24 @@
+
+name: rompy
+channels:
+  - defaults
+
+dependencies:
+  - appdirs
+  - python=3.7
+  - dask
+  - numpy
+  - pandas
+  - msgpack-python
+  - msgpack-numpy
+  - requests
+  - tornado
+  - jinja2
+  - python-snappy
+  - pyyaml
+  - hvplot >=0.5.2
+  - panel >=0.8.0
+  - bokeh <2.0.0
+  - sphinx
+  - sphinx_rtd_theme
+  - numpydoc
