@@ -85,7 +85,7 @@ class BoundaryInterface(RompyBaseModel):
         default="boundary_interface", description="Model type discriminator"
     )
     kind: Union[Boundnest1, BoundspecSide, BoundspecSegmentXY] = Field(
-        default=None, description="Boundary data object"
+        description="Boundary data object", discriminator="model_type"
     )
 
     def get(self, staging_dir: Path, grid: SwanGrid, period: TimeRange):

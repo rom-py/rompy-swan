@@ -35,12 +35,17 @@ def write_tpar(df: pd.DataFrame, filename: str | Path):
         Filename to write to.
 
     """
+    if df.isna().any().any():
+        raise ValueError(
+            f"Missing values in the TPAR data for {Path(filename).name}. The boundary "
+            "points are probably outside the spectra dataset or beyond the selection "
+            "tolerance: check `sel_method_kwargs` and the extent of the source."
+        )
     with open(filename, "w") as stream:
         stream.write("TPAR\n")
         df.to_csv(
             stream,
             sep=" ",
-            na_rep=0.0,
             header=False,
             float_format="%0.2f",
             date_format="%Y%m%d.%H%M%S",
@@ -295,7 +300,7 @@ class BoundspecSide(BoundspecBase):
             comp = CONSTANTFILE(fname=filename.name, seq=1)
             cmds.append(f"BOUNDSPEC {self.location.render()}{comp.render()}")
             filenames.append(filename)
-        return filename, "\n".join(cmds)
+        return filename, "\n".join([self.shapespec.render(), *cmds])
 
 
 class BoundspecSegmentXY(BoundspecBase):
@@ -320,8 +325,8 @@ class BoundspecSegmentXY(BoundspecBase):
 
     """
 
-    model_type: Literal["boundspecside", "BOUNDSPECSIDE"] = Field(
-        default="boundspecside", description="Model type discriminator"
+    model_type: Literal["boundspecsegmentxy", "BOUNDSPECSEGMENTXY"] = Field(
+        default="boundspecsegmentxy", description="Model type discriminator"
     )
     location: Union[SIDE, SIDES, XY] = Field(
         description="The side of the grid to apply the boundary to",
@@ -396,4 +401,4 @@ class BoundspecSegmentXY(BoundspecBase):
             location = location.render().replace("\n", " ").replace("  ", " ")
             cmds.append(f"BOUNDSPEC {location}{file.render()}")
             filenames.append(filename)
-        return filenames, "\n".join(cmds)
+        return filenames, "\n".join([self.shapespec.render(), *cmds])
