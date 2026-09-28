@@ -403,7 +403,8 @@ class Swan_accessor(object):
             variables=[z],
             fill_value=fill_value,
         )
-        grid = self.grid(x=x, y=y, rot=rot)
+        # SWAN compares the exception value after applying fac (see READINP)
+        grid = self.grid(x=x, y=y, rot=rot, exc=fill_value * fac)
         inpgrid = f"INPGRID BOTTOM {grid.inpgrid}"
         readinp = f"READINP BOTTOM {fac} '{Path(output_file).name}' 3 FREE"
         return inpgrid, readinp
@@ -454,9 +455,14 @@ class Swan_accessor(object):
             SWAN READinp command instruction.
 
         """
-        ds = self._obj
+        if self._obj[time].size < 2:
+            raise ValueError(
+                f"Nonstationary {var} input needs at least two times, the dataset has "
+                f"{self._obj[time].size}. Check the data covers the run period."
+            )
+        variables = [z1] if z2 is None else [z1, z2]
+        ds = self._obj[variables].transpose(time, y, x).fillna(FILL_VALUE)
 
-        # ds = ds.transpose((time,) + ds[x].dims)
         # Calculate time difference in hours
         time_diffs = np.diff(ds[time].values)
         dt = time_diffs.mean() / pd.to_timedelta(1, "h")
@@ -488,8 +494,9 @@ class Swan_accessor(object):
                 f"***Error! No times written to {output_file}\n. Check the input data!"
             )
 
-        # Create grid object from this dataset
-        grid = self.grid(x=x, y=y, rot=rot)
+        # Create grid object from this dataset, SWAN compares the exception value
+        # after applying fac (see READINP)
+        grid = self.grid(x=x, y=y, rot=rot, exc=FILL_VALUE * fac)
 
         inpgrid = f"INPGRID {var} {grid.inpgrid} NONSTATION {inptimes[0]} {dt_str} HR"
         readinp = f"READINP {var} {fac} '{Path(output_file).name}' 3 0 1 0 FREE"
