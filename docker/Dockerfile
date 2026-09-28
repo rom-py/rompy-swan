@@ -43,6 +43,15 @@ RUN version="$(echo "${SWAN_VERSION}" | tr -d .)" \
     && mkdir /opt/swan && tar xzf /tmp/swan.tar.gz -C /opt/swan --strip-components=1
 WORKDIR /opt/swan
 
+# FOR (ocpmix.ftn) declares its filename argument with a fixed length of 140 and
+# rewrites path separators over that whole length, but SWAN passes it a shorter
+# temporary when opening NetCDF output files. The writes past the end of the string
+# corrupt the heap and SWAN intermittently crashes. Declaring the argument with
+# assumed length limits the rewriting to the string that is passed. The replacement
+# keeps the line length, since the source is fixed-form.
+RUN sed -i 's|CHARACTER DDNAME\*(LENFNM), SF\*2|CHARACTER DDNAME*(*), SF*2     |' ocpmix.ftn \
+    && grep -q 'CHARACTER DDNAME\*(\*), SF\*2' ocpmix.ftn
+
 # `make config` writes macros.inc for the compiler. Setting NETCDFROOT enables NetCDF
 # output (BLOCK and SPECOUT files ending in .nc); the lines it guards redefine
 # variables in terms of themselves, which GNU make rejects, so they become appends.
