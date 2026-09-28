@@ -1619,10 +1619,11 @@ class NEST(BaseComponent):
     @model_validator(mode="after")
     def warn_sname_override(self) -> "NEST":
         """Warn if the user explicitly set a different sname on child components."""
-        if self.ngrid.sname != "nest":
-            logger.warning(f"NEST overriding NGRID sname: '{self.ngrid.sname}' -> '{self.sname}'")
-        if self.nestout.sname != "nest":
-            logger.warning(f"NEST overriding NESTOUT sname: '{self.nestout.sname}' -> '{self.sname}'")
+        for name, component in [("NGRID", self.ngrid), ("NESTOUT", self.nestout)]:
+            if component.sname not in ("nest", self.sname):
+                logger.warning(
+                    f"NEST overriding {name} sname: '{component.sname}' -> '{self.sname}'"
+                )
         return self
 
     @model_validator(mode="after")

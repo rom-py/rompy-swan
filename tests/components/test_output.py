@@ -645,3 +645,23 @@ def test_write_locations_checked_after_special_name():
             block=BLOCK(sname="COMPGRID", fname="grid.nc", output=["hsign"]),
             table=TABLE(sname="missing", fname="table.txt", output=["hsign"]),
         )
+
+
+def test_nest_warns_only_when_sname_differs(monkeypatch):
+    import rompy_swan.components.output as output_module
+
+    warnings = []
+    monkeypatch.setattr(output_module.logger, "warning", warnings.append)
+    grid = dict(xp=0.0, yp=0.0, alp=0.0, xlen=100.0, ylen=100.0, mx=10, my=10)
+    NEST(
+        sname="child",
+        ngrid=NGRID(sname="child", grid=grid),
+        nestout=NESTOUT(sname="child", fname="child.bnd"),
+    )
+    assert warnings == []
+    NEST(
+        sname="child",
+        ngrid=NGRID(sname="other", grid=grid),
+        nestout=NESTOUT(sname="child", fname="child.bnd"),
+    )
+    assert len(warnings) == 1
