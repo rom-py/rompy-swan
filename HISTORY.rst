@@ -33,6 +33,22 @@ are continually evolving. Contributions and feedback are welcome!
 Releases
 ********
 
+Unreleased
+__________
+
+Bug Fixes
+---------
+* The data-driven ``BoundspecSide`` and ``BoundspecSegmentXY`` boundaries now write the ``BOUND SHAPESPEC`` command. Without it SWAN applied its default ``DSPR POWER`` to the directional spreading in the TPAR files, which is given in degrees.
+* TPAR boundary files are no longer written with zeros where the boundary spectra are missing, for example when a boundary point is beyond the selection tolerance. An error explains the likely cause instead.
+* ``BoundspecSegmentXY`` has its own ``model_type`` (``boundspecsegmentxy``) instead of sharing ``boundspecside`` with ``BoundspecSide``, and ``BoundaryInterface.kind`` is discriminated by ``model_type``, so YAML configurations load the intended class. YAML files that used ``boundspecside`` for a segment boundary must change it to ``boundspecsegmentxy``.
+* Input grids other than the bottom (wind, currents, water level, ...) now write missing values as the declared exception value instead of ``nan``, write rows along the y axis whatever the dimension order of the dataset, and raise a clear error when fewer than two times are available.
+* The exception value of input grids is now multiplied by ``fac``, as SWAN expects. With ``fac=-1`` (elevation data) missing points were previously read as 99 m deep water.
+* ``NUMERIC`` now renders its ``csigma`` and ``setup`` options, which were silently dropped.
+* ``SPEC1D`` renders ``SPEC1D`` instead of ``SPEC2D``; ``CURVILINEAR`` renders ``yexc`` instead of repeating ``xexc``; ``CSIGMA`` and ``OUTPUT_OPTIONS`` have their own ``model_type`` values (``csigma`` and ``output_options``).
+* The ``OUTPUT`` group checks every write component's location, instead of stopping at the first one that uses a special name such as ``COMPGRID``.
+* Removed a stray ``print`` of the physics options when ``PHYSICS.deactivate`` is set.
+
+
 0.11.1 (2026-07-27)
 ____________________
 
