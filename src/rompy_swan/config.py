@@ -194,7 +194,10 @@ class SwanConfig(BaseConfig):
                 )
         timed_inputs = []
         if self.output is not None:
-            writes = [getattr(self.output, name) for name in self.output._write_fields]
+            writes = []
+            for name in self.output._write_fields:
+                write = getattr(self.output, name)
+                writes += getattr(write, "components", [write])
             writes += [nest.nestout for nest in self.output.nests or []]
             if any(getattr(write, "times", None) is not None for write in writes):
                 timed_inputs.append("output components with times")

@@ -90,3 +90,22 @@ def test_stationary_mode_rejects_output_times():
     )
     with pytest.raises(ValidationError, match="output components with times"):
         SwanConfig(cgrid=CGRID, output=OUTPUT(block=block))
+
+
+def test_blocks_get_output_times(tmp_path):
+    from rompy_swan.components.group import OUTPUT
+    from rompy_swan.components.output import BLOCK, BLOCKS
+
+    blocks = BLOCKS(
+        components=[
+            BLOCK(sname="COMPGRID", fname="a.nc", output=["hsign"]),
+            BLOCK(sname="COMPGRID", fname="b.nc", output=["dir"]),
+        ]
+    )
+    config = SwanConfig(
+        cgrid=CGRID,
+        startup=STARTUP(mode=MODE(kind="nonstationary")),
+        output=OUTPUT(block=blocks),
+        lockup=LOCKUP(compute=COMPUTE_NONSTAT()),
+    )
+    assert input_file(config, tmp_path).count("OUTPUT tbegblk=20230101.000000") == 2

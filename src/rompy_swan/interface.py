@@ -138,9 +138,12 @@ class OutputInterface(TimeInterface):
         """
         for component in self.group._write_fields:
             obj = getattr(self.group, component)
-            if obj is not None:
-                times = obj.times or TimeRangeOpen()
-                obj.times = self._timerange(times, obj.suffix)
+            if obj is None:
+                continue
+            # BLOCKS holds several BLOCK components, each with its own times
+            for write in getattr(obj, "components", [obj]):
+                times = write.times or TimeRangeOpen()
+                write.times = self._timerange(times, write.suffix)
 
         # Handle nests separately
         if self.group.nests is not None:
