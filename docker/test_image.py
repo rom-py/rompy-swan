@@ -24,7 +24,7 @@ from rompy_swan.boundary import Boundnest1
 from rompy_swan.components.boundary import BOUNDSPEC
 from rompy_swan.components.cgrid import REGULAR
 from rompy_swan.components.group import LOCKUP, OUTPUT, PHYSICS, STARTUP
-from rompy_swan.components.lockup import COMPUTE_NONSTAT, COMPUTE_STAT
+from rompy_swan.components.lockup import COMPUTE, COMPUTE_NONSTAT
 from rompy_swan.components.output import BLOCK, POINTS, SPECOUT
 from rompy_swan.components.physics import GEN3, OFF, OFFS
 from rompy_swan.components.startup import COORDINATES, MODE, SET
@@ -93,7 +93,7 @@ CASES = {
             data={"model_type": "constantpar", "hs": 2.0, "per": 12.0, "dir": 250.0},
         ),
         physics=PHYSICS(gen=GEN3(), deactivate=OFFS(offs=[OFF(physics="quadrupl")])),
-        compute=COMPUTE_STAT(),
+        compute=COMPUTE(),
     ),
     "nonstationary": config(
         mode="nonstationary",
