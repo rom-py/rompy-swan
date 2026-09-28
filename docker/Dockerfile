@@ -1,73 +1,100 @@
-FROM  ubuntu:20.04
+# SWAN runtime image for rompy-swan.
+#
+# Builds a SWAN release from its source tarball with NetCDF output, in two builds: a
+# serial one and an MPI one. The `swan.exe` command is a wrapper that runs the MPI
+# binary when launched by mpirun with 2 or more processes and the serial binary
+# otherwise, so the same command works in both cases:
+#
+#   docker run --rm -v "$PWD":/data ghcr.io/rom-py/swan swan.exe
+#   docker run --rm -v "$PWD":/data ghcr.io/rom-py/swan mpirun -n 4 swan.exe
+#
+# Build a release (see releases.txt for the versions and checksums):
+#   docker build -t swan:41.51 \
+#     --build-arg SWAN_VERSION=41.51 --build-arg SWAN_SHA256=<sha256> docker
+#
+# No ENTRYPOINT is set so the image works with rompy's DockerConfig backend, which
+# runs `bash -c "<command>"` inside the container.
 
-LABEL maintainer="CSIRO <csiro@domain.com>"
+ARG BASE_IMAGE=ubuntu:24.04
 
-# Using latest SWAN from Git - no version pinning needed
-ENV BUILD_DIR=/tmp/build
-ENV INSTALL_DIR=/usr/local
+FROM ${BASE_IMAGE} AS builder
+
+ARG SWAN_VERSION=41.51
+ARG SWAN_SHA256=325c229f3dde0b812db4ec9ae6fa1cd4086d2109562c389576590ce8f94b26bb
+ARG SWAN_URL=https://swanmodel.sourceforge.io/download/zip
+
 ENV DEBIAN_FRONTEND=noninteractive
-
-RUN echo "-------------------- Install system libraries --------------------" && \
-    apt update && apt install -y --no-install-recommends \
-        autoconf \
-        automake \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         ca-certificates \
-        cmake \
-        make \
-        gcc \
+        curl \
         gfortran \
-        git \
-        g++ \
-        libhdf5-dev \
         libnetcdf-dev \
         libnetcdff-dev \
         libopenmpi-dev \
-        ninja-build \
+        make \
         openmpi-bin \
-        patch \
-        wget \
-        zlib1g-dev && \
-    apt clean && \
-    rm -rf /var/lib/apt/lists/*
+        perl \
+    && rm -rf /var/lib/apt/lists/*
 
+# Release tarballs are named without the dot, e.g. swan4151.tar.gz for 41.51
+RUN version="$(echo "${SWAN_VERSION}" | tr -d .)" \
+    && curl -fsSL -o /tmp/swan.tar.gz "${SWAN_URL}/swan${version}.tar.gz" \
+    && echo "${SWAN_SHA256}  /tmp/swan.tar.gz" | sha256sum -c - \
+    && mkdir /opt/swan && tar xzf /tmp/swan.tar.gz -C /opt/swan --strip-components=1
+WORKDIR /opt/swan
 
-#==========================================
-# Model build dependencies
-#==========================================
+# FOR (ocpmix.ftn) declares its filename argument with a fixed length of 140 and
+# rewrites path separators over that whole length, but SWAN passes it a shorter
+# temporary when opening NetCDF output files. The writes past the end of the string
+# corrupt the heap and SWAN intermittently crashes. Declaring the argument with
+# assumed length limits the rewriting to the string that is passed. The replacement
+# keeps the line length, since the source is fixed-form.
+RUN sed -i 's|CHARACTER DDNAME\*(LENFNM), SF\*2|CHARACTER DDNAME*(*), SF*2     |' ocpmix.ftn \
+    && grep -q 'CHARACTER DDNAME\*(\*), SF\*2' ocpmix.ftn
 
-# Using pre-installed packages for OpenMPI, HDF5, and NetCDF instead of building from source
+# `make config` writes macros.inc for the compiler. Setting NETCDFROOT enables NetCDF
+# output (BLOCK and SPECOUT files ending in .nc); the lines it guards redefine
+# variables in terms of themselves, which GNU make rejects, so they become appends.
+# SWAN's Makefile builds swan.exe in place, so the two builds run one after the other.
+RUN make config \
+    && sed -i -e 's|^NETCDFROOT =$|NETCDFROOT = /usr|' \
+        -e 's|^\(  *\)\([A-Za-z_]*\) = \$(\2)|\1\2 +=|' macros.inc \
+    && make ser && mv swan.exe swan-serial && make clobber \
+    && make mpi && mv swan.exe swan-mpi
 
+# Record the packages that provide the shared libraries the binaries link to, so the
+# runtime stage installs the right ones whatever the base image
+RUN ldd swan-serial swan-mpi \
+        | awk '/=> \// {print $3}' | xargs -r readlink -f | sort -u \
+        | xargs -r dpkg -S 2>/dev/null | cut -d: -f1 | sort -u \
+        > runtime-packages.txt
 
-#==========================================
-# Model build
-#==========================================
-# Using the latest SWAN source and build system from the official GitLab repository.
-# This provides the most up-to-date CMake build configuration and source code.
+FROM ${BASE_IMAGE}
 
-WORKDIR $BUILD_DIR
-RUN echo "-------------------- Build SWAN --------------------" && \
-    git clone --depth 1 https://gitlab.tudelft.nl/citg/wavemodels/swan.git && \
-    cd swan && \
-    mkdir build && \
-    cd build && \
-    cmake .. -DNETCDF=ON -DMPI=OFF && \
-    make VERBOSE=1 && \
-    echo "=== Build directory contents ===" && \
-    find . -type f -executable | head -20 && \
-    echo "=== Looking for SWAN executables ===" && \
-    find . -name "*swan*" -type f && \
-    echo "=== Looking for any executables ===" && \
-    find . -type f -perm /u+x | grep -v "\.so" | head -10 && \
-    echo "=== Trying to install manually ===" && \
-    find . -name "*swan*" -type f -executable -exec cp {} $INSTALL_DIR/bin/ \; && \
-    echo "=== Final installed files ===" && \
-    ls -la $INSTALL_DIR/bin/ && \
-    cd ../../ && \
-    rm -rf $BUILD_DIR/swan
+ARG SWAN_VERSION=41.51
 
+LABEL org.opencontainers.image.title="swan" \
+      org.opencontainers.image.description="SWAN ${SWAN_VERSION} with NetCDF and MPI, for use with rompy-swan" \
+      org.opencontainers.image.source="https://github.com/rom-py/rompy-swan" \
+      org.opencontainers.image.version="${SWAN_VERSION}" \
+      org.opencontainers.image.licenses="GPL-3.0-or-later"
 
-# Skip the built-in test for now - will be handled by the container test
+ENV DEBIAN_FRONTEND=noninteractive
+COPY --from=builder /opt/swan/runtime-packages.txt /tmp/runtime-packages.txt
+RUN apt-get update \
+    && xargs -a /tmp/runtime-packages.txt apt-get install -y --no-install-recommends \
+        openmpi-bin \
+        openssh-client \
+    && rm -rf /var/lib/apt/lists/* /tmp/runtime-packages.txt
 
+COPY --from=builder /opt/swan/swan-serial /usr/local/bin/swan-serial
+COPY --from=builder /opt/swan/swan-mpi /usr/local/bin/swan-mpi
+COPY swan.sh /usr/local/bin/swan.exe
 
-WORKDIR /home
-RUN rm -rf $BUILD_DIR
+# Containers usually run as root, which Open MPI refuses by default
+ENV OMPI_ALLOW_RUN_AS_ROOT=1 \
+    OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1 \
+    SWAN_VERSION=${SWAN_VERSION}
+
+WORKDIR /data
+CMD ["swan.exe"]
