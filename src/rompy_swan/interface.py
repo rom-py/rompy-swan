@@ -13,6 +13,7 @@ from rompy.core.time import TimeRange
 from rompy.core.types import RompyBaseModel
 from rompy.logging import get_logger
 from rompy_swan.boundary import Boundnest1, BoundspecSegmentXY, BoundspecSide
+from rompy_swan.components.lockup import COMPUTE
 from rompy_swan.data import SwanDataGrid
 from rompy_swan.grid import SwanGrid
 from rompy_swan.subcomponents.time import NONSTATIONARY, STATIONARY, TimeRangeOpen
@@ -191,6 +192,8 @@ class LockupInterface(TimeInterface):
     @model_validator(mode="after")
     def time_interface(self) -> "LockupInterface":
         """Set the time parameter for COMPUTE components."""
+        if isinstance(self.group.compute, COMPUTE):
+            return self  # the stationary-mode computation has no times
         times = self.group.compute.times or NONSTATIONARY()
         if isinstance(times, NONSTATIONARY):
             times = self._nonstationary(times.tfmt, times.dfmt)

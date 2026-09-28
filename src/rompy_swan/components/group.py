@@ -12,7 +12,7 @@ from pydantic import Field, SerializeAsAny, field_validator, model_validator
 
 from rompy_swan.components.base import BaseComponent
 from rompy_swan.components.inpgrid import CURVILINEAR, ICE, REGULAR, UNSTRUCTURED, WIND
-from rompy_swan.components.lockup import COMPUTE_NONSTAT, COMPUTE_STAT, STOP
+from rompy_swan.components.lockup import COMPUTE, COMPUTE_NONSTAT, COMPUTE_STAT, STOP
 from rompy_swan.components.output import (
     BLOCK,
     BLOCKS,
@@ -829,7 +829,7 @@ class OUTPUT(BaseGroupComponent):
 # Lockup
 # =====================================================================================
 COMPUTE_TYPE = Annotated[
-    Union[COMPUTE_STAT, COMPUTE_NONSTAT],
+    Union[COMPUTE, COMPUTE_STAT, COMPUTE_NONSTAT],
     Field(description="Compute components", discriminator="model_type"),
 ]
 
@@ -850,6 +850,12 @@ class LOCKUP(BaseComponent):
     `COMPUTE` commands that may or may not be interleaved with `HOTFILE` commands,
     and a final `STOP` command.
 
+    The computation depends on the SWAN mode (see command `MODE`):
+
+    * stationary mode (SWAN's default): a single computation without times, `COMPUTE`.
+    * nonstationary mode: computations at given times, either stationary
+      (`COMPUTE_STAT`) or nonstationary (`COMPUTE_NONSTAT`).
+
     Examples
     --------
 
@@ -857,6 +863,8 @@ class LOCKUP(BaseComponent):
         :okwarning:
 
         from rompy_swan.components.group import LOCKUP
+        lockup = LOCKUP(compute=dict(model_type="compute"))
+        print(lockup.render())
         lockup = LOCKUP(
             compute=dict(
                 model_type="stat",

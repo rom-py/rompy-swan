@@ -23,8 +23,7 @@ from rompy_swan.components.group import (
     PHYSICS,
     STARTUP,
 )
-from rompy_swan.components.lockup import COMPUTE, COMPUTE_NONSTAT, STOP
-from rompy_swan.subcomponents.time import NONSTATIONARY
+from rompy_swan.components.lockup import COMPUTE
 from rompy_swan.grid import SwanGrid
 from rompy_swan.interface import (
     BoundaryInterface,
@@ -91,6 +90,8 @@ class SwanConfig(BaseConfig):
         - Time and interval formatting (`tfmt`, `dfmt`) can be specified in the component's 
           `times` field
         - The runtime `interval` defines the computational timestep (`deltc`)
+        - `COMPUTE`, the single computation of stationary mode, has no times; output
+          components are then also written without times
 
     **OUTPUT Components (BLOCK, TABLE, SPECOUT, NESTOUT):**
         - Start time (`tbeg`) is always from runtime `start`
@@ -176,30 +177,32 @@ class SwanConfig(BaseConfig):
 
     @model_validator(mode="after")
     def compute_consistent_with_mode(self) -> "SwanConfig":
-        """Ensure the computations and inputs are possible in the SWAN mode.
+        """Ensure the computation and inputs are possible in the SWAN mode.
 
-        In stationary mode SWAN accepts a single COMPUTE command without times, and no
-        time information in the inputs. A nonstationary computation, a series of
-        stationary computations, and the time-stamped files written by the data and
-        boundary interfaces need MODE NONSTATIONARY. A stationary computation at a
-        given time is then `COMPUTE_STAT` in nonstationary mode.
+        In stationary mode (SWAN's default) SWAN makes a single computation without
+        times, `COMPUTE`, and accepts no time information in the inputs and output.
+        Computations at given times, `COMPUTE_STAT` and `COMPUTE_NONSTAT`, and the
+        time-stamped files written by the data and boundary interfaces need
+        MODE NONSTATIONARY.
 
         """
+        compute = self.lockup.compute if self.lockup is not None else None
         if not self.stationary_mode:
+            if isinstance(compute, COMPUTE):
+                raise ValueError(
+                    "COMPUTE is the single computation of stationary mode. In "
+                    "nonstationary mode use COMPUTE_STAT or COMPUTE_NONSTAT."
+                )
             return self
         advice = (
-            "Set startup.mode=MODE(kind='nonstationary'); a stationary computation at "
-            "a given time is then COMPUTE_STAT."
+            "Set startup.mode=MODE(kind='nonstationary') for computations at given "
+            "times (COMPUTE_STAT or COMPUTE_NONSTAT) and time-varying inputs."
         )
-        if self.lockup is not None:
-            compute = self.lockup.compute
-            if isinstance(compute, COMPUTE_NONSTAT) or isinstance(
-                compute.times, NONSTATIONARY
-            ):
-                raise ValueError(
-                    "In stationary mode (MODE STATIONARY, SWAN's default) SWAN accepts "
-                    "only a single stationary computation. " + advice
-                )
+        if compute is not None and not isinstance(compute, COMPUTE):
+            raise ValueError(
+                "In stationary mode (MODE STATIONARY, SWAN's default) SWAN makes a "
+                "single computation without times, lockup.compute=COMPUTE(). " + advice
+            )
         timed_inputs = []
         if self.output is not None:
             writes = []
@@ -271,17 +274,6 @@ class SwanConfig(BaseConfig):
     def not_curvilinear_if_ray(self) -> "SwanConfig":
         """Ensure bottom and water level grids are not curvilinear for RAY."""
         return self
-
-    def _render_lockup(self) -> str:
-        """Render the lockup commands, without times in stationary mode."""
-        if not self.stationary_mode:
-            return self.lockup.render()
-        compute = self.lockup.compute
-        lines = [COMPUTE().render()]
-        if compute.hotfile is not None:
-            lines.append(compute.hotfile.render())
-        lines.append(STOP().render())
-        return "\n".join(lines)
 
     @model_validator(mode="after")
     def resolve_segment_ij_sentinels(self) -> "SwanConfig":
@@ -796,7 +788,7 @@ class SwanConfig(BaseConfig):
             ret["output"] = self.output.render()
         if self.lockup:
             logger.debug("Rendering lockup configuration")
-            ret["lockup"] = self._render_lockup()
+            ret["lockup"] = self.lockup.render()
 
         if self.forcing:
             logger.debug("Rendering constant forcing configuration")

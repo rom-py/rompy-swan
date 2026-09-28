@@ -41,13 +41,18 @@ New Features
 * ``SwanConfig.forcing`` takes a ``FORCING`` group with constant, spatially uniform ``WIND`` and ``ICE`` inputs. Unlike ``WIND`` and ``ICE`` inside ``INPGRIDS``, they can be combined with input grids from the data interface (#14).
 * In a ``BOUNDSPEC`` ``SEGMENT`` given by grid indices (``IJ``), ``-1`` stands for the last grid index along that axis. SWAN stops reading the segment at a negative index, so it is replaced with the index from the computational grid (#14).
 
+Breaking Changes
+----------------
+* ``COMPUTE`` is now the single computation of stationary mode and no longer takes ``times``, ``i0`` or ``i1``. Its times duplicated ``COMPUTE_STAT`` and ``COMPUTE_NONSTAT``, which remain the components for computations at given times, and ``i0`` and ``i1`` were never written.
+* Configurations in stationary mode (no ``startup.mode``) with ``COMPUTE_STAT`` now fail validation. They produced INPUT files that SWAN rejected; use ``COMPUTE`` or set ``MODE NONSTATIONARY``.
+
 Deprecations
 ------------
 * ``WIND`` and ``ICE`` inside ``INPGRIDS`` are deprecated and emit a ``DeprecationWarning``; use ``SwanConfig.forcing`` instead (#14).
 
 Bug Fixes
 ---------
-* In stationary mode (``MODE STATIONARY``, SWAN's default when ``startup.mode`` is not set) the lockup now writes a plain ``COMPUTE`` and output components are written without times. SWAN rejected the times that were always written, so these runs failed. ``SwanConfig`` now also reports, when it is created, the combinations SWAN refuses in stationary mode: a nonstationary computation or series of computations, output times, and time-varying inputs from the data or boundary interfaces. A stationary computation at a given time is ``COMPUTE_STAT`` with ``MODE NONSTATIONARY``.
+* Stationary mode (``MODE STATIONARY``, SWAN's default when ``startup.mode`` is not set) now works. SWAN makes a single computation without times in this mode, but only computations at given times could be defined, so SWAN rejected the INPUT file. ``LOCKUP`` now takes ``COMPUTE``, the single computation of stationary mode, optionally followed by a hotfile, and output components are written without times. ``SwanConfig`` checks that the computation matches the mode, ``COMPUTE`` in stationary mode and ``COMPUTE_STAT`` or ``COMPUTE_NONSTAT`` in nonstationary mode, and reports the inputs SWAN refuses in stationary mode: output times and time-varying inputs from the data or boundary interfaces.
 * Input grids with a single point along an axis (usually data coarser than the model grid) raise a clear error instead of writing ``nan`` into the ``INPGRID`` command.
 * The data-driven ``BoundspecSide`` and ``BoundspecSegmentXY`` boundaries now write the ``BOUND SHAPESPEC`` command. Without it SWAN applied its default ``DSPR POWER`` to the directional spreading in the TPAR files, which is given in degrees.
 * Boundary files are no longer written with missing spectra: TPAR files had zeros and ``Boundnest1`` and ``spec2d`` files had ``nan`` where a boundary point was beyond the selection tolerance or the source. An error explains the likely cause instead.
