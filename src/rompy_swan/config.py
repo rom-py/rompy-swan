@@ -193,6 +193,11 @@ class SwanConfig(BaseConfig):
                     "take a single stationary computation. " + advice
                 )
         timed_inputs = []
+        if self.output is not None:
+            writes = [getattr(self.output, name) for name in self.output._write_fields]
+            writes += [nest.nestout for nest in self.output.nests or []]
+            if any(getattr(write, "times", None) is not None for write in writes):
+                timed_inputs.append("output components with times")
         if isinstance(self.boundary, BoundaryInterface):
             timed_inputs.append("the boundary interface")
         if isinstance(self.inpgrid, DataInterface) and self.inpgrid.input:
@@ -201,8 +206,8 @@ class SwanConfig(BaseConfig):
             )
         if timed_inputs:
             raise ValueError(
-                f"SWAN does not accept the time-stamped files written by "
-                f"{' and '.join(timed_inputs)} in stationary mode (MODE STATIONARY is "
+                f"SWAN does not accept time information, used by "
+                f"{' and '.join(timed_inputs)}, in stationary mode (MODE STATIONARY is "
                 "the default). " + advice
             )
         return self
@@ -705,7 +710,8 @@ class SwanConfig(BaseConfig):
                         logger.info(f"    {line}")
 
         # Interface the runtime with components that require times
-        if self.output:
+        # Output times are only allowed in nonstationary mode
+        if self.output and not self.stationary_mode:
 
             logger.debug("Configuring output interface with period")
             self.output = OutputInterface(group=self.output, period=period).group

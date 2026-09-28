@@ -49,3 +49,8 @@ def test_exception_value_scaled_by_fac(tmp_path, dset):
     )
     assert "EXC 99.0" in inpgrid
     assert "READINP BOTTOM -1.0" in readinp
+
+
+def test_inpgrid_needs_two_points_per_axis(tmp_path, dset):
+    with pytest.raises(ValueError, match="increase the `buffer`"):
+        dset.isel(lat=[0]).swan.to_inpgrid(tmp_path / "wind.grd", z1="u10")

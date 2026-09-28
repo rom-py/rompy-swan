@@ -63,8 +63,30 @@ def test_stationary_mode_rejects_time_stamped_inputs():
         bottom=SwanDataGrid(var="bottom", z1="depth", source=source),
         input=[SwanDataGrid(var="wind", z1="u10", z2="v10", source=source)],
     )
-    with pytest.raises(ValidationError, match="written by the wind input"):
+    with pytest.raises(ValidationError, match="used by the wind input"):
         SwanConfig(cgrid=CGRID, inpgrid=inpgrid)
     SwanConfig(
         cgrid=CGRID, inpgrid=inpgrid, startup=STARTUP(mode=MODE(kind="nonstationary"))
     )
+
+
+def test_stationary_mode_writes_output_without_times(tmp_path):
+    from rompy_swan.components.group import OUTPUT
+    from rompy_swan.components.output import BLOCK
+
+    output = OUTPUT(block=BLOCK(sname="COMPGRID", fname="grid.nc", output=["hsign"]))
+    config = SwanConfig(
+        cgrid=CGRID, output=output, lockup=LOCKUP(compute=COMPUTE_STAT())
+    )
+    assert "tbegblk" not in input_file(config, tmp_path)
+
+
+def test_stationary_mode_rejects_output_times():
+    from rompy_swan.components.group import OUTPUT
+    from rompy_swan.components.output import BLOCK
+
+    block = BLOCK(
+        sname="COMPGRID", fname="grid.nc", output=["hsign"], times=dict(delt="PT1H")
+    )
+    with pytest.raises(ValidationError, match="output components with times"):
+        SwanConfig(cgrid=CGRID, output=OUTPUT(block=block))

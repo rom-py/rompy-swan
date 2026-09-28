@@ -339,6 +339,13 @@ class Swan_accessor(object):
             SwanGrid object representing this dataset.
 
         """
+        for coord in (x, y):
+            if self._obj[coord].size < 2:
+                raise ValueError(
+                    f"The input grid has {self._obj[coord].size} point along '{coord}' "
+                    "but SWAN needs at least two. The data is probably coarser than "
+                    "the model grid: increase the `buffer` of the data object."
+                )
         return SwanGrid(
             grid_type="REG",
             x0=float(self._obj[x].min()),
