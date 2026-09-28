@@ -25,7 +25,7 @@ def cgrid():
 
 @pytest.fixture(scope="module")
 def lockup():
-    return LOCKUP(compute=dict(model_type="stat"))
+    return LOCKUP(compute=dict(model_type="compute"))
 
 
 @pytest.fixture(scope="module")

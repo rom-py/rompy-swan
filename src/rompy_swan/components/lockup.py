@@ -23,107 +23,6 @@ TIMES_TYPE = Union[STATIONARY, NONSTATIONARY]
 HOTTIMES_TYPE = Union[list[datetime], list[int]]
 
 
-class COMPUTE(BaseComponent):
-    """Start SWAN computation.
-
-    .. code-block:: text
-
-        COMPUTE STATIONARY|NONSTATIONARY
-
-    If the SWAN mode is stationary (see command `MODE`), then only the command
-    `COMPUTE` should be given here.
-
-    If the SWAN mode is nonstationary (see command `MODE`), then the computation can
-    be:
-
-    * stationary (at the specified time: option STATIONARY here).
-    * nonstationary (over the specified period of time.
-
-    To verify input to SWAN (e.g., all input fields such as water depth, wind fields,
-    etc), SWAN can be run without computations (that is: zero iterations by using
-    command `NUM ACCUR MXITST=0`).
-
-    In the case `MODE NONSTATIONARY` several commands COMPUTE can appear, where the
-    wave state at the end of one computation is used as initial state for the next one,
-    unless a command `INIT` appears in between the two COMPUTE commands. This enables
-    the user to make a stationary computation to obtain the initial state for a
-    nonstationary computation and/or to change the computational time step during a
-    computation, to change a boundary condition etc. This also has the advantage of not
-    using a hotfile since, it can be very large in size.
-
-    For small domains, i.e. less than 100 km or 1 deg, a stationary computation is
-    recommended. Otherwise, a nonstationary computation is advised.
-
-    For a nonstationary computation, a time step of at most 10 minutes is advised (when
-    you are choosing a time step larger than 10 minutes, the action density limiter
-    (see command `NUM`) becomes probably a part of the physics).
-
-    Also, the time step should be chosen such that the Courant number is smaller than
-    10 for the fastest (or dominant) wave. Otherwise, a first order upwind scheme is
-    recommended in that case; see command `PROP BSBT`. If you want to run a high
-    resolution model with a very large time step, e.g. 1 hour, you may apply multiple
-    COMPUT STAT commands. For a small time step (<= 10 minutes), no more than 1
-    iteration per time step is recommended (see command `NUM ... NONSTAT mxitns`).
-
-    Examples
-    --------
-
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.lockup import COMPUTE
-        comp = COMPUTE()
-        print(comp.render())
-        comp = COMPUTE(
-            times=dict(model_type="stationary", time="1990-01-01T00:00:00", tfmt=2)
-        )
-        print(comp.render())
-        comp = COMPUTE(
-            times=dict(
-                model_type="nonstationary",
-                tbeg="1990-01-01T00:00:00",
-                tend="1990-02-01T00:00:00",
-                delt="PT1H",
-                tfmt=1,
-                dfmt="hr",
-            ),
-        )
-        print(comp.render())
-
-    """
-
-    model_type: Literal["compute", "COMPUTE"] = Field(
-        default="compute", description="Model type discriminator"
-    )
-    times: Optional[TIMES_TYPE] = Field(
-        default=None,
-        description="Times for the stationary or nonstationary computation",
-        discriminator="model_type",
-    )
-    i0: Optional[int] = Field(
-        default=None,
-        description="Time index of the initial time step",
-    )
-    i1: Optional[int] = Field(
-        default=None,
-        description="Time index of the final time step",
-    )
-
-    @field_validator("times")
-    @classmethod
-    def times_suffix(cls, times: TIMES_TYPE) -> TIMES_TYPE:
-        if isinstance(times, NONSTATIONARY):
-            times.suffix = "c"
-        return times
-
-    def cmd(self) -> str:
-        """Command file string for this component."""
-        repr = "COMPUTE"
-        if self.times is not None:
-            repr += f" {self.times.render()}"
-        return repr
-
-
 class HOTFILE(BaseComponent):
     """Write intermediate results.
 
@@ -193,6 +92,58 @@ class HOTFILE(BaseComponent):
         repr = f"HOTFILE fname='{self.fname}'"
         if self.format is not None:
             repr += f" {self.format.upper()}"
+        return repr
+
+
+class COMPUTE(BaseComponent):
+    """Single SWAN computation in stationary mode.
+
+    .. code-block:: text
+
+        COMPUTE
+        HOTFILE 'fname' ->FREE|UNFORMATTED
+
+    If the SWAN mode is stationary (see command `MODE`, stationary is SWAN's default),
+    then SWAN makes a single computation, started by a `COMPUTE` command without
+    times. The wave field at the end of the computation can be written to a hotfile.
+
+    If the SWAN mode is nonstationary, computations are made at given times, either
+    stationary (`COMPUTE_STAT`) or nonstationary (`COMPUTE_NONSTAT`).
+
+    To verify input to SWAN (e.g., all input fields such as water depth, wind fields,
+    etc), SWAN can be run without computations (that is: zero iterations by using
+    command `NUM ACCUR MXITST=0`).
+
+    For small domains, i.e. less than 100 km or 1 deg, a stationary computation is
+    recommended. Otherwise, a nonstationary computation is advised.
+
+    Examples
+    --------
+
+    .. ipython:: python
+        :okwarning:
+
+        from rompy_swan.components.lockup import COMPUTE
+        comp = COMPUTE()
+        print(comp.render())
+        comp = COMPUTE(hotfile=dict(fname="hotfile.swn"))
+        print(comp.render())
+
+    """
+
+    model_type: Literal["compute", "COMPUTE"] = Field(
+        default="compute", description="Model type discriminator"
+    )
+    hotfile: Optional[HOTFILE] = Field(
+        default=None,
+        description="Write the wave field at the end of the computation to a hotfile",
+    )
+
+    def cmd(self) -> list:
+        """Command file strings for this component."""
+        repr = ["COMPUTE"]
+        if self.hotfile is not None:
+            repr += [self.hotfile.render()]
         return repr
 
 
@@ -335,6 +286,25 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
 
     This component can be used to define multiple nonstationary compute commands and
     write intermediate results as hotfiles between then.
+
+    In the case `MODE NONSTATIONARY` several commands COMPUTE can appear, where the
+    wave state at the end of one computation is used as initial state for the next one,
+    unless a command `INIT` appears in between the two COMPUTE commands. This enables
+    the user to make a stationary computation to obtain the initial state for a
+    nonstationary computation and/or to change the computational time step during a
+    computation, to change a boundary condition etc. This also has the advantage of not
+    using a hotfile since, it can be very large in size.
+
+    For a nonstationary computation, a time step of at most 10 minutes is advised (when
+    you are choosing a time step larger than 10 minutes, the action density limiter
+    (see command `NUM`) becomes probably a part of the physics).
+
+    Also, the time step should be chosen such that the Courant number is smaller than
+    10 for the fastest (or dominant) wave. Otherwise, a first order upwind scheme is
+    recommended in that case; see command `PROP BSBT`. If you want to run a high
+    resolution model with a very large time step, e.g. 1 hour, you may apply multiple
+    COMPUT STAT commands. For a small time step (<= 10 minutes), no more than 1
+    iteration per time step is recommended (see command `NUM ... NONSTAT mxitns`).
 
     Note
     ----

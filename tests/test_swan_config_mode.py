@@ -1,4 +1,4 @@
-"""Test that the lockup commands follow the SWAN mode."""
+"""Test that the computation, inputs and output follow the SWAN mode."""
 
 import pytest
 from pydantic import ValidationError
@@ -7,7 +7,7 @@ from rompy.core.time import TimeRange
 from rompy.model import ModelRun
 from rompy_swan.components.cgrid import REGULAR
 from rompy_swan.components.group import LOCKUP, STARTUP
-from rompy_swan.components.lockup import COMPUTE_NONSTAT, COMPUTE_STAT
+from rompy_swan.components.lockup import COMPUTE, COMPUTE_NONSTAT, COMPUTE_STAT
 from rompy_swan.components.startup import MODE
 from rompy_swan.config import SwanConfig
 from rompy_swan.subcomponents.time import NONSTATIONARY
@@ -27,11 +27,12 @@ def input_file(config, tmp_path) -> str:
 @pytest.mark.parametrize("startup", [None, STARTUP(mode=MODE(kind="stationary"))])
 def test_stationary_mode_writes_compute_without_times(tmp_path, startup):
     config = SwanConfig(
-        cgrid=CGRID, startup=startup, lockup=LOCKUP(compute=COMPUTE_STAT())
+        cgrid=CGRID,
+        startup=startup,
+        lockup=LOCKUP(compute=COMPUTE(hotfile=dict(fname="hotfile"))),
     )
     lines = input_file(config, tmp_path).splitlines()
-    assert "COMPUTE" in lines
-    assert not any(line.startswith("COMPUTE ") for line in lines)
+    assert lines[-3:] == ["COMPUTE", "HOTFILE fname='hotfile'", "STOP"]
 
 
 def test_nonstationary_mode_writes_compute_times(tmp_path):
@@ -45,12 +46,21 @@ def test_nonstationary_mode_writes_compute_times(tmp_path):
 
 @pytest.mark.parametrize(
     "compute",
-    [COMPUTE_NONSTAT(), COMPUTE_STAT(times=NONSTATIONARY())],
-    ids=["nonstationary", "stationary-series"],
+    [COMPUTE_STAT(), COMPUTE_STAT(times=NONSTATIONARY()), COMPUTE_NONSTAT()],
+    ids=["stationary", "stationary-series", "nonstationary"],
 )
 def test_stationary_mode_rejects_timed_computations(compute):
-    with pytest.raises(ValidationError, match="stationary mode"):
+    with pytest.raises(ValidationError, match="lockup.compute=COMPUTE()"):
         SwanConfig(cgrid=CGRID, lockup=LOCKUP(compute=compute))
+
+
+def test_nonstationary_mode_rejects_compute():
+    with pytest.raises(ValidationError, match="single computation of stationary"):
+        SwanConfig(
+            cgrid=CGRID,
+            startup=STARTUP(mode=MODE(kind="nonstationary")),
+            lockup=LOCKUP(compute=COMPUTE()),
+        )
 
 
 def test_stationary_mode_rejects_time_stamped_inputs():
@@ -75,9 +85,7 @@ def test_stationary_mode_writes_output_without_times(tmp_path):
     from rompy_swan.components.output import BLOCK
 
     output = OUTPUT(block=BLOCK(sname="COMPGRID", fname="grid.nc", output=["hsign"]))
-    config = SwanConfig(
-        cgrid=CGRID, output=output, lockup=LOCKUP(compute=COMPUTE_STAT())
-    )
+    config = SwanConfig(cgrid=CGRID, output=output, lockup=LOCKUP(compute=COMPUTE()))
     assert "tbegblk" not in input_file(config, tmp_path)
 
 
