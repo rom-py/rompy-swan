@@ -17,6 +17,11 @@ from rompy_swan.subcomponents.readgrid import GRIDREGULAR
 logger = get_logger(__name__)
 
 
+def clean(value: float) -> float:
+    """Round away floating-point noise (e.g. 1.4000000000000001) before writing."""
+    return float(f"{value:.12g}")
+
+
 class SwanGrid(RegularGrid):
     """Regular SWAN grid in geographic space."""
 
@@ -85,7 +90,10 @@ class SwanGrid(RegularGrid):
     @property
     def inpgrid(self):
         if self.grid_type == "REG":
-            inpstr = f"REG {self.x0} {self.y0} {self.rot} {self.nx-1:0.0f} {self.ny-1:0.0f} {self.dx} {self.dy}"
+            inpstr = (
+                f"REG {clean(self.x0)} {clean(self.y0)} {clean(self.rot)} "
+                f"{self.nx-1:0.0f} {self.ny-1:0.0f} {clean(self.dx)} {clean(self.dy)}"
+            )
             if self.exc is not None:
                 inpstr += f" EXC {self.exc}"
             return inpstr
@@ -96,7 +104,10 @@ class SwanGrid(RegularGrid):
     @property
     def cgrid(self):
         if self.grid_type == "REG":
-            return f"REG {self.x0} {self.y0} {self.rot} {self.xlen} {self.ylen} {self.nx-1:0.0f} {self.ny-1:0.0f}"
+            return (
+                f"REG {clean(self.x0)} {clean(self.y0)} {clean(self.rot)} "
+                f"{clean(self.xlen)} {clean(self.ylen)} {self.nx-1:0.0f} {self.ny-1:0.0f}"
+            )
         elif self.grid_type == "CURV":
             raise NotImplementedError("Curvilinear grids not supported yet")
             # return (f'CURVilinear {self.nx-1:0.0f} {self.ny-1:0.0f}',f'READGRID COOR 1 \'{os.path.basename(self.gridpath)}\' 1 0 1 FREE')
@@ -114,11 +125,11 @@ class SwanGrid(RegularGrid):
         """Return the respective SWAN component for this grid."""
         if self.grid_type == "REG":
             return GRIDREGULAR(
-                xp=self.x0,
-                yp=self.y0,
-                alp=self.rot,
-                xlen=self.xlen,
-                ylen=self.ylen,
+                xp=clean(self.x0),
+                yp=clean(self.y0),
+                alp=clean(self.rot),
+                xlen=clean(self.xlen),
+                ylen=clean(self.ylen),
                 mx=self.nx - 1,
                 my=self.ny - 1,
             )

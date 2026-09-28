@@ -49,6 +49,7 @@ Bug Fixes
 * ``SPEC1D`` renders ``SPEC1D`` instead of ``SPEC2D``; ``CURVILINEAR`` renders ``yexc`` instead of repeating ``xexc``; ``CSIGMA`` and ``OUTPUT_OPTIONS`` have their own ``model_type`` values (``csigma`` and ``output_options``).
 * ``READINP`` and ``READCOORD`` accept a negative ``fac``, as SWAN does and as their description says, e.g. ``fac=-1`` to read elevations as depths. Only zero is rejected.
 * The ``OUTPUT`` group checks every write component's location, instead of stopping at the first one that uses a special name such as ``COMPGRID``.
+* Grid coordinates, lengths and spacings in ``CGRID`` and ``INPGRID`` are rounded to 12 significant digits, so they no longer show floating-point noise such as ``xlenc=1.4000000000000001``.
 * Removed a stray ``print`` of the physics options when ``PHYSICS.deactivate`` is set.
 * Importing ``rompy_swan`` no longer reconfigures rompy's logging, which reset the log level set by the user (for example with ``rompy.logging.config.update(level="WARNING")``) to INFO.
 

@@ -18,7 +18,7 @@ from rompy.core.data import DataGrid
 from rompy.core.time import TimeRange
 from rompy.formatting import get_formatted_box, log_box
 from rompy.logging import get_logger
-from rompy_swan.grid import SwanGrid
+from rompy_swan.grid import SwanGrid, clean
 from rompy_swan.types import GridOptions
 
 logger = get_logger(__name__)
@@ -348,10 +348,10 @@ class Swan_accessor(object):
                 )
         return SwanGrid(
             grid_type="REG",
-            x0=float(self._obj[x].min()),
-            y0=float(self._obj[y].min()),
-            dx=float(np.diff(self._obj[x]).mean()),
-            dy=float(np.diff(self._obj[y]).mean()),
+            x0=clean(float(self._obj[x].min())),
+            y0=clean(float(self._obj[y].min())),
+            dx=clean(float(np.diff(self._obj[x]).mean())),
+            dy=clean(float(np.diff(self._obj[y]).mean())),
             nx=len(self._obj[x]),
             ny=len(self._obj[y]),
             rot=rot,

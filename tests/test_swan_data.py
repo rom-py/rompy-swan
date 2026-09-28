@@ -54,3 +54,12 @@ def test_exception_value_scaled_by_fac(tmp_path, dset):
 def test_inpgrid_needs_two_points_per_axis(tmp_path, dset):
     with pytest.raises(ValueError, match="increase the `buffer`"):
         dset.isel(lat=[0]).swan.to_inpgrid(tmp_path / "wind.grd", z1="u10")
+
+
+def test_grid_values_are_rounded():
+    from rompy_swan.grid import SwanGrid
+
+    grid = SwanGrid(x0=114.5, y0=-32.8, dx=0.02, dy=0.02, nx=71, ny=66)
+    assert grid.component.render() == (
+        "xp=114.5 yp=-32.8 alp=0.0 xlen=1.4 ylen=1.3 mx=70 my=65"
+    )
