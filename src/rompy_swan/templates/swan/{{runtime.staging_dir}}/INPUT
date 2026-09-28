@@ -16,6 +16,8 @@
 
 {% if config.get("inpgrid") %}{{config.inpgrid}}{% endif %}
 
+{% if config.get("forcing") %}{{config.forcing}}{% endif %}
+
 
 ! Boundary and Initial conditions -------------------------------------------------------------------------------------------------------------------------------------------------
 

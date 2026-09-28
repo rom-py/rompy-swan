@@ -151,7 +151,7 @@ class READGRID(BaseSubComponent, ABC):
             raise ValueError("fac must not be zero")
         return fac
     idla: IDLA = Field(
-        default=1,
+        default=IDLA.ONE,
         description=(
             "Prescribes the order in which the values of bottom levels "
             "and other fields should be given in the file"

@@ -151,6 +151,7 @@ class OutputInterface(TimeInterface):
                 if nest.nestout is not None:
                     times = nest.nestout.times or TimeRangeOpen()
                     nest.nestout.times = self._timerange(times, nest.nestout.suffix)
+        return self
 
     def _timerange(self, times: TimeRangeOpen, suffix: str) -> TimeRangeOpen:
         """Convert generic TimeRange into the Swan TimeRangeOpen subcomponent.
@@ -198,3 +199,4 @@ class LockupInterface(TimeInterface):
         else:
             raise ValueError(f"Unknown time type {type(times)}")
         self.group.compute.times = times
+        return self
