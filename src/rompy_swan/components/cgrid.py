@@ -158,7 +158,7 @@ class CURVILINEAR(CGRID):
     @property
     def exception(self):
         if self.xexc is not None:
-            return f"EXCEPTION xexc={self.xexc} xexc={self.yexc}"
+            return f"EXCEPTION xexc={self.xexc} yexc={self.yexc}"
         else:
             return ""
 

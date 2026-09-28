@@ -74,7 +74,6 @@ from rompy_swan.components.physics import (
     WCAPPING_KOMEN,
 )
 from rompy_swan.components.startup import COORDINATES, MODE, PROJECT, SET
-from rompy_swan.types import PhysicsOff
 
 logger = logging.getLogger(__name__)
 
@@ -363,8 +362,6 @@ class PHYSICS(BaseGroupComponent):
     @classmethod
     def deactivate_physics(cls, off: OFF_TYPE) -> OFF_TYPE:
         """Convert OFF to OFFS so list is rendered."""
-        for phys in PhysicsOff:
-            print(phys.value)
         return off
 
     @model_validator(mode="after")
@@ -581,7 +578,7 @@ class OUTPUT(BaseGroupComponent):
             snames = obj.sname if isinstance(obj.sname, list) else [obj.sname]
             for sname in snames:
                 if sname in SPECIAL_NAMES:
-                    return self
+                    continue
                 try:
                     self._filter_location(sname)
                 except ValueError as err:

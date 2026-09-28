@@ -1026,8 +1026,8 @@ class OUTPUT_OPTIONS(BaseComponent):
 
     """
 
-    model_type: Literal["block", "BLOCK"] = Field(
-        default="block", description="Model type discriminator"
+    model_type: Literal["output_options", "OUTPUT_OPTIONS"] = Field(
+        default="output_options", description="Model type discriminator"
     )
     comment: Optional[str] = Field(
         default=None,

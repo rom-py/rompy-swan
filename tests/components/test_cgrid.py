@@ -153,3 +153,8 @@ def test_unstructured_triangle_easymesh(spectrum):
 def test_unstructured_grid_types(spectrum):
     with pytest.raises(ValueError):
         UNSTRUCTURED(spectrum=spectrum, grid_type="something_else")
+
+
+def test_curvilinear_exception_renders_xexc_and_yexc(curvilinear_kwargs):
+    cgrid = CURVILINEAR(xexc=-999.0, yexc=-998.0, **curvilinear_kwargs)
+    assert "xexc=-999.0 yexc=-998.0" in cgrid.render()
