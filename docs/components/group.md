@@ -4,6 +4,7 @@ SWAN group commands
 
 ::: rompy_swan.components.group.BaseGroupComponent
 ::: rompy_swan.components.group.STARTUP
+::: rompy_swan.components.group.FORCING
 ::: rompy_swan.components.group.INPGRIDS
 ::: rompy_swan.components.group.PHYSICS
 ::: rompy_swan.components.group.OUTPUT

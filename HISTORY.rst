@@ -36,6 +36,15 @@ Releases
 Unreleased
 __________
 
+New Features
+------------
+* ``SwanConfig.forcing`` takes a ``FORCING`` group with constant, spatially uniform ``WIND`` and ``ICE`` inputs. Unlike ``WIND`` and ``ICE`` inside ``INPGRIDS``, they can be combined with input grids from the data interface (#14).
+* In a ``BOUNDSPEC`` ``SEGMENT`` given by grid indices (``IJ``), ``-1`` stands for the last grid index along that axis. SWAN stops reading the segment at a negative index, so it is replaced with the index from the computational grid (#14).
+
+Deprecations
+------------
+* ``WIND`` and ``ICE`` inside ``INPGRIDS`` are deprecated and emit a ``DeprecationWarning``; use ``SwanConfig.forcing`` instead (#14).
+
 Bug Fixes
 ---------
 * In stationary mode (``MODE STATIONARY``, SWAN's default when ``startup.mode`` is not set) the lockup now writes a plain ``COMPUTE`` and output components are written without times. SWAN rejected the times that were always written, so these runs failed. ``SwanConfig`` now also reports, when it is created, the combinations SWAN refuses in stationary mode: a nonstationary computation or series of computations, output times, and time-varying inputs from the data or boundary interfaces. A stationary computation at a given time is ``COMPUTE_STAT`` with ``MODE NONSTATIONARY``.
@@ -56,6 +65,7 @@ Bug Fixes
 * ``NEST`` only warns about overriding the ``sname`` of its ``NGRID`` and ``NESTOUT`` when the names differ.
 * Removed a stray ``print`` of the physics options when ``PHYSICS.deactivate`` is set.
 * Importing ``rompy_swan`` no longer reconfigures rompy's logging, which reset the log level set by the user (for example with ``rompy.logging.config.update(level="WARNING")``) to INFO.
+* ``OutputInterface`` and ``LockupInterface`` validators return the model and ``READGRID.idla`` defaults to an ``IDLA`` value, which removes pydantic warnings (#14).
 
 
 0.11.1 (2026-07-27)

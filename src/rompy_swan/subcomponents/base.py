@@ -98,12 +98,25 @@ class IJ(BaseSubComponent):
 
     .. code-block:: text
 
-        < [x] [y] >
+        < [i] [j] >
+
+    Grid indices are 0-based and must be in the range ``0 ≤ i ≤ mx`` and
+    ``0 ≤ j ≤ my`` where ``mx`` and ``my`` are the number of cells in each
+    direction as defined by the CGRID command.
 
     Note
     ----
-    Coordinates should be given in m when Cartesian coordinates are used or degrees
-    when Spherical coordinates are used (see command `COORD`).
+    A value of ``-1`` may be used as a sentinel for the last grid index: ``-1``
+    in the ``i`` list is replaced by ``mx``, and ``-1`` in the ``j`` list is
+    replaced by ``my``. The substitution is performed automatically by
+    :meth:`SwanConfig.resolve_segment_ij_sentinels` when the IJ object is used
+    as the points of a BOUNDSPEC SEGMENT location.
+
+    Warning
+    -------
+    SWAN terminates its SEGMENT IJ reading loop when it encounters a negative
+    ``i`` value, so ``-1`` **cannot** be passed literally to SWAN — it must be
+    resolved to the actual grid index before the INPUT file is written.
 
     Examples
     --------

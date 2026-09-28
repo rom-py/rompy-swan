@@ -20,6 +20,20 @@ from test_utils.logging import configure_test_logging
 
 
 @pytest.fixture(scope="session", autouse=True)
+def dask_single_threaded():
+    """Compute dask arrays in the main thread.
+
+    Older xarray (2025.6, the last release for Python 3.10) can close a netCDF file
+    during garbage collection in one dask thread while another thread reads a file,
+    which crashes netCDF-C with a bus error.
+    """
+    import dask
+
+    with dask.config.set(scheduler="synchronous"):
+        yield
+
+
+@pytest.fixture(scope="session", autouse=True)
 def docker_available() -> bool:
     try:
         result = subprocess.run(
