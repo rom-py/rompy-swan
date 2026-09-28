@@ -141,8 +141,15 @@ class READGRID(BaseSubComponent, ABC):
             "if the values are given in unit decimeter, one should make `fac=0.1` to "
             "obtain values in m. To change sign use a negative `fac`"
         ),
-        gt=0.0,
     )
+
+    @field_validator("fac")
+    @classmethod
+    def fac_not_zero(cls, fac: float) -> float:
+        """SWAN multiplies the values by fac, so it must not be zero."""
+        if fac == 0:
+            raise ValueError("fac must not be zero")
+        return fac
     idla: IDLA = Field(
         default=IDLA.ONE,
         description=(

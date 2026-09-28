@@ -33,6 +33,46 @@ are continually evolving. Contributions and feedback are welcome!
 Releases
 ********
 
+Unreleased
+__________
+
+New Features
+------------
+* ``SwanConfig.forcing`` takes a ``FORCING`` group with constant, spatially uniform ``WIND`` and ``ICE`` inputs. Unlike ``WIND`` and ``ICE`` inside ``INPGRIDS``, they can be combined with input grids from the data interface (#14).
+* In a ``BOUNDSPEC`` ``SEGMENT`` given by grid indices (``IJ``), ``-1`` stands for the last grid index along that axis. SWAN stops reading the segment at a negative index, so it is replaced with the index from the computational grid (#14).
+
+Breaking Changes
+----------------
+* ``COMPUTE`` is now the single computation of stationary mode and no longer takes ``times``, ``i0`` or ``i1``. Its times duplicated ``COMPUTE_STAT`` and ``COMPUTE_NONSTAT``, which remain the components for computations at given times, and ``i0`` and ``i1`` were never written.
+* Configurations in stationary mode (no ``startup.mode``) with ``COMPUTE_STAT`` now fail validation. They produced INPUT files that SWAN rejected; use ``COMPUTE`` or set ``MODE NONSTATIONARY``.
+
+Deprecations
+------------
+* ``WIND`` and ``ICE`` inside ``INPGRIDS`` are deprecated and emit a ``DeprecationWarning``; use ``SwanConfig.forcing`` instead (#14).
+
+Bug Fixes
+---------
+* Stationary mode (``MODE STATIONARY``, SWAN's default when ``startup.mode`` is not set) now works. SWAN makes a single computation without times in this mode, but only computations at given times could be defined, so SWAN rejected the INPUT file. ``LOCKUP`` now takes ``COMPUTE``, the single computation of stationary mode, optionally followed by a hotfile, and output components are written without times. ``SwanConfig`` checks that the computation matches the mode, ``COMPUTE`` in stationary mode and ``COMPUTE_STAT`` or ``COMPUTE_NONSTAT`` in nonstationary mode, and reports the inputs SWAN refuses in stationary mode: output times and time-varying inputs from the data or boundary interfaces.
+* Input grids with a single point along an axis (usually data coarser than the model grid) raise a clear error instead of writing ``nan`` into the ``INPGRID`` command.
+* The data-driven ``BoundspecSide`` and ``BoundspecSegmentXY`` boundaries now write the ``BOUND SHAPESPEC`` command. Without it SWAN applied its default ``DSPR POWER`` to the directional spreading in the TPAR files, which is given in degrees.
+* Boundary files are no longer written with missing spectra: TPAR files had zeros and ``Boundnest1`` and ``spec2d`` files had ``nan`` where a boundary point was beyond the selection tolerance or the source. An error explains the likely cause instead.
+* ``BoundspecSegmentXY`` has its own ``model_type`` (``boundspecsegmentxy``) instead of sharing ``boundspecside`` with ``BoundspecSide``, and ``BoundaryInterface.kind`` is discriminated by ``model_type``, so YAML configurations load the intended class. YAML files that used ``boundspecside`` for a segment boundary must change it to ``boundspecsegmentxy``.
+* Input grids other than the bottom (wind, currents, water level, ...) now write missing values as the declared exception value instead of ``nan``, write rows along the y axis whatever the dimension order of the dataset, and raise a clear error when fewer than two times are available.
+* The exception value of input grids is now multiplied by ``fac``, as SWAN expects. With ``fac=-1`` (elevation data) missing points were previously read as 99 m deep water.
+* Boundary points along a side no longer repeat the end point when the spacing divides the side length exactly, which gave ``BoundspecSegmentXY`` a zero-length segment.
+* ``NUMERIC`` now renders its ``csigma`` and ``setup`` options, which were silently dropped.
+* ``SPEC1D`` renders ``SPEC1D`` instead of ``SPEC2D``; ``CURVILINEAR`` renders ``yexc`` instead of repeating ``xexc``; ``CSIGMA`` and ``OUTPUT_OPTIONS`` have their own ``model_type`` values (``csigma`` and ``output_options``).
+* ``READINP`` and ``READCOORD`` accept a negative ``fac``, as SWAN does and as their description says, e.g. ``fac=-1`` to read elevations as depths. Only zero is rejected.
+* Output components without an explicit ``times.delt`` now write at the interval of the run period, as documented, instead of always every hour: ``TimeRangeOpen`` has a default interval, so the run interval was never used. Set ``times=TimeRangeOpen(delt=...)`` to keep a different output interval.
+* ``BLOCKS`` (several ``BLOCK`` outputs) no longer fails when the output times are set from the run period; each block gets its own times.
+* The ``OUTPUT`` group checks every write component's location, instead of stopping at the first one that uses a special name such as ``COMPGRID``.
+* Grid coordinates, lengths and spacings in ``CGRID`` and ``INPGRID`` are rounded to 12 significant digits, so they no longer show floating-point noise such as ``xlenc=1.4000000000000001``.
+* ``NEST`` only warns about overriding the ``sname`` of its ``NGRID`` and ``NESTOUT`` when the names differ.
+* Removed a stray ``print`` of the physics options when ``PHYSICS.deactivate`` is set.
+* Importing ``rompy_swan`` no longer reconfigures rompy's logging, which reset the log level set by the user (for example with ``rompy.logging.config.update(level="WARNING")``) to INFO.
+* ``OutputInterface`` and ``LockupInterface`` validators return the model and ``READGRID.idla`` defaults to an ``IDLA`` value, which removes pydantic warnings (#14).
+
+
 0.11.1 (2026-07-27)
 ____________________
 

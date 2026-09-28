@@ -173,4 +173,8 @@ class NUMERIC(BaseComponent):
             repr += f" {self.sigimpl.render()}"
         if self.ctheta is not None:
             repr += f" {self.ctheta.render()}"
+        if self.csigma is not None:
+            repr += f" {self.csigma.render()}"
+        if self.setup is not None:
+            repr += f" {self.setup.render()}"
         return repr

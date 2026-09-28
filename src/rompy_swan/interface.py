@@ -13,6 +13,7 @@ from rompy.core.time import TimeRange
 from rompy.core.types import RompyBaseModel
 from rompy.logging import get_logger
 from rompy_swan.boundary import Boundnest1, BoundspecSegmentXY, BoundspecSide
+from rompy_swan.components.lockup import COMPUTE
 from rompy_swan.data import SwanDataGrid
 from rompy_swan.grid import SwanGrid
 from rompy_swan.subcomponents.time import NONSTATIONARY, STATIONARY, TimeRangeOpen
@@ -85,7 +86,7 @@ class BoundaryInterface(RompyBaseModel):
         default="boundary_interface", description="Model type discriminator"
     )
     kind: Union[Boundnest1, BoundspecSide, BoundspecSegmentXY] = Field(
-        default=None, description="Boundary data object"
+        description="Boundary data object", discriminator="model_type"
     )
 
     def get(self, staging_dir: Path, grid: SwanGrid, period: TimeRange):
@@ -138,9 +139,12 @@ class OutputInterface(TimeInterface):
         """
         for component in self.group._write_fields:
             obj = getattr(self.group, component)
-            if obj is not None:
-                times = obj.times or TimeRangeOpen()
-                obj.times = self._timerange(times, obj.suffix)
+            if obj is None:
+                continue
+            # BLOCKS holds several BLOCK components, each with its own times
+            for write in getattr(obj, "components", [obj]):
+                times = write.times or TimeRangeOpen()
+                write.times = self._timerange(times, write.suffix)
 
         # Handle nests separately
         if self.group.nests is not None:
@@ -158,7 +162,7 @@ class OutputInterface(TimeInterface):
         """
         return TimeRangeOpen(
             tbeg=times.tbeg if "tbeg" in times.model_fields_set else self.period.start,
-            delt=times.delt if times.delt is not None else self.period.interval,
+            delt=times.delt if "delt" in times.model_fields_set else self.period.interval,
             tfmt=times.tfmt,
             dfmt=times.dfmt,
             suffix=suffix,
@@ -188,6 +192,8 @@ class LockupInterface(TimeInterface):
     @model_validator(mode="after")
     def time_interface(self) -> "LockupInterface":
         """Set the time parameter for COMPUTE components."""
+        if isinstance(self.group.compute, COMPUTE):
+            return self  # the stationary-mode computation has no times
         times = self.group.compute.times or NONSTATIONARY()
         if isinstance(times, NONSTATIONARY):
             times = self._nonstationary(times.tfmt, times.dfmt)
