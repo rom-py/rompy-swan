@@ -9,13 +9,13 @@ import warnings
 from pathlib import Path
 from typing import Annotated, Literal, Optional, Union
 
-from pydantic import Field, model_validator
+from pydantic import Field, SerializeAsAny, model_validator
 
 from rompy.core.config import BaseConfig
 from rompy.formatting import get_formatted_header_footer
 from rompy.logging import get_logger
 from rompy_swan.components import boundary, cgrid, numerics
-from rompy_swan.components.group import INPGRIDS, LOCKUP, OUTPUT, PHYSICS, STARTUP
+from rompy_swan.components.group import FORCING, INPGRIDS, LOCKUP, OUTPUT, PHYSICS, STARTUP
 from rompy_swan.grid import SwanGrid
 from rompy_swan.interface import (
     BoundaryInterface,
@@ -44,7 +44,7 @@ CGRID_TYPES = Annotated[
     Field(description="Cgrid component", discriminator="model_type"),
 ]
 INPGRID_TYPES = Annotated[
-    Union[INPGRIDS, DataInterface],
+    SerializeAsAny[Union[INPGRIDS, DataInterface]],
     Field(description="Input grid components", discriminator="model_type"),
 ]
 BOUNDARY_TYPES = Annotated[
@@ -150,6 +150,7 @@ class SwanConfig(BaseConfig):
     cgrid: CGRID_TYPES
     startup: Optional[STARTUP_TYPE] = Field(default=None)
     inpgrid: Optional[INPGRID_TYPES] = Field(default=None)
+    forcing: Optional[FORCING] = Field(default=None)
     boundary: Optional[BOUNDARY_TYPES] = Field(default=None)
     initial: Optional[INITIAL_TYPE] = Field(default=None)
     physics: Optional[PHYSICS_TYPE] = Field(default=None)
@@ -205,6 +206,47 @@ class SwanConfig(BaseConfig):
     @model_validator(mode="after")
     def not_curvilinear_if_ray(self) -> "SwanConfig":
         """Ensure bottom and water level grids are not curvilinear for RAY."""
+        return self
+
+    @model_validator(mode="after")
+    def resolve_segment_ij_sentinels(self) -> "SwanConfig":
+        """Replace -1 sentinel values in BOUNDSPEC SEGMENT IJ with grid max indices.
+
+        SWAN terminates the SEGMENT IJ reading loop when it encounters a negative i
+        value, so -1 cannot be used literally. This validator allows users to specify
+        -1 as a shorthand for the last grid index (mx for i, my for j) and replaces
+        it with the actual value derived from the cgrid definition.
+        """
+        from rompy_swan.subcomponents.base import IJ
+        from rompy_swan.subcomponents.boundary import SEGMENT
+
+        if not isinstance(self.boundary, boundary.BOUNDSPEC):
+            return self
+        if not isinstance(self.boundary.location, SEGMENT):
+            return self
+        if not isinstance(self.boundary.location.points, IJ):
+            return self
+
+        points = self.boundary.location.points
+        if -1 not in points.i and -1 not in points.j:
+            return self
+
+        grid = self.cgrid.grid
+        if not hasattr(grid, "mx") or not hasattr(grid, "my"):
+            return self
+
+        new_i = [grid.mx if v == -1 else v for v in points.i]
+        new_j = [grid.my if v == -1 else v for v in points.j]
+
+        logger.info(
+            f"Resolved SEGMENT IJ sentinel -1 values to grid max indices "
+            f"(mx={grid.mx}, my={grid.my}): i={new_i}, j={new_j}"
+        )
+
+        new_points = points.model_copy(update={"i": new_i, "j": new_j})
+        new_location = self.boundary.location.model_copy(update={"points": new_points})
+        self.boundary = self.boundary.model_copy(update={"location": new_location})
+
         return self
 
     @property
@@ -679,6 +721,10 @@ class SwanConfig(BaseConfig):
         if self.lockup:
             logger.debug("Rendering lockup configuration")
             ret["lockup"] = self.lockup.render()
+
+        if self.forcing:
+            logger.debug("Rendering constant forcing configuration")
+            ret["forcing"] = self.forcing.render()
 
         # inpgrid / boundary may use the Interface api so we need passing the args
         if self.inpgrid and isinstance(self.inpgrid, DataInterface):
