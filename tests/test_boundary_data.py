@@ -63,3 +63,27 @@ def test_boundary_interface_parses_kind_from_dict(source, cls):
     kind = cls(id="wave", source=source, location=SIDE(side="west"))
     interface = BoundaryInterface(kind=kind.model_dump())
     assert type(interface.kind) is cls
+
+
+def test_boundnest1_rejects_missing_spectra(tmp_path, grid, time, source):
+    from rompy_swan.boundary import Boundnest1
+
+    bnd = Boundnest1(
+        id="wave", source=source, sel_method="idw", sel_method_kwargs={"tolerance": 0.1}
+    )
+    with pytest.raises(ValueError, match="Missing spectra"):
+        bnd.get(destdir=tmp_path, grid=grid, time=time)
+
+
+def test_boundnest1_writes_complete_spectra(tmp_path, grid, time, source):
+    from rompy_swan.boundary import Boundnest1
+
+    bnd = Boundnest1(
+        id="wave",
+        source=source,
+        sel_method="nearest",
+        sel_method_kwargs={"tolerance": 4.0},
+    )
+    filename, cmd = bnd.get(destdir=tmp_path, grid=grid, time=time)
+    assert cmd.startswith("BOUNDNEST1 NEST")
+    assert "nan" not in filename.read_text().lower()

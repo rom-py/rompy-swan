@@ -24,6 +24,27 @@ from rompy_swan.subcomponents.spectrum import SHAPESPEC
 logger = get_logger(__name__)
 
 
+MISSING_SPECTRA_HINT = (
+    "The boundary points are probably outside the spectra dataset or beyond the "
+    "selection tolerance: check `sel_method_kwargs` and the extent of the source, or "
+    "use sel_method='nearest'."
+)
+
+
+def check_spectra(ds, filename: str | Path):
+    """Raise an error if the boundary spectra have missing values."""
+    missing = ds.efth.isnull().any(dim=[d for d in ds.efth.dims if d != "site"])
+    if "site" in missing.dims:
+        count = int(missing.sum())
+    else:
+        count = int(bool(missing))
+    if count:
+        raise ValueError(
+            f"Missing spectra at {count} boundary point(s) for {Path(filename).name}. "
+            + MISSING_SPECTRA_HINT
+        )
+
+
 def write_tpar(df: pd.DataFrame, filename: str | Path):
     """Write TPAR file.
 
@@ -37,9 +58,8 @@ def write_tpar(df: pd.DataFrame, filename: str | Path):
     """
     if df.isna().any().any():
         raise ValueError(
-            f"Missing values in the TPAR data for {Path(filename).name}. The boundary "
-            "points are probably outside the spectra dataset or beyond the selection "
-            "tolerance: check `sel_method_kwargs` and the extent of the source."
+            f"Missing values in the TPAR data for {Path(filename).name}. "
+            + MISSING_SPECTRA_HINT
         )
     with open(filename, "w") as stream:
         stream.write("TPAR\n")
@@ -101,6 +121,7 @@ class Boundnest1(BoundaryWaveStation):
             ds["lat"].values = ybnd
 
         filename = Path(destdir) / f"{self.id}.bnd"
+        check_spectra(ds, filename)
         ds.spec.to_swan(filename)
         cmd = f"BOUNDNEST1 NEST '{filename.name}' {self.rectangle.upper()}"
         return filename, cmd
@@ -296,6 +317,7 @@ class BoundspecSide(BoundspecBase):
             if self.file_type == "tpar":
                 write_tpar(self.tpar, filename)
             elif self.file_type == "spec2d":
+                check_spectra(self._ds, filename)
                 self._ds.spec.to_swan(filename)
             comp = CONSTANTFILE(fname=filename.name, seq=1)
             cmds.append(f"BOUNDSPEC {self.location.render()}{comp.render()}")
@@ -395,6 +417,7 @@ class BoundspecSegmentXY(BoundspecBase):
             if self.file_type == "tpar":
                 write_tpar(self.tpar, filename)
             elif self.file_type == "spec2d":
+                check_spectra(self._ds, filename)
                 self._ds.spec.to_swan(filename)
             file = CONSTANTFILE(fname=filename.name, seq=1)
             location = SEGMENT(points=XY(x=ds_seg.lon.values, y=ds_seg.lat.values))
