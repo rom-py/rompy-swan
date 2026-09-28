@@ -49,6 +49,7 @@ Bug Fixes
 * ``SPEC1D`` renders ``SPEC1D`` instead of ``SPEC2D``; ``CURVILINEAR`` renders ``yexc`` instead of repeating ``xexc``; ``CSIGMA`` and ``OUTPUT_OPTIONS`` have their own ``model_type`` values (``csigma`` and ``output_options``).
 * The ``OUTPUT`` group checks every write component's location, instead of stopping at the first one that uses a special name such as ``COMPGRID``.
 * Removed a stray ``print`` of the physics options when ``PHYSICS.deactivate`` is set.
+* Importing ``rompy_swan`` no longer reconfigures rompy's logging, which reset the log level set by the user (for example with ``rompy.logging.config.update(level="WARNING")``) to INFO.
 
 
 0.11.1 (2026-07-27)
