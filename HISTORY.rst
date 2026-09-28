@@ -47,6 +47,7 @@ Bug Fixes
 * The exception value of input grids is now multiplied by ``fac``, as SWAN expects. With ``fac=-1`` (elevation data) missing points were previously read as 99 m deep water.
 * ``NUMERIC`` now renders its ``csigma`` and ``setup`` options, which were silently dropped.
 * ``SPEC1D`` renders ``SPEC1D`` instead of ``SPEC2D``; ``CURVILINEAR`` renders ``yexc`` instead of repeating ``xexc``; ``CSIGMA`` and ``OUTPUT_OPTIONS`` have their own ``model_type`` values (``csigma`` and ``output_options``).
+* ``READINP`` and ``READCOORD`` accept a negative ``fac``, as SWAN does and as their description says, e.g. ``fac=-1`` to read elevations as depths. Only zero is rejected.
 * The ``OUTPUT`` group checks every write component's location, instead of stopping at the first one that uses a special name such as ``COMPGRID``.
 * Removed a stray ``print`` of the physics options when ``PHYSICS.deactivate`` is set.
 * Importing ``rompy_swan`` no longer reconfigures rompy's logging, which reset the log level set by the user (for example with ``rompy.logging.config.update(level="WARNING")``) to INFO.
