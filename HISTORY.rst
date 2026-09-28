@@ -45,6 +45,7 @@ Bug Fixes
 * ``BoundspecSegmentXY`` has its own ``model_type`` (``boundspecsegmentxy``) instead of sharing ``boundspecside`` with ``BoundspecSide``, and ``BoundaryInterface.kind`` is discriminated by ``model_type``, so YAML configurations load the intended class. YAML files that used ``boundspecside`` for a segment boundary must change it to ``boundspecsegmentxy``.
 * Input grids other than the bottom (wind, currents, water level, ...) now write missing values as the declared exception value instead of ``nan``, write rows along the y axis whatever the dimension order of the dataset, and raise a clear error when fewer than two times are available.
 * The exception value of input grids is now multiplied by ``fac``, as SWAN expects. With ``fac=-1`` (elevation data) missing points were previously read as 99 m deep water.
+* Boundary points along a side no longer repeat the end point when the spacing divides the side length exactly, which gave ``BoundspecSegmentXY`` a zero-length segment.
 * ``NUMERIC`` now renders its ``csigma`` and ``setup`` options, which were silently dropped.
 * ``SPEC1D`` renders ``SPEC1D`` instead of ``SPEC2D``; ``CURVILINEAR`` renders ``yexc`` instead of repeating ``xexc``; ``CSIGMA`` and ``OUTPUT_OPTIONS`` have their own ``model_type`` values (``csigma`` and ``output_options``).
 * ``READINP`` and ``READCOORD`` accept a negative ``fac``, as SWAN does and as their description says, e.g. ``fac=-1`` to read elevations as depths. Only zero is rejected.

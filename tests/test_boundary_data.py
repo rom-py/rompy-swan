@@ -87,3 +87,19 @@ def test_boundnest1_writes_complete_spectra(tmp_path, grid, time, source):
     filename, cmd = bnd.get(destdir=tmp_path, grid=grid, time=time)
     assert cmd.startswith("BOUNDNEST1 NEST")
     assert "nan" not in filename.read_text().lower()
+
+
+def test_segments_have_no_repeated_points(source):
+    from rompy_swan.subcomponents.boundary import SIDES
+
+    grid = SwanGrid(x0=114.5, y0=-32.8, dx=0.02, dy=0.02, nx=71, ny=66)
+    sides = SIDES(
+        sides=[
+            SIDE(side="south", direction="clockwise"),
+            SIDE(side="west", direction="clockwise"),
+        ]
+    )
+    bnd = BoundspecSegmentXY(id="wave", source=source, location=sides, spacing=0.325)
+    x, y = bnd._boundary_points(grid)
+    steps = [abs(x1 - x0) + abs(y1 - y0) for x0, x1, y0, y1 in zip(x, x[1:], y, y[1:])]
+    assert min(steps) > 1e-6

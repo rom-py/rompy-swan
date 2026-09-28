@@ -210,7 +210,9 @@ class BoundspecBase(BoundaryWaveStation, ABC):
         line = LineString(zip(xbnd, ybnd))
         if line.length < spacing:
             raise ValueError(f"Spacing = {spacing} > side length = {line.length}")
-        npts = int(np.ceil(line.length / spacing))
+        # The tolerance stops a spacing that divides the length exactly from adding a
+        # duplicate end point, which would make a zero-length segment
+        npts = int(np.ceil(line.length / spacing - 1e-9))
         points = [line.interpolate(i * spacing) for i in range(npts + 1)]
         xi = np.array([point.x for point in points])
         yi = np.array([point.y for point in points])
