@@ -189,8 +189,8 @@ class SwanConfig(BaseConfig):
                 compute.times, NONSTATIONARY
             ):
                 raise ValueError(
-                    "SWAN runs in stationary mode (MODE STATIONARY is the default) "
-                    "take a single stationary computation. " + advice
+                    "In stationary mode (MODE STATIONARY, SWAN's default) SWAN accepts "
+                    "only a single stationary computation. " + advice
                 )
         timed_inputs = []
         if self.output is not None:
