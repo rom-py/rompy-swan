@@ -109,3 +109,37 @@ def test_blocks_get_output_times(tmp_path):
         lockup=LOCKUP(compute=COMPUTE_NONSTAT()),
     )
     assert input_file(config, tmp_path).count("OUTPUT tbegblk=20230101.000000") == 2
+
+
+def test_output_interval_follows_the_run_period(tmp_path):
+    from datetime import timedelta
+
+    from rompy_swan.components.group import OUTPUT
+    from rompy_swan.components.output import BLOCK
+    from rompy_swan.subcomponents.time import TimeRangeOpen
+
+    def config(block):
+        return SwanConfig(
+            cgrid=CGRID,
+            startup=STARTUP(mode=MODE(kind="nonstationary")),
+            output=OUTPUT(block=block),
+            lockup=LOCKUP(compute=COMPUTE_NONSTAT()),
+        )
+
+    def generate(block, run_id):
+        period = TimeRange(start="2023-01-01T00", end="2023-01-01T01", interval="10m")
+        run = ModelRun(
+            run_id=run_id, period=period, output_dir=tmp_path, config=config(block)
+        )
+        run.generate()
+        return (tmp_path / run_id / "INPUT").read_text()
+
+    default = BLOCK(sname="COMPGRID", fname="a.nc", output=["hsign"])
+    assert "deltblk=600.0 SEC" in generate(default, "default")
+    every_3h = BLOCK(
+        sname="COMPGRID",
+        fname="a.nc",
+        output=["hsign"],
+        times=TimeRangeOpen(delt=timedelta(hours=3)),
+    )
+    assert "deltblk=10800.0 SEC" in generate(every_3h, "every_3h")

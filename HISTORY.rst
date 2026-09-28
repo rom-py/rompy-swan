@@ -49,6 +49,7 @@ Bug Fixes
 * ``NUMERIC`` now renders its ``csigma`` and ``setup`` options, which were silently dropped.
 * ``SPEC1D`` renders ``SPEC1D`` instead of ``SPEC2D``; ``CURVILINEAR`` renders ``yexc`` instead of repeating ``xexc``; ``CSIGMA`` and ``OUTPUT_OPTIONS`` have their own ``model_type`` values (``csigma`` and ``output_options``).
 * ``READINP`` and ``READCOORD`` accept a negative ``fac``, as SWAN does and as their description says, e.g. ``fac=-1`` to read elevations as depths. Only zero is rejected.
+* Output components without an explicit ``times.delt`` now write at the interval of the run period, as documented, instead of always every hour: ``TimeRangeOpen`` has a default interval, so the run interval was never used. Set ``times=TimeRangeOpen(delt=...)`` to keep a different output interval.
 * ``BLOCKS`` (several ``BLOCK`` outputs) no longer fails when the output times are set from the run period; each block gets its own times.
 * The ``OUTPUT`` group checks every write component's location, instead of stopping at the first one that uses a special name such as ``COMPGRID``.
 * Grid coordinates, lengths and spacings in ``CGRID`` and ``INPGRID`` are rounded to 12 significant digits, so they no longer show floating-point noise such as ``xlenc=1.4000000000000001``.

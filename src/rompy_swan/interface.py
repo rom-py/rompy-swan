@@ -160,7 +160,7 @@ class OutputInterface(TimeInterface):
         """
         return TimeRangeOpen(
             tbeg=times.tbeg if "tbeg" in times.model_fields_set else self.period.start,
-            delt=times.delt if times.delt is not None else self.period.interval,
+            delt=times.delt if "delt" in times.model_fields_set else self.period.interval,
             tfmt=times.tfmt,
             dfmt=times.dfmt,
             suffix=suffix,
