@@ -16,6 +16,8 @@ from rompy.formatting import get_formatted_header_footer
 from rompy.logging import get_logger
 from rompy_swan.components import boundary, cgrid, numerics
 from rompy_swan.components.group import INPGRIDS, LOCKUP, OUTPUT, PHYSICS, STARTUP
+from rompy_swan.components.lockup import COMPUTE, COMPUTE_NONSTAT, STOP
+from rompy_swan.subcomponents.time import NONSTATIONARY
 from rompy_swan.grid import SwanGrid
 from rompy_swan.interface import (
     BoundaryInterface,
@@ -158,6 +160,53 @@ class SwanConfig(BaseConfig):
     output: Optional[OUTPUT_TYPE] = Field(default=None)
     lockup: Optional[LOCKUP_TYPE] = Field(default=None)
 
+    @property
+    def stationary_mode(self) -> bool:
+        """True if SWAN runs in stationary mode (MODE STATIONARY, the default)."""
+        mode = self.startup.mode if self.startup is not None else None
+        return mode is None or mode.kind == "stationary"
+
+    @model_validator(mode="after")
+    def compute_consistent_with_mode(self) -> "SwanConfig":
+        """Ensure the computations and inputs are possible in the SWAN mode.
+
+        In stationary mode SWAN accepts a single COMPUTE command without times, and no
+        time information in the inputs. A nonstationary computation, a series of
+        stationary computations, and the time-stamped files written by the data and
+        boundary interfaces need MODE NONSTATIONARY. A stationary computation at a
+        given time is then `COMPUTE_STAT` in nonstationary mode.
+
+        """
+        if not self.stationary_mode:
+            return self
+        advice = (
+            "Set startup.mode=MODE(kind='nonstationary'); a stationary computation at "
+            "a given time is then COMPUTE_STAT."
+        )
+        if self.lockup is not None:
+            compute = self.lockup.compute
+            if isinstance(compute, COMPUTE_NONSTAT) or isinstance(
+                compute.times, NONSTATIONARY
+            ):
+                raise ValueError(
+                    "SWAN runs in stationary mode (MODE STATIONARY is the default) "
+                    "take a single stationary computation. " + advice
+                )
+        timed_inputs = []
+        if isinstance(self.boundary, BoundaryInterface):
+            timed_inputs.append("the boundary interface")
+        if isinstance(self.inpgrid, DataInterface) and self.inpgrid.input:
+            timed_inputs.append(
+                ", ".join(f"the {data.var.value} input" for data in self.inpgrid.input)
+            )
+        if timed_inputs:
+            raise ValueError(
+                f"SWAN does not accept the time-stamped files written by "
+                f"{' and '.join(timed_inputs)} in stationary mode (MODE STATIONARY is "
+                "the default). " + advice
+            )
+        return self
+
     @model_validator(mode="after")
     def no_nor_if_spherical(self) -> "SwanConfig":
         """Ensure SET nor is not prescribed when using spherical coordinates."""
@@ -206,6 +255,17 @@ class SwanConfig(BaseConfig):
     def not_curvilinear_if_ray(self) -> "SwanConfig":
         """Ensure bottom and water level grids are not curvilinear for RAY."""
         return self
+
+    def _render_lockup(self) -> str:
+        """Render the lockup commands, without times in stationary mode."""
+        if not self.stationary_mode:
+            return self.lockup.render()
+        compute = self.lockup.compute
+        lines = [COMPUTE().render()]
+        if compute.hotfile is not None:
+            lines.append(compute.hotfile.render())
+        lines.append(STOP().render())
+        return "\n".join(lines)
 
     @property
     def grid(self):
@@ -678,7 +738,7 @@ class SwanConfig(BaseConfig):
             ret["output"] = self.output.render()
         if self.lockup:
             logger.debug("Rendering lockup configuration")
-            ret["lockup"] = self.lockup.render()
+            ret["lockup"] = self._render_lockup()
 
         # inpgrid / boundary may use the Interface api so we need passing the args
         if self.inpgrid and isinstance(self.inpgrid, DataInterface):

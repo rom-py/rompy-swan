@@ -38,6 +38,7 @@ __________
 
 Bug Fixes
 ---------
+* In stationary mode (``MODE STATIONARY``, SWAN's default when ``startup.mode`` is not set) the lockup now writes a plain ``COMPUTE``. SWAN rejected the ``COMPUTE STATIONARY [time]`` that was always written, so these runs failed. ``SwanConfig`` now also reports, when it is created, the combinations SWAN refuses in stationary mode: a nonstationary computation or series of computations, and time-varying inputs from the data or boundary interfaces. A stationary computation at a given time is ``COMPUTE_STAT`` with ``MODE NONSTATIONARY``.
 * The data-driven ``BoundspecSide`` and ``BoundspecSegmentXY`` boundaries now write the ``BOUND SHAPESPEC`` command. Without it SWAN applied its default ``DSPR POWER`` to the directional spreading in the TPAR files, which is given in degrees.
 * TPAR boundary files are no longer written with zeros where the boundary spectra are missing, for example when a boundary point is beyond the selection tolerance. An error explains the likely cause instead.
 * ``BoundspecSegmentXY`` has its own ``model_type`` (``boundspecsegmentxy``) instead of sharing ``boundspecside`` with ``BoundspecSide``, and ``BoundaryInterface.kind`` is discriminated by ``model_type``, so YAML configurations load the intended class. YAML files that used ``boundspecside`` for a segment boundary must change it to ``boundspecsegmentxy``.
