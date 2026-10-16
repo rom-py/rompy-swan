@@ -110,42 +110,42 @@ class SwanConfig(BaseConfig):
     Examples
     --------
     
-    .. code-block:: python
+    ```python
+    from datetime import datetime, timedelta
+    from rompy.core.time import TimeRange
 
-        from datetime import datetime, timedelta
-        from rompy.core.time import TimeRange
-        
-        # Runtime with 1-hour interval
-        runtime = TimeRange(
-            start=datetime(2024, 1, 1, 0, 0, 0),
-            end=datetime(2024, 1, 2, 0, 0, 0),
-            interval=timedelta(hours=1),
-        )
-        
-        config = SwanConfig(
-            cgrid=dict(...),
-            output=dict(
-                # Custom 30-minute output interval
-                block=dict(
-                    sname="COMPGRID",
-                    fname="output.nc",
-                    output=["hsign"],
-                    times=dict(delt=timedelta(minutes=30), tfmt=1, dfmt="min"),
-                ),
-                # Uses runtime interval (1 hour)
-                table=dict(
-                    sname="COMPGRID",
-                    fname="table.nc",
-                    output=["dir"],
-                ),
+    # Runtime with 1-hour interval
+    runtime = TimeRange(
+        start=datetime(2024, 1, 1, 0, 0, 0),
+        end=datetime(2024, 1, 2, 0, 0, 0),
+        interval=timedelta(hours=1),
+    )
+
+    config = SwanConfig(
+        cgrid=dict(...),
+        output=dict(
+            # Custom 30-minute output interval
+            block=dict(
+                sname="COMPGRID",
+                fname="output.nc",
+                output=["hsign"],
+                times=dict(delt=timedelta(minutes=30), tfmt=1, dfmt="min"),
             ),
-        )
-        
-        # Result:
-        # - COMPUTE: deltc = 1 HR (from runtime)
-        # - BLOCK: deltblk = 30 MIN (from component times)
-        # - TABLE: delttbl = 1 HR (from runtime)
-        rendered = config(runtime)
+            # Uses runtime interval (1 hour)
+            table=dict(
+                sname="COMPGRID",
+                fname="table.nc",
+                output=["dir"],
+            ),
+        ),
+    )
+
+    # Result:
+    # - COMPUTE: deltc = 1 HR (from runtime)
+    # - BLOCK: deltblk = 30 MIN (from component times)
+    # - TABLE: delttbl = 1 HR (from runtime)
+    rendered = config(runtime)
+    ```
 
     """
 

@@ -40,9 +40,9 @@ class BaseSubComponent(RompyBaseModel, ABC):
 class XY(BaseSubComponent):
     """Points in problem coordinates.
 
-    .. code-block:: text
-
-        < [x] [y] >
+    ```text
+    < [x] [y] >
+    ```
 
     Note
     ----
@@ -52,16 +52,15 @@ class XY(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.base import XY
-        points = XY(
-            x=[172, 172, 172, 172.5, 173],
-            y=[-41, -40.5, -40, -40, -40],
-            fmt="0.2f",
-        )
-        print(points.render())
+    ```python exec="on" source="above" result="text" session="base-xy"
+    from rompy_swan.subcomponents.base import XY
+    points = XY(
+        x=[172, 172, 172, 172.5, 173],
+        y=[-41, -40.5, -40, -40, -40],
+        fmt="0.2f",
+    )
+    print(points.render())
+    ```
 
     """
 
@@ -96,9 +95,9 @@ class XY(BaseSubComponent):
 class IJ(BaseSubComponent):
     """Points in grid indices coordinates.
 
-    .. code-block:: text
-
-        < [i] [j] >
+    ```text
+    < [i] [j] >
+    ```
 
     Grid indices are 0-based and must be in the range ``0 ≤ i ≤ mx`` and
     ``0 ≤ j ≤ my`` where ``mx`` and ``my`` are the number of cells in each
@@ -121,12 +120,11 @@ class IJ(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.base import IJ
-        points = IJ(i=[0, 0, 5], j=[0, 19, 19])
-        print(points.render())
+    ```python exec="on" source="above" result="text" session="base-ij"
+    from rompy_swan.subcomponents.base import IJ
+    points = IJ(i=[0, 0, 5], j=[0, 19, 19])
+    print(points.render())
+    ```
 
     """
 

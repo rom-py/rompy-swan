@@ -112,12 +112,12 @@ COORDINATES_TYPE = Annotated[COORDINATES, Field(description="Coordinates compone
 class STARTUP(BaseGroupComponent):
     """Startup group component.
 
-    .. code-block:: text
-
-        PROJECT ...
-        SET ...
-        MODE ...
-        COORDINATES ...
+    ```text
+    PROJECT ...
+    SET ...
+    MODE ...
+    COORDINATES ...
+    ```
 
     This group component is used to group individual startup components. Only fields
     that are explicitly prescribed are rendered by this group component.
@@ -125,22 +125,21 @@ class STARTUP(BaseGroupComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.startup import PROJECT, SET, MODE, COORDINATES
-        from rompy_swan.components.group import STARTUP
-        proj = PROJECT(nr="01")
-        set = SET(level=0.5, direction_convention="nautical")
-        mode = MODE(kind="nonstationary", dim="twodimensional")
-        coords = COORDINATES(kind=dict(model_type="spherical", projection="ccm"))
-        startup = STARTUP(
-            project=proj,
-            set=set,
-            mode=mode,
-            coordinates=coords,
-        )
-        print(startup.render())
+    ```python exec="on" source="above" result="text" session="group-startup"
+    from rompy_swan.components.startup import PROJECT, SET, MODE, COORDINATES
+    from rompy_swan.components.group import STARTUP
+    proj = PROJECT(nr="01")
+    set = SET(level=0.5, direction_convention="nautical")
+    mode = MODE(kind="nonstationary", dim="twodimensional")
+    coords = COORDINATES(kind=dict(model_type="spherical", projection="ccm"))
+    startup = STARTUP(
+        project=proj,
+        set=set,
+        mode=mode,
+        coordinates=coords,
+    )
+    print(startup.render())
+    ```
 
     """
 
@@ -172,10 +171,10 @@ class STARTUP(BaseGroupComponent):
 class FORCING(BaseGroupComponent):
     """SWAN constant forcing group component.
 
-    .. code-block:: text
-
-        WIND vel dir [cc]
-        ICE aice [hice]
+    ```text
+    WIND vel dir [cc]
+    ICE aice [hice]
+    ```
 
     This group component holds constant (non-gridded) forcing inputs. At most one
     WIND and one ICE instance may be provided; use the INPGRID-based components for
@@ -184,17 +183,16 @@ class FORCING(BaseGroupComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.group import FORCING
-        forcing = FORCING(wind=dict(vel=10.0, dir=270.0))
-        print(forcing.render())
-        forcing = FORCING(
-            wind=dict(vel=10.0, dir=270.0),
-            ice=dict(aice=0.5, hice=1.5),
-        )
-        print(forcing.render())
+    ```python exec="on" source="above" result="text" session="group-forcing"
+    from rompy_swan.components.group import FORCING
+    forcing = FORCING(wind=dict(vel=10.0, dir=270.0))
+    print(forcing.render())
+    forcing = FORCING(
+        wind=dict(vel=10.0, dir=270.0),
+        ice=dict(aice=0.5, hice=1.5),
+    )
+    print(forcing.render())
+    ```
 
     """
 
@@ -231,15 +229,15 @@ INPGRID_TYPE = Annotated[
 class INPGRIDS(BaseGroupComponent):
     """SWAN input grids group component.
 
-    .. code-block:: text
+    ```text
+    INPGRID ...
+    READGRID ...
 
-        INPGRID ...
-        READGRID ...
+    INPGRID ...
+    READGRID ...
 
-        INPGRID ...
-        READGRID ...
-
-        ...
+    ...
+    ```
 
     This group component is a convenience to allow defining and rendering
     a list of input grid components.
@@ -247,44 +245,43 @@ class INPGRIDS(BaseGroupComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.inpgrid import REGULAR, ICE
-        from rompy_swan.components.group import INPGRIDS
-        inpgrid_bottom = REGULAR(
-            grid_type="bottom",
-            excval=-99.0,
-            xpinp=172.0,
-            ypinp=-41.0,
-            alpinp=0.0,
-            mxinp=99,
-            myinp=99,
-            dxinp=0.005,
-            dyinp=0.005,
-            readinp=dict(fname1="bottom.txt"),
-        )
-        inpgrid_wind = REGULAR(
-            grid_type="wind",
-            excval=-99.0,
-            xpinp=172.0,
-            ypinp=-41.0,
-            alpinp=0.0,
-            mxinp=99,
-            myinp=99,
-            dxinp=0.005,
-            dyinp=0.005,
-            readinp=dict(fname1="wind.txt"),
-            nonstationary=dict(
-                tbeg="2019-01-01T00:00:00",
-                tend="2019-01-07 00:00:00",
-                delt=3600,
-                dfmt="hr",
-            ),
-        )
-        inpgrid_ice_cte = ICE(aice=0.8, hice=2.0)
-        inpgrids = INPGRIDS(inpgrids=[inpgrid_bottom, inpgrid_wind, inpgrid_ice_cte])
-        print(inpgrids.render())
+    ```python exec="on" source="above" result="text" session="group-inpgrids"
+    from rompy_swan.components.inpgrid import REGULAR, ICE
+    from rompy_swan.components.group import INPGRIDS
+    inpgrid_bottom = REGULAR(
+        grid_type="bottom",
+        excval=-99.0,
+        xpinp=172.0,
+        ypinp=-41.0,
+        alpinp=0.0,
+        mxinp=99,
+        myinp=99,
+        dxinp=0.005,
+        dyinp=0.005,
+        readinp=dict(fname1="bottom.txt"),
+    )
+    inpgrid_wind = REGULAR(
+        grid_type="wind",
+        excval=-99.0,
+        xpinp=172.0,
+        ypinp=-41.0,
+        alpinp=0.0,
+        mxinp=99,
+        myinp=99,
+        dxinp=0.005,
+        dyinp=0.005,
+        readinp=dict(fname1="wind.txt"),
+        nonstationary=dict(
+            tbeg="2019-01-01T00:00:00",
+            tend="2019-01-07 00:00:00",
+            delt=3600,
+            dfmt="hr",
+        ),
+    )
+    inpgrid_ice_cte = ICE(aice=0.8, hice=2.0)
+    inpgrids = INPGRIDS(inpgrids=[inpgrid_bottom, inpgrid_wind, inpgrid_ice_cte])
+    print(inpgrids.render())
+    ```
 
     """
 
@@ -379,21 +376,20 @@ class PHYSICS(BaseGroupComponent):
     Exemples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.group import PHYSICS
-        gen = {"model_type": "gen3", "source_terms": {"model_type": "komen"}}
-        phys = PHYSICS(gen=gen)
-        print(phys.render())
-        phys = PHYSICS(
-            gen=dict(model_type="gen3", source_terms={"model_type": "st6c1"}),
-            negatinp={"model_type": "negatinp", "rdcoef": 0.04},
-            sswell={"model_type": "zieger"},
-            breaking={"model_type": "constant", "alpha": 1.0, "gamma": 0.73},
-            friction={"model_type": "jonswap", "cfjon": 0.038},
-        )
-        print(phys.render())
+    ```python exec="on" source="above" result="text" session="group-physics"
+    from rompy_swan.components.group import PHYSICS
+    gen = {"model_type": "gen3", "source_terms": {"model_type": "komen"}}
+    phys = PHYSICS(gen=gen)
+    print(phys.render())
+    phys = PHYSICS(
+        gen=dict(model_type="gen3", source_terms={"model_type": "st6c1"}),
+        negatinp={"model_type": "negatinp", "rdcoef": 0.04},
+        sswell={"model_type": "zieger"},
+        breaking={"model_type": "constant", "alpha": 1.0, "gamma": 0.73},
+        friction={"model_type": "jonswap", "cfjon": 0.038},
+    )
+    print(phys.render())
+    ```
 
     """
 
@@ -522,27 +518,26 @@ NEST_TYPE = Annotated[NEST, Field(description="Nest component (NGRID + NESTOUT)"
 class OUTPUT(BaseGroupComponent):
     """Output group component.
 
-    .. code-block:: text
-
-        FRAME 'sname' ...
-        GROUP 'sname' ...
-        CURVE 'sname' ...
-        RAY 'rname' ...
-        ISOLINE 'sname' 'rname' ...
-        POINTS 'sname ...
-        NESTS (list):
-          - NEST 'sname':
-              NGRID 'sname' ...
-              NESTOUT 'sname' ...
-          - NEST 'sname':
-              NGRID 'sname' ...
-              NESTOUT 'sname' ...
-        QUANTITY ...
-        OUTPUT OPTIONS ...
-        BLOCK 'sname' ...
-        TABLE 'sname' ...
-        SPECOUT 'sname' ...
-
+    ```text
+    FRAME 'sname' ...
+    GROUP 'sname' ...
+    CURVE 'sname' ...
+    RAY 'rname' ...
+    ISOLINE 'sname' 'rname' ...
+    POINTS 'sname ...
+    NESTS (list):
+      - NEST 'sname':
+          NGRID 'sname' ...
+          NESTOUT 'sname' ...
+      - NEST 'sname':
+          NGRID 'sname' ...
+          NESTOUT 'sname' ...
+    QUANTITY ...
+    OUTPUT OPTIONS ...
+    BLOCK 'sname' ...
+    TABLE 'sname' ...
+    SPECOUT 'sname' ...
+    ```
 
     This group component is used to define multiple types of output locations and
     write components in a single model. Only fields that are explicitly prescribed are
@@ -565,39 +560,38 @@ class OUTPUT(BaseGroupComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import POINTS, BLOCK, QUANTITIES, TABLE
-        from rompy_swan.components.group import OUTPUT
-        points = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
-        quantity = QUANTITIES(
-            quantities=[
-                dict(output=["depth", "hsign", "tps", "dir", "tm01"], excv=-9),
-            ]
-        )
-        times = dict(tbeg="2012-01-01T00:00:00", delt="PT30M", tfmt=1, dfmt="min")
-        block = BLOCK(
-            model_type="block",
-            sname="COMPGRID",
-            fname="./swangrid.nc",
-            output=["depth", "hsign", "tps", "dir"],
-            times=times,
-        )
-        table = TABLE(
-            sname="outpts",
-            format="noheader",
-            fname="./swantable.nc",
-            output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-            times=times,
-        )
-        out = OUTPUT(
-            points=points,
-            quantity=quantity,
-            block=block,
-            table=table,
-        )
-        print(out.render())
+    ```python exec="on" source="above" result="text" session="group-output"
+    from rompy_swan.components.output import POINTS, BLOCK, QUANTITIES, TABLE
+    from rompy_swan.components.group import OUTPUT
+    points = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
+    quantity = QUANTITIES(
+        quantities=[
+            dict(output=["depth", "hsign", "tps", "dir", "tm01"], excv=-9),
+        ]
+    )
+    times = dict(tbeg="2012-01-01T00:00:00", delt="PT30M", tfmt=1, dfmt="min")
+    block = BLOCK(
+        model_type="block",
+        sname="COMPGRID",
+        fname="./swangrid.nc",
+        output=["depth", "hsign", "tps", "dir"],
+        times=times,
+    )
+    table = TABLE(
+        sname="outpts",
+        format="noheader",
+        fname="./swantable.nc",
+        output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
+        times=times,
+    )
+    out = OUTPUT(
+        points=points,
+        quantity=quantity,
+        block=block,
+        table=table,
+    )
+    print(out.render())
+    ```
 
     """
 
@@ -702,7 +696,7 @@ class OUTPUT(BaseGroupComponent):
     def migrate_legacy_ngrid_nestout(self) -> "OUTPUT":
         """Convert deprecated ngrid/nestout fields to nests.
 
-        .. deprecated::
+        !!! warning "Deprecated"
             Use the `nests` field instead. This validator will be removed in a future
             version once the legacy `ngrid` and `nestout` fields are dropped.
         """
@@ -837,14 +831,14 @@ COMPUTE_TYPE = Annotated[
 class LOCKUP(BaseComponent):
     """Lockup group component.
 
-    .. code-block:: text
-
-        COMPUTE ...
-        HOTFILE ...
-        COMPUTE ...
-        HOTFILE ...
-        ...
-        STOP
+    ```text
+    COMPUTE ...
+    HOTFILE ...
+    COMPUTE ...
+    HOTFILE ...
+    ...
+    STOP
+    ```
 
     This is a group component to specify SWAN "Lockup" commands including multiple
     `COMPUTE` commands that may or may not be interleaved with `HOTFILE` commands,
@@ -859,27 +853,26 @@ class LOCKUP(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.group import LOCKUP
-        lockup = LOCKUP(compute=dict(model_type="compute"))
-        print(lockup.render())
-        lockup = LOCKUP(
-            compute=dict(
-                model_type="stat",
-                times=dict(
-                    model_type="nonstationary",
-                    tbeg="1990-01-01T00:00:00",
-                    tend="1990-01-01T03:00:00",
-                    delt="PT1H",
-                    dfmt="hr",
-                ),
-                hotfile=dict(fname="hotfile"),
-                hottimes=[-1],
+    ```python exec="on" source="above" result="text" session="group-lockup"
+    from rompy_swan.components.group import LOCKUP
+    lockup = LOCKUP(compute=dict(model_type="compute"))
+    print(lockup.render())
+    lockup = LOCKUP(
+        compute=dict(
+            model_type="stat",
+            times=dict(
+                model_type="nonstationary",
+                tbeg="1990-01-01T00:00:00",
+                tend="1990-01-01T03:00:00",
+                delt="PT1H",
+                dfmt="hr",
             ),
-        )
-        print(lockup.render())
+            hotfile=dict(fname="hotfile"),
+            hottimes=[-1],
+        ),
+    )
+    print(lockup.render())
+    ```
 
     """
 

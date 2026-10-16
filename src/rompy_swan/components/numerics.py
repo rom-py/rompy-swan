@@ -35,9 +35,9 @@ PROP_TYPE = Annotated[
 class PROP(BaseComponent):
     """Propagation scheme.
 
-    .. code-block:: text
-
-        PROP BSTB|GSE
+    ```text
+    PROP BSTB|GSE
+    ```
 
     Notes
     -----
@@ -61,21 +61,20 @@ class PROP(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.numerics import PROP
-        prop = PROP()
-        print(prop.render())
-        prop = PROP(scheme=dict(model_type="bsbt"))
-        print(prop.render())
-        prop = PROP(
-            scheme=dict(
-                model_type="gse",
-                waveage=dict(delt="PT5H", dfmt="hr"),
-            ),
-        )
-        print(prop.render())
+    ```python exec="on" source="above" result="text" session="numerics-prop"
+    from rompy_swan.components.numerics import PROP
+    prop = PROP()
+    print(prop.render())
+    prop = PROP(scheme=dict(model_type="bsbt"))
+    print(prop.render())
+    prop = PROP(
+        scheme=dict(
+            model_type="gse",
+            waveage=dict(delt="PT5H", dfmt="hr"),
+        ),
+    )
+    print(prop.render())
+    ```
 
     """
 
@@ -101,35 +100,34 @@ class PROP(BaseComponent):
 class NUMERIC(BaseComponent):
     """Numerical properties.
 
-    .. code-block:: text
-
-        NUMeric ( STOPC [dabs] [drel] [curvat] [npnts] ->STAT|NONSTAT [limiter] ) &
-            ( DIRimpl [cdd] ) ( SIGIMpl [css] [eps2] [outp] [niter] ) &
-            ( CTheta [cfl] ) ( CSigma [cfl] ) ( SETUP [eps2] [outp] [niter] )
+    ```text
+    NUMeric ( STOPC [dabs] [drel] [curvat] [npnts] ->STAT|NONSTAT [limiter] ) &
+        ( DIRimpl [cdd] ) ( SIGIMpl [css] [eps2] [outp] [niter] ) &
+        ( CTheta [cfl] ) ( CSigma [cfl] ) ( SETUP [eps2] [outp] [niter] )
+    ```
 
     Examples
     --------
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.numerics import NUMERIC
-        numeric = NUMERIC()
-        print(numeric.render())
-        numeric = NUMERIC(
-            stop=dict(
-                model_type="stopc",
-                dabs=0.05,
-                drel=0.01,
-                curvat=0.05,
-                npnts=99.5,
-            ),
-            dirimpl=dict(cdd=0.5),
-            sigimpl=dict(css=0.5, eps2=1e-4, outp=0, niter=20),
-            ctheta=dict(cfl=0.9),
-            csigma=dict(cfl=0.9),
-            setup=dict(eps2=1e-4, outp=0, niter=20),
-        )
-        print(numeric.render())
+    ```python exec="on" source="above" result="text" session="numerics-numeric"
+    from rompy_swan.components.numerics import NUMERIC
+    numeric = NUMERIC()
+    print(numeric.render())
+    numeric = NUMERIC(
+        stop=dict(
+            model_type="stopc",
+            dabs=0.05,
+            drel=0.01,
+            curvat=0.05,
+            npnts=99.5,
+        ),
+        dirimpl=dict(cdd=0.5),
+        sigimpl=dict(css=0.5, eps2=1e-4, outp=0, niter=20),
+        ctheta=dict(cfl=0.9),
+        csigma=dict(cfl=0.9),
+        setup=dict(eps2=1e-4, outp=0, niter=20),
+    )
+    print(numeric.render())
+    ```
 
     """
 

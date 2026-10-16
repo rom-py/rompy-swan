@@ -11,19 +11,18 @@ from rompy_swan.subcomponents.time import Delt
 class BSBT(BaseSubComponent):
     """BSBT first order propagation scheme.
 
-    .. code-block:: text
-
-        BSTB
+    ```text
+    BSTB
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import BSBT
-        scheme = BSBT()
-        print(scheme.render())
+    ```python exec="on" source="above" result="text" session="numerics-bsbt"
+    from rompy_swan.subcomponents.numerics import BSBT
+    scheme = BSBT()
+    print(scheme.render())
+    ```
 
     """
 
@@ -39,9 +38,9 @@ class BSBT(BaseSubComponent):
 class GSE(BaseSubComponent):
     """Garden-sprinkler effect.
 
-    .. code-block:: text
-
-        GSE [waveage] Sec|MIn|HR|DAy
+    ```text
+    GSE [waveage] Sec|MIn|HR|DAy
+    ```
 
     Garden-sprinkler effect is to be counteracted in the S&L propagation scheme
     (default for nonstationary regular grid computations) or in the propagation
@@ -51,12 +50,11 @@ class GSE(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import GSE
-        scheme = GSE(waveage=dict(delt=86400, dfmt="day"))
-        print(scheme.render())
+    ```python exec="on" source="above" result="text" session="numerics-gse"
+    from rompy_swan.subcomponents.numerics import GSE
+    scheme = GSE(waveage=dict(delt=86400, dfmt="day"))
+    print(scheme.render())
+    ```
 
     """
 
@@ -140,9 +138,9 @@ class NONSTAT(BaseSubComponent):
 class STOPC(BaseSubComponent):
     """Stopping criteria of  Zijlema and Van der Westhuysen (2005).
 
-    .. code-block:: text
-
-        STOPC [dabs] [drel] [curvat] [npnts] ->STAT|NONSTAT [limiter]
+    ```text
+    STOPC [dabs] [drel] [curvat] [npnts] ->STAT|NONSTAT [limiter]
+    ```
 
     With this option the user can influence the criterion for terminating the iterative
     procedure in the SWAN computations (both stationary and nonstationary). The
@@ -171,21 +169,20 @@ class STOPC(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import STOPC
-        stop = STOPC()
-        print(stop.render())
-        stop = STOPC(
-            dabs=0.005,
-            drel=0.01,
-            curvat=0.005,
-            npnts=99.5,
-            mode=dict(model_type="nonstat", mxitns=1),
-            limiter=0.1,
-        )
-        print(stop.render())
+    ```python exec="on" source="above" result="text" session="numerics-stopc"
+    from rompy_swan.subcomponents.numerics import STOPC
+    stop = STOPC()
+    print(stop.render())
+    stop = STOPC(
+        dabs=0.005,
+        drel=0.01,
+        curvat=0.005,
+        npnts=99.5,
+        mode=dict(model_type="nonstat", mxitns=1),
+        limiter=0.1,
+    )
+    print(stop.render())
+    ```
 
     """
 
@@ -255,9 +252,9 @@ class STOPC(BaseSubComponent):
 class ACCUR(BaseSubComponent):
     """Stop the iterative procedure.
 
-    .. code-block:: text
-
-        ACCUR [drel] [dhoval] [dtoval] [npnts] ->STAT|NONSTAT [limiter]
+    ```text
+    ACCUR [drel] [dhoval] [dtoval] [npnts] ->STAT|NONSTAT [limiter]
+    ```
 
     With this option the user can influence the criterion for terminating the iterative
     procedure in the SWAN computations (both stationary and non-stationary modes).
@@ -281,21 +278,20 @@ class ACCUR(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import ACCUR
-        accur = ACCUR()
-        print(accur.render())
-        accur = ACCUR(
-            drel=0.01,
-            dhoval=0.02,
-            dtoval=0.02,
-            npnts=98.0,
-            mode=dict(model_type="nonstat", mxitns=1),
-            limiter=0.1,
-        )
-        print(accur.render())
+    ```python exec="on" source="above" result="text" session="numerics-accur"
+    from rompy_swan.subcomponents.numerics import ACCUR
+    accur = ACCUR()
+    print(accur.render())
+    accur = ACCUR(
+        drel=0.01,
+        dhoval=0.02,
+        dtoval=0.02,
+        npnts=98.0,
+        mode=dict(model_type="nonstat", mxitns=1),
+        limiter=0.1,
+    )
+    print(accur.render())
+    ```
 
     """
 
@@ -365,20 +361,19 @@ class ACCUR(BaseSubComponent):
 class DIRIMPL(BaseSubComponent):
     """Numerical scheme for refraction.
 
-    .. code-block:: text
-
-        DIRIMPL [cdd]
+    ```text
+    DIRIMPL [cdd]
+    ```
 
     Examples
     --------
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import DIRIMPL
-        dirimpl = DIRIMPL()
-        print(dirimpl.render())
-        dirimpl = DIRIMPL(cdd=0.5)
-        print(dirimpl.render())
+    ```python exec="on" source="above" result="text" session="numerics-dirimpl"
+    from rompy_swan.subcomponents.numerics import DIRIMPL
+    dirimpl = DIRIMPL()
+    print(dirimpl.render())
+    dirimpl = DIRIMPL(cdd=0.5)
+    print(dirimpl.render())
+    ```
 
     """
 
@@ -407,9 +402,9 @@ class DIRIMPL(BaseSubComponent):
 class SIGIMPL(BaseSubComponent):
     """Frequency shifting accuracy.
 
-    .. code-block:: text
-
-        SIGIMpl [cfl] [eps2] [outp] [niter]
+    ```text
+    SIGIMpl [cfl] [eps2] [outp] [niter]
+    ```
 
     Controls the accuracy of computing the frequency shifting and the stopping
     criterion and amount of output for the SIP solver (used in the computations in the
@@ -417,14 +412,13 @@ class SIGIMPL(BaseSubComponent):
 
     Examples
     --------
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import SIGIMPL
-        sigimpl = SIGIMPL()
-        print(sigimpl.render())
-        sigimpl = SIGIMPL(css=0.5, eps2=1e-4, outp=0, niter=20)
-        print(sigimpl.render())
+    ```python exec="on" source="above" result="text" session="numerics-sigimpl"
+    from rompy_swan.subcomponents.numerics import SIGIMPL
+    sigimpl = SIGIMPL()
+    print(sigimpl.render())
+    sigimpl = SIGIMPL(css=0.5, eps2=1e-4, outp=0, niter=20)
+    print(sigimpl.render())
+    ```
 
     """
 
@@ -482,9 +476,9 @@ class SIGIMPL(BaseSubComponent):
 class CTHETA(BaseSubComponent):
     """Prevents excessive directional turning.
 
-    .. code-block:: text
-
-        CTheta [cfl]
+    ```text
+    CTheta [cfl]
+    ```
 
     This option prevents an excessive directional turning at a single grid point or
     vertex due to a very coarse bathymetry or current locally. This option limits the
@@ -494,14 +488,13 @@ class CTHETA(BaseSubComponent):
 
     Examples
     --------
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import CTHETA
-        ctheta = CTHETA()
-        print(ctheta.render())
-        ctheta = CTHETA(cfl=0.9)
-        print(ctheta.render())
+    ```python exec="on" source="above" result="text" session="numerics-ctheta"
+    from rompy_swan.subcomponents.numerics import CTHETA
+    ctheta = CTHETA()
+    print(ctheta.render())
+    ctheta = CTHETA(cfl=0.9)
+    print(ctheta.render())
+    ```
 
     """
 
@@ -527,9 +520,9 @@ class CTHETA(BaseSubComponent):
 class CSIGMA(BaseSubComponent):
     """Prevents excessive directional turning.
 
-    .. code-block:: text
-
-        CSigma [cfl]
+    ```text
+    CSigma [cfl]
+    ```
 
     This option prevents an excessive frequency shifting at a single grid point or
     vertex due to a very coarse bathymetry or current locally. This option limits the
@@ -539,14 +532,13 @@ class CSIGMA(BaseSubComponent):
 
     Examples
     --------
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import CSIGMA
-        csigma = CSIGMA()
-        print(csigma.render())
-        csigma = CSIGMA(cfl=0.9)
-        print(csigma.render())
+    ```python exec="on" source="above" result="text" session="numerics-csigma"
+    from rompy_swan.subcomponents.numerics import CSIGMA
+    csigma = CSIGMA()
+    print(csigma.render())
+    csigma = CSIGMA(cfl=0.9)
+    print(csigma.render())
+    ```
 
     """
 
@@ -572,23 +564,22 @@ class CSIGMA(BaseSubComponent):
 class SETUP(BaseSubComponent):
     """Stop criteria in the computation of wave setup.
 
-    .. code-block:: text
-
-        SETUP [eps2] [outp] [niter]
+    ```text
+    SETUP [eps2] [outp] [niter]
+    ```
 
     Controls the stopping criterion and amount of output for the SOR solver in the
     computation of the wave-induced set-up.
 
     Examples
     --------
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.numerics import SETUP
-        setup = SETUP()
-        print(setup.render())
-        setup = SETUP(eps2=1e-4, outp=0, niter=20)
-        print(setup.render())
+    ```python exec="on" source="above" result="text" session="numerics-setup"
+    from rompy_swan.subcomponents.numerics import SETUP
+    setup = SETUP()
+    print(setup.render())
+    setup = SETUP(eps2=1e-4, outp=0, niter=20)
+    print(setup.render())
+    ```
 
     """
 

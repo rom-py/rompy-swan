@@ -18,9 +18,9 @@ logger = get_logger(__name__)
 class SIDE(BaseSubComponent):
     """Boundary over one side of computational domain.
 
-    .. code-block:: text
-
-        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
+    ```text
+    SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
+    ```
 
     The boundary is one full side of the computational grid (in 1D cases either of the
     two ends of the 1D-grid).
@@ -32,12 +32,11 @@ class SIDE(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import SIDE
-        side = SIDE(side="west", direction="ccw")
-        print(side.render())
+    ```python exec="on" source="above" result="text" session="boundary-side"
+    from rompy_swan.subcomponents.boundary import SIDE
+    side = SIDE(side="west", direction="ccw")
+    print(side.render())
+    ```
 
     """
 
@@ -61,11 +60,11 @@ class SIDE(BaseSubComponent):
 class SIDES(BaseSubComponent):
     """Boundary over multiple side of computational domain.
 
-    .. code-block:: text
-
-        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
-        SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
-        ...
+    ```text
+    SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
+    SIDE NORTH|NW|WEST|SW|SOUTH|SE|E|NE CCW|CLOCKWISE
+    ...
+    ```
 
     Note
     ----
@@ -74,14 +73,13 @@ class SIDES(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import SIDE, SIDES
-        side1 = SIDE(side="west", direction="ccw")
-        side2 = SIDE(side="north", direction="ccw")
-        sides = SIDES(sides=[side1, side2])
-        print(sides.render())
+    ```python exec="on" source="above" result="text" session="boundary-sides"
+    from rompy_swan.subcomponents.boundary import SIDE, SIDES
+    side1 = SIDE(side="west", direction="ccw")
+    side2 = SIDE(side="north", direction="ccw")
+    sides = SIDES(sides=[side1, side2])
+    print(sides.render())
+    ```
 
     """
 
@@ -103,10 +101,10 @@ class SIDES(BaseSubComponent):
 class SEGMENT(BaseSubComponent):
     """Boundary over a segment defined from points.
 
-    .. code-block:: text
-
-        SEGMENT XY < [x] [y] >
-        SEGMENT IJ < [i] [j] >
+    ```text
+    SEGMENT XY < [x] [y] >
+    SEGMENT IJ < [i] [j] >
+    ```
 
     The segment is defined either by means of a series of points in terms of problem
     coordinates (`XY`) or by means of a series of points in terms of grid indices
@@ -115,27 +113,26 @@ class SEGMENT(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import SEGMENT
-        seg = SEGMENT(
-            points=dict(
-                model_type="xy",
-                x=[172, 172, 172, 172.5, 173],
-                y=[-41, -40.5, -40, -40, -40],
-                fmt="0.2f",
-            ),
-        )
-        print(seg.render())
-        seg = SEGMENT(
-            points=dict(
-                model_type="ij",
-                i=[0, 0, 5],
-                j=[0, 19, 19],
-            ),
-        )
-        print(seg.render())
+    ```python exec="on" source="above" result="text" session="boundary-segment"
+    from rompy_swan.subcomponents.boundary import SEGMENT
+    seg = SEGMENT(
+        points=dict(
+            model_type="xy",
+            x=[172, 172, 172, 172.5, 173],
+            y=[-41, -40.5, -40, -40, -40],
+            fmt="0.2f",
+        ),
+    )
+    print(seg.render())
+    seg = SEGMENT(
+        points=dict(
+            model_type="ij",
+            i=[0, 0, 5],
+            j=[0, 19, 19],
+        ),
+    )
+    print(seg.render())
+    ```
 
     """
 
@@ -155,19 +152,18 @@ class SEGMENT(BaseSubComponent):
 class PAR(BaseSubComponent):
     """Spectral parameters.
 
-    .. code-block:: text
-
-        PAR [hs] [per] [dir] [dd]
+    ```text
+    PAR [hs] [per] [dir] [dd]
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import PAR
-        par = PAR(hs=1.5, per=8.1, dir=225)
-        print(par.render())
+    ```python exec="on" source="above" result="text" session="boundary-par"
+    from rompy_swan.subcomponents.boundary import PAR
+    par = PAR(hs=1.5, per=8.1, dir=225)
+    print(par.render())
+    ```
 
     """
 
@@ -220,19 +216,18 @@ class PAR(BaseSubComponent):
 class CONSTANTPAR(PAR):
     """Constant spectral parameters.
 
-    .. code-block:: text
-
-        CONSTANT PAR [hs] [per] [dir] ([dd])
+    ```text
+    CONSTANT PAR [hs] [per] [dir] ([dd])
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import CONSTANTPAR
-        par = CONSTANTPAR(hs=1.5, per=8.1, dir=225)
-        print(par.render())
+    ```python exec="on" source="above" result="text" session="boundary-constantpar"
+    from rompy_swan.subcomponents.boundary import CONSTANTPAR
+    par = CONSTANTPAR(hs=1.5, per=8.1, dir=225)
+    print(par.render())
+    ```
 
     """
 
@@ -249,25 +244,24 @@ class CONSTANTPAR(PAR):
 class VARIABLEPAR(BaseSubComponent):
     """Variable spectral parameter.
 
-    .. code-block:: text
-
-        VARIABLE PAR < [len] [hs] [per] [dir] [dd] >
+    ```text
+    VARIABLE PAR < [len] [hs] [per] [dir] [dd] >
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import VARIABLEPAR
-        par = VARIABLEPAR(
-            hs=[1.5, 1.4, 1.1],
-            per=[8.1, 8.0, 8.1],
-            dir=[225, 226, 228],
-            dd=[25, 22, 23],
-            len=[0, 0.5, 1.0],
-        )
-        print(par.render())
+    ```python exec="on" source="above" result="text" session="boundary-variablepar"
+    from rompy_swan.subcomponents.boundary import VARIABLEPAR
+    par = VARIABLEPAR(
+        hs=[1.5, 1.4, 1.1],
+        per=[8.1, 8.0, 8.1],
+        dir=[225, 226, 228],
+        dd=[25, 22, 23],
+        len=[0, 0.5, 1.0],
+    )
+    print(par.render())
+    ```
 
     """
 
@@ -336,9 +330,9 @@ class VARIABLEPAR(BaseSubComponent):
 class CONSTANTFILE(BaseSubComponent):
     """Constant file specification.
 
-    .. code-block:: text
-
-        CONSTANT FILE 'fname' [seq]
+    ```text
+    CONSTANT FILE 'fname' [seq]
+    ```
 
     There are three types of files:
 
@@ -359,24 +353,23 @@ class CONSTANTFILE(BaseSubComponent):
     ----
     Example of a TPAR file:
 
-    .. code-block:: text
-
-        TPAR
-        19920516.130000 4.2 12. -110. 22.
-        19920516.180000 4.2 12. -110. 22.
-        19920517.000000 1.2 8. -110. 22.
-        19920517.120000 1.4 8.5 -80. 26
-        19920517.200000 0.9 6.5 -95. 28
+    ```text
+    TPAR
+    19920516.130000 4.2 12. -110. 22.
+    19920516.180000 4.2 12. -110. 22.
+    19920517.000000 1.2 8. -110. 22.
+    19920517.120000 1.4 8.5 -80. 26
+    19920517.200000 0.9 6.5 -95. 28
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import CONSTANTFILE
-        par = CONSTANTFILE(fname="tpar.txt")
-        print(par.render())
+    ```python exec="on" source="above" result="text" session="boundary-constantfile"
+    from rompy_swan.subcomponents.boundary import CONSTANTFILE
+    par = CONSTANTFILE(fname="tpar.txt")
+    print(par.render())
+    ```
 
     """
 
@@ -410,9 +403,9 @@ class CONSTANTFILE(BaseSubComponent):
 class VARIABLEFILE(BaseSubComponent):
     """Variable file specification.
 
-    .. code-block:: text
-
-        VARIABLE FILE < [len] 'fname' [seq] >
+    ```text
+    VARIABLE FILE < [len] 'fname' [seq] >
+    ```
 
     There are three types of files:
 
@@ -433,27 +426,26 @@ class VARIABLEFILE(BaseSubComponent):
     ----
     Example of a TPAR file:
 
-    .. code-block:: text
-
-        TPAR
-        19920516.130000 4.2 12. -110. 22.
-        19920516.180000 4.2 12. -110. 22.
-        19920517.000000 1.2 8. -110. 22.
-        19920517.120000 1.4 8.5 -80. 26
-        19920517.200000 0.9 6.5 -95. 28
+    ```text
+    TPAR
+    19920516.130000 4.2 12. -110. 22.
+    19920516.180000 4.2 12. -110. 22.
+    19920517.000000 1.2 8. -110. 22.
+    19920517.120000 1.4 8.5 -80. 26
+    19920517.200000 0.9 6.5 -95. 28
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import VARIABLEFILE
-        par = VARIABLEFILE(
-            fname=["tpar1.txt", "tpar2.txt", "tpar3.txt"],
-            len=[0.0, 0.5, 1.0],
-        )
-        print(par.render())
+    ```python exec="on" source="above" result="text" session="boundary-variablefile"
+    from rompy_swan.subcomponents.boundary import VARIABLEFILE
+    par = VARIABLEFILE(
+        fname=["tpar1.txt", "tpar2.txt", "tpar3.txt"],
+        len=[0.0, 0.5, 1.0],
+    )
+    print(par.render())
+    ```
 
     """
 
@@ -510,9 +502,9 @@ class VARIABLEFILE(BaseSubComponent):
 class DEFAULT(BaseSubComponent):
     """Default initial conditions.
 
-    .. code-block:: text
-
-        DEFAULT
+    ```text
+    DEFAULT
+    ```
 
     The initial spectra are computed from the local wind velocities, using the
     deep-water growth curve of Kahma and Calkoen (1992), cut off at values of
@@ -524,12 +516,11 @@ class DEFAULT(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import DEFAULT
-        init = DEFAULT()
-        print(init.render())
+    ```python exec="on" source="above" result="text" session="boundary-default"
+    from rompy_swan.subcomponents.boundary import DEFAULT
+    init = DEFAULT()
+    print(init.render())
+    ```
 
     """
 
@@ -542,9 +533,9 @@ class DEFAULT(BaseSubComponent):
 class ZERO(BaseSubComponent):
     """Zero initial conditions.
 
-    .. code-block:: text
-
-        ZERO
+    ```text
+    ZERO
+    ```
 
     The initial spectral densities are all 0; note that if waves are generated in the
     model only by wind, waves can become non-zero only by the presence of the
@@ -553,12 +544,11 @@ class ZERO(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import ZERO
-        init = ZERO()
-        print(init.render())
+    ```python exec="on" source="above" result="text" session="boundary-zero"
+    from rompy_swan.subcomponents.boundary import ZERO
+    init = ZERO()
+    print(init.render())
+    ```
 
     """
 
@@ -571,9 +561,9 @@ class ZERO(BaseSubComponent):
 class HOTSINGLE(BaseSubComponent):
     """Hotstart single initial conditions.
 
-    .. code-block:: text
-
-        HOTSTART SINGLE fname='fname' FREE|UNFORMATTED
+    ```text
+    HOTSTART SINGLE fname='fname' FREE|UNFORMATTED
+    ```
 
     Initial wave field is read from file; this file was generated in a previous SWAN
     run by means of the HOTFILE command. If the previous run was nonstationary,
@@ -589,12 +579,11 @@ class HOTSINGLE(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import HOTSINGLE
-        init = HOTSINGLE(fname="hotstart.swn", format="free")
-        print(init.render())
+    ```python exec="on" source="above" result="text" session="boundary-hotsingle"
+    from rompy_swan.subcomponents.boundary import HOTSINGLE
+    init = HOTSINGLE(fname="hotstart.swn", format="free")
+    print(init.render())
+    ```
 
     """
 
@@ -622,9 +611,9 @@ class HOTSINGLE(BaseSubComponent):
 class HOTMULTIPLE(BaseSubComponent):
     """Hotstart multiple initial conditions.
 
-    .. code-block:: text
-
-        HOTSTART MULTIPLE fname='fname' FREE|UNFORMATTED
+    ```text
+    HOTSTART MULTIPLE fname='fname' FREE|UNFORMATTED
+    ```
 
     Initial wave field is read from file; this file was generated in a previous SWAN
     run by means of the HOTFILE command. If the previous run was nonstationary,
@@ -640,12 +629,11 @@ class HOTMULTIPLE(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.boundary import HOTMULTIPLE
-        init = HOTMULTIPLE(fname="hotstart.swn", format="free")
-        print(init.render())
+    ```python exec="on" source="above" result="text" session="boundary-hotmultiple"
+    from rompy_swan.subcomponents.boundary import HOTMULTIPLE
+    init = HOTMULTIPLE(fname="hotstart.swn", format="free")
+    print(init.render())
+    ```
 
     """
 

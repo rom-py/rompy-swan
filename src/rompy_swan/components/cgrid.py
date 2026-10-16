@@ -16,10 +16,10 @@ logger = logging.getLogger(__name__)
 class CGRID(BaseComponent, ABC):
     """SWAN computational grid abstract component.
 
-    .. code-block:: text
-
-        CGRID ->REGULAR|CURVILINEAR|UNSTRUCTURED &
-            CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+    ```text
+    CGRID ->REGULAR|CURVILINEAR|UNSTRUCTURED &
+        CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+    ```
 
     This class should not be used directly.
 
@@ -38,10 +38,10 @@ class CGRID(BaseComponent, ABC):
 class REGULAR(CGRID):
     """SWAN regular computational grid.
 
-    .. code-block:: text
-
-        CGRID REGULAR [xpc] [ypc] [alpc] [xlenc] [ylenc] [mxc] [myc] &
-            ->CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+    ```text
+    CGRID REGULAR [xpc] [ypc] [alpc] [xlenc] [ylenc] [mxc] [myc] &
+        ->CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+    ```
 
     This is a group component that includes a `CGRID` and a `READGRID` component.
 
@@ -53,15 +53,14 @@ class REGULAR(CGRID):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.cgrid import REGULAR
-        cgrid = REGULAR(
-            grid=dict(xp=0, yp=0, alp=0, xlen=2000, ylen=1300, mx=100, my=100),
-            spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
-        )
-        print(cgrid.render())
+    ```python exec="on" source="above" result="text" session="cgrid-regular"
+    from rompy_swan.components.cgrid import REGULAR
+    cgrid = REGULAR(
+        grid=dict(xp=0, yp=0, alp=0, xlen=2000, ylen=1300, mx=100, my=100),
+        spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
+    )
+    print(cgrid.render())
+    ```
 
     """
 
@@ -86,29 +85,28 @@ class REGULAR(CGRID):
 class CURVILINEAR(CGRID):
     """SWAN curvilinear computational grid.
 
-    .. code-block:: text
-
-        CGRID CURVILINEAR [mxc] [myc] (EXCEPTION [xexc] [yexc])
-            ->CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
-        READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] &
-            FREE|FORMAT ('form'|[idfm])
+    ```text
+    CGRID CURVILINEAR [mxc] [myc] (EXCEPTION [xexc] [yexc])
+        ->CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+    READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] &
+        FREE|FORMAT ('form'|[idfm])
+    ```
 
     This is a group component that includes a `CGRID` and a `READGRID` component.
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.cgrid import CURVILINEAR
-        cgrid = CURVILINEAR(
-            mxc=199,
-            myc=199,
-            readcoord=dict(fname="./coords.txt"),
-            spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
-        )
-        print(cgrid.render())
+    ```python exec="on" source="above" result="text" session="cgrid-curvilinear"
+    from rompy_swan.components.cgrid import CURVILINEAR
+    cgrid = CURVILINEAR(
+        mxc=199,
+        myc=199,
+        readcoord=dict(fname="./coords.txt"),
+        spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
+    )
+    print(cgrid.render())
+    ```
 
     """
 
@@ -186,25 +184,24 @@ class CURVILINEAR(CGRID):
 class UNSTRUCTURED(CGRID):
     """SWAN unstructured computational grid.
 
-    .. code-block:: text
-
-        CGRID UNSTRUCTURED CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
-        READGRID UNSTRUCTURED [grid_type] ('fname')
+    ```text
+    CGRID UNSTRUCTURED CIRCLE|SECTOR [mdc] [flow] [fhigh] [msc]
+    READGRID UNSTRUCTURED [grid_type] ('fname')
+    ```
 
     This is a group component that includes a `CGRID` and a `READGRID` component.
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.cgrid import UNSTRUCTURED
-        cgrid = UNSTRUCTURED(
-            grid_type="adcirc",
-            spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
-        )
-        print(cgrid.render())
+    ```python exec="on" source="above" result="text" session="cgrid-unstructured"
+    from rompy_swan.components.cgrid import UNSTRUCTURED
+    cgrid = UNSTRUCTURED(
+        grid_type="adcirc",
+        spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
+    )
+    print(cgrid.render())
+    ```
 
     """
 

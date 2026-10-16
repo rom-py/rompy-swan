@@ -27,9 +27,9 @@ HERE = Path(__file__).parent
 class INITIAL(BaseComponent):
     """Initial conditions.
 
-    .. code-block:: text
-
-        INITIAL -> DEFAULT|ZERO|PAR|HOTSTART
+    ```text
+    INITIAL -> DEFAULT|ZERO|PAR|HOTSTART
+    ```
 
     This command can be used to specify the initial values for a stationary (INITIAL
     HOTSTART only) or nonstationary computation. The initial values thus specified
@@ -40,16 +40,15 @@ class INITIAL(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.boundary import INITIAL
-        init = INITIAL()
-        print(init.render())
-        init = INITIAL(
-            kind=dict(model_type="hotmultiple", fname="hotstart.swn", format="free")
-        )
-        print(init.render())
+    ```python exec="on" source="above" result="text" session="boundary-initial"
+    from rompy_swan.components.boundary import INITIAL
+    init = INITIAL()
+    print(init.render())
+    init = INITIAL(
+        kind=dict(model_type="hotmultiple", fname="hotstart.swn", format="free")
+    )
+    print(init.render())
+    ```
 
     """
 
@@ -70,9 +69,9 @@ class INITIAL(BaseComponent):
 class BOUNDSPEC(BaseComponent):
     """Boundary along sides or segment.
 
-    .. code-block:: text
-
-        BOUNDSPEC ->SIDE|SEGMENT CONSTANT|VARIABLE PAR|FILE
+    ```text
+    BOUNDSPEC ->SIDE|SEGMENT CONSTANT|VARIABLE PAR|FILE
+    ```
 
     This command BOUNDSPEC defines parametric spectra at the boundary. It consists of
     two parts, the first part defines the boundary side or segment where the spectra
@@ -87,25 +86,24 @@ class BOUNDSPEC(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.boundary import BOUNDSPEC
-        boundary = BOUNDSPEC(
-            shapespec=dict(model_type="shapespec", shape=dict(model_type="pm")),
-            location=dict(model_type="side", side="west", direction="ccw"),
-            data=dict(model_type="constantpar", hs=2, per=8, dir=270, dd=30),
-        )
-        print(boundary.render())
-        boundary = BOUNDSPEC(
-            shapespec=dict(model_type="shapespec", shape=dict(model_type="pm")),
-            location=dict(
-                model_type="segment",
-                points=dict(model_type="ij", i=[0, 0], j=[0, 3])
-            ),
-            data=dict(model_type="constantpar", hs=2, per=8, dir=270, dd=30),
-        )
-        print(boundary.render())
+    ```python exec="on" source="above" result="text" session="boundary-boundspec"
+    from rompy_swan.components.boundary import BOUNDSPEC
+    boundary = BOUNDSPEC(
+        shapespec=dict(model_type="shapespec", shape=dict(model_type="pm")),
+        location=dict(model_type="side", side="west", direction="ccw"),
+        data=dict(model_type="constantpar", hs=2, per=8, dir=270, dd=30),
+    )
+    print(boundary.render())
+    boundary = BOUNDSPEC(
+        shapespec=dict(model_type="shapespec", shape=dict(model_type="pm")),
+        location=dict(
+            model_type="segment",
+            points=dict(model_type="ij", i=[0, 0], j=[0, 3])
+        ),
+        data=dict(model_type="constantpar", hs=2, per=8, dir=270, dd=30),
+    )
+    print(boundary.render())
+    ```
 
     """
 
@@ -133,9 +131,9 @@ class BOUNDSPEC(BaseComponent):
 class BOUNDNEST1(BaseComponent):
     """Boundary spectra from a coarser SWAN nest.
 
-    .. code-block:: text
-
-        BOUNDNEST1 NEST 'fname' ->CLOSED|OPEN
+    ```text
+    BOUNDNEST1 NEST 'fname' ->CLOSED|OPEN
+    ```
 
     With this optional command a nested SWAN run can be carried out with the boundary
     conditions obtained from a coarse grid SWAN run (generated in that previous SWAN
@@ -154,12 +152,11 @@ class BOUNDNEST1(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.boundary import BOUNDNEST1
-        boundary = BOUNDNEST1(fname="boundary.swn", rectangle="closed")
-        print(boundary.render())
+    ```python exec="on" source="above" result="text" session="boundary-boundnest1"
+    from rompy_swan.components.boundary import BOUNDNEST1
+    boundary = BOUNDNEST1(fname="boundary.swn", rectangle="closed")
+    print(boundary.render())
+    ```
 
     """
 
@@ -191,9 +188,9 @@ class BOUNDNEST1(BaseComponent):
 class BOUNDNEST2(BaseComponent):
     """Boundary spectra from WAM.
 
-    .. code-block:: text
-
-        BOUNDNEST2 WAMNEST 'fname' FREE|UNFORMATTED ->CRAY|WKSTAT [xgc] [ygc] [lwdate]
+    ```text
+    BOUNDNEST2 WAMNEST 'fname' FREE|UNFORMATTED ->CRAY|WKSTAT [xgc] [ygc] [lwdate]
+    ```
 
     With this optional command (not fully tested) a nested SWAN run can be carried out
     with the boundary conditions obtained from a coarse grid WAM run (WAM Cycle 4.5,
@@ -221,21 +218,20 @@ class BOUNDNEST2(BaseComponent):
     ----
     the contents of 'fname' file could look like:
 
-    .. code-block:: text
-
-        CBO9212010000
-        CBO9212020000
-        CBO9212030000
+    ```text
+    CBO9212010000
+    CBO9212020000
+    CBO9212030000
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.boundary import BOUNDNEST2
-        boundary = BOUNDNEST2(fname="boundary.wam", format="cray", lwdate=12)
-        print(boundary.render())
+    ```python exec="on" source="above" result="text" session="boundary-boundnest2"
+    from rompy_swan.components.boundary import BOUNDNEST2
+    boundary = BOUNDNEST2(fname="boundary.wam", format="cray", lwdate=12)
+    print(boundary.render())
+    ```
 
     """
 
@@ -313,9 +309,9 @@ class BOUNDNEST2(BaseComponent):
 class BOUNDNEST3(BaseComponent):
     """Boundary spectra from WAVEWATCHIII.
 
-    .. code-block:: text
-
-        BOUNDNEST3 WW3 'fname' FREE|UNFORMATTED ->CLOSED|OPEN [xgc] [ygc]
+    ```text
+    BOUNDNEST3 WW3 'fname' FREE|UNFORMATTED ->CLOSED|OPEN [xgc] [ygc]
+    ```
 
     With this optional command a nested SWAN run can be carried out with the boundary
     conditions obtained from a coarse grid WAVEWATCH III run. The spectral frequencies
@@ -342,16 +338,15 @@ class BOUNDNEST3(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.boundary import BOUNDNEST3
-        boundary = BOUNDNEST3(
-            fname="boundary.ww3",
-            format="free",
-            rectangle="closed",
-        )
-        print(boundary.render())
+    ```python exec="on" source="above" result="text" session="boundary-boundnest3"
+    from rompy_swan.components.boundary import BOUNDNEST3
+    boundary = BOUNDNEST3(
+        fname="boundary.ww3",
+        format="free",
+        rectangle="closed",
+    )
+    print(boundary.render())
+    ```
 
     """
 

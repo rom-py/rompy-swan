@@ -19,9 +19,9 @@ logger = get_logger(__name__)
 class PROJECT(BaseComponent):
     """SWAN Project.
 
-    .. code-block:: text
-
-        PROJECT 'name' 'nr' 'title' 'title2 'title3'
+    ```text
+    PROJECT 'name' 'nr' 'title' 'title2 'title3'
+    ```
 
     With this required command the user defines a number of strings to identify the
     SWAN run (project name e.g., an engineering project) in the print and plot file.
@@ -29,19 +29,18 @@ class PROJECT(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.startup import PROJECT
-        proj = PROJECT(nr="01")
-        print(proj.render())
-        proj = PROJECT(
-            name="waus",
-            nr="001",
-            title1="Western Australia",
-            title2="Perth Nest"
-        )
-        print(proj.render())
+    ```python exec="on" source="above" result="text" session="startup-project"
+    from rompy_swan.components.startup import PROJECT
+    proj = PROJECT(nr="01")
+    print(proj.render())
+    proj = PROJECT(
+        name="waus",
+        nr="001",
+        title1="Western Australia",
+        title2="Perth Nest"
+    )
+    print(proj.render())
+    ```
 
     """
 
@@ -95,10 +94,10 @@ class PROJECT(BaseComponent):
 class SET(BaseComponent):
     """SWAN setting commands.
 
-    .. code-block:: text
-
-        SET [level] [nor] [depmin] [maxmes] [maxerr] [grav] [rho] [cdcap] &
-            [inrhog] [hsrerr] NAUTICAL|->CARTESIAN [pwtail] [froudmax] [icewind]
+    ```text
+    SET [level] [nor] [depmin] [maxmes] [maxerr] [grav] [rho] [cdcap] &
+        [inrhog] [hsrerr] NAUTICAL|->CARTESIAN [pwtail] [froudmax] [icewind]
+    ```
 
     With this optional command the user assigns values to various general parameters.
 
@@ -121,25 +120,24 @@ class SET(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.startup import SET
-        set = SET(level=0.5, direction_convention="nautical")
-        print(set.render())
-        set = SET(
-            level=-1.0,
-            nor=90,
-            depmin=0.01,
-            maxerr=3,
-            grav=9.81,
-            rho=1025,
-            cdcap=2.5e-3,
-            inrhog=0,
-            hsrerr=0.1,
-            direction_convention="nautical",
-        )
-        print(set.render())
+    ```python exec="on" source="above" result="text" session="startup-set"
+    from rompy_swan.components.startup import SET
+    set = SET(level=0.5, direction_convention="nautical")
+    print(set.render())
+    set = SET(
+        level=-1.0,
+        nor=90,
+        depmin=0.01,
+        maxerr=3,
+        grav=9.81,
+        rho=1025,
+        cdcap=2.5e-3,
+        inrhog=0,
+        hsrerr=0.1,
+        direction_convention="nautical",
+    )
+    print(set.render())
+    ```
 
     """
 
@@ -323,9 +321,9 @@ class SET(BaseComponent):
 class MODE(BaseComponent):
     """SWAN Mode.
 
-    .. code-block:: text
-
-        MODE ->STATIONARY|NONSTATIONARY ->TWODIMENSIONAL|ONEDIMENSIONAL
+    ```text
+    MODE ->STATIONARY|NONSTATIONARY ->TWODIMENSIONAL|ONEDIMENSIONAL
+    ```
 
     With this optional command the user indicates that the run will be either
     stationary or nonstationary and one-dimensional (1D-mode) or two-dimensional
@@ -338,14 +336,13 @@ class MODE(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.startup import MODE
-        mode = MODE()
-        print(mode.render())
-        mode = MODE(kind="nonstationary", dim="twodimensional")
-        print(mode.render())
+    ```python exec="on" source="above" result="text" session="startup-mode"
+    from rompy_swan.components.startup import MODE
+    mode = MODE()
+    print(mode.render())
+    mode = MODE(kind="nonstationary", dim="twodimensional")
+    print(mode.render())
+    ```
 
     """
 
@@ -371,9 +368,9 @@ class MODE(BaseComponent):
 class COORDINATES(BaseComponent):
     """SWAN Coordinates.
 
-    .. code-block:: text
-
-        COORDINATES ->CARTESIAN|SPHERICAL REPEATING
+    ```text
+    COORDINATES ->CARTESIAN|SPHERICAL REPEATING
+    ```
 
     Command to choose between Cartesian and spherical coordinates (see Section 2.5).
     A nested SWAN run must use the same coordinate system as the coarse grid SWAN run.
@@ -381,17 +378,16 @@ class COORDINATES(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.startup import COORDINATES
-        coords = COORDINATES()
-        print(coords.render())
-        coords = COORDINATES(
-            kind=dict(model_type="spherical", projection="ccm"),
-            reapeating=True,
-        )
-        print(coords.render())
+    ```python exec="on" source="above" result="text" session="startup-coordinates"
+    from rompy_swan.components.startup import COORDINATES
+    coords = COORDINATES()
+    print(coords.render())
+    coords = COORDINATES(
+        kind=dict(model_type="spherical", projection="ccm"),
+        reapeating=True,
+    )
+    print(coords.render())
+    ```
 
     """
 

@@ -26,9 +26,9 @@ HOTTIMES_TYPE = Union[list[datetime], list[int]]
 class HOTFILE(BaseComponent):
     """Write intermediate results.
 
-    .. code-block:: text
-
-        HOTFILE 'fname' ->FREE|UNFORMATTED
+    ```text
+    HOTFILE 'fname' ->FREE|UNFORMATTED
+    ```
 
     This command can be used to write the entire wave field at the end of a computation
     to a so-called hotfile, to be used as initial condition in a subsequent SWAN run
@@ -58,14 +58,13 @@ class HOTFILE(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.lockup import HOTFILE
-        hotfile = HOTFILE(fname="hotfile.swn")
-        print(hotfile.render())
-        hotfile = HOTFILE(fname="hotfile.dat", format="unformatted")
-        print(hotfile.render())
+    ```python exec="on" source="above" result="text" session="lockup-hotfile"
+    from rompy_swan.components.lockup import HOTFILE
+    hotfile = HOTFILE(fname="hotfile.swn")
+    print(hotfile.render())
+    hotfile = HOTFILE(fname="hotfile.dat", format="unformatted")
+    print(hotfile.render())
+    ```
 
     """
 
@@ -98,10 +97,10 @@ class HOTFILE(BaseComponent):
 class COMPUTE(BaseComponent):
     """Single SWAN computation in stationary mode.
 
-    .. code-block:: text
-
-        COMPUTE
-        HOTFILE 'fname' ->FREE|UNFORMATTED
+    ```text
+    COMPUTE
+    HOTFILE 'fname' ->FREE|UNFORMATTED
+    ```
 
     If the SWAN mode is stationary (see command `MODE`, stationary is SWAN's default),
     then SWAN makes a single computation, started by a `COMPUTE` command without
@@ -120,14 +119,13 @@ class COMPUTE(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.lockup import COMPUTE
-        comp = COMPUTE()
-        print(comp.render())
-        comp = COMPUTE(hotfile=dict(fname="hotfile.swn"))
-        print(comp.render())
+    ```python exec="on" source="above" result="text" session="lockup-compute"
+    from rompy_swan.components.lockup import COMPUTE
+    comp = COMPUTE()
+    print(comp.render())
+    comp = COMPUTE(hotfile=dict(fname="hotfile.swn"))
+    print(comp.render())
+    ```
 
     """
 
@@ -150,15 +148,15 @@ class COMPUTE(BaseComponent):
 class COMPUTE_STAT(BaseComponent):
     """Multiple SWAN stationary computations.
 
-    .. code-block:: text
-
-        COMPUTE STATIONARY [time]
-        HOTFILE 'fname' ->FREE|UNFORMATTED
-        COMPUTE STATIONARY [time]
-        COMPUTE STATIONARY [time]
-        HOTFILE 'fname' ->FREE|UNFORMATTED
-        .
-        .
+    ```text
+    COMPUTE STATIONARY [time]
+    HOTFILE 'fname' ->FREE|UNFORMATTED
+    COMPUTE STATIONARY [time]
+    COMPUTE STATIONARY [time]
+    HOTFILE 'fname' ->FREE|UNFORMATTED
+    .
+    .
+    ```
 
     This component can be used to define multiple stationary compute commands and
     write intermediate results as hotfiles between then.
@@ -171,27 +169,26 @@ class COMPUTE_STAT(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.time import STATIONARY, NONSTATIONARY
-        from rompy_swan.components.lockup import COMPUTE_STAT
-        time = STATIONARY(time="1990-01-01T00:00:00")
-        comp = COMPUTE_STAT(times=time)
-        print(comp.render())
-        times = NONSTATIONARY(
-            tbeg="1990-01-01T00:00:00",
-            tend="1990-01-01T03:00:00",
-            delt="PT1H",
-        )
-        comp = COMPUTE_STAT(times=times)
-        print(comp.render())
-        hotfile = dict(fname="./hotfile.swn")
-        hottimes=["1990-01-01T03:00:00"]
-        comp = COMPUTE_STAT(times=times, hotfile=hotfile, hottimes=hottimes)
-        print(comp.render())
-        comp = COMPUTE_STAT(times=times, hotfile=hotfile, hottimes=[2, -1])
-        print(comp.render())
+    ```python exec="on" source="above" result="text" session="lockup-compute_stat"
+    from rompy_swan.subcomponents.time import STATIONARY, NONSTATIONARY
+    from rompy_swan.components.lockup import COMPUTE_STAT
+    time = STATIONARY(time="1990-01-01T00:00:00")
+    comp = COMPUTE_STAT(times=time)
+    print(comp.render())
+    times = NONSTATIONARY(
+        tbeg="1990-01-01T00:00:00",
+        tend="1990-01-01T03:00:00",
+        delt="PT1H",
+    )
+    comp = COMPUTE_STAT(times=times)
+    print(comp.render())
+    hotfile = dict(fname="./hotfile.swn")
+    hottimes=["1990-01-01T03:00:00"]
+    comp = COMPUTE_STAT(times=times, hotfile=hotfile, hottimes=hottimes)
+    print(comp.render())
+    comp = COMPUTE_STAT(times=times, hotfile=hotfile, hottimes=[2, -1])
+    print(comp.render())
+    ```
 
     """
 
@@ -275,14 +272,14 @@ class COMPUTE_STAT(BaseComponent):
 class COMPUTE_NONSTAT(COMPUTE_STAT):
     """Multiple SWAN nonstationary computations.
 
-    .. code-block:: text
-
-        COMPUTE NONSTATIONARY [tbegc] [deltc] SEC|MIN|HR|DAY [tendc]
-        HOTFILE 'fname' ->FREE|UNFORMATTED
-        COMPUTE NONSTATIONARY [tbegc] [deltc] SEC|MIN|HR|DAY [tendc]
-        HOTFILE 'fname' ->FREE|UNFORMATTED
-        .
-        .
+    ```text
+    COMPUTE NONSTATIONARY [tbegc] [deltc] SEC|MIN|HR|DAY [tendc]
+    HOTFILE 'fname' ->FREE|UNFORMATTED
+    COMPUTE NONSTATIONARY [tbegc] [deltc] SEC|MIN|HR|DAY [tendc]
+    HOTFILE 'fname' ->FREE|UNFORMATTED
+    .
+    .
+    ```
 
     This component can be used to define multiple nonstationary compute commands and
     write intermediate results as hotfiles between then.
@@ -314,32 +311,31 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.time import NONSTATIONARY
-        from rompy_swan.components.lockup import COMPUTE_NONSTAT
-        times = NONSTATIONARY(
-            tbeg="1990-01-01T00:00:00",
-            tend="1990-02-01T00:00:00",
-            delt="PT1H",
-            dfmt="hr",
-        )
-        comp = COMPUTE_NONSTAT(times=times)
-        print(comp.render())
-        comp = COMPUTE_NONSTAT(
-            times=times,
-            hotfile=dict(fname="hotfile.swn", format="free"),
-            hottimes=["1990-02-01T00:00:00"],
-        )
-        print(comp.render())
-        comp = COMPUTE_NONSTAT(
-            times=times,
-            initstat=True,
-            hotfile=dict(fname="hotfile", format="free"),
-            hottimes=[6, 12, 18, -1],
-        )
-        print(comp.render())
+    ```python exec="on" source="above" result="text" session="lockup-compute_nonstat"
+    from rompy_swan.subcomponents.time import NONSTATIONARY
+    from rompy_swan.components.lockup import COMPUTE_NONSTAT
+    times = NONSTATIONARY(
+        tbeg="1990-01-01T00:00:00",
+        tend="1990-02-01T00:00:00",
+        delt="PT1H",
+        dfmt="hr",
+    )
+    comp = COMPUTE_NONSTAT(times=times)
+    print(comp.render())
+    comp = COMPUTE_NONSTAT(
+        times=times,
+        hotfile=dict(fname="hotfile.swn", format="free"),
+        hottimes=["1990-02-01T00:00:00"],
+    )
+    print(comp.render())
+    comp = COMPUTE_NONSTAT(
+        times=times,
+        initstat=True,
+        hotfile=dict(fname="hotfile", format="free"),
+        hottimes=[6, 12, 18, -1],
+    )
+    print(comp.render())
+    ```
 
     """
 
@@ -396,9 +392,9 @@ class COMPUTE_NONSTAT(COMPUTE_STAT):
 class STOP(BaseComponent):
     """End of commands.
 
-    .. code-block:: text
-
-        STOP
+    ```text
+    STOP
+    ```
 
     This required command marks the end of the commands in the command file. Note that
     the command `STOP` may be the last command in the input file; any information in
@@ -407,12 +403,11 @@ class STOP(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.lockup import STOP
-        stop = STOP()
-        print(stop.render())
+    ```python exec="on" source="above" result="text" session="lockup-stop"
+    from rompy_swan.components.lockup import STOP
+    stop = STOP()
+    print(stop.render())
+    ```
 
     """
 

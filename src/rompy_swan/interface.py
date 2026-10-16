@@ -27,10 +27,9 @@ class DataInterface(RompyBaseModel):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.interface import DataInterface
+    ```python exec="on" source="above" result="text" session="interface-datainterface"
+    from rompy_swan.interface import DataInterface
+    ```
 
     """
 
@@ -75,10 +74,9 @@ class BoundaryInterface(RompyBaseModel):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.interface import BoundaryInterface
+    ```python exec="on" source="above" result="text" session="interface-boundaryinterface"
+    from rompy_swan.interface import BoundaryInterface
+    ```
 
     """
 
