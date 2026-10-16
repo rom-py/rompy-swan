@@ -1,0 +1,21 @@
+{#- Bar linking the rompy documentation sites. Managed by rompy-docs: do not edit. -#}
+{%- set sites = [
+  ("rompy", "rompy", "https://rom-py.github.io/rompy/"),
+  ("xbeach", "XBeach", "https://rom-py.github.io/rompy-xbeach/"),
+  ("swan", "SWAN", "https://rom-py.github.io/rompy-swan/"),
+  ("schism", "SCHISM", "https://rom-py.github.io/rompy-schism/"),
+  ("notebooks", "Notebooks", "https://rom-py.github.io/rompy-notebooks/"),
+] -%}
+{%- set rompy = config.extra.rompy or {} -%}
+{%- set current = rompy.site -%}
+{%- set model = page.meta.rompy_model if page and page.meta and page.meta.rompy_model else none -%}
+<nav class="rompy-sites" aria-label="rompy documentation sites">
+  <div class="rompy-sites__inner md-grid">
+    {%- for key, label, url in sites %}
+      {%- set classes = ["rompy-sites__link"] -%}
+      {%- if key == current or key == model %}{% set _ = classes.append("rompy-sites__link--active") %}{% endif -%}
+      <a class="{{ classes | join(' ') }}" href="{{ url }}"
+         {%- if key == current %} aria-current="true"{% endif %}>{{ label }}</a>
+    {%- endfor %}
+  </div>
+</nav>

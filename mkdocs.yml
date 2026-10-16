@@ -1,5 +1,5 @@
 site_name: rompy-swan
-site_description: Python interface for the SWAN spectral wave model
+site_description: Configure and run the SWAN spectral wave model from Python and YAML
 site_url: https://rom-py.github.io/rompy-swan/
 repo_url: https://github.com/rom-py/rompy-swan
 repo_name: rom-py/rompy-swan
@@ -7,144 +7,139 @@ edit_uri: edit/main/docs/
 
 nav:
   - Home: index.md
-  - Getting Started:
+  - Getting started:
       - Installation: getting-started/installation.md
-      - Quickstart: getting-started/quickstart.md
-  - Concepts:
-      - Architecture: user-guide/architecture.md
+      - Your first model: getting-started/first-model.md
+  - User guide:
+      - How rompy-swan works: user-guide/how-it-works.md
       - Configuration: user-guide/configuration.md
-  - Components:
-      - Overview: components/index.md
-      - CGRID: components/cgrid.md
-      - Startup: components/startup.md
-      - INPGRID: components/inpgrid.md
-      - Boundary: components/boundary.md
-      - Physics: components/physics.md
-      - Numerics: components/numerics.md
-      - Output: components/output.md
-      - Lockup: components/lockup.md
-      - Group: components/group.md
-  - Subcomponents:
-      - Base: subcomponents/base.md
-      - Startup: subcomponents/startup.md
-      - Spectrum: subcomponents/spectrum.md
-      - Time: subcomponents/time.md
-      - CGRID: subcomponents/cgrid.md
-      - READGRID: subcomponents/readgrid.md
-      - Boundary: subcomponents/boundary.md
-      - Physics: subcomponents/physics.md
-      - Numerics: subcomponents/numerics.md
-      - Output: subcomponents/output.md
-  - Data Interfaces:
-      - Overview: data-interfaces/index.md
-  - Examples:
-      - examples/index.md
-      - Declarative Configuration: examples/example_declarative.ipynb
-      - Procedural Configuration: examples/example_procedural.ipynb
-      - Sensitivity Analysis: examples/example_sensitivity.ipynb
-      - Boundary:
-          - BOUNDSPEC Side: examples/boundary/boundspec_side.ipynb
-          - BOUNDSPEC Segment: examples/boundary/boundspec_segment.ipynb
-          - BOUNDNEST1: examples/boundary/boundnest1.ipynb
-      - Components:
-          - Output: examples/components/output.ipynb
-          - CGRID: examples/components/cgrid.ipynb
-          - Startup: examples/components/startup.ipynb
-          - Physics: examples/components/physics.ipynb
-          - Numerics: examples/components/numerics.ipynb
-          - INPGRID: examples/components/inpgrid.ipynb
-  - API Reference:
-      - Config: api-reference/config.md
-      - Components: api-reference/components.md
-      - Data: api-reference/data.md
-      - Types: api-reference/types.md
-  - Developer:
-      - Contributing: developer/contributing.md
+      - Computational grid: user-guide/computational-grid.md
+      - Input grids and forcing: user-guide/input-grids.md
+      - Boundary and initial conditions: user-guide/boundaries.md
+      - Stationary and nonstationary runs: user-guide/modes.md
+      - Physics: user-guide/physics.md
+      - Numerics: user-guide/numerics.md
+      - Output: user-guide/output.md
+      - Nesting: user-guide/nesting.md
+      - Running SWAN: user-guide/running.md
+      - Hotstart and chained runs: user-guide/hotstart.md
+      - Troubleshooting: user-guide/troubleshooting.md
+  - Tutorial: tutorial.md
+  - Examples: examples.md
+  - Reference:
+      - reference/index.md
+      - Config: reference/config.md
+      - Grid: reference/grid.md
+      - Data and boundary interfaces: reference/interfaces.md
+      - Startup: reference/startup.md
+      - Computational grid: reference/cgrid.md
+      - Input grids: reference/inpgrid.md
+      - Boundary and initial conditions: reference/boundary.md
+      - Physics: reference/physics.md
+      - Numerics: reference/numerics.md
+      - Output: reference/output.md
+      - Lockup: reference/lockup.md
+      - Command groups: reference/groups.md
+      - Subcomponents: reference/subcomponents.md
+      - Base components: reference/base.md
+      - Types: reference/types.md
+      - Command index: reference/commands.md
+  - Development:
+      - Contributing: development/contributing.md
+      - Changelog: https://github.com/rom-py/rompy-swan/blob/main/HISTORY.rst
 
 theme:
   name: material
+  custom_dir: docs/overrides
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/lightbulb
+        icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: indigo
       accent: indigo
       toggle:
-        icon: material/lightbulb-outline
+        icon: material/brightness-4
         name: Switch to light mode
   features:
     - navigation.tabs
     - navigation.sections
-    - navigation.expand
-    - navigation.top
     - navigation.indexes
+    - navigation.top
+    - navigation.footer
     - toc.follow
     - search.suggest
     - search.highlight
-    - content.tabs.link
-    - content.code.annotate
     - content.code.copy
-  icon:
-    repo: fontawesome/brands/github
+    - content.code.annotate
+    - content.tabs.link
+
+extra_css:
+  - stylesheets/rompy.css
+
+extra:
+  rompy:
+    site: swan
 
 plugins:
   - search
-  - mkdocs-jupyter:
-      include_source: true
-      execute: false
+  - markdown-exec
   - mkdocstrings:
       handlers:
         python:
+          paths: [src]
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://docs.pydantic.dev/latest/objects.inv
+            - https://docs.xarray.dev/en/stable/objects.inv
+            # ROMPY_INVENTORY points local builds at an unpublished rompy site.
+            - url: !ENV [ROMPY_INVENTORY, "https://rom-py.github.io/rompy/objects.inv"]
+              base_url: https://rom-py.github.io/rompy/
           options:
-
+            docstring_style: auto
+            docstring_section_style: table
+            preload_modules: [rompy]
+            inherited_members: true
+            show_bases: true
             show_root_heading: true
             show_root_full_path: false
-            show_object_full_path: false
-            show_category_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
             show_if_no_docstring: true
+            show_source: false
+            separate_signature: true
             show_signature_annotations: true
             signature_crossrefs: true
-            separate_signature: true
-            docstring_section_style: table
+            merge_init_into_class: true
             members_order: source
             group_by_category: true
-            show_submodules: false
-            filters:
-              - "!^_"  # Hide private members by default
+            summary: false
+            filters: ["!^_", "!^model_(?!type$)"]
+            extensions:
+              - griffe_pydantic: {schema: false}
+              - rompy_docs.griffe:PydanticFieldRules
 
 markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
-  - pymdownx.details
-  - pymdownx.tabbed:
-      alternate_style: true
-  - pymdownx.critic
-  - pymdownx.caret
-  - pymdownx.keys
-  - pymdownx.mark
-  - pymdownx.tilde
+  - admonition
   - attr_list
   - md_in_html
-  - admonition
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - tables
   - toc:
       permalink: true
-
-extra:
-  social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/rom-py/rompy-swan
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
