@@ -16,8 +16,8 @@ def test_readgrid_fac():
     READGRID(grid_type="coordinates", fac=1.0)
     with pytest.raises(ValidationError):
         READGRID(grid_type="coordinates", fac=0.0)
-    with pytest.raises(ValidationError):
-        READGRID(grid_type="coordinates", fac=-1.0)
+    # A negative fac changes the sign of the values, as in the SWAN manual
+    READGRID(grid_type="coordinates", fac=-1.0)
 
 
 def test_readgrid_wrong_format():
@@ -88,3 +88,10 @@ def test_grid_regular():
     assert grid.render() == (
         "xpc=120.0 ypc=-30.0 alpc=0.0 xlenc=10.0 ylenc=10.0 mxc=20 myc=20"
     )
+
+
+def test_readinp_negative_fac():
+    from rompy_swan.subcomponents.readgrid import READINP
+
+    readinp = READINP(grid_type="bottom", fname1="bottom.txt", fac=-1.0)
+    assert "fac=-1.0" in readinp.render()

@@ -626,3 +626,42 @@ def test_output_interface_preserves_explicit_epoch_tbeg(frame, period):
     result = OutputInterface(group=output, period=period).group
     assert result.block.times.tbeg == datetime.fromisoformat(epoch)
     assert result.block.times.tbeg != period.start
+
+
+def test_output_options_model_type():
+    assert OUTPUT_OPTIONS().model_type == "output_options"
+
+
+def test_specout_spec1d_renders_spec1d():
+    from rompy_swan.subcomponents.output import SPEC1D
+
+    assert SPEC1D().render().strip() == "SPEC1D"
+
+
+def test_write_locations_checked_after_special_name():
+    """A missing location is reported even when another write uses a special name."""
+    with pytest.raises(ValidationError, match="no location component"):
+        OUTPUT(
+            block=BLOCK(sname="COMPGRID", fname="grid.nc", output=["hsign"]),
+            table=TABLE(sname="missing", fname="table.txt", output=["hsign"]),
+        )
+
+
+def test_nest_warns_only_when_sname_differs(monkeypatch):
+    import rompy_swan.components.output as output_module
+
+    warnings = []
+    monkeypatch.setattr(output_module.logger, "warning", warnings.append)
+    grid = dict(xp=0.0, yp=0.0, alp=0.0, xlen=100.0, ylen=100.0, mx=10, my=10)
+    NEST(
+        sname="child",
+        ngrid=NGRID(sname="child", grid=grid),
+        nestout=NESTOUT(sname="child", fname="child.bnd"),
+    )
+    assert warnings == []
+    NEST(
+        sname="child",
+        ngrid=NGRID(sname="other", grid=grid),
+        nestout=NESTOUT(sname="child", fname="child.bnd"),
+    )
+    assert len(warnings) == 1

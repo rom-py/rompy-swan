@@ -18,7 +18,7 @@ from rompy.core.data import DataGrid
 from rompy.core.time import TimeRange
 from rompy.formatting import get_formatted_box, log_box
 from rompy.logging import get_logger
-from rompy_swan.grid import SwanGrid
+from rompy_swan.grid import SwanGrid, clean
 from rompy_swan.types import GridOptions
 
 logger = get_logger(__name__)
@@ -339,12 +339,19 @@ class Swan_accessor(object):
             SwanGrid object representing this dataset.
 
         """
+        for coord in (x, y):
+            if self._obj[coord].size < 2:
+                raise ValueError(
+                    f"The input grid has {self._obj[coord].size} point along '{coord}' "
+                    "but SWAN needs at least two. The data is probably coarser than "
+                    "the model grid: increase the `buffer` of the data object."
+                )
         return SwanGrid(
             grid_type="REG",
-            x0=float(self._obj[x].min()),
-            y0=float(self._obj[y].min()),
-            dx=float(np.diff(self._obj[x]).mean()),
-            dy=float(np.diff(self._obj[y]).mean()),
+            x0=clean(float(self._obj[x].min())),
+            y0=clean(float(self._obj[y].min())),
+            dx=clean(float(np.diff(self._obj[x]).mean())),
+            dy=clean(float(np.diff(self._obj[y]).mean())),
             nx=len(self._obj[x]),
             ny=len(self._obj[y]),
             rot=rot,
@@ -403,7 +410,8 @@ class Swan_accessor(object):
             variables=[z],
             fill_value=fill_value,
         )
-        grid = self.grid(x=x, y=y, rot=rot)
+        # SWAN compares the exception value after applying fac (see READINP)
+        grid = self.grid(x=x, y=y, rot=rot, exc=fill_value * fac)
         inpgrid = f"INPGRID BOTTOM {grid.inpgrid}"
         readinp = f"READINP BOTTOM {fac} '{Path(output_file).name}' 3 FREE"
         return inpgrid, readinp
@@ -454,9 +462,14 @@ class Swan_accessor(object):
             SWAN READinp command instruction.
 
         """
-        ds = self._obj
+        if self._obj[time].size < 2:
+            raise ValueError(
+                f"Nonstationary {var} input needs at least two times, the dataset has "
+                f"{self._obj[time].size}. Check the data covers the run period."
+            )
+        variables = [z1] if z2 is None else [z1, z2]
+        ds = self._obj[variables].transpose(time, y, x).fillna(FILL_VALUE)
 
-        # ds = ds.transpose((time,) + ds[x].dims)
         # Calculate time difference in hours
         time_diffs = np.diff(ds[time].values)
         dt = time_diffs.mean() / pd.to_timedelta(1, "h")
@@ -488,8 +501,9 @@ class Swan_accessor(object):
                 f"***Error! No times written to {output_file}\n. Check the input data!"
             )
 
-        # Create grid object from this dataset
-        grid = self.grid(x=x, y=y, rot=rot)
+        # Create grid object from this dataset, SWAN compares the exception value
+        # after applying fac (see READINP)
+        grid = self.grid(x=x, y=y, rot=rot, exc=FILL_VALUE * fac)
 
         inpgrid = f"INPGRID {var} {grid.inpgrid} NONSTATION {inptimes[0]} {dt_str} HR"
         readinp = f"READINP {var} {fac} '{Path(output_file).name}' 3 0 1 0 FREE"

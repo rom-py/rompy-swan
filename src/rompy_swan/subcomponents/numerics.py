@@ -550,8 +550,8 @@ class CSIGMA(BaseSubComponent):
 
     """
 
-    model_type: Literal["ctheta", "CTHETA"] = Field(
-        default="ctheta", description="Model type discriminator"
+    model_type: Literal["csigma", "CSIGMA"] = Field(
+        default="csigma", description="Model type discriminator"
     )
     cfl: Optional[float] = Field(
         default=None,

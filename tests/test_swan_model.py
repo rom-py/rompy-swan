@@ -61,6 +61,9 @@ def test_swan_model_boundary(tmpdir, config_dict):
                 source=SourceIntake(
                     dataset_id="ausspec", catalog_uri=HERE / "data/catalog.yaml"
                 ),
+                # The test spectra are about 2 degrees apart
+                sel_method="nearest",
+                sel_method_kwargs={"tolerance": 4.0},
             )
         ),
         initial=config_dict["initial"],

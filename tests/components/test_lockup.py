@@ -3,6 +3,7 @@
 from copy import deepcopy
 
 import pytest
+from pydantic import ValidationError
 
 # Import test utilities
 from test_utils.logging import get_test_logger
@@ -37,17 +38,14 @@ def test_compute():
     assert comp.render() == "COMPUTE"
 
 
-def test_compute_stationary():
-    comp = COMPUTE(times=dict(model_type="stationary", time="1990-01-01T00:00:00"))
-    assert comp.render() == "COMPUTE STATIONARY time=19900101.000000"
+def test_compute_with_hotfile():
+    comp = COMPUTE(hotfile=dict(fname="hotfile", format="free"))
+    assert comp.render().split("\n") == ["COMPUTE", "HOTFILE fname='hotfile' FREE"]
 
 
-def test_compute_nonstationary(times):
-    comp = COMPUTE(times=times)
-    assert comp.render() == (
-        "COMPUTE NONSTATIONARY tbegc=19900101.000000 deltc=1.0 HR "
-        "tendc=19900201.000000"
-    )
+def test_compute_has_no_times():
+    with pytest.raises(ValidationError):
+        COMPUTE(times=dict(model_type="stationary", time="1990-01-01T00:00:00"))
 
 
 def test_hotfile_default():
@@ -147,6 +145,12 @@ def test_lockup_compute_stat(times):
     )
     assert lockup.compute.model_type == "stat"
     assert "STOP" in lockup.render()
+
+
+def test_lockup_compute(times):
+    lockup = LOCKUP(compute=dict(model_type="compute"))
+    assert isinstance(lockup.compute, COMPUTE)
+    assert lockup.render().split("\n") == ["COMPUTE", "STOP"]
 
 
 def test_lockup_compute_nonstat(times):

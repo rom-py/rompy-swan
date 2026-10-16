@@ -37,7 +37,7 @@ class SPEC1D(BaseSubComponent):
 
     def cmd(self) -> str:
         """Command file string for this subcomponent."""
-        return "SPEC2D"
+        return "SPEC1D"
 
 
 class SPEC2D(BaseSubComponent):

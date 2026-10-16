@@ -15,7 +15,15 @@ from rompy.core.config import BaseConfig
 from rompy.formatting import get_formatted_header_footer
 from rompy.logging import get_logger
 from rompy_swan.components import boundary, cgrid, numerics
-from rompy_swan.components.group import FORCING, INPGRIDS, LOCKUP, OUTPUT, PHYSICS, STARTUP
+from rompy_swan.components.group import (
+    FORCING,
+    INPGRIDS,
+    LOCKUP,
+    OUTPUT,
+    PHYSICS,
+    STARTUP,
+)
+from rompy_swan.components.lockup import COMPUTE
 from rompy_swan.grid import SwanGrid
 from rompy_swan.interface import (
     BoundaryInterface,
@@ -82,6 +90,8 @@ class SwanConfig(BaseConfig):
         - Time and interval formatting (`tfmt`, `dfmt`) can be specified in the component's 
           `times` field
         - The runtime `interval` defines the computational timestep (`deltc`)
+        - `COMPUTE`, the single computation of stationary mode, has no times; output
+          components are then also written without times
 
     **OUTPUT Components (BLOCK, TABLE, SPECOUT, NESTOUT):**
         - Start time (`tbeg`) is always from runtime `start`
@@ -158,6 +168,63 @@ class SwanConfig(BaseConfig):
     numeric: Optional[NUMERIC_TYPE] = Field(default=None)
     output: Optional[OUTPUT_TYPE] = Field(default=None)
     lockup: Optional[LOCKUP_TYPE] = Field(default=None)
+
+    @property
+    def stationary_mode(self) -> bool:
+        """True if SWAN runs in stationary mode (MODE STATIONARY, the default)."""
+        mode = self.startup.mode if self.startup is not None else None
+        return mode is None or mode.kind == "stationary"
+
+    @model_validator(mode="after")
+    def compute_consistent_with_mode(self) -> "SwanConfig":
+        """Ensure the computation and inputs are possible in the SWAN mode.
+
+        In stationary mode (SWAN's default) SWAN makes a single computation without
+        times, `COMPUTE`, and accepts no time information in the inputs and output.
+        Computations at given times, `COMPUTE_STAT` and `COMPUTE_NONSTAT`, and the
+        time-stamped files written by the data and boundary interfaces need
+        MODE NONSTATIONARY.
+
+        """
+        compute = self.lockup.compute if self.lockup is not None else None
+        if not self.stationary_mode:
+            if isinstance(compute, COMPUTE):
+                raise ValueError(
+                    "COMPUTE is the single computation of stationary mode. In "
+                    "nonstationary mode use COMPUTE_STAT or COMPUTE_NONSTAT."
+                )
+            return self
+        advice = (
+            "Set startup.mode=MODE(kind='nonstationary') for computations at given "
+            "times (COMPUTE_STAT or COMPUTE_NONSTAT) and time-varying inputs."
+        )
+        if compute is not None and not isinstance(compute, COMPUTE):
+            raise ValueError(
+                "In stationary mode (MODE STATIONARY, SWAN's default) SWAN makes a "
+                "single computation without times, lockup.compute=COMPUTE(). " + advice
+            )
+        timed_inputs = []
+        if self.output is not None:
+            writes = []
+            for name in self.output._write_fields:
+                write = getattr(self.output, name)
+                writes += getattr(write, "components", [write])
+            writes += [nest.nestout for nest in self.output.nests or []]
+            if any(getattr(write, "times", None) is not None for write in writes):
+                timed_inputs.append("output components with times")
+        if isinstance(self.boundary, BoundaryInterface):
+            timed_inputs.append("the boundary interface")
+        if isinstance(self.inpgrid, DataInterface) and self.inpgrid.input:
+            timed_inputs.append(
+                ", ".join(f"the {data.var.value} input" for data in self.inpgrid.input)
+            )
+        if timed_inputs:
+            raise ValueError(
+                f"SWAN does not accept time information, used by "
+                f"{' and '.join(timed_inputs)}, in stationary mode (MODE STATIONARY is "
+                "the default). " + advice
+            )
+        return self
 
     @model_validator(mode="after")
     def no_nor_if_spherical(self) -> "SwanConfig":
@@ -687,7 +754,8 @@ class SwanConfig(BaseConfig):
                         logger.info(f"    {line}")
 
         # Interface the runtime with components that require times
-        if self.output:
+        # Output times are only allowed in nonstationary mode
+        if self.output and not self.stationary_mode:
 
             logger.debug("Configuring output interface with period")
             self.output = OutputInterface(group=self.output, period=period).group
