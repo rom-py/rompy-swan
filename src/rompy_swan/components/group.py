@@ -417,12 +417,6 @@ class PHYSICS(BaseGroupComponent):
     scat: Optional[SCAT_TYPE] = Field(default=None)
     deactivate: Optional[OFF_TYPE] = Field(default=None)
 
-    @field_validator("deactivate")
-    @classmethod
-    def deactivate_physics(cls, off: OFF_TYPE) -> OFF_TYPE:
-        """Convert OFF to OFFS so list is rendered."""
-        return off
-
     @model_validator(mode="after")
     def negatinp_only_with_zieger(self) -> "PHYSICS":
         """Log a warning if NEGATINP is used with a non-ZIEGER SSWELL."""

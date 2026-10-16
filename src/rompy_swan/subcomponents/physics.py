@@ -464,7 +464,7 @@ class ST6C5(ST6C1):
     """Fifth ST6 calibration in the SWAN user manual.
 
     ```text
-    ST6 4.7e-7 6.6e-6 4.0 4.0 UP HWANG VECTAU U10PROXY 28.0 AGROW
+    ST6 6.5e-6 8.5e-5 4.0 4.0 UP HWANG VECTAU U10PROXY 35.0 DEBIAS 0.89 AGROW
     ```
 
     Examples

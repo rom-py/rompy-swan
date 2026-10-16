@@ -12,7 +12,7 @@ class BSBT(BaseSubComponent):
     """BSBT first order propagation scheme.
 
     ```text
-    BSTB
+    BSBT
     ```
 
     Examples
@@ -403,7 +403,7 @@ class SIGIMPL(BaseSubComponent):
     """Frequency shifting accuracy.
 
     ```text
-    SIGIMpl [cfl] [eps2] [outp] [niter]
+    SIGIMpl [css] [eps2] [outp] [niter]
     ```
 
     Controls the accuracy of computing the frequency shifting and the stopping

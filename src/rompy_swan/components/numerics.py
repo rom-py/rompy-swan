@@ -36,7 +36,7 @@ class PROP(BaseComponent):
     """Propagation scheme.
 
     ```text
-    PROP BSTB|GSE
+    PROP BSBT|GSE
     ```
 
     Notes
