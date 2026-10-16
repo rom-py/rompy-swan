@@ -38,7 +38,7 @@ A [`SwanDataGrid`][rompy_swan.data.SwanDataGrid] turns a dataset into one SWAN i
 | `coords` | The names of the x, y and time coordinates in the dataset; the default is `longitude`, `latitude` and `time` |
 | `buffer` | Extra distance around the computational grid when the data is cropped, in the grid's units |
 | `time_buffer` | Extra source time steps before and after the run period, e.g. `[1, 1]` |
-| `filter` | A rompy [`Filter`][rompy.core.filters.Filter] applied when the data is opened: sort, subset, crop or rename |
+| `filter` | A rompy [`Filter`](https://rom-py.github.io/rompy/reference/filters/) applied when the data is opened: sort, subset, crop or rename |
 | `crop_data` | Crop the data to the grid and the run period (default `True`) |
 
 ### Bathymetry

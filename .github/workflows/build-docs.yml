@@ -60,7 +60,8 @@ jobs:
           pip install -e ".[docs,test]"
           # Temporary, until rompy's docs branch is merged and released: the API
           # pages include members inherited from rompy, whose docstrings it fixes.
-          pip install "rompy @ git+https://github.com/rom-py/rompy.git@docs-restructure"
+          # The branch has the same version number as the release, so force the reinstall.
+          pip install --force-reinstall --no-deps "rompy @ git+https://github.com/rom-py/rompy.git@docs-restructure"
 
       # The examples read data from tests/data, downloaded from rompy-test-data
       - name: Download the example data
