@@ -94,7 +94,8 @@ class SwanConfig(BaseConfig):
           components are then also written without times
 
     **OUTPUT Components (BLOCK, TABLE, SPECOUT, NESTOUT):**
-        - Start time (`tbeg`) is always from runtime `start`
+        - Start time (`tbeg`) is the runtime `start` unless the component's `times`
+          field sets it, e.g. to leave out a spin-up period
         - Time interval (`delt`) can be specified in the component's `times` field to 
           override runtime `interval`
         - Time and interval formatting (`tfmt`, `dfmt`) can be specified in the component's 
@@ -109,43 +110,51 @@ class SwanConfig(BaseConfig):
 
     Examples
     --------
-    
-    .. code-block:: python
+    In nonstationary mode, the BLOCK output sets its own interval while the TABLE
+    output and the computation use the run interval:
 
-        from datetime import datetime, timedelta
-        from rompy.core.time import TimeRange
-        
-        # Runtime with 1-hour interval
-        runtime = TimeRange(
-            start=datetime(2024, 1, 1, 0, 0, 0),
-            end=datetime(2024, 1, 2, 0, 0, 0),
-            interval=timedelta(hours=1),
-        )
-        
-        config = SwanConfig(
-            cgrid=dict(...),
-            output=dict(
-                # Custom 30-minute output interval
-                block=dict(
-                    sname="COMPGRID",
-                    fname="output.nc",
-                    output=["hsign"],
-                    times=dict(delt=timedelta(minutes=30), tfmt=1, dfmt="min"),
-                ),
-                # Uses runtime interval (1 hour)
-                table=dict(
-                    sname="COMPGRID",
-                    fname="table.nc",
-                    output=["dir"],
-                ),
+    ```python exec="on" source="above" result="text" session="config-swanconfig"
+    import tempfile
+    from datetime import timedelta
+    from pathlib import Path
+
+    from rompy.core.time import TimeRange
+    from rompy.logging import config as logging_config
+    from rompy.model import ModelRun
+    from rompy_swan.config import SwanConfig
+    from rompy_swan.grid import SwanGrid
+
+    logging_config.update(level="WARNING")
+
+    grid = SwanGrid(x0=110.0, y0=-36.0, dx=0.5, dy=0.5, nx=13, ny=15)
+    config = SwanConfig(
+        startup=dict(mode=dict(kind="nonstationary")),
+        cgrid=dict(
+            model_type="regular",
+            grid=grid.component,
+            spectrum=dict(mdc=36, flow=0.04, fhigh=1.0),
+        ),
+        output=dict(
+            # Custom 30-minute output interval
+            block=dict(
+                model_type="block",
+                sname="COMPGRID",
+                fname="output.nc",
+                output=["hsign"],
+                times=dict(delt=timedelta(minutes=30), dfmt="min"),
             ),
-        )
-        
-        # Result:
-        # - COMPUTE: deltc = 1 HR (from runtime)
-        # - BLOCK: deltblk = 30 MIN (from component times)
-        # - TABLE: delttbl = 1 HR (from runtime)
-        rendered = config(runtime)
+            # Uses the run interval (1 hour)
+            points=dict(model_type="points", sname="sites", xp=[115.5], yp=[-32.0]),
+            table=dict(sname="sites", fname="table.txt", output=["hsign", "dir"]),
+        ),
+        lockup=dict(compute=dict(model_type="nonstat")),
+    )
+    period = TimeRange(start="2024-01-01T00", end="2024-01-02T00", interval="1h")
+    run = ModelRun(run_id="times", period=period, output_dir=tempfile.mkdtemp(), config=config)
+    input_file = (Path(run()) / "INPUT").read_text()
+    lines = input_file.splitlines()
+    print("\\n".join(line for line in lines if line.startswith(("BLOCK", "TABLE", "COMPUTE", " "))))
+    ```
 
     """
 

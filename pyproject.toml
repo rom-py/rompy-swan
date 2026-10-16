@@ -50,10 +50,7 @@ test = [
     "envyaml"
 ]
 docs = [
-    "mkdocs",
-    "mkdocs-material",
-    "mkdocstrings[python]",
-    "mkdocs-jupyter"
+    "rompy-docs @ git+https://github.com/rom-py/rompy-docs.git",
 ]
 
 [project.entry-points."rompy.config"]

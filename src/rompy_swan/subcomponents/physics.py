@@ -35,9 +35,9 @@ class SourceTerms(BaseSubComponent, ABC):
 class JANSSEN(SourceTerms):
     """Janssen source terms subcomponent.
 
-    .. code-block:: text
-
-        JANSSEN [cds1] [delta] (AGROW [a])
+    ```text
+    JANSSEN [cds1] [delta] (AGROW [a])
+    ```
 
     References
     ----------
@@ -54,14 +54,13 @@ class JANSSEN(SourceTerms):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import JANSSEN
-        janssen = JANSSEN()
-        print(janssen.render())
-        janssen = JANSSEN(cds1=4.5, delta=0.5, agrow=True)
-        print(janssen.render())
+    ```python exec="on" source="above" result="text" session="physics-janssen"
+    from rompy_swan.subcomponents.physics import JANSSEN
+    janssen = JANSSEN()
+    print(janssen.render())
+    janssen = JANSSEN(cds1=4.5, delta=0.5, agrow=True)
+    print(janssen.render())
+    ```
 
     """
 
@@ -100,9 +99,9 @@ class JANSSEN(SourceTerms):
 class KOMEN(SourceTerms):
     """Komen source terms subcomponent.
 
-    .. code-block:: text
-
-        KOMEN [cds2] [stpm] (AGROW [a])
+    ```text
+    KOMEN [cds2] [stpm] (AGROW [a])
+    ```
 
     References
     ----------
@@ -112,14 +111,13 @@ class KOMEN(SourceTerms):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import KOMEN
-        komen = KOMEN()
-        print(komen.render())
-        komen = KOMEN(cds2=2.36e-5, stpm=3.02e-3, agrow=True, a=0.0015)
-        print(komen.render())
+    ```python exec="on" source="above" result="text" session="physics-komen"
+    from rompy_swan.subcomponents.physics import KOMEN
+    komen = KOMEN()
+    print(komen.render())
+    komen = KOMEN(cds2=2.36e-5, stpm=3.02e-3, agrow=True, a=0.0015)
+    print(komen.render())
+    ```
 
     """
 
@@ -158,9 +156,9 @@ class KOMEN(SourceTerms):
 class WESTHUYSEN(SourceTerms):
     """Westhuysen source terms subcomponent.
 
-    .. code-block:: text
-
-        WESTHUYSEN [cds2] [br] (AGROW [a])
+    ```text
+    WESTHUYSEN [cds2] [br] (AGROW [a])
+    ```
 
     Nonlinear saturation-based whitecapping combined with wind input of Yan (1987).
 
@@ -179,14 +177,13 @@ class WESTHUYSEN(SourceTerms):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import WESTHUYSEN
-        westhuysen = WESTHUYSEN()
-        print(westhuysen.render())
-        westhuysen = WESTHUYSEN(cds2=5.0e-5, br=1.75e-3)
-        print(westhuysen.render())
+    ```python exec="on" source="above" result="text" session="physics-westhuysen"
+    from rompy_swan.subcomponents.physics import WESTHUYSEN
+    westhuysen = WESTHUYSEN()
+    print(westhuysen.render())
+    westhuysen = WESTHUYSEN(cds2=5.0e-5, br=1.75e-3)
+    print(westhuysen.render())
+    ```
 
     """
 
@@ -221,10 +218,10 @@ class WESTHUYSEN(SourceTerms):
 class ST6(SourceTerms):
     """St6 source terms subcomponent.
 
-    .. code-block:: text
-
-        ST6 [a1sds] [a2sds] [p1sds] [p2sds] UP|DOWN HWANG|FAN|ECMWF VECTAU|SCATAU &
-            TRUE10|U10PROXY [windscaling] DEBIAS [cdfac] (AGROW [a])
+    ```text
+    ST6 [a1sds] [a2sds] [p1sds] [p2sds] UP|DOWN HWANG|FAN|ECMWF VECTAU|SCATAU &
+        TRUE10|U10PROXY [windscaling] DEBIAS [cdfac] (AGROW [a])
+    ```
 
     wind input and whitecapping from Rogers et al. (2012) (RBW12).
 
@@ -248,26 +245,25 @@ class ST6(SourceTerms):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import ST6
-        st6 = ST6(a1sds=4.7e-7, a2sds=6.6e-6)
-        print(st6.render())
-        kwargs = dict(
-            a1sds=2.8e-6,
-            a2sds=3.5e-5,
-            normalization="up",
-            wind_drag="hwang",
-            tau="vectau",
-            u10="u10proxy",
-            windscaling=32.0,
-            cdfac=0.89,
-            agrow=True,
-            a=0.0015,
-        )
-        st6 = ST6(**kwargs)
-        print(st6.render())
+    ```python exec="on" source="above" result="text" session="physics-st6"
+    from rompy_swan.subcomponents.physics import ST6
+    st6 = ST6(a1sds=4.7e-7, a2sds=6.6e-6)
+    print(st6.render())
+    kwargs = dict(
+        a1sds=2.8e-6,
+        a2sds=3.5e-5,
+        normalization="up",
+        wind_drag="hwang",
+        tau="vectau",
+        u10="u10proxy",
+        windscaling=32.0,
+        cdfac=0.89,
+        agrow=True,
+        a=0.0015,
+    )
+    st6 = ST6(**kwargs)
+    print(st6.render())
+    ```
 
     """
 
@@ -370,19 +366,18 @@ class ST6(SourceTerms):
 class ST6C1(ST6):
     """First ST6 calibration in the SWAN user manual.
 
-    .. code-block:: text
-
-        ST6 4.7e-7 6.6e-6 4.0 4.0 UP HWANG VECTAU U10PROXY 28.0 AGROW
+    ```text
+    ST6 4.7e-7 6.6e-6 4.0 4.0 UP HWANG VECTAU U10PROXY 28.0 AGROW
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import ST6C1
-        st6 = ST6C1()
-        print(st6.render())
+    ```python exec="on" source="above" result="text" session="physics-st6c1"
+    from rompy_swan.subcomponents.physics import ST6C1
+    st6 = ST6C1()
+    print(st6.render())
+    ```
 
     """
 
@@ -398,19 +393,18 @@ class ST6C1(ST6):
 class ST6C2(ST6C1):
     """Second ST6 calibration in the SWAN user manual.
 
-    .. code-block:: text
-
-        ST6 4.7e-7 6.6e-6 4.0 4.0 UP FAN VECTAU U10PROXY 28.0 AGROW
+    ```text
+    ST6 4.7e-7 6.6e-6 4.0 4.0 UP FAN VECTAU U10PROXY 28.0 AGROW
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import ST6C2
-        st6 = ST6C2()
-        print(st6.render())
+    ```python exec="on" source="above" result="text" session="physics-st6c2"
+    from rompy_swan.subcomponents.physics import ST6C2
+    st6 = ST6C2()
+    print(st6.render())
+    ```
 
     TODO: Ensure validator is reused here so fan and debias are not used together.
 
@@ -423,19 +417,18 @@ class ST6C2(ST6C1):
 class ST6C3(ST6C1):
     """Third ST6 calibration in the SWAN user manual.
 
-    .. code-block:: text
-
-        ST6 2.8e-6 3.5e-5 4.0 4.0 UP HWANG VECTAU U10PROXY 32.0 AGROW
+    ```text
+    ST6 2.8e-6 3.5e-5 4.0 4.0 UP HWANG VECTAU U10PROXY 32.0 AGROW
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import ST6C3
-        st6 = ST6C3()
-        print(st6.render())
+    ```python exec="on" source="above" result="text" session="physics-st6c3"
+    from rompy_swan.subcomponents.physics import ST6C3
+    st6 = ST6C3()
+    print(st6.render())
+    ```
 
     """
 
@@ -448,19 +441,18 @@ class ST6C3(ST6C1):
 class ST6C4(ST6C3):
     """Fourth ST6 calibration in the SWAN user manual.
 
-    .. code-block:: text
-
-        ST6 2.8e-6 3.5e-5 4.0 4.0 UP HWANG VECTAU U10PROXY 32.0 DEBIAS 0.89 AGROW
+    ```text
+    ST6 2.8e-6 3.5e-5 4.0 4.0 UP HWANG VECTAU U10PROXY 32.0 DEBIAS 0.89 AGROW
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import ST6C4
-        st6 = ST6C4()
-        print(st6.render())
+    ```python exec="on" source="above" result="text" session="physics-st6c4"
+    from rompy_swan.subcomponents.physics import ST6C4
+    st6 = ST6C4()
+    print(st6.render())
+    ```
 
     """
 
@@ -471,19 +463,18 @@ class ST6C4(ST6C3):
 class ST6C5(ST6C1):
     """Fifth ST6 calibration in the SWAN user manual.
 
-    .. code-block:: text
-
-        ST6 4.7e-7 6.6e-6 4.0 4.0 UP HWANG VECTAU U10PROXY 28.0 AGROW
+    ```text
+    ST6 6.5e-6 8.5e-5 4.0 4.0 UP HWANG VECTAU U10PROXY 35.0 DEBIAS 0.89 AGROW
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import ST6C5
-        st6 = ST6C5()
-        print(st6.render())
+    ```python exec="on" source="above" result="text" session="physics-st6c5"
+    from rompy_swan.subcomponents.physics import ST6C5
+    st6 = ST6C5()
+    print(st6.render())
+    ```
 
     """
 
@@ -500,9 +491,9 @@ class ST6C5(ST6C1):
 class ELDEBERKY(BaseSubComponent):
     """Biphase of Eldeberky (1999).
 
-    .. code-block:: text
-
-        BIPHASE ELDEBERKY [urcrit]
+    ```text
+    BIPHASE ELDEBERKY [urcrit]
+    ```
 
     Biphase parameterisation as a funtion of the Ursell number of Eldeberky (1999).
 
@@ -523,14 +514,13 @@ class ELDEBERKY(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import ELDEBERKY
-        biphase = ELDEBERKY()
-        print(biphase.render())
-        biphase = ELDEBERKY(urcrit=0.63)
-        print(biphase.render())
+    ```python exec="on" source="above" result="text" session="physics-eldeberky"
+    from rompy_swan.subcomponents.physics import ELDEBERKY
+    biphase = ELDEBERKY()
+    print(biphase.render())
+    biphase = ELDEBERKY(urcrit=0.63)
+    print(biphase.render())
+    ```
 
     """
 
@@ -557,9 +547,9 @@ class ELDEBERKY(BaseSubComponent):
 class DEWIT(BaseSubComponent):
     """Biphase of De Wit (2022).
 
-    .. code-block:: text
-
-        BIPHASE DEWIT [lpar]
+    ```text
+    BIPHASE DEWIT [lpar]
+    ```
 
     Biphase parameterization based on bed slope and peak period of De Wit (2022).
 
@@ -572,14 +562,13 @@ class DEWIT(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import DEWIT
-        biphase = DEWIT()
-        print(biphase.render())
-        biphase = DEWIT(lpar=0.0)
-        print(biphase.render())
+    ```python exec="on" source="above" result="text" session="physics-dewit"
+    from rompy_swan.subcomponents.physics import DEWIT
+    biphase = DEWIT()
+    print(biphase.render())
+    biphase = DEWIT(lpar=0.0)
+    print(biphase.render())
+    ```
 
     """
 
@@ -608,21 +597,20 @@ class DEWIT(BaseSubComponent):
 class TRANSM(BaseSubComponent):
     """Constant transmission coefficient.
 
-    .. code-block:: text
-
-        TRANSM [trcoef]
+    ```text
+    TRANSM [trcoef]
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import TRANSM
-        transm = TRANSM()
-        print(transm.render())
-        transm = TRANSM(trcoef=0.5)
-        print(transm.render())
+    ```python exec="on" source="above" result="text" session="physics-transm"
+    from rompy_swan.subcomponents.physics import TRANSM
+    transm = TRANSM()
+    print(transm.render())
+    transm = TRANSM(trcoef=0.5)
+    print(transm.render())
+    ```
 
     """
 
@@ -651,19 +639,18 @@ class TRANSM(BaseSubComponent):
 class TRANS1D(BaseSubComponent):
     """Frequency dependent transmission.
 
-    .. code-block:: text
-
-        TRANS1D < [trcoef] >
+    ```text
+    TRANS1D < [trcoef] >
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import TRANS1D
-        transm = TRANS1D(trcoef=[0.0, 0.0, 0.2, 0.5, 0.2, 0.0, 0.0])
-        print(transm.render())
+    ```python exec="on" source="above" result="text" session="physics-trans1d"
+    from rompy_swan.subcomponents.physics import TRANS1D
+    transm = TRANS1D(trcoef=[0.0, 0.0, 0.2, 0.5, 0.2, 0.0, 0.0])
+    print(transm.render())
+    ```
 
     """
 
@@ -686,20 +673,20 @@ class TRANS1D(BaseSubComponent):
 class TRANS2D(BaseSubComponent):
     """Frequency-direction dependent transmission.
 
-    .. code-block:: text
-
-        TRANS2D < [trcoef] >
+    ```text
+    TRANS2D < [trcoef] >
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import TRANS2D
-        trcoef = np.array([[0.0, 0.0], [0.1, 0.1], [0.2, 0.2]])
-        transm = TRANS2D(trcoef=trcoef)
-        print(transm.render())
+    ```python exec="on" source="above" result="text" session="physics-trans2d"
+    import numpy as np
+    from rompy_swan.subcomponents.physics import TRANS2D
+    trcoef = np.array([[0.0, 0.0], [0.1, 0.1], [0.2, 0.2]])
+    transm = TRANS2D(trcoef=trcoef)
+    print(transm.render())
+    ```
 
     """
 
@@ -733,9 +720,9 @@ class TRANS2D(BaseSubComponent):
 class GODA(BaseSubComponent):
     """DAM transmission of Goda/Seelig (1979).
 
-    .. code-block:: text
-
-        DAM GODA [hgt] [alpha] [beta]
+    ```text
+    DAM GODA [hgt] [alpha] [beta]
+    ```
 
     This option specified transmission coefficients dependent on the incident wave
     conditions at the obstacle and on the obstacle height (which may be submerged).
@@ -752,14 +739,13 @@ class GODA(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import GODA
-        transm = GODA(hgt=3.0)
-        print(transm.render())
-        transm = GODA(hgt=3.0, alpha=2.6, beta=0.15)
-        print(transm.render())
+    ```python exec="on" source="above" result="text" session="physics-goda"
+    from rompy_swan.subcomponents.physics import GODA
+    transm = GODA(hgt=3.0)
+    print(transm.render())
+    transm = GODA(hgt=3.0, alpha=2.6, beta=0.15)
+    print(transm.render())
+    ```
 
     """
 
@@ -801,9 +787,9 @@ class GODA(BaseSubComponent):
 class DANGREMOND(BaseSubComponent):
     """DAM transmission of d'Angremond et al. (1996).
 
-    .. code-block:: text
-
-        DAM DANGREMOND [hgt] [slope] [Bk]
+    ```text
+    DAM DANGREMOND [hgt] [slope] [Bk]
+    ```
 
     This option specifies transmission coefficients dependent on the incident wave
     conditions at the obstacle and on the obstacle height (which may be submerged).
@@ -816,12 +802,11 @@ class DANGREMOND(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import DANGREMOND
-        transm = DANGREMOND(hgt=3.0, slope=60, Bk=10.0)
-        print(transm.render())
+    ```python exec="on" source="above" result="text" session="physics-dangremond"
+    from rompy_swan.subcomponents.physics import DANGREMOND
+    transm = DANGREMOND(hgt=3.0, slope=60, Bk=10.0)
+    print(transm.render())
+    ```
 
     """
 
@@ -850,21 +835,20 @@ class DANGREMOND(BaseSubComponent):
 class REFL(BaseSubComponent):
     """Obstacle reflections.
 
-    .. code-block:: text
-
-        REFL [reflc]
+    ```text
+    REFL [reflc]
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import REFL
-        refl = REFL()
-        print(refl.render())
-        refl = REFL(reflc=0.5)
-        print(refl.render())
+    ```python exec="on" source="above" result="text" session="physics-refl"
+    from rompy_swan.subcomponents.physics import REFL
+    refl = REFL()
+    print(refl.render())
+    refl = REFL(reflc=0.5)
+    print(refl.render())
+    ```
 
     """
 
@@ -890,19 +874,18 @@ class REFL(BaseSubComponent):
 class RSPEC(BaseSubComponent):
     """Specular reflection.
 
-    .. code-block:: text
-
-        RSPEC
+    ```text
+    RSPEC
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import RSPEC
-        refl = RSPEC()
-        print(refl.render())
+    ```python exec="on" source="above" result="text" session="physics-rspec"
+    from rompy_swan.subcomponents.physics import RSPEC
+    refl = RSPEC()
+    print(refl.render())
+    ```
 
     """
 
@@ -918,23 +901,22 @@ class RSPEC(BaseSubComponent):
 class RDIFF(BaseSubComponent):
     """Diffuse reflection.
 
-    .. code-block:: text
-
-        RDIFF [pown]
+    ```text
+    RDIFF [pown]
+    ```
 
     Specular reflection where incident waves are scattered over reflected direction.
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import RDIFF
-        refl = RDIFF()
-        print(refl.render())
-        refl = RDIFF(pown=1.0)
-        print(refl.render())
+    ```python exec="on" source="above" result="text" session="physics-rdiff"
+    from rompy_swan.subcomponents.physics import RDIFF
+    refl = RDIFF()
+    print(refl.render())
+    refl = RDIFF(pown=1.0)
+    print(refl.render())
+    ```
 
     """
 
@@ -961,9 +943,9 @@ class RDIFF(BaseSubComponent):
 class FREEBOARD(BaseSubComponent):
     """Freeboard dependent transmission and reflection.
 
-    .. code-block:: text
-
-        FREEBOARD [hgt] [gammat] [gammar] [QUAY]
+    ```text
+    FREEBOARD [hgt] [gammat] [gammar] [QUAY]
+    ```
 
     With this option the user indicates that the fixed transmission `trcoef` and
     reflection `reflc` coefficients are freeboard dependent. The freeboard dependency
@@ -977,14 +959,13 @@ class FREEBOARD(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import FREEBOARD
-        freeboard = FREEBOARD(hgt=2.0)
-        print(freeboard.render())
-        freeboard = FREEBOARD(hgt=2.0, gammat=1.0, gammar=1.0, quay=True)
-        print(freeboard.render())
+    ```python exec="on" source="above" result="text" session="physics-freeboard"
+    from rompy_swan.subcomponents.physics import FREEBOARD
+    freeboard = FREEBOARD(hgt=2.0)
+    print(freeboard.render())
+    freeboard = FREEBOARD(hgt=2.0, gammat=1.0, gammar=1.0, quay=True)
+    print(freeboard.render())
+    ```
 
     """
 
@@ -1048,9 +1029,9 @@ class FREEBOARD(BaseSubComponent):
 class LINE(BaseSubComponent):
     """Line of points to define obstacle location.
 
-    .. code-block:: text
-
-        LINE < [xp] [yp] >
+    ```text
+    LINE < [xp] [yp] >
+    ```
 
     With this option the user indicates that the fixed transmission `trcoef` and
     reflection `reflc` coefficients are freeboard dependent. The freeboard dependency
@@ -1065,12 +1046,11 @@ class LINE(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.physics import LINE
-        line = LINE(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1])
-        print(line.render())
+    ```python exec="on" source="above" result="text" session="physics-line"
+    from rompy_swan.subcomponents.physics import LINE
+    line = LINE(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1])
+    print(line.render())
+    ```
 
     """
 

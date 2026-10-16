@@ -15,19 +15,18 @@ from rompy_swan.subcomponents.base import BaseSubComponent
 class SPEC1D(BaseSubComponent):
     """Frequency 1D spectra.
 
-    .. code-block:: text
-
-        SPEC1D
+    ```text
+    SPEC1D
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.output import SPEC1D
-        spec = SPEC1D()
-        print(spec.render())
+    ```python exec="on" source="above" result="text" session="output-spec1d"
+    from rompy_swan.subcomponents.output import SPEC1D
+    spec = SPEC1D()
+    print(spec.render())
+    ```
 
     """
 
@@ -43,19 +42,18 @@ class SPEC1D(BaseSubComponent):
 class SPEC2D(BaseSubComponent):
     """Frequency-direction 2D spectra.
 
-    .. code-block:: text
-
-        SPEC2D
+    ```text
+    SPEC2D
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.output import SPEC2D
-        spec = SPEC2D()
-        print(spec.render())
+    ```python exec="on" source="above" result="text" session="output-spec2d"
+    from rompy_swan.subcomponents.output import SPEC2D
+    spec = SPEC2D()
+    print(spec.render())
+    ```
 
     """
 
@@ -71,9 +69,9 @@ class SPEC2D(BaseSubComponent):
 class ABS(BaseSubComponent):
     """Absolute frequency spectra.
 
-    .. code-block:: text
-
-        ABS
+    ```text
+    ABS
+    ```
 
     Spectra are computed as a function of absolute frequency, i.e., the frequency as
     measured in a fixed point.
@@ -81,12 +79,11 @@ class ABS(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.output import ABS
-        freq = ABS()
-        print(freq.render())
+    ```python exec="on" source="above" result="text" session="output-abs"
+    from rompy_swan.subcomponents.output import ABS
+    freq = ABS()
+    print(freq.render())
+    ```
 
     """
 
@@ -102,9 +99,9 @@ class ABS(BaseSubComponent):
 class REL(BaseSubComponent):
     """Relative frequency spectra.
 
-    .. code-block:: text
-
-        REL
+    ```text
+    REL
+    ```
 
     Spectra are computed as a function of relative frequency, i.e., the frequency as
     measured when moving with current.
@@ -112,12 +109,11 @@ class REL(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.output import REL
-        freq = REL()
-        print(freq.render())
+    ```python exec="on" source="above" result="text" session="output-rel"
+    from rompy_swan.subcomponents.output import REL
+    freq = REL()
+    print(freq.render())
+    ```
 
     """
 

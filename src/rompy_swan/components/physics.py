@@ -58,9 +58,9 @@ SOURCE_TERMS = Union[
 class GEN1(BaseComponent):
     """First generation source terms GEN1.
 
-    .. code-block:: text
-
-        GEN1 [cf10] [cf20] [cf30] [cf40] [edmlpm] [cdrag] [umin] [cfpm]
+    ```text
+    GEN1 [cf10] [cf20] [cf30] [cf40] [edmlpm] [cdrag] [umin] [cfpm]
+    ```
 
     With this command the user indicates that SWAN should run in first-generation mode
     (see Scientific/Technical documentation).
@@ -68,24 +68,23 @@ class GEN1(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import GEN1
-        gen = GEN1()
-        print(gen.render())
-        kwargs = dict(
-            cf10=188.0,
-            cf20=0.59,
-            cf30=0.12,
-            cf40=250.0,
-            edmlpm=0.0036,
-            cdrag=0.0012,
-            umin=1.0,
-            cfpm=0.13
-        )
-        gen = GEN1(**kwargs)
-        print(gen.render())
+    ```python exec="on" source="above" result="text" session="physics-gen1"
+    from rompy_swan.components.physics import GEN1
+    gen = GEN1()
+    print(gen.render())
+    kwargs = dict(
+        cf10=188.0,
+        cf20=0.59,
+        cf30=0.12,
+        cf40=250.0,
+        edmlpm=0.0036,
+        cdrag=0.0012,
+        umin=1.0,
+        cfpm=0.13
+    )
+    gen = GEN1(**kwargs)
+    print(gen.render())
+    ```
 
     """
 
@@ -161,9 +160,9 @@ class GEN1(BaseComponent):
 class GEN2(GEN1):
     """Second generation source terms GEN2.
 
-    .. code-block:: text
-
-        GEN2 [cf10] [cf20] [cf30] [cf40] [cf50] [cf60] [edmlpm] [cdrag] [umin] [cfpm]
+    ```text
+    GEN2 [cf10] [cf20] [cf30] [cf40] [cf50] [cf60] [edmlpm] [cdrag] [umin] [cfpm]
+    ```
 
     With this command the user indicates that SWAN should run in second-generation mode
     (see Scientific/Technical documentation).
@@ -171,26 +170,25 @@ class GEN2(GEN1):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import GEN2
-        gen = GEN2()
-        print(gen.render())
-        kwargs = dict(
-            cf10=188.0,
-            cf20=0.59,
-            cf30=0.12,
-            cf40=250.0,
-            cf50=0.0023,
-            cf60=-0.223,
-            edmlpm=0.0036,
-            cdrag=0.0012,
-            umin=1.0,
-            cfpm=0.13
-        )
-        gen = GEN2(**kwargs)
-        print(gen.render())
+    ```python exec="on" source="above" result="text" session="physics-gen2"
+    from rompy_swan.components.physics import GEN2
+    gen = GEN2()
+    print(gen.render())
+    kwargs = dict(
+        cf10=188.0,
+        cf20=0.59,
+        cf30=0.12,
+        cf40=250.0,
+        cf50=0.0023,
+        cf60=-0.223,
+        edmlpm=0.0036,
+        cdrag=0.0012,
+        umin=1.0,
+        cfpm=0.13
+    )
+    gen = GEN2(**kwargs)
+    print(gen.render())
+    ```
 
     """
 
@@ -241,9 +239,9 @@ class GEN2(GEN1):
 class GEN3(BaseComponent):
     """Third generation source terms GEN3.
 
-    .. code-block:: text
-
-        GEN3 JANSSEN|KOMEN|->WESTHUYSEN|ST6 AGROW [a]
+    ```text
+    GEN3 JANSSEN|KOMEN|->WESTHUYSEN|ST6 AGROW [a]
+    ```
 
     With this command the user indicates that SWAN should run in third-generation mode
     for wind input, quadruplet interactions and whitecapping.
@@ -251,21 +249,20 @@ class GEN3(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import GEN3
-        gen = GEN3(
-            source_terms=dict(
-                model_type="westhuysen",
-                wind_drag="wu",
-                agrow=True,
-            ),
-        )
-        print(gen.render())
-        from rompy_swan.subcomponents.physics import ST6C1
-        gen = GEN3(source_terms=ST6C1())
-        print(gen.render())
+    ```python exec="on" source="above" result="text" session="physics-gen3"
+    from rompy_swan.components.physics import GEN3
+    gen = GEN3(
+        source_terms=dict(
+            model_type="westhuysen",
+            wind_drag="wu",
+            agrow=True,
+        ),
+    )
+    print(gen.render())
+    from rompy_swan.subcomponents.physics import ST6C1
+    gen = GEN3(source_terms=ST6C1())
+    print(gen.render())
+    ```
 
     """
 
@@ -290,9 +287,9 @@ class GEN3(BaseComponent):
 class NEGATINP(BaseComponent):
     """Negative wind input.
 
-    .. code-block:: text
-
-        NEGATINP [rdcoef]
+    ```text
+    NEGATINP [rdcoef]
+    ```
 
     With this optional command the user activates negative wind input. **This is
     intended only for use with non-breaking swell dissipation SSWELL ZIEGER**.
@@ -314,14 +311,13 @@ class NEGATINP(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import NEGATINP
-        negatinp = NEGATINP()
-        print(negatinp.render())
-        negatinp = NEGATINP(rdcoef=0.04)
-        print(negatinp.render())
+    ```python exec="on" source="above" result="text" session="physics-negatinp"
+    from rompy_swan.components.physics import NEGATINP
+    negatinp = NEGATINP()
+    print(negatinp.render())
+    negatinp = NEGATINP(rdcoef=0.04)
+    print(negatinp.render())
+    ```
 
     """
 
@@ -346,9 +342,9 @@ class NEGATINP(BaseComponent):
 class SSWELL_ROGERS(BaseComponent):
     """Nonbreaking dissipation of Rogers et al. (2012).
 
-    .. code-block:: text
-
-        SSWELL ROGERS [cdsv] [feswell]
+    ```text
+    SSWELL ROGERS [cdsv] [feswell]
+    ```
 
     References
     ----------
@@ -360,14 +356,13 @@ class SSWELL_ROGERS(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SSWELL_ROGERS
-        sswell = SSWELL_ROGERS()
-        print(sswell.render())
-        sswell = SSWELL_ROGERS(cdsv=1.2, feswell=0.5)
-        print(sswell.render())
+    ```python exec="on" source="above" result="text" session="physics-sswell_rogers"
+    from rompy_swan.components.physics import SSWELL_ROGERS
+    sswell = SSWELL_ROGERS()
+    print(sswell.render())
+    sswell = SSWELL_ROGERS(cdsv=1.2, feswell=0.5)
+    print(sswell.render())
+    ```
 
     """
 
@@ -398,9 +393,9 @@ class SSWELL_ROGERS(BaseComponent):
 class SSWELL_ARDHUIN(BaseComponent):
     """Nonbreaking dissipation of Ardhuin et al. (2010).
 
-    .. code-block:: text
-
-        SSWELL ARDHUIN [cdsv]
+    ```text
+    SSWELL ARDHUIN [cdsv]
+    ```
 
     References
     ----------
@@ -413,14 +408,13 @@ class SSWELL_ARDHUIN(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SSWELL_ARDHUIN
-        sswell = SSWELL_ARDHUIN()
-        print(sswell.render())
-        sswell = SSWELL_ARDHUIN(cdsv=1.2)
-        print(sswell.render())
+    ```python exec="on" source="above" result="text" session="physics-sswell_ardhuin"
+    from rompy_swan.components.physics import SSWELL_ARDHUIN
+    sswell = SSWELL_ARDHUIN()
+    print(sswell.render())
+    sswell = SSWELL_ARDHUIN(cdsv=1.2)
+    print(sswell.render())
+    ```
 
     """
 
@@ -446,9 +440,9 @@ class SSWELL_ARDHUIN(BaseComponent):
 class SSWELL_ZIEGER(BaseComponent):
     """Nonbreaking dissipation of Zieger et al. (2015).
 
-    .. code-block:: text
-
-        SSWELL ZIEGER [b1]
+    ```text
+    SSWELL ZIEGER [b1]
+    ```
 
     Swell dissipation of Young et al. (2013) updated by Zieger et al. (2015). The
     Zieger option is intended for use with negative wind input via the NEGATINP
@@ -468,14 +462,13 @@ class SSWELL_ZIEGER(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SSWELL_ZIEGER
-        sswell = SSWELL_ZIEGER()
-        print(sswell.render())
-        sswell = SSWELL_ZIEGER(b1=0.00025)
-        print(sswell.render())
+    ```python exec="on" source="above" result="text" session="physics-sswell_zieger"
+    from rompy_swan.components.physics import SSWELL_ZIEGER
+    sswell = SSWELL_ZIEGER()
+    print(sswell.render())
+    sswell = SSWELL_ZIEGER(b1=0.00025)
+    print(sswell.render())
+    ```
 
     """
 
@@ -502,9 +495,9 @@ class SSWELL_ZIEGER(BaseComponent):
 class WCAPPING_KOMEN(BaseComponent):
     """Whitecapping according to Komen (1984).
 
-    .. code-block:: text
-
-        WCAPPING KOMEN [cds2] [stpm] [powst] [delta] [powk]
+    ```text
+    WCAPPING KOMEN [cds2] [stpm] [powst] [delta] [powk]
+    ```
 
     Notes
     -----
@@ -521,14 +514,13 @@ class WCAPPING_KOMEN(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import WCAPPING_KOMEN
-        wcapping = WCAPPING_KOMEN()
-        print(wcapping.render())
-        wcapping = WCAPPING_KOMEN(cds2=2.36e-5, stpm=3.02e-3, powst=2, delta=1, powk=2)
-        print(wcapping.render())
+    ```python exec="on" source="above" result="text" session="physics-wcapping_komen"
+    from rompy_swan.components.physics import WCAPPING_KOMEN
+    wcapping = WCAPPING_KOMEN()
+    print(wcapping.render())
+    wcapping = WCAPPING_KOMEN(cds2=2.36e-5, stpm=3.02e-3, powst=2, delta=1, powk=2)
+    print(wcapping.render())
+    ```
 
     """
 
@@ -590,9 +582,9 @@ class WCAPPING_KOMEN(BaseComponent):
 class WCAPPING_AB(BaseComponent):
     """Whitecapping according to Alves and Banner (2003).
 
-    .. code-block:: text
-
-        WCAPPING AB [cds2] [br] CURRENT [cds3]
+    ```text
+    WCAPPING AB [cds2] [br] CURRENT [cds3]
+    ```
 
     References
     ----------
@@ -603,14 +595,13 @@ class WCAPPING_AB(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import WCAPPING_AB
-        wcapping = WCAPPING_AB()
-        print(wcapping.render())
-        wcapping = WCAPPING_AB(cds2=5.0e-5, br=1.75e-3, current=True, cds3=0.8)
-        print(wcapping.render())
+    ```python exec="on" source="above" result="text" session="physics-wcapping_ab"
+    from rompy_swan.components.physics import WCAPPING_AB
+    wcapping = WCAPPING_AB()
+    print(wcapping.render())
+    wcapping = WCAPPING_AB(cds2=5.0e-5, br=1.75e-3, current=True, cds3=0.8)
+    print(wcapping.render())
+    ```
 
     """
 
@@ -658,9 +649,9 @@ class WCAPPING_AB(BaseComponent):
 class QUADRUPL(BaseComponent):
     """Nonlinear quadruplet wave interactions.
 
-    .. code-block:: text
-
-        QUADRUPL [iquad] [lambda] [cnl4] [Csh1] [Csh2] [Csh3]
+    ```text
+    QUADRUPL [iquad] [lambda] [cnl4] [Csh1] [Csh2] [Csh3]
+    ```
 
     With this option the user can influence the computation of nonlinear quadruplet
     wave interactions which are usually included in the computations. Can be
@@ -679,17 +670,16 @@ class QUADRUPL(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import QUADRUPL
-        quadrupl = QUADRUPL()
-        print(quadrupl.render())
-        kwargs = dict(
-            iquad=3, lambd=0.25, cnl4=3.0e7, csh1=5.5, csh2=0.833333, csh3=-1.25
-        )
-        quadrupl = QUADRUPL(**kwargs)
-        print(quadrupl.render())
+    ```python exec="on" source="above" result="text" session="physics-quadrupl"
+    from rompy_swan.components.physics import QUADRUPL
+    quadrupl = QUADRUPL()
+    print(quadrupl.render())
+    kwargs = dict(
+        iquad=3, lambd=0.25, cnl4=3.0e7, csh1=5.5, csh2=0.833333, csh3=-1.25
+    )
+    quadrupl = QUADRUPL(**kwargs)
+    print(quadrupl.render())
+    ```
 
     """
 
@@ -766,23 +756,22 @@ class QUADRUPL(BaseComponent):
 class BREAKING_CONSTANT(BaseComponent):
     """Constant wave breaking index.
 
-    .. code-block:: text
-
-        BREAKING CONSTANT [alpha] [gamma]
+    ```text
+    BREAKING CONSTANT [alpha] [gamma]
+    ```
 
     Indicates that a constant breaker index is to be used.
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import BREAKING_CONSTANT
-        breaking = BREAKING_CONSTANT()
-        print(breaking.render())
-        breaking = BREAKING_CONSTANT(alpha=1.0, gamma=0.73)
-        print(breaking.render())
+    ```python exec="on" source="above" result="text" session="physics-breaking_constant"
+    from rompy_swan.components.physics import BREAKING_CONSTANT
+    breaking = BREAKING_CONSTANT()
+    print(breaking.render())
+    breaking = BREAKING_CONSTANT(alpha=1.0, gamma=0.73)
+    print(breaking.render())
+    ```
 
     """
 
@@ -817,9 +806,9 @@ class BREAKING_CONSTANT(BaseComponent):
 class BREAKING_BKD(BaseComponent):
     """Variable wave breaking index.
 
-    .. code-block:: text
-
-        BREAKING BKD [alpha] [gamma0] [a1] [a2] [a3]
+    ```text
+    BREAKING BKD [alpha] [gamma0] [a1] [a2] [a3]
+    ```
 
     Indicates that the breaker index scales with both the bottom slope (`beta`)
     and the dimensionless depth (kd).
@@ -827,14 +816,13 @@ class BREAKING_BKD(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import BREAKING_BKD
-        breaking = BREAKING_BKD()
-        print(breaking.render())
-        breaking = BREAKING_BKD(alpha=1.0, gamma0=0.54, a1=7.59, a2=-8.06, a3=8.09)
-        print(breaking.render())
+    ```python exec="on" source="above" result="text" session="physics-breaking_bkd"
+    from rompy_swan.components.physics import BREAKING_BKD
+    breaking = BREAKING_BKD()
+    print(breaking.render())
+    breaking = BREAKING_BKD(alpha=1.0, gamma0=0.54, a1=7.59, a2=-8.06, a3=8.09)
+    print(breaking.render())
+    ```
 
     """
 
@@ -893,9 +881,9 @@ class BREAKING_BKD(BaseComponent):
 class FRICTION_JONSWAP(BaseComponent):
     """Hasselmann et al. (1973) Jonswap friction.
 
-    .. code-block:: text
-
-        FRICTION JONSWAP CONSTANT [cfjon]
+    ```text
+    FRICTION JONSWAP CONSTANT [cfjon]
+    ```
 
     Indicates that the semi-empirical expression derived from the JONSWAP results for
     bottom friction dissipation (Hasselmann et al., 1973, JONSWAP) should be activated.
@@ -912,14 +900,13 @@ class FRICTION_JONSWAP(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import FRICTION_JONSWAP
-        friction = FRICTION_JONSWAP()
-        print(friction.render())
-        friction = FRICTION_JONSWAP(cfjon=0.038)
-        print(friction.render())
+    ```python exec="on" source="above" result="text" session="physics-friction_jonswap"
+    from rompy_swan.components.physics import FRICTION_JONSWAP
+    friction = FRICTION_JONSWAP()
+    print(friction.render())
+    friction = FRICTION_JONSWAP(cfjon=0.038)
+    print(friction.render())
+    ```
 
     TODO: Implement VARIABLE option?
 
@@ -944,9 +931,9 @@ class FRICTION_JONSWAP(BaseComponent):
 class FRICTION_COLLINS(BaseComponent):
     """Collins (1972) friction.
 
-    .. code-block:: text
-
-        FRICTION COLLINS [cfw]
+    ```text
+    FRICTION COLLINS [cfw]
+    ```
 
     Note that `cfw` is allowed to vary over the computational region; in that case use
     the commands INPGRID FRICTION and READINP FRICTION to define and read the friction
@@ -962,14 +949,13 @@ class FRICTION_COLLINS(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import FRICTION_COLLINS
-        friction = FRICTION_COLLINS()
-        print(friction.render())
-        friction = FRICTION_COLLINS(cfw=0.038)
-        print(friction.render())
+    ```python exec="on" source="above" result="text" session="physics-friction_collins"
+    from rompy_swan.components.physics import FRICTION_COLLINS
+    friction = FRICTION_COLLINS()
+    print(friction.render())
+    friction = FRICTION_COLLINS(cfw=0.038)
+    print(friction.render())
+    ```
 
     """
 
@@ -992,9 +978,9 @@ class FRICTION_COLLINS(BaseComponent):
 class FRICTION_MADSEN(BaseComponent):
     """Madsen et al (1988) friction.
 
-    .. code-block:: text
-
-        FRICTION MADSEN [kn]
+    ```text
+    FRICTION MADSEN [kn]
+    ```
 
     Note that `kn` is allowed to vary over the computational region; in that case use
     the commands INPGRID FRICTION and READINP FRICTION to define and read the friction
@@ -1013,14 +999,13 @@ class FRICTION_MADSEN(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import FRICTION_MADSEN
-        friction = FRICTION_MADSEN()
-        print(friction.render())
-        friction = FRICTION_MADSEN(kn=0.038)
-        print(friction.render())
+    ```python exec="on" source="above" result="text" session="physics-friction_madsen"
+    from rompy_swan.components.physics import FRICTION_MADSEN
+    friction = FRICTION_MADSEN()
+    print(friction.render())
+    friction = FRICTION_MADSEN(kn=0.038)
+    print(friction.render())
+    ```
 
     """
 
@@ -1046,9 +1031,9 @@ class FRICTION_MADSEN(BaseComponent):
 class FRICTION_RIPPLES(BaseComponent):
     """Smith et al. (2011) Ripples friction.
 
-    .. code-block:: text
-
-        FRICTION RIPPLES [S] [D]
+    ```text
+    FRICTION RIPPLES [S] [D]
+    ```
 
     Indicates that the expression of Smith et al. (2011) should be activated. Here
     friction depends on the formation of bottom ripples and sediment size.
@@ -1063,14 +1048,13 @@ class FRICTION_RIPPLES(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import FRICTION_RIPPLES
-        friction = FRICTION_RIPPLES()
-        print(friction.render())
-        friction = FRICTION_RIPPLES(s=2.65, d=0.0001)
-        print(friction.render())
+    ```python exec="on" source="above" result="text" session="physics-friction_ripples"
+    from rompy_swan.components.physics import FRICTION_RIPPLES
+    friction = FRICTION_RIPPLES()
+    print(friction.render())
+    friction = FRICTION_RIPPLES(s=2.65, d=0.0001)
+    print(friction.render())
+    ```
 
     """
 
@@ -1101,9 +1085,9 @@ class FRICTION_RIPPLES(BaseComponent):
 class TRIAD(BaseComponent):
     """Wave triad interactions.
 
-    .. code-block:: text
-
-        TRIAD [itriad] [trfac] [cutfr] [a] [b] [urcrit] [urslim]
+    ```text
+    TRIAD [itriad] [trfac] [cutfr] [a] [b] [urcrit] [urslim]
+    ```
 
     With this command the user can activate the triad wave-wave interactions. If this
     command is not used, SWAN will not account for triads.
@@ -1115,22 +1099,21 @@ class TRIAD(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import TRIAD
-        triad = TRIAD()
-        print(triad.render())
-        triad = TRIAD(
-            itriad=1,
-            trfac=0.8,
-            cutfr=2.5,
-            a=0.95,
-            b=-0.75,
-            ucrit=0.2,
-            urslim=0.01,
-        )
-        print(triad.render())
+    ```python exec="on" source="above" result="text" session="physics-triad"
+    from rompy_swan.components.physics import TRIAD
+    triad = TRIAD()
+    print(triad.render())
+    triad = TRIAD(
+        itriad=1,
+        trfac=0.8,
+        cutfr=2.5,
+        a=0.95,
+        b=-0.75,
+        ucrit=0.2,
+        urslim=0.01,
+    )
+    print(triad.render())
+    ```
 
     """
 
@@ -1214,9 +1197,9 @@ class TRIAD(BaseComponent):
 class TRIAD_DCTA(BaseComponent):
     """Triad interactions with the DCTA method of Booij et al. (2009).
 
-    .. code-block:: text
-
-        TRIAD DCTA [trfac] [p] COLL|NONC BIPHHASE ELDEBERKY|DEWIT
+    ```text
+    TRIAD DCTA [trfac] [p] COLL|NONC BIPHHASE ELDEBERKY|DEWIT
+    ```
 
     References
     ----------
@@ -1232,19 +1215,18 @@ class TRIAD_DCTA(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import TRIAD_DCTA
-        triad = TRIAD_DCTA()
-        print(triad.render())
-        triad = TRIAD_DCTA(
-            trfac=4.4,
-            p=1.3,
-            noncolinear=True,
-            biphase={"model_type": "dewit", "lpar": 0.0},
-        )
-        print(triad.render())
+    ```python exec="on" source="above" result="text" session="physics-triad_dcta"
+    from rompy_swan.components.physics import TRIAD_DCTA
+    triad = TRIAD_DCTA()
+    print(triad.render())
+    triad = TRIAD_DCTA(
+        trfac=4.4,
+        p=1.3,
+        noncolinear=True,
+        biphase={"model_type": "dewit", "lpar": 0.0},
+    )
+    print(triad.render())
+    ```
 
     """
 
@@ -1298,9 +1280,9 @@ class TRIAD_DCTA(BaseComponent):
 class TRIAD_LTA(BaseComponent):
     """Triad interactions with the LTA method of Eldeberky (1996).
 
-    .. code-block:: text
-
-        TRIAD LTA [trfac] [cutfr] BIPHHASE ELDEBERKY|DEWIT
+    ```text
+    TRIAD LTA [trfac] [cutfr] BIPHHASE ELDEBERKY|DEWIT
+    ```
 
     References
     ----------
@@ -1315,18 +1297,17 @@ class TRIAD_LTA(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import TRIAD_LTA
-        triad = TRIAD_LTA()
-        print(triad.render())
-        triad = TRIAD_LTA(
-            trfac=0.8,
-            cutfr=2.5,
-            biphase={"model_type": "eldeberky", "urcrit": 0.63},
-        )
-        print(triad.render())
+    ```python exec="on" source="above" result="text" session="physics-triad_lta"
+    from rompy_swan.components.physics import TRIAD_LTA
+    triad = TRIAD_LTA()
+    print(triad.render())
+    triad = TRIAD_LTA(
+        trfac=0.8,
+        cutfr=2.5,
+        biphase={"model_type": "eldeberky", "urcrit": 0.63},
+    )
+    print(triad.render())
+    ```
 
     """
 
@@ -1371,9 +1352,9 @@ class TRIAD_LTA(BaseComponent):
 class TRIAD_SPB(BaseComponent):
     """Triad interactions with the SPB method of Becq-Girard et al. (1999).
 
-    .. code-block:: text
-
-        TRIAD SPB [trfac] [a] [b] BIPHHASE ELDEBERKY|DEWIT
+    ```text
+    TRIAD SPB [trfac] [a] [b] BIPHHASE ELDEBERKY|DEWIT
+    ```
 
     References
     ----------
@@ -1388,19 +1369,18 @@ class TRIAD_SPB(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import TRIAD_SPB
-        triad = TRIAD_SPB()
-        print(triad.render())
-        triad = TRIAD_SPB(
-            trfac=0.9,
-            a=0.95,
-            b=0.0,
-            biphase={"model_type": "eldeberky", "urcrit": 0.63},
-        )
-        print(triad.render())
+    ```python exec="on" source="above" result="text" session="physics-triad_spb"
+    from rompy_swan.components.physics import TRIAD_SPB
+    triad = TRIAD_SPB()
+    print(triad.render())
+    triad = TRIAD_SPB(
+        trfac=0.9,
+        a=0.95,
+        b=0.0,
+        biphase={"model_type": "eldeberky", "urcrit": 0.63},
+    )
+    print(triad.render())
+    ```
 
     """
 
@@ -1462,9 +1442,9 @@ class TRIAD_SPB(BaseComponent):
 class VEGETATION(BaseComponent):
     """Vegetation dumping.
 
-    .. code-block:: text
-
-        VEGETATION [iveg] < [height] [diamtr] [nstems] [drag] >
+    ```text
+    VEGETATION [iveg] < [height] [diamtr] [nstems] [drag] >
+    ```
 
     With this command the user can activate wave damping due to vegetation based on the
     Dalrymple's formula (1984) as implemented by Suzuki et al. (2011). This damping is
@@ -1499,27 +1479,26 @@ class VEGETATION(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import VEGETATION
-        # Single layer
-        vegetation = VEGETATION(
-            height=1.2,
-            diamtr=0.1,
-            drag=0.5,
-            nstems=10,
-        )
-        print(vegetation.render())
-        # 2 vertical layers
-        vegetation = VEGETATION(
-            iveg=1,
-            height=[1.2, 0.8],
-            diamtr=[0.1, 0.1],
-            drag=[0.5, 0.5],
-            nstems=[10, 5],
-        )
-        print(vegetation.render())
+    ```python exec="on" source="above" result="text" session="physics-vegetation"
+    from rompy_swan.components.physics import VEGETATION
+    # Single layer
+    vegetation = VEGETATION(
+        height=1.2,
+        diamtr=0.1,
+        drag=0.5,
+        nstems=10,
+    )
+    print(vegetation.render())
+    # 2 vertical layers
+    vegetation = VEGETATION(
+        iveg=1,
+        height=[1.2, 0.8],
+        diamtr=[0.1, 0.1],
+        drag=[0.5, 0.5],
+        nstems=[10, 5],
+    )
+    print(vegetation.render())
+    ```
 
     """
 
@@ -1594,9 +1573,9 @@ class VEGETATION(BaseComponent):
 class MUD(BaseComponent):
     """Mud dumping.
 
-    .. code-block:: text
-
-        MUD [layer] [rhom] [viscm]
+    ```text
+    MUD [layer] [rhom] [viscm]
+    ```
 
     With this command the user can activate wave damping due to mud based on Ng (2000).
     If this command or the commands INPGRID MUDLAY and READINP MUDLAY are not used,
@@ -1610,18 +1589,17 @@ class MUD(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import MUD
-        mud = MUD()
-        print(mud.render())
-        mud = MUD(
-            layer=2.0,
-            rhom=1300,
-            viscm=0.0076,
-        )
-        print(mud.render())
+    ```python exec="on" source="above" result="text" session="physics-mud"
+    from rompy_swan.components.physics import MUD
+    mud = MUD()
+    print(mud.render())
+    mud = MUD(
+        layer=2.0,
+        rhom=1300,
+        viscm=0.0076,
+    )
+    print(mud.render())
+    ```
 
     TODO: Validate `layer` must be prescribed if `INPGRID MUDLAY` isn't used.
 
@@ -1669,9 +1647,9 @@ class MUD(BaseComponent):
 class SICE(BaseComponent):
     """Sea ice dissipation.
 
-    .. code-block:: text
-
-        SICE [aice]
+    ```text
+    SICE [aice]
+    ```
 
     Using this command, the user activates a sink term to represent the dissipation of
     wave energy by sea ice. The default method is R19 empirical/parametric: a
@@ -1705,14 +1683,13 @@ class SICE(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SICE
-        sice = SICE()
-        print(sice.render())
-        sice = SICE(aice=0.5)
-        print(sice.render())
+    ```python exec="on" source="above" result="text" session="physics-sice"
+    from rompy_swan.components.physics import SICE
+    sice = SICE()
+    print(sice.render())
+    sice = SICE(aice=0.5)
+    print(sice.render())
+    ```
 
     TODO: Verify if the `aice` parameter should be used with SICE command, it is not
     shown in the command tree but it is described as an option in the description.
@@ -1746,9 +1723,9 @@ class SICE(BaseComponent):
 class SICE_R19(SICE):
     """Sea ice dissipation based on the method of Rogers et al (2019).
 
-    .. code-block:: text
-
-        SICE [aice] R19 [c0] [c1] [c2] [c3] [c4] [c5] [c6]
+    ```text
+    SICE [aice] R19 [c0] [c1] [c2] [c3] [c4] [c5] [c6]
+    ```
 
     The default options recover the polynomial of Meylan et al. (2014), calibrated for
     a case of ice floes, mostly 10 to 25 m in diameter, in the marginal ice zone near
@@ -1768,24 +1745,23 @@ class SICE_R19(SICE):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SICE_R19
-        sice = SICE_R19()
-        print(sice.render())
-        kwargs = dict(
-            aice=0.5,
-            c0=0.0,
-            c1=0.0,
-            c2=1.06e-3,
-            c3=0.0,
-            c4=0.0,
-            c5=0.0,
-            c6=0.0,
-        )
-        sice = SICE_R19(**kwargs)
-        print(sice.render())
+    ```python exec="on" source="above" result="text" session="physics-sice_r19"
+    from rompy_swan.components.physics import SICE_R19
+    sice = SICE_R19()
+    print(sice.render())
+    kwargs = dict(
+        aice=0.5,
+        c0=0.0,
+        c1=0.0,
+        c2=1.06e-3,
+        c3=0.0,
+        c4=0.0,
+        c5=0.0,
+        c6=0.0,
+    )
+    sice = SICE_R19(**kwargs)
+    print(sice.render())
+    ```
 
     """
 
@@ -1865,9 +1841,9 @@ class SICE_R19(SICE):
 class SICE_D15(SICE):
     """Sea ice dissipation based on the method of Doble et al. (2015).
 
-    .. code-block:: text
-
-        SICE [aice] D15 [chf]
+    ```text
+    SICE [aice] D15 [chf]
+    ```
 
     References
     ----------
@@ -1878,14 +1854,13 @@ class SICE_D15(SICE):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SICE_D15
-        sice = SICE_D15()
-        print(sice.render())
-        sice = SICE_D15(aice=0.2, chf=0.1)
-        print(sice.render())
+    ```python exec="on" source="above" result="text" session="physics-sice_d15"
+    from rompy_swan.components.physics import SICE_D15
+    sice = SICE_D15()
+    print(sice.render())
+    sice = SICE_D15(aice=0.2, chf=0.1)
+    print(sice.render())
+    ```
 
     """
 
@@ -1908,9 +1883,9 @@ class SICE_D15(SICE):
 class SICE_M18(SICE):
     """Sea ice dissipation based on the method of Meylan et al. (2018).
 
-    .. code-block:: text
-
-        SICE [aice] M18 [chf]
+    ```text
+    SICE [aice] M18 [chf]
+    ```
 
     References
     ----------
@@ -1921,14 +1896,13 @@ class SICE_M18(SICE):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SICE_M18
-        sice = SICE_M18()
-        print(sice.render())
-        sice = SICE_M18(aice=0.8, chf=0.059)
-        print(sice.render())
+    ```python exec="on" source="above" result="text" session="physics-sice_m18"
+    from rompy_swan.components.physics import SICE_M18
+    sice = SICE_M18()
+    print(sice.render())
+    sice = SICE_M18(aice=0.8, chf=0.059)
+    print(sice.render())
+    ```
 
     """
 
@@ -1951,9 +1925,9 @@ class SICE_M18(SICE):
 class SICE_R21B(SICE):
     """Sea ice dissipation based on the method of Rogers et al. (2021).
 
-    .. code-block:: text
-
-        SICE [aice] R21B [chf] [npf]
+    ```text
+    SICE [aice] R21B [chf] [npf]
+    ```
 
     References
     ----------
@@ -1964,14 +1938,13 @@ class SICE_R21B(SICE):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SICE_R21B
-        sice = SICE_R21B()
-        print(sice.render())
-        sice = SICE_R21B(aice=0.8, chf=2.9, npf=4.5)
-        print(sice.render())
+    ```python exec="on" source="above" result="text" session="physics-sice_r21b"
+    from rompy_swan.components.physics import SICE_R21B
+    sice = SICE_R21B()
+    print(sice.render())
+    sice = SICE_R21B(aice=0.8, chf=2.9, npf=4.5)
+    print(sice.render())
+    ```
 
     """
 
@@ -2006,9 +1979,9 @@ class SICE_R21B(SICE):
 class TURBULENCE(BaseComponent):
     """Turbulent viscosity.
 
-    .. code-block:: text
-
-        TURBULENCE [ctb] (CURRENT [tbcur])
+    ```text
+    TURBULENCE [ctb] (CURRENT [tbcur])
+    ```
 
     With this optional command the user can activate turbulent viscosity. This physical
     effect is also activated by reading values of the turbulent viscosity using the
@@ -2019,14 +1992,13 @@ class TURBULENCE(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import TURBULENCE
-        turbulence = TURBULENCE(current=False)
-        print(turbulence.render())
-        turbulence = TURBULENCE(ctb=0.01, current=True, tbcur=0.004)
-        print(turbulence.render())
+    ```python exec="on" source="above" result="text" session="physics-turbulence"
+    from rompy_swan.components.physics import TURBULENCE
+    turbulence = TURBULENCE(current=False)
+    print(turbulence.render())
+    turbulence = TURBULENCE(ctb=0.01, current=True, tbcur=0.004)
+    print(turbulence.render())
+    ```
 
     """
 
@@ -2081,9 +2053,9 @@ class TURBULENCE(BaseComponent):
 class BRAGG(BaseComponent):
     """Bragg scattering.
 
-    .. code-block:: text
-
-        BRAGG [ibrag] [nreg] [cutoff]
+    ```text
+    BRAGG [ibrag] [nreg] [cutoff]
+    ```
 
     Using this optional command, the user activates a source term to represent the
     scattering of waves due to changes in the small-scale bathymetry based on the
@@ -2121,14 +2093,13 @@ class BRAGG(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import BRAGG
-        bragg = BRAGG(nreg=200)
-        print(bragg.render())
-        bragg = BRAGG(ibrag=1, nreg=200, cutoff=5.0)
-        print(bragg.render())
+    ```python exec="on" source="above" result="text" session="physics-bragg"
+    from rompy_swan.components.physics import BRAGG
+    bragg = BRAGG(nreg=200)
+    print(bragg.render())
+    bragg = BRAGG(ibrag=1, nreg=200, cutoff=5.0)
+    print(bragg.render())
+    ```
 
     """
 
@@ -2178,9 +2149,9 @@ class BRAGG(BaseComponent):
 class BRAGG_FT(BRAGG):
     """Bragg scattering with bottom spectrum computed from FFT.
 
-    .. code-block:: text
-
-        BRAGG [ibrag] [nreg] [cutoff] FT
+    ```text
+    BRAGG [ibrag] [nreg] [cutoff] FT
+    ```
 
     If this keyword is present the bottom spectrum will be computed in each active
     grid point using a Fast Fourier Transform (FFT).
@@ -2193,14 +2164,13 @@ class BRAGG_FT(BRAGG):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import BRAGG_FT
-        bragg = BRAGG_FT(nreg=350)
-        print(bragg.render())
-        bragg = BRAGG_FT(ibrag=2, nreg=350, cutoff=5.0)
-        print(bragg.render())
+    ```python exec="on" source="above" result="text" session="physics-bragg_ft"
+    from rompy_swan.components.physics import BRAGG_FT
+    bragg = BRAGG_FT(nreg=350)
+    print(bragg.render())
+    bragg = BRAGG_FT(ibrag=2, nreg=350, cutoff=5.0)
+    print(bragg.render())
+    ```
 
     """
 
@@ -2216,9 +2186,9 @@ class BRAGG_FT(BRAGG):
 class BRAGG_FILE(BRAGG):
     """Bragg scattering with bottom spectrum from file.
 
-    .. code-block:: text
-
-        BRAGG [ibrag] [nreg] [cutoff] FILE 'fname' [idla] [mkx] [mky] [dkx] [dky]
+    ```text
+    BRAGG [ibrag] [nreg] [cutoff] FILE 'fname' [idla] [mkx] [mky] [dkx] [dky]
+    ```
 
     The bed elevation spectrum `FB(kx, ky)` is read from a file.
 
@@ -2229,24 +2199,23 @@ class BRAGG_FILE(BRAGG):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import BRAGG_FILE
-        bragg = BRAGG_FILE(fname="bottom_spectrum.txt", nreg=500, mkx=99, dkx=0.1)
-        print(bragg.render())
-        kwargs = dict(
-            ibrag=3,
-            nreg=500,
-            cutoff=5.0,
-            fname="bottom_spectrum.txt",
-            mkx=99,
-            mky=149,
-            dkx=0.1,
-            dky=0.1,
-        )
-        bragg = BRAGG_FILE(**kwargs)
-        print(bragg.render())
+    ```python exec="on" source="above" result="text" session="physics-bragg_file"
+    from rompy_swan.components.physics import BRAGG_FILE
+    bragg = BRAGG_FILE(fname="bottom_spectrum.txt", nreg=500, mkx=99, dkx=0.1)
+    print(bragg.render())
+    kwargs = dict(
+        ibrag=3,
+        nreg=500,
+        cutoff=5.0,
+        fname="bottom_spectrum.txt",
+        mkx=99,
+        mky=149,
+        dkx=0.1,
+        dky=0.1,
+    )
+    bragg = BRAGG_FILE(**kwargs)
+    print(bragg.render())
+    ```
 
     """
 
@@ -2309,9 +2278,9 @@ class BRAGG_FILE(BRAGG):
 class LIMITER(BaseComponent):
     """Physics limiter.
 
-    .. code-block:: text
-
-        LIMITER [ursell] [qb]
+    ```text
+    LIMITER [ursell] [qb]
+    ```
 
     With this command the user can de-activate permanently the quadruplets when
     the actual Ursell number exceeds `ursell`. Moreover, as soon as the actual
@@ -2321,14 +2290,13 @@ class LIMITER(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import LIMITER
-        limiter = LIMITER()
-        print(limiter.render())
-        limiter = LIMITER(ursell=10.0, qb=1.0)
-        print(limiter.render())
+    ```python exec="on" source="above" result="text" session="physics-limiter"
+    from rompy_swan.components.physics import LIMITER
+    limiter = LIMITER()
+    print(limiter.render())
+    limiter = LIMITER(ursell=10.0, qb=1.0)
+    print(limiter.render())
+    ```
 
     """
 
@@ -2370,10 +2338,10 @@ REFLECTION_TYPE = Annotated[
 class OBSTACLE(BaseComponent):
     """Subgrid obstacle.
 
-    .. code-block:: text
-
-        OBSTACLE ->TRANSM|TRANS1D|TRANS2D|GODA|DANGREMOND REFL [reflc] ->RSPEC|RDIFF &
-            (FREEBOARD [hgt] [gammat] [gammar] QUAY) LINE < [xp] [yp] >
+    ```text
+    OBSTACLE ->TRANSM|TRANS1D|TRANS2D|GODA|DANGREMOND REFL [reflc] ->RSPEC|RDIFF &
+        (FREEBOARD [hgt] [gammat] [gammar] QUAY) LINE < [xp] [yp] >
+    ```
 
     With this optional command the user provides the characteristics of a (line
     of) sub-grid obstacle(s) through which waves are transmitted or against which
@@ -2398,16 +2366,15 @@ class OBSTACLE(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import OBSTACLE
-        obs = OBSTACLE(
-            transmission=dict(model_type="transm", trcoef=0.5),
-            reflection=dict(reflc=0.5),
-            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
-        )
-        print(obs.render())
+    ```python exec="on" source="above" result="text" session="physics-obstacle"
+    from rompy_swan.components.physics import OBSTACLE
+    obs = OBSTACLE(
+        transmission=dict(model_type="transm", trcoef=0.5),
+        reflection=dict(reflc=0.5),
+        line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+    )
+    print(obs.render())
+    ```
 
     """
 
@@ -2447,9 +2414,9 @@ class OBSTACLE(BaseComponent):
 class OBSTACLE_FIG(BaseComponent):
     """Obstacle for free infragravity radiation.
 
-    .. code-block:: text
-
-        OBSTACLE FIG [alpha1] [hss] [tss] (REFL [reflc]) LINE <[xp] [yp]>
+    ```text
+    OBSTACLE FIG [alpha1] [hss] [tss] (REFL [reflc]) LINE <[xp] [yp]>
+    ```
 
     With this optional command the user specifies the obstacles along which the
     free infra-gravity (FIG) energy is radiated. By placing the obstacles close to
@@ -2488,25 +2455,24 @@ class OBSTACLE_FIG(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import OBSTACLE_FIG
-        obs = OBSTACLE_FIG(
-            alpha1=5e-4,
-            hss=2.5,
-            tss=10.3,
-            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
-        )
-        print(obs.render())
-        obs = OBSTACLE_FIG(
-            alpha1=5e-4,
-            hss=2.5,
-            tss=10.3,
-            reflection=dict(reflc=0.5),
-            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
-        )
-        print(obs.render())
+    ```python exec="on" source="above" result="text" session="physics-obstacle_fig"
+    from rompy_swan.components.physics import OBSTACLE_FIG
+    obs = OBSTACLE_FIG(
+        alpha1=5e-4,
+        hss=2.5,
+        tss=10.3,
+        line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+    )
+    print(obs.render())
+    obs = OBSTACLE_FIG(
+        alpha1=5e-4,
+        hss=2.5,
+        tss=10.3,
+        reflection=dict(reflc=0.5),
+        line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+    )
+    print(obs.render())
+    ```
 
     """
 
@@ -2549,11 +2515,11 @@ OBSTACLES_TYPE = Annotated[
 class OBSTACLES(BaseComponent):
     """List of swan obstacles.
 
-    .. code-block:: text
-
-        OBSTACLE ... LINE < [xp] [yp] >
-        OBSTACLE ... LINE < [xp] [yp] >
-        .
+    ```text
+    OBSTACLE ... LINE < [xp] [yp] >
+    OBSTACLE ... LINE < [xp] [yp] >
+    .
+    ```
 
     This group component is a convenience to allow defining and rendering
     a list of obstacle components.
@@ -2561,28 +2527,27 @@ class OBSTACLES(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import OBSTACLES, OBSTACLE, OBSTACLE_FIG
-        obst1 = dict(
-            model_type="obstacle",
-            reflection=dict(reflc=1.0),
-            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
-        )
-        obst2 = OBSTACLE(
-            transmission=dict(model_type="transm"),
-            line=dict(xp=[174.3, 174.3], yp=[-39.1, -39.2]),
-        )
-        obst3 = OBSTACLE_FIG(
-            alpha1=5e-4,
-            hss=2.5,
-            tss=10.3,
-            line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
-        )
-        obstacles = OBSTACLES(obstacles=[obst1, obst2, obst3])
-        for obst in obstacles.render():
-            print(obst)
+    ```python exec="on" source="above" result="text" session="physics-obstacles"
+    from rompy_swan.components.physics import OBSTACLES, OBSTACLE, OBSTACLE_FIG
+    obst1 = dict(
+        model_type="obstacle",
+        reflection=dict(reflc=1.0),
+        line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+    )
+    obst2 = OBSTACLE(
+        transmission=dict(model_type="transm"),
+        line=dict(xp=[174.3, 174.3], yp=[-39.1, -39.2]),
+    )
+    obst3 = OBSTACLE_FIG(
+        alpha1=5e-4,
+        hss=2.5,
+        tss=10.3,
+        line=dict(xp=[174.1, 174.2, 174.3], yp=[-39.1, -39.1, -39.1]),
+    )
+    obstacles = OBSTACLES(obstacles=[obst1, obst2, obst3])
+    for obst in obstacles.render():
+        print(obst)
+    ```
 
     """
 
@@ -2612,9 +2577,9 @@ class OBSTACLES(BaseComponent):
 class SETUP(BaseComponent):
     """Wave setup.
 
-    .. code-block:: text
-
-        SETUP [supcor]
+    ```text
+    SETUP [supcor]
+    ```
 
     If this command is given, the wave-induced set-up is computed and accounted for in
     the wave computations (during the computation it is added to the depth that is
@@ -2633,14 +2598,13 @@ class SETUP(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import SETUP
-        setup = SETUP()
-        print(setup.render())
-        setup = SETUP(supcor=0.5)
-        print(setup.render())
+    ```python exec="on" source="above" result="text" session="physics-setup"
+    from rompy_swan.components.physics import SETUP
+    setup = SETUP()
+    print(setup.render())
+    setup = SETUP(supcor=0.5)
+    print(setup.render())
+    ```
 
     """
 
@@ -2674,9 +2638,9 @@ class SETUP(BaseComponent):
 class DIFFRACTION(BaseComponent):
     """Wave diffraction.
 
-    .. code-block:: text
-
-        DIFFRACTION [idiffr] [smpar] [smnum] [cgmod]
+    ```text
+    DIFFRACTION [idiffr] [smpar] [smnum] [cgmod]
+    ```
 
     If this optional command is given, the diffraction is included in the wave
     computation. But the diffraction approximation in SWAN does not properly handle
@@ -2701,13 +2665,13 @@ class DIFFRACTION(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-
-        from rompy_swan.components.physics import DIFFRACTION
-        diffraction = DIFFRACTION()
-        print(diffraction.render())
-        diffraction = DIFFRACTION(idiffr=True, smpar=0.0, smnum=1.0)
-        print(diffraction.render())
+    ```python exec="on" source="above" result="text" session="physics-diffraction"
+    from rompy_swan.components.physics import DIFFRACTION
+    diffraction = DIFFRACTION()
+    print(diffraction.render())
+    diffraction = DIFFRACTION(idiffr=True, smpar=0.0, smnum=1.0)
+    print(diffraction.render())
+    ```
 
     """
 
@@ -2762,9 +2726,9 @@ class DIFFRACTION(BaseComponent):
 class SURFBEAT(BaseComponent):
     """Surfbeat.
 
-    .. code-block:: text
-
-        SURFBEAT [df] [nmax] [emin] UNIFORM/LOGARITHMIC
+    ```text
+    SURFBEAT [df] [nmax] [emin] UNIFORM/LOGARITHMIC
+    ```
 
     Using this optional command, the user activates the Infragravity Energy Module
     (IEM) of Reniers and Zijlema (2022). Besides the energy balance equation for a
@@ -2784,13 +2748,13 @@ class SURFBEAT(BaseComponent):
     Examples:
     ---------
 
-    .. ipython:: python
-
-        from rompy_swan.components.physics import SURFBEAT
-        surfbeat = SURFBEAT()
-        print(surfbeat.render())
-        surfbeat = SURFBEAT(df=0.01, nmax=50000, emin=0.05, spacing="logarithmic")
-        print(surfbeat.render())
+    ```python exec="on" source="above" result="text" session="physics-surfbeat"
+    from rompy_swan.components.physics import SURFBEAT
+    surfbeat = SURFBEAT()
+    print(surfbeat.render())
+    surfbeat = SURFBEAT(df=0.01, nmax=50000, emin=0.05, spacing="logarithmic")
+    print(surfbeat.render())
+    ```
 
     """
 
@@ -2849,9 +2813,9 @@ class SURFBEAT(BaseComponent):
 class SCAT(BaseComponent):
     """Scattering.
 
-    .. code-block:: text
-
-        SCAT [iqcm] (GRID [rfac]) (TRUNC [alpha] [qmax])
+    ```text
+    SCAT [iqcm] (GRID [rfac]) (TRUNC [alpha] [qmax])
+    ```
 
     Using this optional command, the user activates a source term that allows for the
     generation and propagation of cross correlations between scattered waves due to
@@ -2887,13 +2851,13 @@ class SCAT(BaseComponent):
     Examples:
     ---------
 
-    .. ipython:: python
-
-        from rompy_swan.components.physics import SCAT
-        scat = SCAT()
-        print(scat.render())
-        scat = SCAT(iqcm=2, rfac=1.0, alpha=1.0)
-        print(scat.render())
+    ```python exec="on" source="above" result="text" session="physics-scat"
+    from rompy_swan.components.physics import SCAT
+    scat = SCAT()
+    print(scat.render())
+    scat = SCAT(iqcm=2, rfac=1.0, alpha=1.0)
+    print(scat.render())
+    ```
 
     """
 
@@ -2961,9 +2925,9 @@ class SCAT(BaseComponent):
 class OFF(BaseComponent):
     """Deactivate physics commands.
 
-    .. code-block:: text
-
-        OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
+    ```text
+    OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
+    ```
 
     This command deactivates physics commands. The command can be used to switch off
     the computation of a certain physics component without having to remove the command
@@ -2972,11 +2936,11 @@ class OFF(BaseComponent):
     Examples:
     ---------
 
-    .. ipython:: python
-
-        from rompy_swan.components.physics import OFF
-        off = OFF(physics="windgrowth")
-        print(off.render())
+    ```python exec="on" source="above" result="text" session="physics-off"
+    from rompy_swan.components.physics import OFF
+    off = OFF(physics="windgrowth")
+    print(off.render())
+    ```
 
     """
 
@@ -2993,11 +2957,11 @@ class OFF(BaseComponent):
 class OFFS(BaseComponent):
     """Deactivate multiple physics commands.
 
-    .. code-block:: text
-
-        OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
-        OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
-        .
+    ```text
+    OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
+    OFF WINDGROWTH|QUADRUPL|WCAPPING|BREAKING|REFRAC|FSHIFT|BNDCHK
+    .
+    ```
 
     This group component is a convenience to allow defining and rendering
     a list of `OFF` components.
@@ -3005,15 +2969,14 @@ class OFFS(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.physics import OFFS
-        off1 = dict(physics="windgrowth")
-        off2 = dict(physics="wcapping")
-        offs = OFFS(offs=[off1, off2])
-        for off in offs.render():
-            print(off)
+    ```python exec="on" source="above" result="text" session="physics-offs"
+    from rompy_swan.components.physics import OFFS
+    off1 = dict(physics="windgrowth")
+    off2 = dict(physics="wcapping")
+    offs = OFFS(offs=[off1, off2])
+    for off in offs.render():
+        print(off)
+    ```
 
     """
 

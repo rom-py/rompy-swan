@@ -32,9 +32,9 @@ SNAME_TYPE = Annotated[str, Field(min_length=1, max_length=8)]
 class BaseLocation(BaseComponent, ABC):
     """Base class for SWAN output locations.
 
-    .. code-block:: text
-
-        {MODEL_TYPE} sname='sname'
+    ```text
+    {MODEL_TYPE} sname='sname'
+    ```
 
     This is the base class for all locations components. It is not meant to be used
     directly.
@@ -48,12 +48,11 @@ class BaseLocation(BaseComponent, ABC):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import BaseLocation
-        loc = BaseLocation(sname="outsites")
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-baselocation"
+    from rompy_swan.components.output import BaseLocation
+    loc = BaseLocation(sname="outsites")
+    print(loc.render())
+    ```
 
     """
 
@@ -82,9 +81,9 @@ class BaseLocation(BaseComponent, ABC):
 class FRAME(BaseLocation):
     """Output locations on a regular grid.
 
-    .. code-block:: text
-
-        FRAME 'sname' [xpfr] [ypfr] [alpfr] [xlenfr] [ylenfr] [mxfr] [myfr]
+    ```text
+    FRAME 'sname' [xpfr] [ypfr] [alpfr] [xlenfr] [ylenfr] [mxfr] [myfr]
+    ```
 
     With this optional command the user defines output on a rectangular, uniform grid
     in a regular frame.
@@ -99,15 +98,14 @@ class FRAME(BaseLocation):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import FRAME
-        loc = FRAME(
-            sname="outgrid",
-            grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
-        )
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-frame"
+    from rompy_swan.components.output import FRAME
+    loc = FRAME(
+        sname="outgrid",
+        grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
+    )
+    print(loc.render())
+    ```
 
     """
 
@@ -131,9 +129,9 @@ class FRAME(BaseLocation):
 class GROUP(BaseLocation):
     """Output locations on subset of a grid.
 
-    .. code-block:: text
-
-        GROUP 'sname' SUBGRID [ix1] [ix2] [iy1] [iy2]
+    ```text
+    GROUP 'sname' SUBGRID [ix1] [ix2] [iy1] [iy2]
+    ```
 
     With this optional command the user defines a group of output locations on a
     rectangular or curvilinear grid that is identical with (part of) the computational
@@ -158,12 +156,11 @@ class GROUP(BaseLocation):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import GROUP
-        loc = GROUP(sname="subgrid", ix1=20, iy1=0, ix2=50, iy2=100)
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-group"
+    from rompy_swan.components.output import GROUP
+    loc = GROUP(sname="subgrid", ix1=20, iy1=0, ix2=50, iy2=100)
+    print(loc.render())
+    ```
 
     """
 
@@ -195,9 +192,9 @@ class GROUP(BaseLocation):
 class CURVE(BaseLocation):
     """Output locations along a curve.
 
-    .. code-block:: text
-
-        CURVE 'sname' [xp1] [yp1] < [int] [xp] [yp] >
+    ```text
+    CURVE 'sname' [xp1] [yp1] < [int] [xp] [yp] >
+    ```
 
     With this optional command the user defines output along a curved line. Actually
     this curve is a broken line, defined by the user with its corner points. The values
@@ -222,19 +219,18 @@ class CURVE(BaseLocation):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import CURVE
-        loc = CURVE(
-            sname="outcurve",
-            xp1=172,
-            yp1=-40,
-            npts=[3, 3],
-            xp=[172.0, 174.0],
-            yp=[-38.0, -38.0],
-        )
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-curve"
+    from rompy_swan.components.output import CURVE
+    loc = CURVE(
+        sname="outcurve",
+        xp1=172,
+        yp1=-40,
+        npts=[3, 3],
+        xp=[172.0, 174.0],
+        yp=[-38.0, -38.0],
+    )
+    print(loc.render())
+    ```
 
     """
 
@@ -290,29 +286,28 @@ class CURVE(BaseLocation):
 class CURVES(BaseComponent):
     """Output locations along multiple curves.
 
-    .. code-block:: text
-
-        CURVE 'sname1' [xp1] [yp1] < [int] [xp] [yp] >
-        CURVE 'sname2' [xp1] [yp1] < [int] [xp] [yp] >
-        ..
+    ```text
+    CURVE 'sname1' [xp1] [yp1] < [int] [xp] [yp] >
+    CURVE 'sname2' [xp1] [yp1] < [int] [xp] [yp] >
+    ..
+    ```
 
     This component can be used to prescribe and render multiple CURVE components.
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import CURVE, CURVES
-        loc1 = CURVE(
-            sname="c1", xp1=7, yp1=-40, npts=[3, 3], xp=[7, 9], yp=[-38, -38],
-        )
-        loc2 = CURVE(
-            sname="c2", xp1=3, yp1=-37, npts=[5, 5], xp=[4, 5], yp=[-37, -36],
-        )
-        locs = CURVES(curves=[loc1, loc2])
-        print(locs.render())
+    ```python exec="on" source="above" result="text" session="output-curves"
+    from rompy_swan.components.output import CURVE, CURVES
+    loc1 = CURVE(
+        sname="c1", xp1=7, yp1=-40, npts=[3, 3], xp=[7, 9], yp=[-38, -38],
+    )
+    loc2 = CURVE(
+        sname="c2", xp1=3, yp1=-37, npts=[5, 5], xp=[4, 5], yp=[-37, -36],
+    )
+    locs = CURVES(curves=[loc1, loc2])
+    print(locs.render())
+    ```
 
     """
 
@@ -335,9 +330,9 @@ class CURVES(BaseComponent):
 class RAY(BaseComponent):
     """Output locations along a depth contour.
 
-    .. code-block:: text
-
-        RAY 'rname' [xp1] [yp1] [xq1] [yq1] < [int] [xp] [yp] [xq] [yq] >
+    ```text
+    RAY 'rname' [xp1] [yp1] [xq1] [yq1] < [int] [xp] [yp] [xq] [yq] >
+    ```
 
     With this optional command the user provides SWAN with information to determine
     output locations along the depth contour line(s) defined subsequently in command
@@ -369,23 +364,22 @@ class RAY(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import RAY
-        loc = RAY(
-            rname="outray",
-            xp1=171.9,
-            yp1=-40.1,
-            xq1=172.1,
-            yq1=-39.9,
-            npts=[3, 3],
-            xp=[171.9, 173.9],
-            yp=[-38.1, -38.1],
-            xq=[172.1, 174.1],
-            yq=[-37.9, -37.9],
-        )
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-ray"
+    from rompy_swan.components.output import RAY
+    loc = RAY(
+        rname="outray",
+        xp1=171.9,
+        yp1=-40.1,
+        xq1=172.1,
+        yq1=-39.9,
+        npts=[3, 3],
+        xp=[171.9, 173.9],
+        yp=[-38.1, -38.1],
+        xq=[172.1, 174.1],
+        yq=[-37.9, -37.9],
+    )
+    print(loc.render())
+    ```
 
     """
 
@@ -476,9 +470,9 @@ class RAY(BaseComponent):
 class ISOLINE(BaseLocation):
     """Output locations along a depth contour.
 
-    .. code-block:: text
-
-        ISOLINE 'sname' 'rname' DEPTH|BOTTOM [dep]
+    ```text
+    ISOLINE 'sname' 'rname' DEPTH|BOTTOM [dep]
+    ```
 
     With this optional command the user defines a set of output locations along one
     depth or bottom level contour line (in combination with command RAY).
@@ -490,12 +484,11 @@ class ISOLINE(BaseLocation):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import ISOLINE
-        loc = ISOLINE(sname="outcurve", rname="outray", dep_type="depth", dep=12.0)
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-isoline"
+    from rompy_swan.components.output import ISOLINE
+    loc = ISOLINE(sname="outcurve", rname="outray", dep_type="depth", dep=12.0)
+    print(loc.render())
+    ```
 
     """
 
@@ -533,9 +526,9 @@ class ISOLINE(BaseLocation):
 class POINTS(BaseLocation):
     """Isolated output locations.
 
-    .. code-block:: text
-
-        POINTS 'sname' < [xp] [yp] >
+    ```text
+    POINTS 'sname' < [xp] [yp] >
+    ```
 
     With this optional command the user defines a set of individual output point
     locations.
@@ -548,12 +541,11 @@ class POINTS(BaseLocation):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import POINTS
-        loc = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-points"
+    from rompy_swan.components.output import POINTS
+    loc = POINTS(sname="outpts", xp=[172.3, 172.4], yp=[-39, -39])
+    print(loc.render())
+    ```
 
     """
 
@@ -586,9 +578,9 @@ class POINTS(BaseLocation):
 class POINTS_FILE(BaseLocation):
     """Isolated output locations.
 
-    .. code-block:: text
-
-        POINTS 'sname' FILE 'fname'
+    ```text
+    POINTS 'sname' FILE 'fname'
+    ```
 
     With this optional command the user defines a set of individual output point
     locations from text file. The file should have one point per row with x-coordinates
@@ -602,12 +594,11 @@ class POINTS_FILE(BaseLocation):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import POINTS_FILE
-        loc = POINTS_FILE(sname="outpts", fname="./output_locations.txt")
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-points_file"
+    from rompy_swan.components.output import POINTS_FILE
+    loc = POINTS_FILE(sname="outpts", fname="./output_locations.txt")
+    print(loc.render())
+    ```
 
     """
 
@@ -628,9 +619,9 @@ class POINTS_FILE(BaseLocation):
 class NGRID(BaseLocation):
     """Output locations for a nested grid.
 
-    .. code-block:: text
-
-        NGRID 'sname' [xpn] [ypn] [alpn] [xlenn] [ylenn] [mxn] [myn]
+    ```text
+    NGRID 'sname' [xpn] [ypn] [alpn] [xlenn] [ylenn] [mxn] [myn]
+    ```
 
     If the user wishes to carry out nested SWAN runs, a separate coarse-grid SWAN run
     is required. With this optional command `NGRID`, the user defines in the present
@@ -650,15 +641,14 @@ class NGRID(BaseLocation):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import NGRID
-        loc = NGRID(
-            sname="outnest",
-            grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
-        )
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-ngrid"
+    from rompy_swan.components.output import NGRID
+    loc = NGRID(
+        sname="outnest",
+        grid=dict(xp=173, yp=-40, xlen=2, ylen=2, mx=19, my=19),
+    )
+    print(loc.render())
+    ```
 
     """
 
@@ -689,9 +679,9 @@ class NGRID(BaseLocation):
 class NGRID_UNSTRUCTURED(BaseLocation):
     """Output locations for a nested grid.
 
-    .. code-block:: text
-
-        NGRID 'sname' UNSTRUCTURED ->TRIANGLE|EASYMESH 'fname'
+    ```text
+    NGRID 'sname' UNSTRUCTURED ->TRIANGLE|EASYMESH 'fname'
+    ```
 
     If the user wishes to carry out nested SWAN runs, a separate coarse-grid SWAN run
     is required. With this optional command `NGRID`, the user defines in the present
@@ -710,12 +700,11 @@ class NGRID_UNSTRUCTURED(BaseLocation):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import NGRID_UNSTRUCTURED
-        loc = NGRID_UNSTRUCTURED(sname="outnest", kind="triangle", fname="ngrid.txt")
-        print(loc.render())
+    ```python exec="on" source="above" result="text" session="output-ngrid_unstructured"
+    from rompy_swan.components.output import NGRID_UNSTRUCTURED
+    loc = NGRID_UNSTRUCTURED(sname="outnest", kind="triangle", fname="ngrid.txt")
+    print(loc.render())
+    ```
 
     """
 
@@ -755,19 +744,19 @@ class NGRID_UNSTRUCTURED(BaseLocation):
 class QUANTITY(BaseComponent):
     """Define output settings.
 
-    .. code-block:: text
+    ```text
+    QUANTITY < output > 'short' 'long' [lexp] [hexp] [excv] [power] [ref] &
+        [fswell] [fmin] [fmax] ->PROBLEMCOORD|FRAME
 
-        QUANTITY < output > 'short' 'long' [lexp] [hexp] [excv] [power] [ref] &
-            [fswell] [fmin] [fmax] ->PROBLEMCOORD|FRAME
-
-        Examples:
-        ---------
-        QUANTITY Xp hexp=100.
-        QUANTITY HS TM01 RTMM10 excv=-9.
-        QUANTITY HS TM02 FSPR fmin=0.03 fmax=0.5
-        QUANTITY Hswell fswell=0.08
-        QUANTITY Per short='Tm-1,0' power=0.
-        QUANTITY Transp Force Frame
+    Examples:
+    ---------
+    QUANTITY Xp hexp=100.
+    QUANTITY HS TM01 RTMM10 excv=-9.
+    QUANTITY HS TM02 FSPR fmin=0.03 fmax=0.5
+    QUANTITY Hswell fswell=0.08
+    QUANTITY Per short='Tm-1,0' power=0.
+    QUANTITY Transp Force Frame
+    ```
 
     With this command the user can influence:
 
@@ -813,22 +802,21 @@ class QUANTITY(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import QUANTITY
-        quant = QUANTITY(output=["xp"], hexp=100)
-        print(quant.render())
-        quant = QUANTITY(output=["hsign", "tm01", "rtmm10"], excv=-9)
-        print(quant.render())
-        quant = QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
-        print(quant.render())
-        quant = QUANTITY(output=["hsign"], fswell=0.08)
-        print(quant.render())
-        quant = QUANTITY(output=["per"], short="Tm-1,0", power=0)
-        print(quant.render())
-        quant = QUANTITY(output=["transp", "force"], coord="frame")
-        print(quant.render())
+    ```python exec="on" source="above" result="text" session="output-quantity"
+    from rompy_swan.components.output import QUANTITY
+    quant = QUANTITY(output=["xp"], hexp=100)
+    print(quant.render())
+    quant = QUANTITY(output=["hsign", "tm01", "rtmm10"], excv=-9)
+    print(quant.render())
+    quant = QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
+    print(quant.render())
+    quant = QUANTITY(output=["hsign"], fswell=0.08)
+    print(quant.render())
+    quant = QUANTITY(output=["per"], short="Tm-1,0", power=0)
+    print(quant.render())
+    quant = QUANTITY(output=["transp", "force"], coord="frame")
+    print(quant.render())
+    ```
 
     """
 
@@ -964,29 +952,28 @@ class QUANTITY(BaseComponent):
 class QUANTITIES(BaseComponent):
     """Define output settings for multiple output.
 
-    .. code-block:: text
-
-        QUANTITY < output > ...
-        QUANTITY < output > ...
-        ..
+    ```text
+    QUANTITY < output > ...
+    QUANTITY < output > ...
+    ..
+    ```
 
     This component can be used to prescribe and render multiple QUANTITY components.
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import QUANTITY, QUANTITIES
-        q1 = QUANTITY(output=["xp"], hexp=100)
-        q2 = QUANTITY(output=["hsign", "tm01", "rtmm10"], excv=-9)
-        q3 = QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
-        q4 = QUANTITY(output=["hsign"], fswell=0.08)
-        q5 = QUANTITY(output=["per"], short="Tm-1,0", power=0)
-        q6 = QUANTITY(output=["transp", "force"], coord="frame")
-        quantities = QUANTITIES(quantities=[q1, q2, q3, q4, q5, q6])
-        print(quantities.render())
+    ```python exec="on" source="above" result="text" session="output-quantities"
+    from rompy_swan.components.output import QUANTITY, QUANTITIES
+    q1 = QUANTITY(output=["xp"], hexp=100)
+    q2 = QUANTITY(output=["hsign", "tm01", "rtmm10"], excv=-9)
+    q3 = QUANTITY(output=["hsign", "tm02", "fspr"], fmin=0.03, fmax=0.5)
+    q4 = QUANTITY(output=["hsign"], fswell=0.08)
+    q5 = QUANTITY(output=["per"], short="Tm-1,0", power=0)
+    q6 = QUANTITY(output=["transp", "force"], coord="frame")
+    quantities = QUANTITIES(quantities=[q1, q2, q3, q4, q5, q6])
+    print(quantities.render())
+    ```
 
     """
 
@@ -1005,9 +992,9 @@ class QUANTITIES(BaseComponent):
 class OUTPUT_OPTIONS(BaseComponent):
     """Set format of output.
 
-    .. code-block:: text
-
-        OUTPUT OPTIons 'comment' (TABLE [field]) (BLOCK [ndec] [len]) (SPEC [ndec])
+    ```text
+    OUTPUT OPTIons 'comment' (TABLE [field]) (BLOCK [ndec] [len]) (SPEC [ndec])
+    ```
 
     This command enables the user to influence the format of block, table and spectral
     output.
@@ -1015,14 +1002,13 @@ class OUTPUT_OPTIONS(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import OUTPUT_OPTIONS
-        opts = OUTPUT_OPTIONS(
-            comment="!", field=10, ndec_block=4, len=20, ndec_spec=6,
-        )
-        print(opts.render())
+    ```python exec="on" source="above" result="text" session="output-output_options"
+    from rompy_swan.components.output import OUTPUT_OPTIONS
+    opts = OUTPUT_OPTIONS(
+        comment="!", field=10, ndec_block=4, len=20, ndec_spec=6,
+    )
+    print(opts.render())
+    ```
 
     """
 
@@ -1086,9 +1072,9 @@ class OUTPUT_OPTIONS(BaseComponent):
 class BaseWrite(BaseComponent, ABC):
     """Base class for SWAN output writing.
 
-    .. code-block:: text
-
-        {MODEL_TYPE} sname='sname'
+    ```text
+    {MODEL_TYPE} sname='sname'
+    ```
 
     This is the base class for all write components. It is not meant to be used
     directly.
@@ -1096,22 +1082,21 @@ class BaseWrite(BaseComponent, ABC):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import BaseWrite
-        write = BaseWrite(
-            sname="outgrid",
-            fname="./output-grid.nc",
-            times=dict(
-                tbeg="2012-01-01T00:00:00",
-                delt="PT30M",
-                tfmt=1,
-                dfmt="min",
-                suffix="",
-            )
+    ```python exec="on" source="above" result="text" session="output-basewrite"
+    from rompy_swan.components.output import BaseWrite
+    write = BaseWrite(
+        sname="outgrid",
+        fname="./output-grid.nc",
+        times=dict(
+            tbeg="2012-01-01T00:00:00",
+            delt="PT30M",
+            tfmt=1,
+            dfmt="min",
+            suffix="",
         )
-        print(write.render())
+    )
+    print(write.render())
+    ```
 
     """
 
@@ -1168,10 +1153,10 @@ class BaseWrite(BaseComponent, ABC):
 class BLOCK(BaseWrite):
     """Write spatial distributions.
 
-    .. code-block:: text
-
-        BLOCK 'sname' ->HEADER|NOHEADER 'fname' (LAYOUT [idla]) < output > &
-            [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+    ```text
+    BLOCK 'sname' ->HEADER|NOHEADER 'fname' (LAYOUT [idla]) < output > &
+        [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+    ```
 
     With this optional command the user indicates that one or more spatial
     distributions should be written to a file.
@@ -1192,27 +1177,26 @@ class BLOCK(BaseWrite):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import BLOCK
-        block = BLOCK(sname="outgrid", fname="./depth-frame.nc", output=["depth"])
-        print(block.render())
-        block = BLOCK(
-            sname="COMPGRID",
-            header=False,
-            fname="./output-grid.nc",
-            idla=3,
-            output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-            times=dict(
-                tbeg="2012-01-01T00:00:00",
-                delt="PT30M",
-                tfmt=1,
-                dfmt="min",
-                suffix="",
-            )
+    ```python exec="on" source="above" result="text" session="output-block"
+    from rompy_swan.components.output import BLOCK
+    block = BLOCK(sname="outgrid", fname="./depth-frame.nc", output=["depth"])
+    print(block.render())
+    block = BLOCK(
+        sname="COMPGRID",
+        header=False,
+        fname="./output-grid.nc",
+        idla=3,
+        output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
+        times=dict(
+            tbeg="2012-01-01T00:00:00",
+            delt="PT30M",
+            tfmt=1,
+            dfmt="min",
+            suffix="",
         )
-        print(block.render())
+    )
+    print(block.render())
+    ```
 
     """
 
@@ -1297,27 +1281,26 @@ class BLOCK(BaseWrite):
 class BLOCKS(MultiComponents):
     """Write multiple spatial distributions.
 
-    .. code-block:: text
-
-        BLOCK 'sname' ->HEADER|NOHEADER 'fname1' (LAYOUT [idla]) < output > &
-            [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
-        BLOCK 'sname' ->HEADER|NOHEADER 'fname2' (LAYOUT [idla]) < output > &
-            [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
-        ..
+    ```text
+    BLOCK 'sname' ->HEADER|NOHEADER 'fname1' (LAYOUT [idla]) < output > &
+        [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+    BLOCK 'sname' ->HEADER|NOHEADER 'fname2' (LAYOUT [idla]) < output > &
+        [unit] (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+    ..
+    ```
 
     This component can be used to prescribe and render multiple BLOCK components.
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import BLOCK, BLOCKS
-        block1 = BLOCK(sname="outgrid", fname="./depth.txt", output=["depth"])
-        block2 = BLOCK(sname="outgrid", fname="./output.nc", output=["hsign", "hswell"])
-        blocks = BLOCKS(components=[block1, block2])
-        print(blocks.render())
+    ```python exec="on" source="above" result="text" session="output-blocks"
+    from rompy_swan.components.output import BLOCK, BLOCKS
+    block1 = BLOCK(sname="outgrid", fname="./depth.txt", output=["depth"])
+    block2 = BLOCK(sname="outgrid", fname="./output.nc", output=["hsign", "hswell"])
+    blocks = BLOCKS(components=[block1, block2])
+    print(blocks.render())
+    ```
 
     """
 
@@ -1334,10 +1317,10 @@ class BLOCKS(MultiComponents):
 class TABLE(BaseWrite):
     """Write spatial distributions.
 
-    .. code-block:: text
-
-        TABLE 'sname' ->HEADER|NOHEADER|INDEXED 'fname'  < output > &
-            (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+    ```text
+    TABLE 'sname' ->HEADER|NOHEADER|INDEXED 'fname'  < output > &
+        (OUTPUT [tbegblk] [deltblk]) SEC|MIN|HR|DAY
+    ```
 
     With this optional command the user indicates that for each location of the output
     location set 'sname' (see commands `POINTS`, `CURVE`, `FRAME` or `GROUP`) one or
@@ -1364,18 +1347,17 @@ class TABLE(BaseWrite):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import TABLE
-        table = TABLE(
-            sname="outpts",
-            format="noheader",
-            fname="./output_table.nc",
-            output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
-            times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
-        )
-        print(table.render())
+    ```python exec="on" source="above" result="text" session="output-table"
+    from rompy_swan.components.output import TABLE
+    table = TABLE(
+        sname="outpts",
+        format="noheader",
+        fname="./output_table.nc",
+        output=["hsign", "hswell", "dir", "tps", "tm01", "watlev", "qp"],
+        times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
+    )
+    print(table.render())
+    ```
 
     """
 
@@ -1434,10 +1416,10 @@ FREQ_TYPE = Annotated[
 class SPECOUT(BaseWrite):
     """Write to data file the wave spectra.
 
-    .. code-block:: text
-
-        SPECOUT 'sname' SPEC1D|->SPEC2D ->ABS|REL 'fname' &
-            (OUTPUT [tbeg] [delt] SEC|MIN|HR|DAY)
+    ```text
+    SPECOUT 'sname' SPEC1D|->SPEC2D ->ABS|REL 'fname' &
+        (OUTPUT [tbeg] [delt] SEC|MIN|HR|DAY)
+    ```
 
     With this optional command the user indicates that for each location of the output
     location set 'sname' (see commands `POINTS`, `CURVE`, `FRAME` or `GROUP`) the 1D
@@ -1457,20 +1439,19 @@ class SPECOUT(BaseWrite):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import SPECOUT
-        out = SPECOUT(sname="outpts", fname="./specout.swn")
-        print(out.render())
-        out = SPECOUT(
-            sname="outpts",
-            dim=dict(model_type="spec2d"),
-            freq=dict(model_type="rel"),
-            fname="./specout.nc",
-            times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
-        )
-        print(out.render())
+    ```python exec="on" source="above" result="text" session="output-specout"
+    from rompy_swan.components.output import SPECOUT
+    out = SPECOUT(sname="outpts", fname="./specout.swn")
+    print(out.render())
+    out = SPECOUT(
+        sname="outpts",
+        dim=dict(model_type="spec2d"),
+        freq=dict(model_type="rel"),
+        fname="./specout.nc",
+        times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
+    )
+    print(out.render())
+    ```
 
     """
 
@@ -1500,9 +1481,9 @@ class SPECOUT(BaseWrite):
 class NESTOUT(BaseWrite):
     """Write to 2D boundary spectra.
 
-    .. code-block:: text
-
-        NESTOUT 'sname' 'fname' (OUTPUT [tbegnst] [deltnst] ->SEC|MIN|HR|DAY)
+    ```text
+    NESTOUT 'sname' 'fname' (OUTPUT [tbegnst] [deltnst] ->SEC|MIN|HR|DAY)
+    ```
 
     Write to data file two-dimensional action density spectra (relative frequency)
     along the boundary of a nested grid (see command NGRID) to be used in a subsequent
@@ -1515,16 +1496,15 @@ class NESTOUT(BaseWrite):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import NESTOUT
-        out = NESTOUT(
-            sname="outnest",
-            fname="./nestout.swn",
-            times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
-        )
-        print(out.render())
+    ```python exec="on" source="above" result="text" session="output-nestout"
+    from rompy_swan.components.output import NESTOUT
+    out = NESTOUT(
+        sname="outnest",
+        fname="./nestout.swn",
+        times=dict(tbeg="2012-01-01T00:00:00", delt="PT30M", dfmt="min"),
+    )
+    print(out.render())
+    ```
 
     """
 
@@ -1557,10 +1537,10 @@ class NESTOUT(BaseWrite):
 class NEST(BaseComponent):
     """Coupled NGRID and NESTOUT component for nested runs.
 
-    .. code-block:: text
-
-        NGRID 'sname' ...
-        NESTOUT 'sname' ...
+    ```text
+    NGRID 'sname' ...
+    NESTOUT 'sname' ...
+    ```
 
     This component couples together an NGRID location definition with its corresponding
     NESTOUT write command. This ensures that nested grid outputs are properly paired
@@ -1574,22 +1554,21 @@ class NEST(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import NEST
-        nest = NEST(
-            sname="child1",
-            ngrid=dict(
-                model_type="ngrid",
-                grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
-            ),
-            nestout=dict(
-                fname="nestout_child1.swn",
-                times=dict(tfmt=1, dfmt="hr"),
-            ),
-        )
-        print(nest.render())
+    ```python exec="on" source="above" result="text" session="output-nest"
+    from rompy_swan.components.output import NEST
+    nest = NEST(
+        sname="child1",
+        ngrid=dict(
+            model_type="ngrid",
+            grid=dict(xp=167.0, yp=-45.5, xlen=0.1, ylen=0.1, mx=12, my=14),
+        ),
+        nestout=dict(
+            fname="nestout_child1.swn",
+            times=dict(tfmt=1, dfmt="hr"),
+        ),
+    )
+    print(nest.render())
+    ```
 
     """
 
@@ -1644,9 +1623,9 @@ class NEST(BaseComponent):
 class TEST(BaseComponent):
     """Write intermediate results.
 
-    .. code-block:: text
-
-        TEST [itest] [itrace] POINTS XY|IJ (PAR 'fname') (S1D 'fname') (S2D 'fname')
+    ```text
+    TEST [itest] [itrace] POINTS XY|IJ (PAR 'fname') (S1D 'fname') (S2D 'fname')
+    ```
 
     Note
     ----
@@ -1656,28 +1635,27 @@ class TEST(BaseComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.output import TEST
-        test = TEST(
-            itest=10,
-            points=dict(model_type="ij", i=[0, 0], j=[10, 20]),
-            fname_par="integral_parameters.test",
-            fname_s1d="1d_variance_density.test",
-            fname_s2d="2d_variance_density.test",
-        )
-        print(test.render())
-        import numpy as np
-        test = TEST(
-            points=dict(
-                model_type="xy",
-                x=np.linspace(172.5, 174.0, 25),
-                y=25*[-38],
-            ),
-            fname_s2d="2d_variance_density.test",
-        )
-        print(test.render())
+    ```python exec="on" source="above" result="text" session="output-test"
+    from rompy_swan.components.output import TEST
+    test = TEST(
+        itest=10,
+        points=dict(model_type="ij", i=[0, 0], j=[10, 20]),
+        fname_par="integral_parameters.test",
+        fname_s1d="1d_variance_density.test",
+        fname_s2d="2d_variance_density.test",
+    )
+    print(test.render())
+    import numpy as np
+    test = TEST(
+        points=dict(
+            model_type="xy",
+            x=np.linspace(172.5, 174.0, 25),
+            y=25*[-38],
+        ),
+        fname_s2d="2d_variance_density.test",
+    )
+    print(test.render())
+    ```
 
     TODO: Support `k` in POINTS IJ.
 

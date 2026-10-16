@@ -32,9 +32,9 @@ TIME_FORMAT = {
 class Time(BaseSubComponent):
     """Time specification in SWAN.
 
-    .. code-block:: text
-
-        [time]
+    ```text
+    [time]
+    ```
 
     Time is rendered in one of the following formats:
 
@@ -57,15 +57,14 @@ class Time(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.time import Time
-        from datetime import datetime
-        time = Time(time=datetime(1990, 1, 1))
-        print(time.render())
-        time = Time(time="2012-01-01T00:00:00", tfmt=2)
-        print(time.render())
+    ```python exec="on" source="above" result="text" session="time-time"
+    from rompy_swan.subcomponents.time import Time
+    from datetime import datetime
+    time = Time(time=datetime(1990, 1, 1))
+    print(time.render())
+    time = Time(time="2012-01-01T00:00:00", tfmt=2)
+    print(time.render())
+    ```
 
     """
 
@@ -95,9 +94,9 @@ class Time(BaseSubComponent):
 class Delt(BaseSubComponent):
     """Time interval specification in SWAN.
 
-    .. code-block:: text
-
-        [delt] SEC|MIN|HR|DAY
+    ```text
+    [delt] SEC|MIN|HR|DAY
+    ```
 
     Note
     ----
@@ -113,15 +112,14 @@ class Delt(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.time import Delt
-        from datetime import timedelta
-        delt = Delt(delt=timedelta(minutes=30))
-        print(delt.render())
-        delt = Delt(delt="PT1H", dfmt="hr")
-        print(delt.render())
+    ```python exec="on" source="above" result="text" session="time-delt"
+    from rompy_swan.subcomponents.time import Delt
+    from datetime import timedelta
+    delt = Delt(delt=timedelta(minutes=30))
+    print(delt.render())
+    delt = Delt(delt="PT1H", dfmt="hr")
+    print(delt.render())
+    ```
 
     """
 
@@ -147,9 +145,9 @@ class Delt(BaseSubComponent):
 class TimeRangeOpen(BaseSubComponent):
     """Regular times with an open boundary.
 
-    .. code-block:: text
-
-        [tbeg] [delt] SEC|MIN|HR|DAY
+    ```text
+    [tbeg] [delt] SEC|MIN|HR|DAY
+    ```
 
     Time is rendered in one of the following formats:
 
@@ -188,19 +186,18 @@ class TimeRangeOpen(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.time import TimeRangeOpen
-        from datetime import datetime, timedelta
-        times = TimeRangeOpen(
-            tbeg=datetime(1990, 1, 1), delt=timedelta(minutes=30), dfmt="min"
-        )
-        print(times.render())
-        times = TimeRangeOpen(
-            tbeg="2012-01-01T00:00:00", delt="PT1H", tfmt=2, dfmt="hr", suffix="blk"
-        )
-        print(times.render())
+    ```python exec="on" source="above" result="text" session="time-timerangeopen"
+    from rompy_swan.subcomponents.time import TimeRangeOpen
+    from datetime import datetime, timedelta
+    times = TimeRangeOpen(
+        tbeg=datetime(1990, 1, 1), delt=timedelta(minutes=30), dfmt="min"
+    )
+    print(times.render())
+    times = TimeRangeOpen(
+        tbeg="2012-01-01T00:00:00", delt="PT1H", tfmt=2, dfmt="hr", suffix="blk"
+    )
+    print(times.render())
+    ```
 
     """
 
@@ -232,9 +229,9 @@ class TimeRangeOpen(BaseSubComponent):
 class TimeRangeClosed(TimeRangeOpen):
     """Regular times with a closed boundary.
 
-    .. code-block:: text
-
-        [tbeg] [delt] SEC|MIN|HR|DAY [tend]
+    ```text
+    [tbeg] [delt] SEC|MIN|HR|DAY [tend]
+    ```
 
     Note
     ----
@@ -244,27 +241,26 @@ class TimeRangeClosed(TimeRangeOpen):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.time import TimeRangeClosed
-        from datetime import datetime, timedelta
-        times = TimeRangeClosed(
-            tbeg=datetime(1990, 1, 1),
-            tend=datetime(1990, 1, 7),
-            delt=timedelta(minutes=30),
-            dfmt="min",
-        )
-        print(times.render())
-        times = TimeRangeClosed(
-            tbeg="2012-01-01T00:00:00",
-            tend="2012-02-01T00:00:00",
-            delt="PT1H",
-            tfmt=2,
-            dfmt="hr",
-            suffix="blk",
-        )
-        print(times.render())
+    ```python exec="on" source="above" result="text" session="time-timerangeclosed"
+    from rompy_swan.subcomponents.time import TimeRangeClosed
+    from datetime import datetime, timedelta
+    times = TimeRangeClosed(
+        tbeg=datetime(1990, 1, 1),
+        tend=datetime(1990, 1, 7),
+        delt=timedelta(minutes=30),
+        dfmt="min",
+    )
+    print(times.render())
+    times = TimeRangeClosed(
+        tbeg="2012-01-01T00:00:00",
+        tend="2012-02-01T00:00:00",
+        delt="PT1H",
+        tfmt=2,
+        dfmt="hr",
+        suffix="blk",
+    )
+    print(times.render())
+    ```
 
     """
 
@@ -296,9 +292,9 @@ class TimeRangeClosed(TimeRangeOpen):
 class NONSTATIONARY(TimeRangeClosed):
     """Nonstationary time specification.
 
-    .. code-block:: text
-
-        NONSTATIONARY [tbeg] [delt] SEC|MIN|HR|DAY [tend]
+    ```text
+    NONSTATIONARY [tbeg] [delt] SEC|MIN|HR|DAY [tend]
+    ```
 
     Note
     ----
@@ -308,27 +304,26 @@ class NONSTATIONARY(TimeRangeClosed):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.time import NONSTATIONARY
-        nonstat = NONSTATIONARY(
-            tbeg="2012-01-01T00:00:00",
-            tend="2012-02-01T00:00:00",
-            delt="PT1H",
-            dfmt="hr",
-        )
-        print(nonstat.render())
-        from datetime import datetime, timedelta
-        nonstat = NONSTATIONARY(
-            tbeg=datetime(1990, 1, 1),
-            tend=datetime(1990, 1, 7),
-            delt=timedelta(minutes=30),
-            tfmt=1,
-            dfmt="min",
-            suffix="tbl",
-        )
-        print(nonstat.render())
+    ```python exec="on" source="above" result="text" session="time-nonstationary"
+    from rompy_swan.subcomponents.time import NONSTATIONARY
+    nonstat = NONSTATIONARY(
+        tbeg="2012-01-01T00:00:00",
+        tend="2012-02-01T00:00:00",
+        delt="PT1H",
+        dfmt="hr",
+    )
+    print(nonstat.render())
+    from datetime import datetime, timedelta
+    nonstat = NONSTATIONARY(
+        tbeg=datetime(1990, 1, 1),
+        tend=datetime(1990, 1, 7),
+        delt=timedelta(minutes=30),
+        tfmt=1,
+        dfmt="min",
+        suffix="tbl",
+    )
+    print(nonstat.render())
+    ```
 
     """
 
@@ -348,9 +343,9 @@ class NONSTATIONARY(TimeRangeClosed):
 class STATIONARY(BaseSubComponent):
     """Stationary time specification.
 
-    .. code-block:: text
-
-        STATIONARY [time]
+    ```text
+    STATIONARY [time]
+    ```
 
     Note
     ----
@@ -360,12 +355,11 @@ class STATIONARY(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.time import STATIONARY
-        stat = STATIONARY(time="2012-01-01T00:00:00")
-        print(stat.render())
+    ```python exec="on" source="above" result="text" session="time-stationary"
+    from rompy_swan.subcomponents.time import STATIONARY
+    stat = STATIONARY(time="2012-01-01T00:00:00")
+    print(stat.render())
+    ```
 
     """
 

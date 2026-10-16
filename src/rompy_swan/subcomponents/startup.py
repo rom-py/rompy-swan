@@ -10,9 +10,9 @@ from rompy_swan.subcomponents.base import BaseSubComponent
 class CARTESIAN(BaseSubComponent):
     """Cartesian coordinates.
 
-    .. code-block:: text
-
-        CARTESIAN
+    ```text
+    CARTESIAN
+    ```
 
     All locations and distances are in m. Coordinates are given with respect
     to x- and y-axes chosen by the user in the various commands.
@@ -20,12 +20,11 @@ class CARTESIAN(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.startup import CARTESIAN
-        coords = CARTESIAN()
-        print(coords.render())
+    ```python exec="on" source="above" result="text" session="startup-cartesian"
+    from rompy_swan.components.startup import CARTESIAN
+    coords = CARTESIAN()
+    print(coords.render())
+    ```
 
     """
 
@@ -37,9 +36,9 @@ class CARTESIAN(BaseSubComponent):
 class SPHERICAL(BaseSubComponent):
     """Spherical coordinates.
 
-    .. code-block:: text
-
-        SPHERICAL [->CCM|QC]
+    ```text
+    SPHERICAL [->CCM|QC]
+    ```
 
     Notes
     -----
@@ -69,14 +68,13 @@ class SPHERICAL(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.components.startup import SPHERICAL
-        coords = SPHERICAL()
-        print(coords.render())
-        coords = SPHERICAL(projection="qc")
-        print(coords.render())
+    ```python exec="on" source="above" result="text" session="startup-spherical"
+    from rompy_swan.components.startup import SPHERICAL
+    coords = SPHERICAL()
+    print(coords.render())
+    coords = SPHERICAL(projection="qc")
+    print(coords.render())
+    ```
 
     """
 

@@ -26,10 +26,9 @@ class ForcingData(RompyBaseModel):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.forcing import ForcingData
+    ```python exec="on" source="above" result="text" session="legacy-forcingdata"
+    from rompy_swan.forcing import ForcingData
+    ```
 
     """
 

@@ -1,66 +1,37 @@
----
-title: "Relocatable Ocean Modelling in PYthon (rompy)"
----
+# rompy-swan
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.15093426.svg)](https://doi.org/10.5281/zenodo.15093426)
-[![GitHub Pages](https://github.com/rom-py/rompy/actions/workflows/sphinx_docs_to_gh_pages.yaml/badge.svg)](https://rom-py.github.io/rompy/)
-[![PyPI version](https://img.shields.io/pypi/v/rompy.svg)](https://pypi.org/project/rompy/)
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/rom-py/rompy/python-publish.yml)](https://github.com/rom-py/rompy/actions)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/rompy)](https://pypistats.org/packages/rompy)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/rompy)](https://pypi.org/project/rompy/)
+[![PyPI version](https://img.shields.io/pypi/v/rompy-swan.svg)](https://pypi.org/project/rompy-swan/)
+[![Tests](https://github.com/rom-py/rompy-swan/actions/workflows/testing.yml/badge.svg)](https://github.com/rom-py/rompy-swan/actions/workflows/testing.yml)
+[![Documentation](https://github.com/rom-py/rompy-swan/actions/workflows/build-docs.yml/badge.svg)](https://rom-py.github.io/rompy-swan/)
+[![Python versions](https://img.shields.io/pypi/pyversions/rompy-swan)](https://pypi.org/project/rompy-swan/)
 
-# Introduction
+rompy-swan sets up and runs the [SWAN](https://swanmodel.sourceforge.io/) spectral wave model from Python or YAML. It is the SWAN plugin of [rompy](https://rom-py.github.io/rompy/), which provides the run period, data sources, model runs and backends shared by all models.
 
-Relocatable Ocean Modelling in PYthon (rompy) is a modular Python library that aims to streamline the setup, configuration, execution, and analysis of coastal ocean models. Rompy combines templated model configuration with powerful xarray-based data handling and pydantic validation, enabling users to efficiently generate model control files and input datasets for a variety of ocean and wave models. The architecture centers on high-level execution control (`ModelRun`) and flexible configuration objects, supporting both persistent scientific model state and runtime backend selection. Rompy provides unified interfaces for grids, data sources, boundary conditions, and spectra, with extensible plugin support for new models and execution environments. Comprehensive documentation, example Jupyter notebooks, and a robust logging/formatting framework make rompy accessible for both research and operational workflows. Current model support includes SWAN and SCHISM, with ongoing development for additional models and cloud/HPC backends.
+SWAN reads a command file, `INPUT`, whose commands come in a fixed order. rompy-swan describes each SWAN command as a validated Python object and writes the command file and its input files:
 
-Key Features:
-- Modular architecture with clear separation of configuration and execution logic
-- Templated, reproducible model configuration using pydantic and xarray
-- Unified interfaces for grids, data, boundaries, and spectra
-- Extensible plugin system for models, data sources, backends, and postprocessors
-- Robust logging and formatting for consistent output and diagnostics
-- Example notebooks and comprehensive documentation for rapid onboarding
-- Support for local, Docker, and HPC execution backends
+- **One component per SWAN command**: `CGRID`, `BOUNDSPEC`, `GEN3`, `BLOCK` and the others, with the same names and options as in the SWAN user manual.
+- **Input grids and boundaries from data**: bathymetry, wind, currents and water levels from gridded datasets, and boundary spectra from wave model output.
+- **Checks before SWAN runs**: invalid options and combinations SWAN refuses are caught when the configuration is built.
+- **Times from the run**: in nonstationary mode, computation and output times come from the run period.
 
-rompy is under active development—features, model support, and documentation are continually evolving. Contributions and feedback are welcome!
+## Documentation
 
-# Documentation
+- Documentation: https://rom-py.github.io/rompy-swan/
+- Tutorial and examples (notebooks): https://rom-py.github.io/rompy-notebooks/swan-tutorial/
+- Changelog: [HISTORY.rst](https://github.com/rom-py/rompy-swan/blob/main/HISTORY.rst)
 
-See https://rom-py.github.io/rompy/
+## Installation
 
-# Code Formatting and Pre-commit Hooks
+```bash
+pip install rompy-swan
+```
 
-This repository enforces Python code formatting using [black](https://github.com/psf/black) via the pre-commit framework.
+SWAN itself is not included. The public Docker image `ghcr.io/rom-py/swan` runs the generated workspaces, with NetCDF output; see [Running SWAN](https://rom-py.github.io/rompy-swan/user-guide/running/).
 
-To set up pre-commit hooks locally (required for all contributors)::
+## Contributing
 
-    pip install pre-commit
-    pre-commit install
+See the [contributing guide](https://rom-py.github.io/rompy-swan/development/contributing/).
 
-This will automatically check code formatting before each commit. To format your code manually, run::
+## License
 
-    pre-commit run --all-files
-
-All code must pass black formatting before it can be committed or merged.
-
-# Versioning and Release
-
-This project uses [tbump](https://github.com/dmerejkowsky/tbump) for version management.
-
-To bump the version, run::
-
-    tbump <new_version>
-
-This will update the version in `src/rompy/__init__.py`, commit the change, and optionally create a git tag.
-
-tbump is included in the development requirements (`requirements_dev.txt`).
-
-For more advanced configuration, see `tbump.toml` in the project root.
-
-# Relevant packages
-
-> - [rompy](https://github.com/rom-py/rompy)
-> - [rompy-swan](https://github.com/rom-py/rompy-swan)
-> - [rompy-schism](https://github.com/rom-py/rompy-schism)
-> - [rompy-notebooks](https://github.com/rom-py/rompy-notebooks)
+Apache Software License 2.0. See [LICENSE](https://github.com/rom-py/rompy-swan/blob/main/LICENSE).

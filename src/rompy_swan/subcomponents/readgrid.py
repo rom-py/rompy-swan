@@ -20,9 +20,9 @@ logger = get_logger(__name__)
 class GRIDREGULAR(BaseSubComponent):
     """SWAN Regular Grid subcomponent.
 
-    .. code-block:: text
-
-        xp yp alp xlen ylen mx my
+    ```text
+    xp yp alp xlen ylen mx my
+    ```
 
     Note
     ----
@@ -36,15 +36,14 @@ class GRIDREGULAR(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.readgrid import GRIDREGULAR
-        kwargs = dict(xp=173, yp=-40, alp=0, xlen=2, ylen=2, mx=199, my=199)
-        grid = GRIDREGULAR(suffix="c", **kwargs)
-        print(grid.render())
-        grid = GRIDREGULAR(suffix="inp", **kwargs)
-        print(grid.render())
+    ```python exec="on" source="above" result="text" session="readgrid-gridregular"
+    from rompy_swan.subcomponents.readgrid import GRIDREGULAR
+    kwargs = dict(xp=173, yp=-40, alp=0, xlen=2, ylen=2, mx=199, my=199)
+    grid = GRIDREGULAR(suffix="c", **kwargs)
+    print(grid.render())
+    grid = GRIDREGULAR(suffix="inp", **kwargs)
+    print(grid.render())
+    ```
 
     """
 
@@ -108,10 +107,10 @@ class GRIDREGULAR(BaseSubComponent):
 class READGRID(BaseSubComponent, ABC):
     """SWAN grid reader abstract class.
 
-    .. code-block:: text
-
-        READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
-            ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
+    ```text
+    READGRID [grid_type] [fac] 'fname1' [idla] [nhedf] ([nhedt]) ([nhedvec]) &
+        ->FREE|FORMAT|UNFORMATTED ('form'|[idfm])
+    ```
 
     This is the base class for all input grids. It is not meant to be used directly.
 
@@ -231,25 +230,24 @@ class READGRID(BaseSubComponent, ABC):
 class READCOORD(READGRID):
     """SWAN coordinates reader.
 
-    .. code-block:: text
-
-        READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] &
-            FREE|FORMAT ('form'|idfm)
+    ```text
+    READGRID COORDINATES [fac] 'fname' [idla] [nhedf] [nhedvec] &
+        FREE|FORMAT ('form'|idfm)
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.readgrid import READCOORD
-        readcoord = READCOORD(
-            fac=1.0,
-            fname="coords.txt",
-            idla=3,
-            format="free",
-        )
-        print(readcoord.render())
+    ```python exec="on" source="above" result="text" session="readgrid-readcoord"
+    from rompy_swan.subcomponents.readgrid import READCOORD
+    readcoord = READCOORD(
+        fac=1.0,
+        fname="coords.txt",
+        idla=3,
+        format="free",
+    )
+    print(readcoord.render())
+    ```
 
     """
 
@@ -273,26 +271,25 @@ class READCOORD(READGRID):
 class READINP(READGRID):
     """SWAN input grid reader.
 
-    .. code-block:: text
-
-        READINP GRID_TYPE [fac] ('fname1' | SERIES 'fname2') [idla] [nhedf] &
-            ([nhedt]) [nhedvec] FREE|FORMAT ('form'|idfm)|UNFORMATTED`
+    ```text
+    READINP GRID_TYPE [fac] ('fname1' | SERIES 'fname2') [idla] [nhedf] &
+        ([nhedt]) [nhedvec] FREE|FORMAT ('form'|idfm)|UNFORMATTED`
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.readgrid import READINP
-        readinp = READINP(
-            grid_type="wind",
-            fname1="wind.txt",
-            fac=1.0,
-            idla=3,
-            format="free",
-        )
-        print(readinp.render())
+    ```python exec="on" source="above" result="text" session="readgrid-readinp"
+    from rompy_swan.subcomponents.readgrid import READINP
+    readinp = READINP(
+        grid_type="wind",
+        fname1="wind.txt",
+        fac=1.0,
+        idla=3,
+        format="free",
+    )
+    print(readinp.render())
+    ```
 
     """
 

@@ -13,9 +13,9 @@ logger = logging.getLogger(__name__)
 class SPECTRUM(BaseSubComponent):
     """SWAN spectrum specification.
 
-    .. code-block:: text
-
-        ->CIRCLE|SECTOR ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]
+    ```text
+    ->CIRCLE|SECTOR ([dir1] [dir2]) [mdc] [flow] [fhigh] [msc]
+    ```
 
     Notes
     -----
@@ -31,14 +31,13 @@ class SPECTRUM(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.spectrum import SPECTRUM
-        spec = SPECTRUM(mdc=36, flow=0.04, fhigh=1.0)
-        print(spec.render())
-        spec = SPECTRUM(mdc=36, dir1=0, dir2=180, flow=0.04, msc=31)
-        print(spec.render())
+    ```python exec="on" source="above" result="text" session="spectrum-spectrum"
+    from rompy_swan.subcomponents.spectrum import SPECTRUM
+    spec = SPECTRUM(mdc=36, flow=0.04, fhigh=1.0)
+    print(spec.render())
+    spec = SPECTRUM(mdc=36, dir1=0, dir2=180, flow=0.04, msc=31)
+    print(spec.render())
+    ```
 
     """
 
@@ -136,19 +135,18 @@ class SPECTRUM(BaseSubComponent):
 class JONSWAP(BaseSubComponent):
     """Jonswap spectral shape.
 
-    .. code-block:: text
-
-        JONSWAP [gamma]
+    ```text
+    JONSWAP [gamma]
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.spectrum import JONSWAP
-        shape = JONSWAP(gamma=3.3)
-        print(shape.render())
+    ```python exec="on" source="above" result="text" session="spectrum-jonswap"
+    from rompy_swan.subcomponents.spectrum import JONSWAP
+    shape = JONSWAP(gamma=3.3)
+    print(shape.render())
+    ```
 
     """
 
@@ -168,19 +166,18 @@ class JONSWAP(BaseSubComponent):
 class TMA(JONSWAP):
     """TMA spectral shape.
 
-    .. code-block:: text
-
-        TMA [gamma] [d]
+    ```text
+    TMA [gamma] [d]
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.spectrum import TMA
-        shape = TMA(gamma=2.0, d=18)
-        print(shape.render())
+    ```python exec="on" source="above" result="text" session="spectrum-tma"
+    from rompy_swan.subcomponents.spectrum import TMA
+    shape = TMA(gamma=2.0, d=18)
+    print(shape.render())
+    ```
 
     """
 
@@ -199,19 +196,18 @@ class TMA(JONSWAP):
 class GAUSS(BaseSubComponent):
     """Gaussian spectral shape.
 
-    .. code-block:: text
-
-        GAUSS [sigfr]
+    ```text
+    GAUSS [sigfr]
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.spectrum import GAUSS
-        shape = GAUSS(sigfr=0.02)
-        print(shape.render())
+    ```python exec="on" source="above" result="text" session="spectrum-gauss"
+    from rompy_swan.subcomponents.spectrum import GAUSS
+    shape = GAUSS(sigfr=0.02)
+    print(shape.render())
+    ```
 
     """
 
@@ -233,19 +229,18 @@ class GAUSS(BaseSubComponent):
 class PM(BaseSubComponent):
     """Pearson-Moskowitz spectral shape.
 
-    .. code-block:: text
-
-        PM
+    ```text
+    PM
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.spectrum import PM
-        shape = PM()
-        print(shape.render())
+    ```python exec="on" source="above" result="text" session="spectrum-pm"
+    from rompy_swan.subcomponents.spectrum import PM
+    shape = PM()
+    print(shape.render())
+    ```
 
     """
 
@@ -257,19 +252,18 @@ class PM(BaseSubComponent):
 class BIN(BaseSubComponent):
     """Single frequency bin spectral shape.
 
-    .. code-block:: text
-
-        BIN
+    ```text
+    BIN
+    ```
 
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.spectrum import BIN
-        shape = BIN()
-        print(shape.render())
+    ```python exec="on" source="above" result="text" session="spectrum-bin"
+    from rompy_swan.subcomponents.spectrum import BIN
+    shape = BIN()
+    print(shape.render())
+    ```
 
     """
 
@@ -281,9 +275,9 @@ class BIN(BaseSubComponent):
 class SHAPESPEC(BaseSubComponent):
     """Spectral shape specification.
 
-    .. code-block:: text
-
-        BOUND SHAPESPEC JONSWAP|PM|GAUSS|BIN|TMA PEAK|MEAN DSPR [POWER|DEGREES]
+    ```text
+    BOUND SHAPESPEC JONSWAP|PM|GAUSS|BIN|TMA PEAK|MEAN DSPR [POWER|DEGREES]
+    ```
 
     This command BOUND SHAPESPEC defines the shape of the spectra (both in frequency
     and direction) at the boundary of the computational grid in case of parametric
@@ -297,18 +291,17 @@ class SHAPESPEC(BaseSubComponent):
     Examples
     --------
 
-    .. ipython:: python
-        :okwarning:
-
-        from rompy_swan.subcomponents.spectrum import SHAPESPEC
-        shapespec = SHAPESPEC()
-        print(shapespec.render())
-        shapespec = SHAPESPEC(
-            shape=dict(model_type="tma", gamma=3.1, d=12),
-            per_type="mean",
-            dspr_type="degrees",
-        )
-        print(shapespec.render())
+    ```python exec="on" source="above" result="text" session="spectrum-shapespec"
+    from rompy_swan.subcomponents.spectrum import SHAPESPEC
+    shapespec = SHAPESPEC()
+    print(shapespec.render())
+    shapespec = SHAPESPEC(
+        shape=dict(model_type="tma", gamma=3.1, d=12),
+        per_type="mean",
+        dspr_type="degrees",
+    )
+    print(shapespec.render())
+    ```
 
     """
 
