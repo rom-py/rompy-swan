@@ -1,0 +1,4 @@
+# SWAN releases published as ghcr.io/rom-py/swan:<version>, one per line:
+# <version> <sha256 of swan<version without dot>.tar.gz from https://swanmodel.sourceforge.io/download/zip>
+# The last line is also tagged latest.
+41.51 325c229f3dde0b812db4ec9ae6fa1cd4086d2109562c389576590ce8f94b26bb
