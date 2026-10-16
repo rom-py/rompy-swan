@@ -12,6 +12,7 @@ from typing import Annotated, Literal, Optional, Union
 from pydantic import Field, SerializeAsAny, model_validator
 
 from rompy.core.config import BaseConfig
+from rompy.core.responses import Artifact, ArtifactType
 from rompy.formatting import get_formatted_header_footer
 from rompy.logging import get_logger
 from rompy_swan.components import boundary, cgrid, numerics
@@ -225,6 +226,60 @@ class SwanConfig(BaseConfig):
                 "the default). " + advice
             )
         return self
+
+    def expected_artifacts(self) -> list[Artifact]:
+        """Declare configured writes, excluding location/input filenames.
+
+        Hotfile timestamps use the same expansion as the rendered COMPUTE
+        commands. Paths describe serial SWAN outputs; MPI hotfile partitions
+        are additionally discovered by :meth:`validate_outputs`.
+        """
+        from rompy_swan.components.output import BaseWrite, TEST
+
+        artifacts = {}
+
+        def add(fname, artifact_type=None):
+            path = Path(fname).as_posix()
+            if artifact_type is None:
+                artifact_type = {
+                    ".nc": ArtifactType.NETCDF,
+                    ".mat": ArtifactType.OTHER,
+                }.get(Path(path).suffix.lower(), ArtifactType.TEXT)
+            artifacts[path] = Artifact(path=path, artifact_type=artifact_type)
+
+        def writes(component):
+            if isinstance(component, BaseWrite):
+                add(component.fname)
+            elif isinstance(component, TEST):
+                for name in ("fname_par", "fname_s1d", "fname_s2d"):
+                    if getattr(component, name) is not None:
+                        add(getattr(component, name), ArtifactType.TEXT)
+            elif isinstance(component, (list, tuple)):
+                for child in component:
+                    writes(child)
+            elif hasattr(type(component), "model_fields"):
+                for name in type(component).model_fields:
+                    writes(getattr(component, name))
+
+        if self.output is not None:
+            for name in ("block", "table", "specout", "nests", "test"):
+                writes(getattr(self.output, name))
+        if self.lockup is not None:
+            compute = self.lockup.compute
+            if compute.hotfile is not None:
+                if isinstance(compute, COMPUTE):
+                    add(compute.hotfile.fname, ArtifactType.RESTART)
+                else:
+                    times = compute.times()
+                    for index in compute.hotids:
+                        add(compute._hotfile(times[index]).fname, ArtifactType.RESTART)
+        return list(artifacts.values())
+
+    def validate_outputs(self, output_dir: Path | str) -> list[Artifact]:
+        """Discover real files and warn for absent configured outputs."""
+        from rompy_swan.artifacts import discover_artifacts
+
+        return discover_artifacts(output_dir, self.expected_artifacts())
 
     @model_validator(mode="after")
     def no_nor_if_spherical(self) -> "SwanConfig":
