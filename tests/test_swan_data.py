@@ -21,11 +21,22 @@ def dset():
     )
 
 
-def test_inpgrid_fills_missing_values(tmp_path, dset):
-    outfile = tmp_path / "wind.grd"
-    inpgrid, _ = dset.swan.to_inpgrid(outfile, var="WIND", z1="u10", z2="v10")
+@pytest.mark.parametrize(
+    ("var", "z2", "expected_readinp"),
+    [
+        ("WIND", "v10", "READINP WIND 1.0 'wind.grd' 3 0 1 0 FREE"),
+        ("CURRENT", "v10", "READINP CURRENT 1.0 'current.grd' 3 0 1 0 FREE"),
+        ("WLEVEL", None, "READINP WLEVEL 1.0 'wlevel.grd' 3 0 1 FREE"),
+    ],
+)
+def test_inpgrid_fills_missing_values_and_formats_readinp(
+    tmp_path, dset, var, z2, expected_readinp
+):
+    outfile = tmp_path / f"{var.lower()}.grd"
+    inpgrid, readinp = dset.swan.to_inpgrid(outfile, var=var, z1="u10", z2=z2)
     assert "nan" not in outfile.read_text().lower()
     assert "EXC -99.0" in inpgrid
+    assert readinp == expected_readinp
 
 
 def test_inpgrid_writes_rows_along_latitude(tmp_path, dset):

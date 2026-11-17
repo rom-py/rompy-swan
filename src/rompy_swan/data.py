@@ -506,7 +506,10 @@ class Swan_accessor(object):
         grid = self.grid(x=x, y=y, rot=rot, exc=FILL_VALUE * fac)
 
         inpgrid = f"INPGRID {var} {grid.inpgrid} NONSTATION {inptimes[0]} {dt_str} HR"
-        readinp = f"READINP {var} {fac} '{Path(output_file).name}' 3 0 1 0 FREE"
+        # nhedvec is only valid for the vector variables WIND and CURRENT
+        nhedvec = " 0" if var.upper() in {"WIND", "CURRENT"} else ""
+        fname = Path(output_file).name
+        readinp = f"READINP {var} {fac} '{fname}' 3 0 1{nhedvec} FREE"
 
         # Log detailed information about the generated grid
         logger.debug(f"Created {var} grid with:")
